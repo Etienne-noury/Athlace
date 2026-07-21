@@ -89,14 +89,15 @@ export default function AdminImport() {
               mapped.length / BATCH_SIZE
             )}`
           );
-          const { error } = await supabase
-            .from("clubs_enriched")
-            .upsert(batch, { onConflict: "federation_code,external_id" });
-          if (error) {
-            console.error(error);
+          const { data, error } = await supabase.functions.invoke(
+            "admin-bulk-upsert",
+            { body: { clubs: batch } }
+          );
+          if (error || (data && (data as any).error)) {
+            console.error(error || (data as any).error);
             errors += batch.length;
           } else {
-            imported += batch.length;
+            imported += ((data as any)?.upserted as number) ?? batch.length;
           }
           const fileProgress = (i + batch.length) / Math.max(mapped.length, 1);
           setProgress(((fi + fileProgress) / files.length) * 100);
