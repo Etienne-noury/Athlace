@@ -52,7 +52,7 @@ const parseFile = (file: File): Promise<Record<string, string>[]> =>
     });
   });
 
-export default function Admin() {
+export default function AdminImport() {
   const [files, setFiles] = useState<File[]>([]);
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
