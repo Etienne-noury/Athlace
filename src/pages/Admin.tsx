@@ -10,7 +10,8 @@ const SOURCE_URL =
   "https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/";
 
 function isSport(row: Record<string, string>): boolean {
-  const code = parseInt((row.objet_social1 || '').trim(), 10);
+  const raw = (row.objet_social1 || '').trim().replace(/^0+/, '');
+  const code = parseInt(raw, 10);
   return code >= 11000 && code <= 11999;
 }
 
