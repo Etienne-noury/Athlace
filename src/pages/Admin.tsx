@@ -10,10 +10,7 @@ const SOURCE_URL =
   "https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/";
 
 function isSport(row: Record<string, string>): boolean {
-  const code1 = (row.objet_social1 || '').trim();
-  const code2 = (row.objet_social2 || '').trim();
-  // Les codes RNA commençant par 11 = activités sportives officielles
-  return code1.startsWith('11') || code2.startsWith('11');
+  return (row.objet_social1 || '').trim().startsWith('11');
 }
 
 const mapRow = (row: Record<string, string>) => {
