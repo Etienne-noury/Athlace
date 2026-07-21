@@ -10,9 +10,7 @@ const SOURCE_URL =
   "https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/";
 
 function isSport(row: Record<string, string>): boolean {
-  const raw = (row.objet_social1 || '').trim().replace(/^0+/, '');
-  const code = parseInt(raw, 10);
-  return code >= 11000 && code <= 11999;
+  return (row.objet_social1 || '').trim().startsWith('11');
 }
 
 const mapRow = (row: Record<string, string>) => {
@@ -52,7 +50,7 @@ const parseFile = (file: File): Promise<Record<string, string>[]> =>
     });
   });
 
-export default function AdminImport() {
+export default function Admin() {
   const [files, setFiles] = useState<File[]>([]);
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -89,15 +87,14 @@ export default function AdminImport() {
               mapped.length / BATCH_SIZE
             )}`
           );
-          const { data, error } = await supabase.functions.invoke(
-            "admin-bulk-upsert",
-            { body: { clubs: batch } }
-          );
-          if (error || (data && (data as any).error)) {
-            console.error(error || (data as any).error);
+          const { error } = await supabase
+            .from("clubs_enriched")
+            .upsert(batch, { onConflict: "federation_code,external_id" });
+          if (error) {
+            console.error(error);
             errors += batch.length;
           } else {
-            imported += ((data as any)?.upserted as number) ?? batch.length;
+            imported += batch.length;
           }
           const fileProgress = (i + batch.length) / Math.max(mapped.length, 1);
           setProgress(((fi + fileProgress) / files.length) * 100);

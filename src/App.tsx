@@ -13,7 +13,7 @@ import Federations from "./pages/Federations";
 import Football from "./pages/Football";
 import FootballClubDetail from "./pages/FootballClubDetail";
 import NotFound from "./pages/NotFound";
-import AdminImport from "./pages/Admin";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/federations" element={<Federations />} />
           <Route path="/football" element={<Football />} />
           <Route path="/football/club/:id" element={<FootballClubDetail />} />
-          <Route path="/admin" element={<AdminImport />} />
+          <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

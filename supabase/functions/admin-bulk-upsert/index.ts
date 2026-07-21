@@ -1,5 +1,5 @@
 // Admin bulk upsert for clubs_enriched.
-// Accepts { clubs: Row[] } and upserts on (federation_code, external_id).
+// Auth: shared token via x-admin-token header matching ADMIN_IMPORT_TOKEN secret.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -10,7 +10,7 @@ const corsHeaders = {
 };
 
 type Row = {
-  federation_code?: string;
+  federation_code: string;
   external_id?: string | null;
   name: string;
   discipline?: string | null;
@@ -23,53 +23,55 @@ type Row = {
   phone?: string | null;
   email?: string | null;
   website?: string | null;
-  source_url?: string;
+  source_url: string;
   raw?: Record<string, unknown> | null;
 };
-
-// Chunk size for DB upserts to avoid statement/timeout limits.
-const DB_CHUNK = 100;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const body = await req.json().catch(() => ({}));
-    const clubs: Row[] = Array.isArray(body?.clubs)
-      ? body.clubs
-      : Array.isArray(body?.rows)
-        ? body.rows
-        : [];
-
-    if (clubs.length === 0) {
-      return new Response(
-        JSON.stringify({ received: 0, upserted: 0, errors: [] }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+    const adminToken = Deno.env.get("ADMIN_IMPORT_TOKEN");
+    if (!adminToken) throw new Error("ADMIN_IMPORT_TOKEN not configured");
+    const provided = req.headers.get("x-admin-token");
+    if (provided !== adminToken) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
-    if (clubs.length > 2000) {
-      return new Response(JSON.stringify({ error: "Max 2000 rows per request" }), {
+
+    const body = await req.json();
+    const rows: Row[] = Array.isArray(body?.rows) ? body.rows : [];
+    if (rows.length === 0) {
+      return new Response(JSON.stringify({ inserted: 0 }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (rows.length > 1000) {
+      return new Response(JSON.stringify({ error: "Max 1000 rows per batch" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const cleaned = clubs
+    // Basic validation
+    const cleaned = rows
       .filter((r) => r && typeof r.name === "string" && r.name.trim().length > 0)
       .map((r) => ({
         federation_code: r.federation_code || "RNA",
         external_id: r.external_id || null,
         name: String(r.name).slice(0, 500),
-        discipline: r.discipline ?? null,
-        address: r.address ?? null,
-        postal_code: r.postal_code ?? null,
-        city: r.city ?? null,
-        region: r.region ?? null,
+        discipline: r.discipline || null,
+        address: r.address || null,
+        postal_code: r.postal_code || null,
+        city: r.city || null,
+        region: r.region || null,
         latitude: typeof r.latitude === "number" ? r.latitude : null,
         longitude: typeof r.longitude === "number" ? r.longitude : null,
-        phone: r.phone ?? null,
-        email: r.email ?? null,
-        website: r.website ?? null,
+        phone: r.phone || null,
+        email: r.email || null,
+        website: r.website || null,
         source_url: r.source_url || "csv-upload",
         raw: r.raw ?? null,
       }));
@@ -79,39 +81,35 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    let upserted = 0;
-    const errors: string[] = [];
-
-    // Only rows with external_id can be upserted on conflict; the rest are inserted.
+    // Split: rows with external_id -> upsert on conflict; rows without -> plain insert
     const withExt = cleaned.filter((r) => r.external_id);
     const withoutExt = cleaned.filter((r) => !r.external_id);
 
-    for (let i = 0; i < withExt.length; i += DB_CHUNK) {
-      const chunk = withExt.slice(i, i + DB_CHUNK);
-      const { error, count } = await supabase
-        .from("clubs_enriched")
-        .upsert(chunk, {
-          onConflict: "federation_code,external_id",
-          count: "exact",
-        });
-      if (error) errors.push(`upsert[${i}]: ${error.message}`);
-      else upserted += count ?? chunk.length;
-    }
+    let upserted = 0;
+    let inserted = 0;
+    const errors: string[] = [];
 
-    for (let i = 0; i < withoutExt.length; i += DB_CHUNK) {
-      const chunk = withoutExt.slice(i, i + DB_CHUNK);
+    if (withExt.length > 0) {
       const { error, count } = await supabase
         .from("clubs_enriched")
-        .insert(chunk, { count: "exact" });
-      if (error) errors.push(`insert[${i}]: ${error.message}`);
-      else upserted += count ?? chunk.length;
+        .upsert(withExt, { onConflict: "federation_code,external_id", count: "exact" });
+      if (error) errors.push(`upsert: ${error.message}`);
+      else upserted = count ?? withExt.length;
+    }
+    if (withoutExt.length > 0) {
+      const { error, count } = await supabase
+        .from("clubs_enriched")
+        .insert(withoutExt, { count: "exact" });
+      if (error) errors.push(`insert: ${error.message}`);
+      else inserted = count ?? withoutExt.length;
     }
 
     return new Response(
       JSON.stringify({
-        received: clubs.length,
+        received: rows.length,
         cleaned: cleaned.length,
         upserted,
+        inserted,
         errors,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
