@@ -79,7 +79,7 @@ export default function Admin() {
         const file = files[fi];
         setStatus(`Lecture de ${file.name}…`);
         const rows = await parseFile(file);
-        const matched = rows.filter(matchesSport);
+        const matched = rows.filter(isSport);
         filtered += matched.length;
         const mapped = matched.map(mapRow).filter((r) => r.external_id);
 
