@@ -6,32 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 
-const KEYWORDS = [
-  "sport", "club", "football", "tennis", "basket", "natation", "rugby", "judo",
-  "handball", "volley", "athletisme", "cyclisme", "golf", "boxe", "karate", "yoga",
-  "danse", "equitation", "escalade", "petanque", "badminton", "gym", "gymnastique",
-  "running", "triathlon", "aviron", "voile", "ski", "hockey", "taekwondo", "aikido",
-  "lutte", "tir", "musculation", "fitness", "crossfit", "ping", "padel", "squash",
-  "surf", "kayak", "parachut", "parapente", "alpinisme", "boules", "pelote",
-];
-
 const SOURCE_URL =
   "https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/";
 
-const normalize = (s: string) =>
-  (s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-const matchesSport = (row: Record<string, string>) => {
-  const text = normalize(
-    [row.objet, row.objet_social1, row.objet_social2, row.titre]
-      .filter(Boolean)
-      .join(" ")
-  );
-  return KEYWORDS.some((kw) => text.includes(kw));
-};
+function isSport(row: Record<string, string>): boolean {
+  const code1 = (row.objet_social1 || '').trim();
+  const code2 = (row.objet_social2 || '').trim();
+  // Les codes RNA commençant par 11 = activités sportives officielles
+  return code1.startsWith('11') || code2.startsWith('11');
+}
 
 const mapRow = (row: Record<string, string>) => {
   const address = [
