@@ -13,7 +13,7 @@ import Federations from "./pages/Federations";
 import Football from "./pages/Football";
 import FootballClubDetail from "./pages/FootballClubDetail";
 import NotFound from "./pages/NotFound";
-import Admin from "./pages/Admin";
+import AdminImport from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
