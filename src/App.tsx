@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/federations" element={<Federations />} />
           <Route path="/football" element={<Football />} />
           <Route path="/football/club/:id" element={<FootballClubDetail />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<AdminImport />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
