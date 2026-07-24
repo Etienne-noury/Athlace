@@ -18,8 +18,12 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
+          complement: string | null
           created_at: string
+          date_creation: string | null
+          description: string | null
           discipline: string | null
+          distrib: string | null
           email: string | null
           external_id: string | null
           federation_code: string
@@ -39,8 +43,12 @@ export type Database = {
         Insert: {
           address?: string | null
           city?: string | null
+          complement?: string | null
           created_at?: string
+          date_creation?: string | null
+          description?: string | null
           discipline?: string | null
+          distrib?: string | null
           email?: string | null
           external_id?: string | null
           federation_code: string
@@ -60,8 +68,12 @@ export type Database = {
         Update: {
           address?: string | null
           city?: string | null
+          complement?: string | null
           created_at?: string
+          date_creation?: string | null
+          description?: string | null
           discipline?: string | null
+          distrib?: string | null
           email?: string | null
           external_id?: string | null
           federation_code?: string
