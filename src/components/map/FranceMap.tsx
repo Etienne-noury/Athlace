@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById } from "@/data/disciplines";
 import "leaflet/dist/leaflet.css";
+
 
 // Fix Leaflet default marker icons (Vite bundling)
 delete (L.Icon.Default.prototype as any)._getIconUrl;
