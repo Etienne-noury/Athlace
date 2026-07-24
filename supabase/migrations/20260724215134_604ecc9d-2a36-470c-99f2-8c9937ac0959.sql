@@ -1,0 +1,1 @@
+DELETE FROM public.clubs_enriched WHERE postal_code NOT LIKE '75%';
