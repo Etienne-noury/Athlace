@@ -49,11 +49,16 @@ function rowToClub(r: EnrichedClubRow): Club {
 export interface FetchEnrichedParams {
   q?: string;
   discipline?: string;
+  region?: string;
   limit?: number;
+  latMin?: number;
+  latMax?: number;
+  lngMin?: number;
+  lngMax?: number;
 }
 
 export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<Club[]> {
-  const { q, discipline, limit = 30 } = params;
+  const { q, discipline, limit = 30, latMin, latMax, lngMin, lngMax } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
   let query = supabase.from('clubs_enriched_public').select('*').limit(limit);
 
@@ -64,6 +69,11 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     const safe = q.trim();
     query = query.or(`name.ilike.%${safe}%,city.ilike.%${safe}%,postal_code.ilike.%${safe}%`);
   }
+  if (latMin !== undefined) query = query.gte('latitude', latMin);
+  if (latMax !== undefined) query = query.lte('latitude', latMax);
+  if (lngMin !== undefined) query = query.gte('longitude', lngMin);
+  if (lngMax !== undefined) query = query.lte('longitude', lngMax);
+
 
   const { data, error } = await query;
   if (error) {
