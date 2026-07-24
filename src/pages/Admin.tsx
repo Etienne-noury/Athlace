@@ -78,14 +78,50 @@ export default function Admin() {
 
   const runGeocode = async () => {
     setGeocoding(true);
-    setGeocodeResult("Géocodage en cours…");
+    setGeocodeResult("Géocodage en cours… 0 géocodés / 0 échecs");
     try {
-      const { data, error } = await supabase.functions.invoke('geocode-clubs');
-      if (error) {
-        setGeocodeResult(`Erreur: ${error.message}`);
-      } else {
-        setGeocodeResult(`Géocodés: ${data?.geocoded ?? 0} — Échecs: ${data?.failed ?? 0}`);
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/geocode-clubs`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+      });
+      if (!res.ok || !res.body) {
+        setGeocodeResult(`Erreur HTTP ${res.status}`);
+        return;
       }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let last = { geocoded: 0, failed: 0 };
+      let doneMsg = '';
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const evt = JSON.parse(line);
+            if (evt.progress) {
+              last = evt.progress;
+              setGeocodeResult(
+                `Géocodage en cours… ${last.geocoded} géocodés / ${last.failed} échecs`
+              );
+            } else if (evt.done) {
+              doneMsg = `Terminé — Géocodés: ${evt.geocoded} — Échecs: ${evt.failed}`;
+            } else if (evt.error) {
+              doneMsg = `Erreur: ${evt.error} (Géocodés: ${evt.geocoded}, Échecs: ${evt.failed})`;
+            }
+          } catch { /* ignore */ }
+        }
+      }
+      setGeocodeResult(doneMsg || `Terminé — Géocodés: ${last.geocoded} — Échecs: ${last.failed}`);
     } catch (e) {
       setGeocodeResult(`Erreur: ${(e as Error).message}`);
     } finally {
@@ -194,7 +230,7 @@ export default function Admin() {
           Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
         </p>
         <Button onClick={runGeocode} disabled={geocoding}>
-          {geocoding ? "Géocodage…" : "Géocoder les clubs"}
+          {geocoding ? "Géocodage…" : "Géocoder TOUS les clubs"}
         </Button>
         {geocodeResult && (
           <p className="text-sm">{geocodeResult}</p>

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
-import { fetchClubs } from "@/lib/api/equipements";
+import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById } from "@/data/disciplines";
 import "leaflet/dist/leaflet.css";
 
@@ -39,13 +39,14 @@ export function FranceMap({
 
   const { data: displayedClubs = [], isFetching } = useQuery({
     queryKey: ["clubs", "map", selectedDiscipline, selectedRegion, maxClubs],
-    queryFn: () =>
-      fetchClubs({
+    queryFn: async () => {
+      const clubs = await fetchEnrichedClubs({
         discipline: selectedDiscipline,
         region: selectedRegion,
-        withCoordsOnly: true,
         limit: maxClubs,
-      }),
+      } as any);
+      return clubs.filter((c) => c.coordinates?.lat && c.coordinates?.lng);
+    },
   });
 
 
