@@ -102,7 +102,8 @@ export default function Admin() {
             .from("clubs_enriched")
             .upsert(batch, { onConflict: "federation_code,external_id" });
           if (error) {
-            console.error(error);
+            console.error('Erreur upsert:', JSON.stringify(error));
+            setStatus(`Erreur: ${error.message} — code: ${error.code} — détail: ${error.details}`);
             errors += batch.length;
           } else {
             imported += batch.length;
