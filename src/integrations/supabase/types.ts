@@ -19,7 +19,6 @@ export type Database = {
           address: string | null
           city: string | null
           complement: string | null
-          created_at: string
           date_creation: string | null
           description: string | null
           discipline: string | null
@@ -33,9 +32,7 @@ export type Database = {
           name: string
           phone: string | null
           postal_code: string | null
-          raw: Json | null
           region: string | null
-          scraped_at: string
           source_url: string
           updated_at: string
           website: string | null
@@ -44,7 +41,6 @@ export type Database = {
           address?: string | null
           city?: string | null
           complement?: string | null
-          created_at?: string
           date_creation?: string | null
           description?: string | null
           discipline?: string | null
@@ -58,9 +54,7 @@ export type Database = {
           name: string
           phone?: string | null
           postal_code?: string | null
-          raw?: Json | null
           region?: string | null
-          scraped_at?: string
           source_url: string
           updated_at?: string
           website?: string | null
@@ -69,7 +63,6 @@ export type Database = {
           address?: string | null
           city?: string | null
           complement?: string | null
-          created_at?: string
           date_creation?: string | null
           description?: string | null
           discipline?: string | null
@@ -83,9 +76,7 @@ export type Database = {
           name?: string
           phone?: string | null
           postal_code?: string | null
-          raw?: Json | null
           region?: string | null
-          scraped_at?: string
           source_url?: string
           updated_at?: string
           website?: string | null
@@ -197,7 +188,6 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
-          created_at: string | null
           discipline: string | null
           external_id: string | null
           federation_code: string | null
@@ -207,7 +197,6 @@ export type Database = {
           name: string | null
           postal_code: string | null
           region: string | null
-          scraped_at: string | null
           source_url: string | null
           updated_at: string | null
           website: string | null
@@ -215,7 +204,6 @@ export type Database = {
         Insert: {
           address?: string | null
           city?: string | null
-          created_at?: string | null
           discipline?: string | null
           external_id?: string | null
           federation_code?: string | null
@@ -225,7 +213,6 @@ export type Database = {
           name?: string | null
           postal_code?: string | null
           region?: string | null
-          scraped_at?: string | null
           source_url?: string | null
           updated_at?: string | null
           website?: string | null
@@ -233,7 +220,6 @@ export type Database = {
         Update: {
           address?: string | null
           city?: string | null
-          created_at?: string | null
           discipline?: string | null
           external_id?: string | null
           federation_code?: string | null
@@ -243,7 +229,6 @@ export type Database = {
           name?: string | null
           postal_code?: string | null
           region?: string | null
-          scraped_at?: string | null
           source_url?: string | null
           updated_at?: string | null
           website?: string | null
