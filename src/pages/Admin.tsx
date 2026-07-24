@@ -101,7 +101,8 @@ export default function Admin() {
             )}`
           );
           const { data, error } = await supabase.functions.invoke('admin-bulk-upsert', {
-            body: { clubs: batch }
+            body: { rows: batch },
+            headers: { 'x-admin-token': import.meta.env.VITE_ADMIN_IMPORT_TOKEN || '' }
           });
           if (error || data?.error) {
             lastError = error?.message || data?.error;
