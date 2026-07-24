@@ -122,7 +122,7 @@ export default function Admin() {
       console.error(e);
       setStatus(`Erreur: ${(e as Error).message}`);
     } finally {
-      setResult({ imported, errors, filtered });
+      setResult({ imported, errors, filtered, lastError });
       setRunning(false);
     }
   };
