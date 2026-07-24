@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils';
 export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [page, setPage] = useState(0);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
@@ -38,7 +39,7 @@ export default function Recherche() {
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
 
   const { data: filteredClubs = [], isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion],
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion, page],
     queryFn: async () => {
       const [govClubs, enriched] = await Promise.all([
         fetchClubs({
@@ -50,7 +51,8 @@ export default function Recherche() {
         fetchEnrichedClubs({
           q: searchQuery,
           discipline: selectedDiscipline,
-          limit: 30,
+          limit: 100,
+          offset: page * 100,
         }),
       ]);
       // Fédéral d'abord (contacts complets), puis open data
@@ -374,6 +376,24 @@ export default function Recherche() {
             {isFetching && !isLoading && (
               <p className="text-xs text-muted-foreground text-center mt-4">Mise à jour…</p>
             )}
+
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page === 0 || isFetching}
+              >
+                ← Précédent
+              </Button>
+              <span className="text-sm text-muted-foreground">Page {page + 1}</span>
+              <Button
+                variant="outline"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={filteredClubs.length < 100 || isFetching}
+              >
+                Suivant →
+              </Button>
+            </div>
 
           </div>
         </div>
