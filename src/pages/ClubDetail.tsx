@@ -20,7 +20,7 @@ export default function ClubDetail() {
   const { toast } = useToast();
   const { data: club, isLoading } = useQuery({
     queryKey: ['club', id],
-    queryFn: () => fetchClubById(id || ''),
+    queryFn: () => fetchEnrichedClubById(id || ''),
     enabled: !!id,
   });
   const discipline = club ? getDisciplineById(club.discipline) : null;
