@@ -70,6 +70,7 @@ export default function Admin() {
     imported: number;
     errors: number;
     filtered: number;
+    lastError: string;
   } | null>(null);
 
   const runImport = async () => {
@@ -81,6 +82,7 @@ export default function Admin() {
     let imported = 0;
     let errors = 0;
     let filtered = 0;
+    let lastError = '';
 
     try {
       for (let fi = 0; fi < files.length; fi++) {
@@ -103,6 +105,7 @@ export default function Admin() {
             .upsert(batch, { onConflict: "federation_code,external_id" });
           if (error) {
             console.error('Erreur upsert:', JSON.stringify(error));
+            lastError = `${error.message} (code: ${error.code})`;
             setStatus(`Erreur: ${error.message} — code: ${error.code} — détail: ${error.details}`);
             errors += batch.length;
           } else {
@@ -119,7 +122,7 @@ export default function Admin() {
       console.error(e);
       setStatus(`Erreur: ${(e as Error).message}`);
     } finally {
-      setResult({ imported, errors, filtered });
+      setResult({ imported, errors, filtered, lastError });
       setRunning(false);
     }
   };
@@ -155,15 +158,12 @@ export default function Admin() {
 
         {result && (
           <div className="rounded-md border p-4 space-y-1 text-sm">
-            <p>
-              <strong>Lignes filtrées (sport) :</strong> {result.filtered}
-            </p>
-            <p>
-              <strong>Importées :</strong> {result.imported}
-            </p>
-            <p>
-              <strong>Erreurs :</strong> {result.errors}
-            </p>
+            <p><strong>Lignes filtrées (sport) :</strong> {result.filtered}</p>
+            <p><strong>Importées :</strong> {result.imported}</p>
+            <p><strong>Erreurs :</strong> {result.errors}</p>
+            {result.lastError && (
+              <p className="text-red-500"><strong>Dernière erreur :</strong> {result.lastError}</p>
+            )}
           </div>
         )}
       </Card>
