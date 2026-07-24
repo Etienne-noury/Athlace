@@ -18,21 +18,22 @@ function isSport(row: Record<string, string>): boolean {
 const mapRow = (row: Record<string, string>) => {
   const address = [
     row.adrs_numvoie,
-    row.adrs_repetition,
     row.adrs_typevoie,
     row.adrs_libvoie,
-  ]
-    .filter((p) => p && p.trim())
-    .join(" ")
-    .trim();
+  ].filter((p) => p && p.trim()).join(' ').trim();
 
   return {
-    federation_code: "RNA",
+    federation_code: 'RNA',
     external_id: row.id || null,
-    name: row.titre || "Sans nom",
+    name: row.titre || 'Sans nom',
+    description: row.objet || null,
     address: address || null,
+    complement: row.adrs_complement || null,
+    distrib: row.adrs_distrib || null,
     postal_code: row.adrs_codepostal || null,
     city: row.adrs_libcommune || null,
+    date_creation: row.date_creat || null,
+    updated_at: row.maj_time || null,
     website: row.siteweb || null,
     discipline: null,
     source_url: SOURCE_URL,
