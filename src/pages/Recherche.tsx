@@ -377,6 +377,24 @@ export default function Recherche() {
               <p className="text-xs text-muted-foreground text-center mt-4">Mise à jour…</p>
             )}
 
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page === 0 || isFetching}
+              >
+                ← Précédent
+              </Button>
+              <span className="text-sm text-muted-foreground">Page {page + 1}</span>
+              <Button
+                variant="outline"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={filteredClubs.length < 100 || isFetching}
+              >
+                Suivant →
+              </Button>
+            </div>
+
           </div>
         </div>
       </div>
