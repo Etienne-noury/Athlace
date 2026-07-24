@@ -70,6 +70,7 @@ export default function Admin() {
     imported: number;
     errors: number;
     filtered: number;
+    lastError: string;
   } | null>(null);
 
   const runImport = async () => {
