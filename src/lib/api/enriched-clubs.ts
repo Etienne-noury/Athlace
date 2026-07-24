@@ -21,6 +21,7 @@ export interface EnrichedClubRow {
   longitude: number | null;
   website: string | null;
   source_url: string;
+  description: string | null;
 }
 
 function rowToClub(r: EnrichedClubRow): Club {
@@ -41,7 +42,7 @@ function rowToClub(r: EnrichedClubRow): Club {
     coordinates: { lat: r.latitude ?? 0, lng: r.longitude ?? 0 },
     rating: 0,
     reviewCount: 0,
-    description: `Club affilié ${r.federation_code}.${r.website ? ` Site officiel : ${r.website}` : ''}`,
+    description: r.description || null,
     amenities: [],
   };
 }
