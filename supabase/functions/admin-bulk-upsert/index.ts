@@ -68,6 +68,7 @@ Deno.serve(async (req) => {
         phone: r.phone || null,
         email: r.email || null,
         website: r.website || null,
+        date_creation: (r as any).date_creation ? String((r as any).date_creation).split('/').reverse().join('-') : null,
         source_url: r.source_url || "csv-upload",
       }));
 
