@@ -55,8 +55,11 @@ Deno.serve(async (req) => {
         federation_code: r.federation_code || "RNA",
         external_id: r.external_id || null,
         name: String(r.name).slice(0, 500),
+        description: (r as any).description || null,
         discipline: r.discipline || null,
         address: r.address || null,
+        complement: (r as any).complement || null,
+        distrib: (r as any).distrib || null,
         postal_code: r.postal_code || null,
         city: r.city || null,
         region: r.region || null,
@@ -66,7 +69,6 @@ Deno.serve(async (req) => {
         email: r.email || null,
         website: r.website || null,
         source_url: r.source_url || "csv-upload",
-        raw: r.raw ?? null,
       }));
 
     const supabase = createClient(
