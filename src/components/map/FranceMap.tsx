@@ -39,13 +39,14 @@ export function FranceMap({
 
   const { data: displayedClubs = [], isFetching } = useQuery({
     queryKey: ["clubs", "map", selectedDiscipline, selectedRegion, maxClubs],
-    queryFn: () =>
-      fetchClubs({
+    queryFn: async () => {
+      const clubs = await fetchEnrichedClubs({
         discipline: selectedDiscipline,
         region: selectedRegion,
-        withCoordsOnly: true,
         limit: maxClubs,
-      }),
+      } as any);
+      return clubs.filter((c) => c.coordinates?.lat && c.coordinates?.lng);
+    },
   });
 
 
