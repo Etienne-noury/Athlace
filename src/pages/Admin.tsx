@@ -82,6 +82,7 @@ export default function Admin() {
     let imported = 0;
     let errors = 0;
     let filtered = 0;
+    let lastError = '';
 
     try {
       for (let fi = 0; fi < files.length; fi++) {
