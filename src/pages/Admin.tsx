@@ -105,6 +105,7 @@ export default function Admin() {
             .upsert(batch, { onConflict: "federation_code,external_id" });
           if (error) {
             console.error('Erreur upsert:', JSON.stringify(error));
+            lastError = `${error.message} (code: ${error.code})`;
             setStatus(`Erreur: ${error.message} — code: ${error.code} — détail: ${error.details}`);
             errors += batch.length;
           } else {
