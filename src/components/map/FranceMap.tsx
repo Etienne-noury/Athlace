@@ -37,17 +37,23 @@ export function FranceMap({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
+  const [bounds, setBounds] = useState<{ latMin: number; latMax: number; lngMin: number; lngMax: number } | null>(null);
+  const [zoom, setZoom] = useState<number>(FRANCE_ZOOM);
+
+  const dynamicLimit = zoom > 10 ? 500 : zoom >= 8 ? 200 : 50;
 
   const { data: displayedClubs = [], isFetching } = useQuery({
-    queryKey: ["clubs", "map", selectedDiscipline, selectedRegion, maxClubs],
+    queryKey: ["clubs", "map", selectedDiscipline, selectedRegion, bounds, dynamicLimit],
     queryFn: async () => {
       const clubs = await fetchEnrichedClubs({
         discipline: selectedDiscipline,
         region: selectedRegion,
-        limit: maxClubs,
-      } as any);
+        limit: dynamicLimit,
+        ...(bounds ?? {}),
+      });
       return clubs.filter((c) => c.coordinates?.lat && c.coordinates?.lng);
     },
+    enabled: bounds !== null,
   });
 
 
@@ -70,7 +76,23 @@ export function FranceMap({
     mapRef.current = map;
     markersRef.current = markers;
 
+    const updateBounds = () => {
+      const b = map.getBounds();
+      setBounds({
+        latMin: b.getSouth(),
+        latMax: b.getNorth(),
+        lngMin: b.getWest(),
+        lngMax: b.getEast(),
+      });
+      setZoom(map.getZoom());
+    };
+    updateBounds();
+    map.on("moveend", updateBounds);
+    map.on("zoomend", updateBounds);
+
     return () => {
+      map.off("moveend", updateBounds);
+      map.off("zoomend", updateBounds);
       map.remove();
       mapRef.current = null;
       markersRef.current = null;
@@ -112,12 +134,8 @@ export function FranceMap({
       marker.bindPopup(popupHtml, { closeButton: true });
       marker.addTo(markers);
     });
-
-    // Keep France view (simple start) unless user is filtering to a very small set
-    if (displayedClubs.length === 0) {
-      map.setView(FRANCE_CENTER, FRANCE_ZOOM);
-    }
   }, [displayedClubs]);
+
 
   return (
     <div
