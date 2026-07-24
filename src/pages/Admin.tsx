@@ -158,15 +158,12 @@ export default function Admin() {
 
         {result && (
           <div className="rounded-md border p-4 space-y-1 text-sm">
-            <p>
-              <strong>Lignes filtrées (sport) :</strong> {result.filtered}
-            </p>
-            <p>
-              <strong>Importées :</strong> {result.imported}
-            </p>
-            <p>
-              <strong>Erreurs :</strong> {result.errors}
-            </p>
+            <p><strong>Lignes filtrées (sport) :</strong> {result.filtered}</p>
+            <p><strong>Importées :</strong> {result.imported}</p>
+            <p><strong>Erreurs :</strong> {result.errors}</p>
+            {result.lastError && (
+              <p className="text-red-500"><strong>Dernière erreur :</strong> {result.lastError}</p>
+            )}
           </div>
         )}
       </Card>
