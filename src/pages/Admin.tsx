@@ -73,6 +73,25 @@ export default function Admin() {
     filtered: number;
     lastError: string;
   } | null>(null);
+  const [geocoding, setGeocoding] = useState(false);
+  const [geocodeResult, setGeocodeResult] = useState<string>("");
+
+  const runGeocode = async () => {
+    setGeocoding(true);
+    setGeocodeResult("Géocodage en cours…");
+    try {
+      const { data, error } = await supabase.functions.invoke('geocode-clubs');
+      if (error) {
+        setGeocodeResult(`Erreur: ${error.message}`);
+      } else {
+        setGeocodeResult(`Géocodés: ${data?.geocoded ?? 0} — Échecs: ${data?.failed ?? 0}`);
+      }
+    } catch (e) {
+      setGeocodeResult(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setGeocoding(false);
+    }
+  };
 
   const runImport = async () => {
     if (!files.length) return;
