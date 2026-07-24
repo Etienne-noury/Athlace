@@ -52,6 +52,7 @@ export interface FetchEnrichedParams {
   discipline?: string;
   region?: string;
   limit?: number;
+  offset?: number;
   latMin?: number;
   latMax?: number;
   lngMin?: number;
@@ -59,9 +60,12 @@ export interface FetchEnrichedParams {
 }
 
 export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<Club[]> {
-  const { q, discipline, limit = 30, latMin, latMax, lngMin, lngMax } = params;
+  const { q, discipline, limit = 30, offset, latMin, latMax, lngMin, lngMax } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
   let query = supabase.from('clubs_enriched_public').select('*').limit(limit);
+  if (typeof offset === 'number') {
+    query = query.range(offset, offset + limit - 1);
+  }
 
   if (discipline && discipline !== 'all') {
     query = query.eq('discipline', discipline);
