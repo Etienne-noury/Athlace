@@ -188,13 +188,19 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
+          complement: string | null
+          date_creation: string | null
+          description: string | null
           discipline: string | null
+          distrib: string | null
+          email: string | null
           external_id: string | null
           federation_code: string | null
           id: string | null
           latitude: number | null
           longitude: number | null
           name: string | null
+          phone: string | null
           postal_code: string | null
           region: string | null
           source_url: string | null
@@ -204,13 +210,19 @@ export type Database = {
         Insert: {
           address?: string | null
           city?: string | null
+          complement?: string | null
+          date_creation?: string | null
+          description?: string | null
           discipline?: string | null
+          distrib?: string | null
+          email?: string | null
           external_id?: string | null
           federation_code?: string | null
           id?: string | null
           latitude?: number | null
           longitude?: number | null
           name?: string | null
+          phone?: string | null
           postal_code?: string | null
           region?: string | null
           source_url?: string | null
@@ -220,13 +232,19 @@ export type Database = {
         Update: {
           address?: string | null
           city?: string | null
+          complement?: string | null
+          date_creation?: string | null
+          description?: string | null
           discipline?: string | null
+          distrib?: string | null
+          email?: string | null
           external_id?: string | null
           federation_code?: string | null
           id?: string | null
           latitude?: number | null
           longitude?: number | null
           name?: string | null
+          phone?: string | null
           postal_code?: string | null
           region?: string | null
           source_url?: string | null
