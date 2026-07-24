@@ -182,9 +182,10 @@ export default function ClubDetail() {
                   <h2 className="font-display text-xl font-semibold text-foreground mb-4">
                     Description
                   </h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {club.description}
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {club.description || "Aucune description disponible"}
                   </p>
+
                 </div>
 
                 {/* Amenities */}
