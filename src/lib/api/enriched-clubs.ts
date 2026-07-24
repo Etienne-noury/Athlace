@@ -21,6 +21,7 @@ export interface EnrichedClubRow {
   longitude: number | null;
   website: string | null;
   source_url: string;
+  description: string | null;
 }
 
 function rowToClub(r: EnrichedClubRow): Club {
