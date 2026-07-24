@@ -100,16 +100,16 @@ export default function Admin() {
               mapped.length / BATCH_SIZE
             )}`
           );
-          const { error } = await supabase
-            .from("clubs_enriched")
-            .upsert(batch, { onConflict: "federation_code,external_id" });
-          if (error) {
-            console.error('Erreur upsert:', JSON.stringify(error));
-            lastError = `${error.message} (code: ${error.code})`;
-            setStatus(`Erreur: ${error.message} — code: ${error.code} — détail: ${error.details}`);
+          const { data, error } = await supabase.functions.invoke('admin-bulk-upsert', {
+            body: { clubs: batch }
+          });
+          if (error || data?.error) {
+            lastError = error?.message || data?.error;
+            console.error('Erreur upsert:', lastError);
+            setStatus(`Erreur: ${lastError}`);
             errors += batch.length;
           } else {
-            imported += batch.length;
+            imported += data?.inserted || batch.length;
           }
           const fileProgress = (i + batch.length) / Math.max(mapped.length, 1);
           setProgress(((fi + fileProgress) / files.length) * 100);
