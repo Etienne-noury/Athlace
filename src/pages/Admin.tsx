@@ -45,7 +45,12 @@ const parseFile = (file: File): Promise<Record<string, string>[]> =>
       header: true,
       delimiter: ";",
       skipEmptyLines: true,
-      complete: (res) => resolve(res.data),
+      complete: (result) => {
+        console.log('Premières lignes:', result.data.slice(0, 3));
+        console.log('Colonnes:', result.meta.fields);
+        console.log('Total lignes:', result.data.length);
+        resolve(result.data);
+      },
       error: reject,
     });
   });
