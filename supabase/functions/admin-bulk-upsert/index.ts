@@ -31,15 +31,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const adminToken = Deno.env.get("ADMIN_IMPORT_TOKEN");
-    if (!adminToken) throw new Error("ADMIN_IMPORT_TOKEN not configured");
-    const provided = req.headers.get("x-admin-token");
-    if (provided !== adminToken) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+
+
 
     const body = await req.json();
     const rows: Row[] = Array.isArray(body?.rows) ? body.rows : [];
