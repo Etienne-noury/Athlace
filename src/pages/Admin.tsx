@@ -39,9 +39,7 @@ const mapRow = (row: Record<string, string>) => {
     phone: null,
     email: null,
     website: row.siteweb || null,
-    date_creation: row.date_creat || null,
     source_url: SOURCE_URL,
-    updated_at: row.maj_time || null,
   };
 };
 
