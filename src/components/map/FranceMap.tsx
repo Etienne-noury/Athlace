@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
-import { fetchClubs } from "@/lib/api/equipements";
+import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById } from "@/data/disciplines";
 import "leaflet/dist/leaflet.css";
 
