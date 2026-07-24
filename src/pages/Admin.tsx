@@ -187,6 +187,19 @@ export default function Admin() {
           </div>
         )}
       </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Géocodage des clubs</h2>
+        <p className="text-sm text-muted-foreground">
+          Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
+        </p>
+        <Button onClick={runGeocode} disabled={geocoding}>
+          {geocoding ? "Géocodage…" : "Géocoder les clubs"}
+        </Button>
+        {geocodeResult && (
+          <p className="text-sm">{geocodeResult}</p>
+        )}
+      </Card>
     </div>
   );
 }
