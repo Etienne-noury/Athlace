@@ -97,6 +97,8 @@ Deno.serve(async (req) => {
       else inserted = count ?? withoutExt.length;
     }
 
+    console.log('Upsert result:', { upserted, inserted, errors, url: Deno.env.get('SUPABASE_URL') });
+
     return new Response(
       JSON.stringify({
         received: rows.length,
