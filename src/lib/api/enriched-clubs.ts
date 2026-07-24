@@ -72,3 +72,14 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   }
   return (data as EnrichedClubRow[]).map(rowToClub);
 }
+
+export async function fetchEnrichedClubById(id: string): Promise<Club | null> {
+  const cleanId = id.startsWith('fed:') ? id.slice(4) : id;
+  const { data, error } = await supabase
+    .from('clubs_enriched_public')
+    .select('*')
+    .eq('id', cleanId)
+    .single();
+  if (error || !data) return null;
+  return rowToClub(data as EnrichedClubRow);
+}

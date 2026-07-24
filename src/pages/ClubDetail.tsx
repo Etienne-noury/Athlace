@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GoogleMiniMap } from '@/components/foot/GoogleMiniMap';
 import { useToast } from '@/hooks/use-toast';
 import { levels } from '@/data/clubs';
-import { fetchClubById } from '@/lib/api/equipements';
+import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
 import { getDisciplineById } from '@/data/disciplines';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +20,7 @@ export default function ClubDetail() {
   const { toast } = useToast();
   const { data: club, isLoading } = useQuery({
     queryKey: ['club', id],
-    queryFn: () => fetchClubById(id || ''),
+    queryFn: () => fetchEnrichedClubById(id || ''),
     enabled: !!id,
   });
   const discipline = club ? getDisciplineById(club.discipline) : null;
