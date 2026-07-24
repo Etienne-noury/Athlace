@@ -230,7 +230,7 @@ export default function Admin() {
           Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
         </p>
         <Button onClick={runGeocode} disabled={geocoding}>
-          {geocoding ? "Géocodage…" : "Géocoder les clubs"}
+          {geocoding ? "Géocodage…" : "Géocoder TOUS les clubs"}
         </Button>
         {geocodeResult && (
           <p className="text-sm">{geocodeResult}</p>
