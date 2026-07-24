@@ -73,6 +73,25 @@ export default function Admin() {
     filtered: number;
     lastError: string;
   } | null>(null);
+  const [geocoding, setGeocoding] = useState(false);
+  const [geocodeResult, setGeocodeResult] = useState<string>("");
+
+  const runGeocode = async () => {
+    setGeocoding(true);
+    setGeocodeResult("Géocodage en cours…");
+    try {
+      const { data, error } = await supabase.functions.invoke('geocode-clubs');
+      if (error) {
+        setGeocodeResult(`Erreur: ${error.message}`);
+      } else {
+        setGeocodeResult(`Géocodés: ${data?.geocoded ?? 0} — Échecs: ${data?.failed ?? 0}`);
+      }
+    } catch (e) {
+      setGeocodeResult(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setGeocoding(false);
+    }
+  };
 
   const runImport = async () => {
     if (!files.length) return;
@@ -166,6 +185,19 @@ export default function Admin() {
               <p className="text-red-500"><strong>Dernière erreur :</strong> {result.lastError}</p>
             )}
           </div>
+        )}
+      </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Géocodage des clubs</h2>
+        <p className="text-sm text-muted-foreground">
+          Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
+        </p>
+        <Button onClick={runGeocode} disabled={geocoding}>
+          {geocoding ? "Géocodage…" : "Géocoder les clubs"}
+        </Button>
+        {geocodeResult && (
+          <p className="text-sm">{geocodeResult}</p>
         )}
       </Card>
     </div>
