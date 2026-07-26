@@ -63,6 +63,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   const { q, discipline, limit = 30, offset, latMin, latMax, lngMin, lngMax } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
   let query = supabase.from('clubs_enriched_public').select('*').limit(limit);
+  query = query.neq('latitude', 0);
   if (typeof offset === 'number') {
     query = query.range(offset, offset + limit - 1);
   }
