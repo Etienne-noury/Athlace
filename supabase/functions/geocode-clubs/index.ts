@@ -58,11 +58,18 @@ Deno.serve(async (req) => {
                   if (upErr) failed++;
                   else geocoded++;
                 } else {
-                  // Mark as failed by setting a sentinel? Just count; loop would repeat.
-                  // To avoid infinite loop: set latitude to 0 sentinel? Instead, break loop when nothing was geocoded in an entire batch.
+                  // Marque latitude=0 pour éviter la boucle infinie sur les adresses introuvables
+                  await supabase
+                    .from('clubs_enriched')
+                    .update({ latitude: 0, longitude: 0 })
+                    .eq('id', club.id);
                   failed++;
                 }
               } catch {
+                await supabase
+                  .from('clubs_enriched')
+                  .update({ latitude: 0, longitude: 0 })
+                  .eq('id', club.id);
                 failed++;
               }
             }
