@@ -79,23 +79,23 @@ export default function Admin() {
   const runGeocode = async () => {
     setGeocoding(true);
     let totalGeocoded = 0;
+    let totalFailed = 0;
 
     while (true) {
       const { data, error } = await supabase.functions.invoke('geocode-clubs');
       if (error || !data) break;
 
       totalGeocoded += data.geocoded || 0;
-      setGeocodeResult(`Géocodés : ${totalGeocoded} — Échecs : ${data.failed || 0}`);
+      totalFailed += data.failed || 0;
+      setGeocodeResult(`Géocodés : ${totalGeocoded} — Échecs : ${totalFailed}`);
 
-      // Arrête si plus rien à géocoder
-      if ((data.geocoded || 0) === 0) break;
+      if ((data.geocoded || 0) === 0 && (data.failed || 0) === 0) break;
 
-      // Pause 2 secondes entre chaque appel
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 1000));
     }
 
     setGeocoding(false);
-    setGeocodeResult(`Terminé — ${totalGeocoded} clubs géocodés au total`);
+    setGeocodeResult(`Terminé — ${totalGeocoded} géocodés, ${totalFailed} échecs`);
   };
 
   const runImport = async () => {
