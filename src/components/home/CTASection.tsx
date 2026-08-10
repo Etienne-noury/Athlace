@@ -51,7 +51,7 @@ export function CTASection() {
               </h3>
               
               <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                Référencez gratuitement votre club sur CL-HUB, gérez vos inscriptions 
+                Référencez gratuitement votre club sur Athlace, gérez vos inscriptions 
                 en ligne et augmentez votre visibilité auprès de milliers de sportifs.
               </p>
               
