@@ -15,12 +15,12 @@ const faqs = [
     category: 'Général',
     questions: [
       {
-        q: 'Qu\'est-ce que CL-HUB ?',
-        a: 'CL-HUB est le répertoire national des clubs sportifs en France. Notre plateforme vous permet de découvrir, comparer et vous inscrire aux clubs sportifs près de chez vous, parmi plus de 100 000 clubs référencés.'
+        q: 'Qu\'est-ce que Athlace ?',
+        a: 'Athlace est le répertoire national des clubs sportifs en France. Notre plateforme vous permet de découvrir, comparer et vous inscrire aux clubs sportifs près de chez vous, parmi plus de 100 000 clubs référencés.'
       },
       {
-        q: 'L\'utilisation de CL-HUB est-elle gratuite ?',
-        a: 'Oui, CL-HUB est entièrement gratuit pour les sportifs. Vous pouvez rechercher des clubs, consulter leurs informations et créer un compte sans aucun frais.'
+        q: 'L\'utilisation de Athlace est-elle gratuite ?',
+        a: 'Oui, Athlace est entièrement gratuit pour les sportifs. Vous pouvez rechercher des clubs, consulter leurs informations et créer un compte sans aucun frais.'
       },
       {
         q: 'Comment créer un compte ?',
@@ -66,7 +66,7 @@ const faqs = [
     category: 'Clubs partenaires',
     questions: [
       {
-        q: 'Comment référencer mon club sur CL-HUB ?',
+        q: 'Comment référencer mon club sur Athlace ?',
         a: 'Cliquez sur "Inscrire mon club" en bas de page et remplissez le formulaire d\'inscription. Notre équipe validera votre demande sous 48h.'
       },
       {
@@ -101,7 +101,7 @@ export default function Aide() {
             Centre d'aide
           </h1>
           <p className="text-white/80 text-lg max-w-2xl mx-auto mb-8">
-            Trouvez rapidement des réponses à vos questions sur CL-HUB
+            Trouvez rapidement des réponses à vos questions sur Athlace
           </p>
 
           {/* Search */}
@@ -173,8 +173,8 @@ export default function Aide() {
                 <p className="text-muted-foreground text-sm mb-4">
                   Réponse sous 24-48h
                 </p>
-                <a href="mailto:support@cl-hub.fr" className="text-primary hover:underline">
-                  support@cl-hub.fr
+                <a href="mailto:support@athlace.fr" className="text-primary hover:underline">
+                  support@athlace.fr
                 </a>
               </div>
 

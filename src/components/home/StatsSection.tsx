@@ -11,7 +11,7 @@ const stats = [
     icon: Trophy,
     value: '250+',
     label: 'Disciplines sportives',
-    description: 'Référencées sur CL-HUB',
+    description: 'Référencées sur Athlace',
   },
   {
     icon: Map,

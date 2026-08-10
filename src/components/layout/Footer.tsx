@@ -12,7 +12,7 @@ export function Footer() {
               <div className="w-10 h-10 rounded-xl bg-hero-gradient flex items-center justify-center">
                 <span className="text-xl font-bold text-white">CL</span>
               </div>
-              <span className="font-display text-xl font-bold">CL-HUB</span>
+              <span className="font-display text-xl font-bold">Athlace</span>
             </div>
             <p className="text-background/70 text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.
@@ -63,7 +63,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-background/70">
                 <Mail className="w-4 h-4" />
-                <a href="mailto:contact@cl-hub.fr" className="hover:text-background transition-colors">contact@cl-hub.fr</a>
+                <a href="mailto:contact@athlace.fr" className="hover:text-background transition-colors">contact@athlace.fr</a>
               </li>
               <li className="flex items-center gap-2 text-background/70">
                 <Phone className="w-4 h-4" />
@@ -80,7 +80,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-background/50">
-          <p>© 2024 CL-HUB. Tous droits réservés.</p>
+          <p>© 2024 Athlace. Tous droits réservés.</p>
           <div className="flex gap-6">
             <Link to="/mentions-legales" className="hover:text-background transition-colors">Mentions légales</Link>
             <Link to="/confidentialite" className="hover:text-background transition-colors">Confidentialité</Link>

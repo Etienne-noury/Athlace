@@ -25,10 +25,10 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-hero-gradient flex items-center justify-center shadow-sport group-hover:scale-105 transition-transform">
-              <span className="text-xl font-bold text-white">CL</span>
+              <span className="text-xl font-bold text-white">A</span>
             </div>
             <span className="font-display text-xl font-bold text-foreground hidden sm:block">
-              CL-HUB
+              Athlace
             </span>
           </Link>
 

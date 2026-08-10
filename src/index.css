@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CL-HUB Design System - French Sports Theme */
+/* Athlace Design System - French Sports Theme */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* CL-HUB Brand Palette */
+    /* Athlace Brand Palette */
     --background: 0 0% 98%;
     --foreground: 225 30% 21%;
 

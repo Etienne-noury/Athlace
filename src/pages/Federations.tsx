@@ -60,7 +60,7 @@ export default function Federations() {
         <div className="mt-12 p-6 rounded-xl bg-muted/50 border border-border">
           <h2 className="font-display font-semibold text-lg mb-2">À propos de ces sources</h2>
           <p className="text-sm text-muted-foreground">
-            CL-HUB s'appuie principalement sur les données ouvertes de <strong>data.sports.gouv.fr</strong> (Ministère des Sports).
+            Athlace s'appuie principalement sur les données ouvertes de <strong>data.sports.gouv.fr</strong> (Ministère des Sports).
             Cet annuaire complémentaire pointe vers les sources officielles de chaque fédération pour des informations détaillées
             (licences, compétitions, calendriers).
           </p>
