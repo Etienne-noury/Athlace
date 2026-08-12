@@ -40,8 +40,9 @@ export function HeroSection() {
     if (searchQuery) params.set('q', searchQuery);
     if (selectedDiscipline) params.set('discipline', selectedDiscipline);
     if (selectedRegion) params.set('region', selectedRegion);
-    navigate(`/recherche?${params.toString()}`);
+    navigate(`/clubs/?${params.toString()}`);
   };
+
 
   return (
     <section className="relative overflow-hidden">
@@ -156,12 +157,13 @@ export function HeroSection() {
             {parentDisciplines.slice(0, 5).map((d) => (
               <button
                 key={d.id}
-                onClick={() => navigate(`/recherche?discipline=${d.id}`)}
+                onClick={() => navigate(`/clubs/?discipline=${d.id}`)}
                 className="px-3 py-1.5 rounded-full bg-white/10 text-white/90 text-sm hover:bg-white/20 transition-colors"
               >
                 {d.icon} {d.name}
               </button>
             ))}
+
           </div>
         </div>
 

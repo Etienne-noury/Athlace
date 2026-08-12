@@ -51,25 +51,52 @@ export interface FetchEnrichedParams {
   q?: string;
   discipline?: string;
   region?: string;
+  department?: string;
+  city?: string;
   limit?: number;
   offset?: number;
   latMin?: number;
   latMax?: number;
   lngMin?: number;
   lngMax?: number;
+  withCoordsOnly?: boolean;
 }
 
 export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<Club[]> {
-  const { q, discipline, limit = 30, offset, latMin, latMax, lngMin, lngMax } = params;
+  const {
+    q,
+    discipline,
+    region,
+    department,
+    city,
+    limit = 30,
+    offset,
+    latMin,
+    latMax,
+    lngMin,
+    lngMax,
+    withCoordsOnly = true,
+  } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
   let query = supabase.from('clubs_enriched_public').select('*').limit(limit);
-  query = query.neq('latitude', 0);
+  if (withCoordsOnly) {
+    query = query.neq('latitude', 0);
+  }
   if (typeof offset === 'number') {
     query = query.range(offset, offset + limit - 1);
   }
 
   if (discipline && discipline !== 'all') {
     query = query.eq('discipline', discipline);
+  }
+  if (region && region !== 'all') {
+    query = query.ilike('region', `%${region}%`);
+  }
+  if (department && department !== 'all') {
+    query = query.ilike('postal_code', `${department}%`);
+  }
+  if (city && city !== 'all') {
+    query = query.ilike('city', `%${city}%`);
   }
   if (q && q.trim()) {
     const safe = q.trim();
@@ -88,6 +115,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   }
   return (data as EnrichedClubRow[]).map(rowToClub);
 }
+
 
 export async function fetchEnrichedClubById(id: string): Promise<Club | null> {
   const cleanId = id.startsWith('fed:') ? id.slice(4) : id;

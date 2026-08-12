@@ -73,9 +73,10 @@ export default function ClubDetail() {
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-display text-2xl font-bold mb-4">Club non trouvé</h1>
-          <Link to="/recherche">
+          <Link to="/clubs/">
             <Button>Retour à la recherche</Button>
           </Link>
+
         </div>
       </Layout>
     );
@@ -92,12 +93,13 @@ export default function ClubDetail() {
 
         <div className="relative container mx-auto px-4 pt-8">
           <Link
-            to="/recherche"
+            to="/clubs/"
             className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6"
           >
             <ChevronLeft className="w-5 h-5" />
             Retour aux résultats
           </Link>
+
 
           <div className="bg-card rounded-2xl shadow-xl border border-border p-6 lg:p-8">
             <div className="flex flex-col lg:flex-row gap-6">

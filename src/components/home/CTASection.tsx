@@ -27,12 +27,13 @@ export function CTASection() {
                 suivre vos inscriptions et recevoir des recommandations personnalisées.
               </p>
               
-              <Link to="/inscription">
+              <Link to="/compte/inscription/">
                 <Button size="lg" variant="secondary" className="gap-2 bg-white text-primary hover:bg-white/90">
                   Créer mon compte
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
+
             </div>
           </div>
 
@@ -55,12 +56,13 @@ export function CTASection() {
                 en ligne et augmentez votre visibilité auprès de milliers de sportifs.
               </p>
               
-              <Link to="/espace-club">
+              <Link to="/pour-les-clubs/">
                 <Button size="lg" variant="outline" className="gap-2 border-2">
                   Inscrire mon club
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
+
             </div>
           </div>
         </div>
