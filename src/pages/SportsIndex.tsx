@@ -1,13 +1,11 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
+import { PageTitle } from '@/components/PageTitle';
 import { SPORT_FAMILIES, getSportsByFamily } from '@/lib/sports-menu';
 import { ArrowRight } from 'lucide-react';
 
 export default function SportsIndex() {
-  useEffect(() => {
-    document.title = 'Tous les sports - Athlace';
-  }, []);
+
 
   return (
     <Layout>
