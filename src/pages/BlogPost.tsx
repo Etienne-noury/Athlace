@@ -7,7 +7,7 @@ const POSTS: Record<string, { title: string; date: string; content: string }> = 
   'choisir-club-sport': {
     title: 'Comment choisir son club de sport ?',
     date: '12 juin 2026',
-    content: 'Choisir un club de sport dépend de nombreux critères : la localisation, le niveau proposé, les horaires, les tarifs et l'ambiance. Commencez par définir vos objectifs, puis comparez plusieurs clubs avant de vous inscrire. Athlace vous permet de filtrer par ville et par discipline pour affiner votre recherche.'
+    content: "Choisir un club de sport dépend de nombreux critères : la localisation, le niveau proposé, les horaires, les tarifs et l'ambiance. Commencez par définir vos objectifs, puis comparez plusieurs clubs avant de vous inscrire. Athlace vous permet de filtrer par ville et par discipline pour affiner votre recherche."
   },
   'licences-federations-2026': {
     title: 'Licences fédérales 2026 : ce qui change',

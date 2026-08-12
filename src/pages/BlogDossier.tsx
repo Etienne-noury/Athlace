@@ -6,11 +6,11 @@ import { ArrowLeft } from 'lucide-react';
 const DOSSIERS: Record<string, { title: string; content: string }> = {
   'decouvrir': {
     title: 'Dossier : Découvrir un sport',
-    content: 'En France, il existe des milliers de disciplines sportives. De la pratique loisir à la compétition, chaque sport a ses spécificités, son équipement et ses fédérations. Ce dossier vous aide à y voir plus clair.'
+    content: "En France, il existe des milliers de disciplines sportives. De la pratique loisir à la compétition, chaque sport a ses spécificités, son équipement et ses fédérations. Ce dossier vous aide à y voir plus clair."
   },
   'choisir-club': {
     title: 'Dossier : Choisir son club',
-    content: 'Le choix d'un club ne doit rien laisser au hasard. Localisation, tarifs, niveau, encadrement, infrastructures : prenez le temps de comparer et de visiter avant de vous décider.'
+    content: "Le choix d'un club ne doit rien laisser au hasard. Localisation, tarifs, niveau, encadrement, infrastructures : prenez le temps de comparer et de visiter avant de vous décider."
   }
 };
 
