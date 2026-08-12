@@ -11,7 +11,9 @@ export default function SportsIndex() {
 
   return (
     <Layout>
+      <PageTitle title="Tous les sports" description="Découvrez les familles sportives et disciplines pratiquées en France sur Athlace." />
       <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Tous les sports
