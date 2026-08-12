@@ -16,8 +16,8 @@ Nouveau Header façon Decathlon, avec :
 
 Pages générées dynamiquement à partir des clubs en base :
 - `/clubs/tout/region/` — index des régions
-- `/clubs/tout/ville/` — index des villes
-- `/sports/tout/` — index des sports
+- `/carte/` — Carte interactive nationale, accessible depuis « Autour de moi » et le footer
+- `/clubs/tout/carte/` — vue carte globale des clubs référencés
 - `/clubs/[region]/` — région (redescente vers départements)
 - `/clubs/[region]/[dpt]/` — département
 - `/clubs/[dpt]/[ville]/` — ville
@@ -61,6 +61,13 @@ Redirections vers les nouvelles :
 - `/federations` → intégrée dans `/decouvrir/guide-licences-federations/`
 - `/aide` → `/aide/faq/`
 - `/admin` inchangée
+
+## 8. Carte interactive
+
+- Conservation de la page `/carte/` existante (Leaflet) et amélioration des tuiles/bornes pour qu'elle reste performante avec plus de clubs
+- Ajout d'un lien « Autour de moi » dans le Header (`Trouver un club`) et dans le Footer (`Faire du sport`)
+- Intégration de la mini-carte Google Maps sur chaque fiche club existante (`GoogleMiniMap`)
+- Les pages hub géo (`/clubs/[region]/`, `/clubs/[dpt]/[ville]/`, `/clubs/[ville]/[sport]/`) incluront un bandeau « Voir sur la carte » pointant vers `/carte/` avec les filtres correspondants en URL
 
 ## Détails techniques
 
