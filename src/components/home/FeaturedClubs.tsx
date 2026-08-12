@@ -9,7 +9,7 @@ import { getDisciplineById } from '@/data/disciplines';
 export function FeaturedClubs() {
   const { data: featuredClubs = [], isLoading } = useQuery({
     queryKey: ['clubs', 'featured'],
-    queryFn: () => fetchEnrichedClubs({ withCoordsOnly: true, limit: 4 }),
+    queryFn: () => fetchEnrichedClubs({ limit: 4 }),
   });
 
 
