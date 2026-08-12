@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Search, MapPin, Star, ArrowRight, Grid3X3, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
@@ -37,6 +37,10 @@ export default function Recherche() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [selectedDiscipline, setSelectedDiscipline] = useState(searchParams.get('discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
+
+  useEffect(() => {
+    setPage(0);
+  }, [searchQuery, selectedDiscipline, selectedRegion]);
 
   const { data: filteredClubs = [], isLoading, isFetching } = useQuery({
     queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion, page],
