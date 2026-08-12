@@ -41,11 +41,16 @@ import Partners from "./pages/Partners";
 import Compte from "./pages/Compte";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import MyClub from "./pages/MyClub";
 import Notifications from "./pages/Notifications";
 import Fidelity from "./pages/Fidelity";
+import { AuthProvider } from "./lib/auth";
+import { RequireAuth } from "./components/auth/RequireAuth";
+
 import MentionsLegales from "./pages/MentionsLegales";
 import CGU from "./pages/CGU";
 import Confidentialite from "./pages/Confidentialite";
@@ -62,7 +67,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <AuthProvider>
         <Routes>
+
           {/* Home */}
           <Route path="/" element={<Index />} />
 
@@ -114,11 +121,14 @@ const App = () => (
           <Route path="/compte/" element={<Compte />} />
           <Route path="/compte/connexion/" element={<Login />} />
           <Route path="/compte/inscription/" element={<Register />} />
-          <Route path="/compte/profil/" element={<Profile />} />
-          <Route path="/compte/mes-clubs/" element={<Favorites />} />
-          <Route path="/compte/mon-club/" element={<MyClub />} />
-          <Route path="/compte/notifications/" element={<Notifications />} />
+          <Route path="/compte/mot-de-passe-oublie/" element={<ForgotPassword />} />
+          <Route path="/compte/nouveau-mot-de-passe/" element={<ResetPassword />} />
+          <Route path="/compte/profil/" element={<RequireAuth><Profile /></RequireAuth>} />
+          <Route path="/compte/mes-clubs/" element={<RequireAuth><Favorites /></RequireAuth>} />
+          <Route path="/compte/mon-club/" element={<RequireAuth><MyClub /></RequireAuth>} />
+          <Route path="/compte/notifications/" element={<RequireAuth><Notifications /></RequireAuth>} />
           <Route path="/compte/fidelite/" element={<Fidelity />} />
+
 
           {/* Legal */}
           <Route path="/mentions-legales/" element={<MentionsLegales />} />
@@ -152,7 +162,9 @@ const App = () => (
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </AuthProvider>
       </BrowserRouter>
+
     </TooltipProvider>
   </QueryClientProvider>
 );

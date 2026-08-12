@@ -1,11 +1,30 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth';
-import { User, Heart, LogIn, UserPlus } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { User, Heart, LogIn, UserPlus, Bell, Shield, Award } from 'lucide-react';
 
 export default function Compte() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+
+  const { data: favoritesCount = 0 } = useQuery({
+    queryKey: ['favorites-count', user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { count } = await supabase.from('favorites').select('id', { count: 'exact', head: true });
+      return count ?? 0;
+    },
+  });
+
+  const cards = [
+    { to: '/compte/profil/', icon: User, title: 'Mon profil', desc: 'Gérez vos informations personnelles.' },
+    { to: '/compte/mes-clubs/', icon: Heart, title: 'Mes clubs', desc: `${favoritesCount} club${favoritesCount > 1 ? 's' : ''} en favori.` },
+    { to: '/compte/notifications/', icon: Bell, title: 'Notifications', desc: 'Gérez vos alertes et recommandations.' },
+    { to: '/compte/mon-club/', icon: Shield, title: 'Mon club', desc: 'Réclamez la fiche de votre club.' },
+    { to: '/compte/fidelite/', icon: Award, title: 'Fidélité', desc: 'Bientôt disponible.' },
+  ];
 
   return (
     <Layout>
@@ -13,30 +32,27 @@ export default function Compte() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Espace membre</h1>
           <p className="text-muted-foreground text-lg">
-            {user ? 'Bienvenue sur votre espace personnel.' : 'Connectez-vous pour sauvegarder vos clubs et recevoir des recommandations.'}
+            {user
+              ? `Bienvenue ${profile?.full_name || user.email?.split('@')[0]}, voici votre espace personnel.`
+              : 'Connectez-vous pour sauvegarder vos clubs et recevoir des recommandations.'}
           </p>
         </div>
       </section>
 
       <section className="container mx-auto px-4 py-12">
         {user ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link
-              to="/compte/profil/"
-              className="p-6 bg-card border border-border rounded-2xl hover:border-primary/50 transition-colors"
-            >
-              <User className="w-8 h-8 text-primary mb-4" />
-              <h2 className="font-display text-lg font-semibold">Mon profil</h2>
-              <p className="text-sm text-muted-foreground mt-1">Gérez vos informations personnelles.</p>
-            </Link>
-            <Link
-              to="/compte/mes-clubs/"
-              className="p-6 bg-card border border-border rounded-2xl hover:border-primary/50 transition-colors"
-            >
-              <Heart className="w-8 h-8 text-primary mb-4" />
-              <h2 className="font-display text-lg font-semibold">Mes clubs</h2>
-              <p className="text-sm text-muted-foreground mt-1">Retrouvez vos clubs favoris.</p>
-            </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {cards.map((card) => (
+              <Link
+                key={card.to}
+                to={card.to}
+                className="p-6 bg-card border border-border rounded-2xl hover:border-primary/50 transition-colors"
+              >
+                <card.icon className="w-8 h-8 text-primary mb-4" />
+                <h2 className="font-display text-lg font-semibold">{card.title}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{card.desc}</p>
+              </Link>
+            ))}
           </div>
         ) : (
           <div className="max-w-md mx-auto text-center bg-card border border-border rounded-2xl p-8">
