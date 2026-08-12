@@ -1,8 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
-const BATCH_SIZE = 200;
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -13,71 +11,55 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   );
 
+  let geocoded = 0;
+  let failed = 0;
+
   const { data: clubs, error } = await supabase
     .from('clubs_enriched')
     .select('id, address, postal_code, city')
     .is('latitude', null)
-    .limit(BATCH_SIZE);
+    .limit(50);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message, geocoded: 0, failed: 0, remaining: 0 }), {
+    return new Response(JSON.stringify({ error: error.message, geocoded, failed, remaining: 0 }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
-  if (!clubs || clubs.length === 0) {
-    return new Response(JSON.stringify({ geocoded: 0, failed: 0, remaining: 0 }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  const csvLines = clubs
-    .map((c) => `${[c.address, c.postal_code, c.city].filter(Boolean).join(' ')}`)
-    .join('\n');
-
-  const formData = new FormData();
-  formData.append('data', new Blob([`adresse\n${csvLines}`], { type: 'text/csv' }), 'adresses.csv');
-  formData.append('columns', 'adresse');
-  formData.append('result_columns', 'latitude,longitude,result_score');
-
-  try {
-    const res = await fetch('https://api-adresse.data.gouv.fr/search/csv/', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const text = await res.text();
-    const lines = text.split('\n').slice(1); // skip header
-
-    let geocoded = 0;
-    let failed = 0;
-
-    for (let i = 0; i < clubs.length; i++) {
-      const cols = lines[i]?.split(',');
-      const lat = parseFloat(cols?.[cols.length - 3]);
-      const lng = parseFloat(cols?.[cols.length - 2]);
-      const score = parseFloat(cols?.[cols.length - 1]);
-
-      if (!isNaN(lat) && !isNaN(lng) && score > 0.3) {
-        await supabase.from('clubs_enriched').update({ latitude: lat, longitude: lng }).eq('id', clubs[i].id);
-        geocoded++;
+  for (const club of clubs ?? []) {
+    const q = [club.address, club.postal_code, club.city].filter(Boolean).join(' ').trim();
+    if (!q) {
+      await supabase.from('clubs_enriched').update({ latitude: 0, longitude: 0 }).eq('id', club.id);
+      failed++;
+      continue;
+    }
+    try {
+      const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`;
+      const res = await fetch(url);
+      const json = await res.json();
+      const coords = json?.features?.[0]?.geometry?.coordinates;
+      if (coords && coords.length === 2) {
+        const [lng, lat] = coords;
+        const { error: upErr } = await supabase
+          .from('clubs_enriched')
+          .update({ latitude: lat, longitude: lng })
+          .eq('id', club.id);
+        if (upErr) failed++;
+        else geocoded++;
       } else {
-        await supabase.from('clubs_enriched').update({ latitude: 0, longitude: 0 }).eq('id', clubs[i].id);
+        await supabase.from('clubs_enriched').update({ latitude: 0, longitude: 0 }).eq('id', club.id);
         failed++;
       }
-    }
-
-    return new Response(JSON.stringify({ geocoded, failed, remaining: clubs.length }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  } catch (e) {
-    for (const club of clubs) {
+    } catch {
       await supabase.from('clubs_enriched').update({ latitude: 0, longitude: 0 }).eq('id', club.id);
+      failed++;
     }
-    return new Response(
-      JSON.stringify({ error: e.message, geocoded: 0, failed: clubs.length, remaining: clubs.length }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    await new Promise((r) => setTimeout(r, 100));
   }
+
+  return new Response(
+    JSON.stringify({ geocoded, failed, remaining: clubs?.length || 0 }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
 });
