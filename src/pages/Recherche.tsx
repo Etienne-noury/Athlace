@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
 import { disciplines, getParentDisciplines } from '@/data/disciplines';
-import { fetchClubs } from '@/lib/api/equipements';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
@@ -45,22 +44,13 @@ export default function Recherche() {
   const { data: filteredClubs = [], isLoading, isFetching } = useQuery({
     queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion, page],
     queryFn: async () => {
-      const [govClubs, enriched] = await Promise.all([
-        fetchClubs({
-          q: searchQuery,
-          discipline: selectedDiscipline,
-          region: selectedRegion,
-          limit: 60,
-        }),
-        fetchEnrichedClubs({
-          q: searchQuery,
-          discipline: selectedDiscipline,
-          limit: 100,
-          offset: page * 100,
-        }),
-      ]);
-      // Fédéral d'abord (contacts complets), puis open data
-      return [...enriched, ...govClubs];
+      return fetchEnrichedClubs({
+        q: searchQuery,
+        discipline: selectedDiscipline,
+        region: selectedRegion,
+        limit: 100,
+        offset: page * 100,
+      });
     },
   });
 

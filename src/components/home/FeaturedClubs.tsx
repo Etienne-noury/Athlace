@@ -3,13 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Star, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { fetchClubs } from '@/lib/api/equipements';
+import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { getDisciplineById } from '@/data/disciplines';
 
 export function FeaturedClubs() {
   const { data: featuredClubs = [], isLoading } = useQuery({
     queryKey: ['clubs', 'featured'],
-    queryFn: () => fetchClubs({ withCoordsOnly: true, limit: 4 }),
+    queryFn: () => fetchEnrichedClubs({ withCoordsOnly: true, limit: 4 }),
   });
 
 
