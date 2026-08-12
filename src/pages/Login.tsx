@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signInWithEmail, signInWithGoogle } from '@/lib/auth';
+import { signInWithEmail, signInWithGoogle, authErrorMessage } from '@/lib/auth';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from || '/compte/profil/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,15 +20,19 @@ export default function Login() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error } = await signInWithEmail(email, password);
+    const { error } = await signInWithEmail(email.trim(), password);
     setLoading(false);
-    if (error) setError(error.message);
-    else navigate('/compte/profil/');
+    if (error) setError(authErrorMessage(error.message));
+    else navigate(from, { replace: true });
   };
 
   const handleGoogle = async () => {
     setLoading(true);
-    await signInWithGoogle();
+    const { error } = await signInWithGoogle(from);
+    if (error) {
+      setLoading(false);
+      setError(authErrorMessage(error.message));
+    }
   };
 
   return (
@@ -39,7 +45,7 @@ export default function Login() {
           </p>
 
           {error && (
-            <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm">
+            <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm" role="alert">
               {error}
             </div>
           )}
@@ -52,6 +58,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -61,12 +68,18 @@ export default function Login() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Mot de passe</Label>
+                <Link to="/compte/mot-de-passe-oublie/" className="text-xs text-primary hover:underline">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
