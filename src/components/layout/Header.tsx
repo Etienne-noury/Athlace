@@ -62,6 +62,16 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, profile } = useAuth();
+
+  const displayName = profile?.full_name || user?.email?.split('@')[0] || 'Mon compte';
+  const initials = displayName
+    .split(' ')
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
