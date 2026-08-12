@@ -16,8 +16,8 @@ Nouveau Header façon Decathlon, avec :
 
 Pages générées dynamiquement à partir des clubs en base :
 - `/clubs/tout/region/` — index des régions
-- `/clubs/tout/ville/` — index des villes
-- `/sports/tout/` — index des sports
+- `/carte/` — Carte interactive nationale, accessible depuis « Autour de moi » et le footer
+- `/clubs/tout/carte/` — vue carte globale des clubs référencés
 - `/clubs/[region]/` — région (redescente vers départements)
 - `/clubs/[region]/[dpt]/` — département
 - `/clubs/[dpt]/[ville]/` — ville
