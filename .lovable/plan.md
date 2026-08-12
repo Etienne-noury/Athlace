@@ -62,6 +62,13 @@ Redirections vers les nouvelles :
 - `/aide` → `/aide/faq/`
 - `/admin` inchangée
 
+## 8. Carte interactive
+
+- Conservation de la page `/carte/` existante (Leaflet) et amélioration des tuiles/bornes pour qu'elle reste performante avec plus de clubs
+- Ajout d'un lien « Autour de moi » dans le Header (`Trouver un club`) et dans le Footer (`Faire du sport`)
+- Intégration de la mini-carte Google Maps sur chaque fiche club existante (`GoogleMiniMap`)
+- Les pages hub géo (`/clubs/[region]/`, `/clubs/[dpt]/[ville]/`, `/clubs/[ville]/[sport]/`) incluront un bandeau « Voir sur la carte » pointant vers `/carte/` avec les filtres correspondants en URL
+
 ## Détails techniques
 
 - Routes React Router restructurées dans `App.tsx`, avec un fichier de redirections dédié.
