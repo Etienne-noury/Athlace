@@ -1,70 +1,73 @@
-## Objectif
-Permettre l'import de ~100 CSV de clubs sportifs (1 par département) dans `clubs_enriched` avec le minimum de crédits, via la page /admin existante.
+# Refonte de l'arborescence Athlace
 
-## Problème actuel
-Le projet possède une page /admin et une edge function `import-rna`, mais celle-ci tente de télécharger un ZIP de 400 Mo, incompatible avec les limites. L'utilisateur dispose déjà de fichiers CSV pré-filtrés par département.
+Mise en place de la structure complète du site telle que définie dans l'arborescence : méga-menu Header, hub SEO géo × sport, fiches produit sport & club, contenu éditorial, espace membre avec authentification, footer complet.
 
-## Plan
+## 1. Navigation — Header méga-menu
 
-### 1. Ajouter un upload CSV côté client sur /admin
-- Composant `CSVUploader` dans la page `/admin` : input file acceptant `.csv`
-- Lecture du fichier avec `FileReader` + parsing avec `PapaParse` (CSV parser)
-- Mapping des colonnes du CSV vers le schéma de `clubs_enriched` (champs requis : `federation_code`, `name`, `source_url`)
-- Déduplication côté client par `external_id` ou combinaison `name + postal_code`
+Nouveau Header façon Decathlon, avec :
+- Barre de recherche permanente (suggestion ville + sport)
+- **Trouver un sport** (`/sports/`) : colonnes par famille — Sports de raquette (badminton, tennis de table, squash), Sports collectifs (football, basketball, volleyball, handball), Sports individuels (course à pied, natation, yoga), Arts martiaux, Fitness & bien-être
+- **Trouver un club** (`/clubs/`) : par ville, par sport, autour de moi (géolocalisation)
+- **Pour les clubs** (`/pour-les-clubs/`) : gestion adhérents, événements, communication, paiements
+- **Mon compte** et **Une question ?**
+- Version mobile : menu accordéon reprenant la même hiérarchie
 
-### 2. Insérer par batchs via Supabase client
-- Upsert par lots de 500 lignes via `supabase.from('clubs_enriched').upsert()` avec `onConflict: 'external_id'`
-- Affichage d'une barre de progression (fichier lu → lignes parsées → batchs envoyés)
-- Gestion des erreurs par batch (ex: lignes invalides loggées, sans bloquer l'envoi des suivants)
+## 2. Hub SEO géo × sport
 
-### 3. Préparer le mapping CSV → Table
-Le schéma `clubs_enriched` contient :
-- `id` (auto)
-- `federation_code` text not null
-- `external_id` text
-- `name` text not null
-- `discipline` text
-- `address`, `postal_code`, `city`, `region` text
-- `latitude`, `longitude` double precision
-- `phone`, `email`, `website`, `source_url` text
-- `raw` jsonb
-- `scraped_at`, `created_at`, `updated_at`
+Pages générées dynamiquement à partir des clubs en base :
+- `/clubs/tout/region/` — index des régions
+- `/clubs/tout/ville/` — index des villes
+- `/sports/tout/` — index des sports
+- `/clubs/[region]/` — région (redescente vers départements)
+- `/clubs/[region]/[dpt]/` — département
+- `/clubs/[dpt]/[ville]/` — ville
+- `/clubs/[region]/[sport]/` — région × sport
+- `/clubs/[ville]/[sport]/` — ville × sport
+- `/clubs/[ville]/[sport]/[arrondissement]/` — arrondissements Paris
 
-Le mapping attendra les colonnes standard (libre à l'utilisateur de renommer son CSV avant upload) :
-| CSV (attendu) | Table |
-|---|---|
-| nom / name | name |
-| federation / federation_code | federation_code |
-| id / siren / external_id | external_id |
-| adresse / address | address |
-| code_postal / cp | postal_code |
-| ville / city | city |
-| region | region |
-| discipline / activite | discipline |
-| telephone / phone | phone |
-| email | email |
-| site_web / url | website |
-| latitude / lat | latitude |
-| longitude / lng | longitude |
+Chaque page : titre/H1 unique, texte d'intro contextualisé, liste de clubs filtrée, maillage interne vers les niveaux voisins, carte.
 
-### 4. Gérer les départements restants
-- L'uploader sera réutilisable : l'utilisateur ouvre /admin, sélectionne un CSV (ex: dept_75.csv), l'importe, puis passe au suivant.
-- Pour aller plus vite : ajouter un mode "multi-fichiers" (input `multiple`) qui traite les fichiers les uns après les autres en séquence.
+## 3. Fiches produit
 
-### 5. Sécurité
-- RLS `clubs_enriched` : l'upsert doit passer par `service_role` si l'utilisateur est admin, ou via une edge function si la page est publique.
-- Solution simple : la page /admin n'est pas protégée par rôle aujourd'hui → soit on ajoute une vérification côté app, soit on expose une fonction RPC `admin_upsert_clubs` appelable uniquement par un utilisateur avec rôle `admin`.
+- **Sport** `/sports/[sport]/` : présentation & bienfaits, comment débuter, matériel & équipement, budget moyen (licence, cotisation), sous-catégories loisir/compétition, villes disponibles, clubs les mieux notés
+- **Club** `/clubs/[nom]-[ville]/` : infos pratiques (adresse, horaires, contact), sports proposés & créneaux, tarifs & niveaux, avis & photos, CTA « voir les créneaux ». Les blocs sans données réelles restent en « Disponible prochainement ».
 
-## Livrables
-- Nouveau composant `src/components/admin/CSVUploader.tsx`
-- Modification de `src/pages/Admin.tsx`
-- (Optionnel) Edge function `admin-bulk-upsert` si l'insertion directe côté client est bloquée par RLS
+## 4. Contenu éditorial (rédigé en dur)
 
-## Coût
-- Aucun crédit IA consommé pendant l'import (le code tourne dans le navigateur de l'utilisateur)
-- Seuls les appels Supabase Data API (upsert) sont comptés comme usage standard de la base
+- `/decouvrir/` + articles : quel sport choisir, sport en famille, sport pour enfant, reprendre le sport, budget sport associatif, guide licences & fédérations
+- `/blog/` + `/blog/[id]/` et `/blog/dossier-[id]/` : vie associative, pratique sportive, guides clubs, actualités
+- `/pour-les-clubs/` (B2B) : gestion adhérents, événements, communication, paiements/cotisations, tarifs, témoignages, rejoindre (démo), ressources clubs
 
-## Question technique
-Quel outil utiliser ?
-- `PapaParse` est léger et robuste pour parser des CSV de plusieurs milliers de lignes
-- Les insertions se font via le client Supabase JS (déjà configuré dans le projet)
+## 5. Espace membre (authentification réelle)
+
+- `/compte/connexion/`, `/compte/inscription/`, `/compte/profil/`, `/compte/mes-clubs/` (favoris), `/compte/mon-club/` (admin club), notifications
+- Authentification e-mail + Google
+- Base de données : table `profiles` (nom, avatar, ville), table `favorites` (club favori par utilisateur), table `user_roles` séparée (rôles `admin`, `club_admin`, `user`) pour l'accès admin club
+- Routes protégées : redirection vers connexion si non connecté
+
+## 6. Footer complet
+
+Colonnes : Notre entreprise (qui sommes-nous, mission, presse, recrutement, partenaires), Besoin d'aide (FAQ, comment ça marche, contact, aide clubs/pratiquants), Faire du sport, Nos services, Application, Suivez-nous, Informations légales (mentions, CGU/CGV, confidentialité RGPD, cookies, accessibilité).
+
+## 7. Anciennes URLs
+
+Redirections vers les nouvelles :
+- `/recherche` → `/clubs/`
+- `/disciplines` → `/sports/`
+- `/football` → `/sports/football/`
+- `/football/club/:id` → `/clubs/[nom]-[ville]/`
+- `/club/:id` → fiche club nouvelle URL
+- `/carte` conservée (accessible via « Autour de moi »)
+- `/federations` → intégrée dans `/decouvrir/guide-licences-federations/`
+- `/aide` → `/aide/faq/`
+- `/admin` inchangée
+
+## Détails techniques
+
+- Routes React Router restructurées dans `App.tsx`, avec un fichier de redirections dédié.
+- Les segments géo (`region`, `dpt`, `ville`, `sport`) sont slugifiés ; un utilitaire `src/lib/geo.ts` gère slug ↔ libellé et la table régions/départements français.
+- Les pages hub interrogent `clubs_enriched` via `fetchEnrichedClubs` avec filtres ville/département/région/discipline (ajout des filtres manquants côté API).
+- `src/data/disciplines.ts` est conservé comme source des sports ; ajout d'un mapping vers les familles du méga-menu.
+- Nouvelles tables backend : `profiles`, `favorites`, `user_roles` + fonction `has_role`, avec RLS et GRANTs.
+- Métadonnées `<head>` mises à jour dans `index.html` ; l'app étant une SPA statique, le SEO par page n'est pas visible des crawlers — je le signale et on pourra envisager une migration SSR ensuite.
+- Volume : environ 30 nouvelles pages/composants ; je procède par blocs (navigation → hub géo → fiches → éditorial → compte).
