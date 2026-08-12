@@ -26,12 +26,13 @@ export function FeaturedClubs() {
               Les clubs les mieux notés par notre communauté
             </p>
           </div>
-          <Link to="/recherche">
+          <Link to="/clubs/">
             <Button variant="outline" className="gap-2">
               Voir tous les clubs
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
+
         </div>
 
         {/* Grid */}

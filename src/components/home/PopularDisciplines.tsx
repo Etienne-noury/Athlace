@@ -20,12 +20,13 @@ export function PopularDisciplines() {
               Explorez les sports les plus pratiqués en France
             </p>
           </div>
-          <Link to="/disciplines">
+          <Link to="/sports/">
             <Button variant="outline" className="gap-2">
               Voir toutes les disciplines
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
+
         </div>
 
         {/* Grid */}
@@ -33,10 +34,11 @@ export function PopularDisciplines() {
           {disciplines.map((discipline, index) => (
             <Link
               key={discipline.id}
-              to={`/recherche?discipline=${discipline.id}`}
+              to={`/sports/${discipline.id}/`}
               className="group"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
+
               <div className="relative bg-card rounded-2xl p-6 border border-border/50 card-hover overflow-hidden">
                 {/* Background gradient */}
                 <div className={cn(
