@@ -215,12 +215,45 @@ export function Header() {
                 <Heart className="h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/compte/" className="hidden sm:flex">
-              <Button variant="outline" className="gap-2">
-                <User className="h-4 w-4" />
-                <span>Mon Compte</span>
-              </Button>
-            </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="hidden sm:flex gap-2">
+                    <Avatar className="h-6 w-6">
+                      <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
+                    </Avatar>
+                    <span className="max-w-[120px] truncate">{displayName}</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
+                  <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link to="/compte/">Tableau de bord</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/compte/profil/">Mon profil</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/compte/mes-clubs/">Mes clubs</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/compte/notifications/">Notifications</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-destructive"
+                    onClick={async () => {
+                      await signOut();
+                      navigate('/');
+                    }}
+                  >
+                    Déconnexion
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/compte/connexion/" className="hidden sm:flex">
+                <Button variant="outline" className="gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Connexion</span>
+                </Button>
+              </Link>
+            )}
+
 
             <Button
               variant="ghost"
