@@ -4,11 +4,12 @@ import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signUpWithEmail, signInWithGoogle } from '@/lib/auth';
-import { Mail, Lock, Loader2 } from 'lucide-react';
+import { signUpWithEmail, signInWithGoogle, authErrorMessage } from '@/lib/auth';
+import { Mail, Lock, User as UserIcon, Loader2 } from 'lucide-react';
 
 export default function Register() {
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -19,20 +20,32 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (password.length < 8) {
+      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      return;
+    }
     if (password !== confirm) {
       setError('Les mots de passe ne correspondent pas.');
       return;
     }
     setLoading(true);
-    const { error } = await signUpWithEmail(email, password);
+    const { data, error } = await signUpWithEmail(email.trim(), password, fullName.trim() || undefined);
     setLoading(false);
-    if (error) setError(error.message);
+    if (error) {
+      setError(authErrorMessage(error.message));
+      return;
+    }
+    if (data.session) navigate('/compte/profil/', { replace: true });
     else setSuccess(true);
   };
 
   const handleGoogle = async () => {
     setLoading(true);
-    await signInWithGoogle();
+    const { error } = await signInWithGoogle('/compte/profil/');
+    if (error) {
+      setLoading(false);
+      setError(authErrorMessage(error.message));
+    }
   };
 
   return (
@@ -45,18 +58,37 @@ export default function Register() {
           </p>
 
           {success ? (
-            <div className="p-4 bg-primary/10 text-primary rounded-lg text-sm text-center">
-              Inscription réussie ! Vérifiez votre email pour activer votre compte.
+            <div className="space-y-4">
+              <div className="p-4 bg-primary/10 text-primary rounded-lg text-sm text-center">
+                Inscription réussie ! Vérifiez votre email pour activer votre compte.
+              </div>
+              <Button variant="outline" className="w-full" asChild>
+                <Link to="/compte/connexion/">Retour à la connexion</Link>
+              </Button>
             </div>
           ) : (
             <>
               {error && (
-                <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm">
+                <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm" role="alert">
                   {error}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Nom complet</Label>
+                  <div className="relative">
+                    <UserIcon className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-9"
+                      placeholder="Votre nom"
+                      autoComplete="name"
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
@@ -64,6 +96,7 @@ export default function Register() {
                     <Input
                       id="email"
                       type="email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -79,29 +112,35 @@ export default function Register() {
                     <Input
                       id="password"
                       type="password"
+                      autoComplete="new-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      minLength={6}
+                      minLength={8}
                       className="pl-9"
-                      placeholder="••••••••"
+                      placeholder="8 caractères minimum"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirm">Confirmer le mot de passe</Label>
-                  <Input
-                    id="confirm"
-                    type="password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    required
-                    placeholder="••••••••"
-                  />
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="confirm"
+                      type="password"
+                      autoComplete="new-password"
+                      value={confirm}
+                      onChange={(e) => setConfirm(e.target.value)}
+                      required
+                      className="pl-9"
+                      placeholder="••••••••"
+                    />
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  S'inscrire
+                  Créer mon compte
                 </Button>
               </form>
 
