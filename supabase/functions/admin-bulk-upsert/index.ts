@@ -13,7 +13,11 @@ type Row = {
   federation_code: string;
   external_id?: string | null;
   name: string;
+  description?: string | null;
   discipline?: string | null;
+  complement?: string | null;
+  distrib?: string | null;
+  date_creation?: string | null;
   address?: string | null;
   postal_code?: string | null;
   city?: string | null;
@@ -24,7 +28,6 @@ type Row = {
   email?: string | null;
   website?: string | null;
   source_url: string;
-  raw?: Record<string, unknown> | null;
 };
 
 Deno.serve(async (req) => {
@@ -55,11 +58,11 @@ Deno.serve(async (req) => {
         federation_code: r.federation_code || "RNA",
         external_id: r.external_id || null,
         name: String(r.name).slice(0, 500),
-        description: (r as any).description || null,
+        description: r.description || null,
         discipline: r.discipline || null,
         address: r.address || null,
-        complement: (r as any).complement || null,
-        distrib: (r as any).distrib || null,
+        complement: r.complement || null,
+        distrib: r.distrib || null,
         postal_code: r.postal_code || null,
         city: r.city || null,
         region: r.region || null,
@@ -68,7 +71,7 @@ Deno.serve(async (req) => {
         phone: r.phone || null,
         email: r.email || null,
         website: r.website || null,
-        date_creation: (r as any).date_creation ? String((r as any).date_creation).split('/').reverse().join('-') : null,
+        date_creation: r.date_creation ? String(r.date_creation).split('/').reverse().join('-') : null,
         source_url: r.source_url || "csv-upload",
       }));
 
