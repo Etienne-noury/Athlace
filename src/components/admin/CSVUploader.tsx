@@ -24,7 +24,7 @@ const ALIASES: Record<string, string> = {
   longitude: 'longitude', lng: 'longitude', lon: 'longitude',
 };
 
-type Row = Record<string, any>;
+type Row = Record<string, string | number | undefined>;
 
 const BATCH_SIZE = 500;
 
@@ -40,7 +40,7 @@ export default function CSVUploader() {
   const log = (s: string) => setLogs((l) => [...l, s]);
 
   const mapRow = (raw: Row): Row => {
-    const out: Row = { federation_code: federation, source_url: 'csv-upload', raw };
+    const out: Row = { federation_code: federation, source_url: 'csv-upload' };
     for (const [k, v] of Object.entries(raw)) {
       const key = k.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
       const target = ALIASES[key];
@@ -57,7 +57,7 @@ export default function CSVUploader() {
   };
 
   const sendBatch = async (rows: Row[]) => {
-    const url = `https://eoptlujvecbtorzrluoi.supabase.co/functions/v1/admin-bulk-upsert`;
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-bulk-upsert`;
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
@@ -95,8 +95,8 @@ export default function CSVUploader() {
             }
             log(`  ✓ ${file.name} done`);
             resolve();
-          } catch (e: any) {
-            log(`  ✗ ${file.name}: ${e.message}`);
+          } catch (e: unknown) {
+            log(`  ✗ ${file.name}: ${e instanceof Error ? e.message : String(e)}`);
             reject(e);
           }
         },
