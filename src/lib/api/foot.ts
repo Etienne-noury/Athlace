@@ -58,23 +58,26 @@ export async function fetchFootClubsByLocation(query: string): Promise<FootClubR
   const res = await fetch(url);
   if (!res.ok) throw new Error(`data.sports.gouv.fr ${res.status}`);
   const json = await res.json();
-  const records = (json?.results ?? []) as any[];
+  const records = (json?.results ?? []) as Record<string, unknown>[];
 
   // Dédoublonne par equip_numero
   const seen = new Set<string>();
   const clubs: FootClubRaw[] = [];
+  const str = (v: unknown, fallback = ''): string => (typeof v === 'string' && v ? v : fallback);
+  const num = (v: unknown): number | null => (typeof v === 'number' ? v : null);
   for (const r of records) {
-    const id = r.equip_numero ?? r.inst_numero;
+    const coords = (r.equip_coordonnees ?? r.coordonnees) as { lat?: unknown; lon?: unknown } | undefined;
+    const id = str(r.equip_numero) || str(r.inst_numero);
     if (!id || seen.has(id)) continue;
     seen.add(id);
     clubs.push({
-      data_es_id: String(id),
-      nom: r.inst_nom ?? r.equip_nom ?? 'Club de football',
-      adresse: r.inst_adresse ?? '',
-      code_postal: r.inst_cp ?? '',
-      ville: r.new_name ?? '',
-      lat: r.equip_coordonnees?.lat ?? r.coordonnees?.lat ?? null,
-      lng: r.equip_coordonnees?.lon ?? r.coordonnees?.lon ?? null,
+      data_es_id: id,
+      nom: str(r.inst_nom) || str(r.equip_nom) || 'Club de football',
+      adresse: str(r.inst_adresse),
+      code_postal: str(r.inst_cp),
+      ville: str(r.new_name),
+      lat: num(coords?.lat),
+      lng: num(coords?.lon),
     });
   }
   return clubs;

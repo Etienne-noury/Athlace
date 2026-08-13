@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
     let imported = 0;
     let skipped = 0;
     const errors: string[] = [];
-    const batch: any[] = [];
+    const batch: Record<string, string | number | null>[] = [];
     const end = Math.min(lines.length, offset + 1 + limit);
 
     const flush = async () => {
@@ -121,7 +121,6 @@ Deno.serve(async (req) => {
         city: cols[iVille] || null,
         website: cols[iWeb] || null,
         source_url: SOURCE_URL,
-        raw,
       });
 
       if (batch.length >= 500) await flush();
