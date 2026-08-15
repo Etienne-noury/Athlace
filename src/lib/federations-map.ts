@@ -105,3 +105,30 @@ export function getFederationForDiscipline(disciplineId?: string): FederationSou
   const code = DISCIPLINE_TO_FEDERATION[disciplineId];
   return code ? federationSources[code] : null;
 }
+
+/** Sigle officiel (table `federations_sportives`) associé à une discipline. */
+export const DISCIPLINE_TO_SIGLE: Record<string, string> = DISCIPLINE_TO_FEDERATION;
+
+/**
+ * Variante asynchrone : récupère la fédération officielle depuis la table
+ * `federations_sportives` (matching sur le sigle mappé, sinon sur le nom).
+ */
+export async function fetchFederationForDiscipline(disciplineId?: string, disciplineName?: string) {
+  if (!disciplineId && !disciplineName) return null;
+  const { supabase } = await import('@/integrations/supabase/client');
+  const sigle = disciplineId ? DISCIPLINE_TO_SIGLE[disciplineId] : undefined;
+
+  let query = supabase
+    .from('federations_sportives')
+    .select('id, nom, sigle, categorie, site_web, is_paralympique')
+    .limit(1);
+
+  query = sigle
+    ? query.ilike('sigle', sigle)
+    : query.ilike('nom', disciplineName || disciplineId || '');
+
+  const { data, error } = await query.maybeSingle();
+  if (error) return null;
+  return data ?? null;
+}
+

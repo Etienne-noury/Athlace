@@ -16,7 +16,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { SPORT_FAMILIES, getSportsByFamily } from '@/lib/sports-menu';
+import { useQuery } from '@tanstack/react-query';
+import {
+  FEDERATION_CATEGORIES,
+  fetchFederationsByCategorie,
+  slugifyFederation,
+} from '@/lib/federations-officielles';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
