@@ -335,6 +335,45 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+
+              <Accordion type="single" collapsible className="mt-2">
+                {FEDERATION_CATEGORIES.map((categorie) => {
+                  const feds = federationsByCategorie?.[categorie] ?? [];
+                  if (feds.length === 0) return null;
+                  return (
+                    <AccordionItem key={categorie} value={categorie}>
+                      <AccordionTrigger className="px-4 text-sm font-medium">
+                        {categorie}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <ul className="flex flex-col gap-1 px-4 pb-2">
+                          {feds.map((fed) => (
+                            <li key={fed.id}>
+                              <Link
+                                to={`/sports/${slugifyFederation(fed.sigle || fed.nom)}/`}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                              >
+                                {fed.nom}
+                              </Link>
+                            </li>
+                          ))}
+                          <li>
+                            <Link
+                              to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                              onClick={() => setIsMenuOpen(false)}
+                              className="block py-1.5 text-sm text-primary font-medium"
+                            >
+                              Voir la catégorie →
+                            </Link>
+                          </li>
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+
               <div className="flex gap-2 mt-4 pt-4 border-t border-border/50">
                 <Link to="/compte/" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="outline" className="w-full gap-2">
