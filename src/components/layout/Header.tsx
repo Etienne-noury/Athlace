@@ -147,45 +147,49 @@ export function Header() {
 
                 {/* Mega menu */}
                 {item.megaMenu && activeMega === item.id && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[720px]">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[900px] max-w-[95vw]">
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
-                        <div className="grid grid-cols-3 gap-6">
-                          {SPORT_FAMILIES.map((family) => (
-                            <div key={family.id}>
-                              <div className="flex items-center gap-2 mb-3">
-                                <span className="text-lg">{family.icon}</span>
+                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
+                          {FEDERATION_CATEGORIES.map((categorie) => {
+                            const feds = federationsByCategorie?.[categorie] ?? [];
+                            if (feds.length === 0) return null;
+                            return (
+                              <div key={categorie}>
                                 <Link
-                                  to={`/sports/famille/${family.id}/`}
-                                  className="font-display font-semibold text-foreground hover:text-primary"
+                                  to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                                  className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
                                 >
-                                  {family.name}
+                                  {categorie}
                                 </Link>
+                                <ul className="space-y-1.5">
+                                  {feds.slice(0, 5).map((fed) => (
+                                    <li key={fed.id}>
+                                      <Link
+                                        to={`/sports/${slugifyFederation(fed.sigle || fed.nom)}/`}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                      >
+                                        {fed.nom}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                  {feds.length > 5 && (
+                                    <li>
+                                      <Link
+                                        to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                                        className="text-sm text-primary font-medium hover:underline"
+                                      >
+                                        Voir tout →
+                                      </Link>
+                                    </li>
+                                  )}
+                                </ul>
                               </div>
-                              <ul className="space-y-1.5">
-                                {getSportsByFamily(family.id).slice(0, 5).map((sport) => (
-                                  <li key={sport.id}>
-                                    <Link
-                                      to={`/sports/${sport.id}/`}
-                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      {sport.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                                <li>
-                                  <Link
-                                    to={`/sports/famille/${family.id}/`}
-                                    className="text-sm text-primary font-medium hover:underline"
-                                  >
-                                    Voir tout →
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
+
 
                       {item.type === 'clubs' && (
                         <div className="grid grid-cols-2 gap-8">
