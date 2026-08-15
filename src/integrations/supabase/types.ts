@@ -203,6 +203,36 @@ export type Database = {
         }
         Relationships: []
       }
+      federations_sportives: {
+        Row: {
+          categorie: string
+          id: string
+          is_paralympique: boolean
+          nom: string
+          sigle: string | null
+          site_web: string
+          updated_at: string
+        }
+        Insert: {
+          categorie: string
+          id?: string
+          is_paralympique?: boolean
+          nom: string
+          sigle?: string | null
+          site_web: string
+          updated_at?: string
+        }
+        Update: {
+          categorie?: string
+          id?: string
+          is_paralympique?: boolean
+          nom?: string
+          sigle?: string | null
+          site_web?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

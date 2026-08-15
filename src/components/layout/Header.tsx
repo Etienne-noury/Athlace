@@ -16,7 +16,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { SPORT_FAMILIES, getSportsByFamily } from '@/lib/sports-menu';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useQuery } from '@tanstack/react-query';
+import {
+  FEDERATION_CATEGORIES,
+  fetchFederationsByCategorie,
+  slugifyFederation,
+} from '@/lib/federations-officielles';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -74,6 +80,13 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const { data: federationsByCategorie } = useQuery({
+    queryKey: ['federations-by-categorie'],
+    queryFn: fetchFederationsByCategorie,
+    staleTime: 1000 * 60 * 60,
+  });
+
+
 
   const displayName = profile?.full_name || user?.email?.split('@')[0] || 'Mon compte';
   const initials = displayName
@@ -142,45 +155,49 @@ export function Header() {
 
                 {/* Mega menu */}
                 {item.megaMenu && activeMega === item.id && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[720px]">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[900px] max-w-[95vw]">
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
-                        <div className="grid grid-cols-3 gap-6">
-                          {SPORT_FAMILIES.map((family) => (
-                            <div key={family.id}>
-                              <div className="flex items-center gap-2 mb-3">
-                                <span className="text-lg">{family.icon}</span>
+                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
+                          {FEDERATION_CATEGORIES.map((categorie) => {
+                            const feds = federationsByCategorie?.[categorie] ?? [];
+                            if (feds.length === 0) return null;
+                            return (
+                              <div key={categorie}>
                                 <Link
-                                  to={`/sports/famille/${family.id}/`}
-                                  className="font-display font-semibold text-foreground hover:text-primary"
+                                  to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                                  className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
                                 >
-                                  {family.name}
+                                  {categorie}
                                 </Link>
+                                <ul className="space-y-1.5">
+                                  {feds.slice(0, 5).map((fed) => (
+                                    <li key={fed.id}>
+                                      <Link
+                                        to={`/sports/${slugifyFederation(fed.sigle || fed.nom)}/`}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                      >
+                                        {fed.nom}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                  {feds.length > 5 && (
+                                    <li>
+                                      <Link
+                                        to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                                        className="text-sm text-primary font-medium hover:underline"
+                                      >
+                                        Voir tout →
+                                      </Link>
+                                    </li>
+                                  )}
+                                </ul>
                               </div>
-                              <ul className="space-y-1.5">
-                                {getSportsByFamily(family.id).slice(0, 5).map((sport) => (
-                                  <li key={sport.id}>
-                                    <Link
-                                      to={`/sports/${sport.id}/`}
-                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      {sport.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                                <li>
-                                  <Link
-                                    to={`/sports/famille/${family.id}/`}
-                                    className="text-sm text-primary font-medium hover:underline"
-                                  >
-                                    Voir tout →
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
+
 
                       {item.type === 'clubs' && (
                         <div className="grid grid-cols-2 gap-8">
@@ -319,6 +336,45 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+
+              <Accordion type="single" collapsible className="mt-2">
+                {FEDERATION_CATEGORIES.map((categorie) => {
+                  const feds = federationsByCategorie?.[categorie] ?? [];
+                  if (feds.length === 0) return null;
+                  return (
+                    <AccordionItem key={categorie} value={categorie}>
+                      <AccordionTrigger className="px-4 text-sm font-medium">
+                        {categorie}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <ul className="flex flex-col gap-1 px-4 pb-2">
+                          {feds.map((fed) => (
+                            <li key={fed.id}>
+                              <Link
+                                to={`/sports/${slugifyFederation(fed.sigle || fed.nom)}/`}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                              >
+                                {fed.nom}
+                              </Link>
+                            </li>
+                          ))}
+                          <li>
+                            <Link
+                              to={`/sports/famille/${slugifyFederation(categorie)}/`}
+                              onClick={() => setIsMenuOpen(false)}
+                              className="block py-1.5 text-sm text-primary font-medium"
+                            >
+                              Voir la catégorie →
+                            </Link>
+                          </li>
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+
               <div className="flex gap-2 mt-4 pt-4 border-t border-border/50">
                 <Link to="/compte/" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="outline" className="w-full gap-2">
