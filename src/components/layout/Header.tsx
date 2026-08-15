@@ -79,6 +79,13 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const { data: federationsByCategorie } = useQuery({
+    queryKey: ['federations-by-categorie'],
+    queryFn: fetchFederationsByCategorie,
+    staleTime: 1000 * 60 * 60,
+  });
+
+
 
   const displayName = profile?.full_name || user?.email?.split('@')[0] || 'Mon compte';
   const initials = displayName
