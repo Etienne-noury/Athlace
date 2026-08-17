@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Search, MapPin, Star, ArrowRight, Grid3X3, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
+import { FavoriteButton } from '@/components/clubs/FavoriteButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';

@@ -5,6 +5,7 @@ import {
   ChevronLeft, CreditCard, Loader2, Info, Calendar, Trophy,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
+import { FavoriteButton } from '@/components/clubs/FavoriteButton';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
