@@ -80,6 +80,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { data: federationsByCategorie } = useQuery({
     queryKey: ['federations-by-categorie'],
     queryFn: fetchFederationsByCategorie,
