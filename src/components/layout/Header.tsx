@@ -244,12 +244,8 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
-            <Link to="/clubs/" className="hidden sm:flex">
-              <Button variant="ghost" size="icon">
-                <Search className="h-5 w-5" />
-              </Button>
-            </Link>
             <Link to="/compte/mes-clubs/" className="hidden sm:flex">
+
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
               </Button>
