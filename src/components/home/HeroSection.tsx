@@ -65,10 +65,11 @@ export function HeroSection() {
 
           {/* Title */}
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-            Trouvez votre club sportif{' '}
+            Trouvez{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-accent">
-              idéal
-            </span>
+              LE
+            </span>{' '}
+            club sportif qui vous correspond
           </h1>
 
           <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>

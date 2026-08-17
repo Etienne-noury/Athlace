@@ -284,12 +284,19 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to="/compte/connexion/" className="hidden sm:flex">
-                <Button variant="outline" className="gap-2">
-                  <User className="h-4 w-4" />
-                  <span>Connexion</span>
-                </Button>
-              </Link>
+              <div className="hidden sm:flex items-center gap-2">
+                <Link to="/compte/connexion/">
+                  <Button variant="outline" className="gap-2">
+                    <User className="h-4 w-4" />
+                    <span>Connexion</span>
+                  </Button>
+                </Link>
+                <Link to="/compte/inscription/">
+                  <Button className="gap-2">
+                    <span>Créer un compte</span>
+                  </Button>
+                </Link>
+              </div>
             )}
 
 
@@ -375,13 +382,18 @@ export function Header() {
                 })}
               </Accordion>
 
-              <div className="flex gap-2 mt-4 pt-4 border-t border-border/50">
-                <Link to="/compte/" className="flex-1" onClick={() => setIsMenuOpen(false)}>
+              <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
+                <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="outline" className="w-full gap-2">
                     <User className="h-4 w-4" />
                     Mon Compte
                   </Button>
                 </Link>
+                {!user && (
+                  <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full">Créer un compte</Button>
+                  </Link>
+                )}
               </div>
               <Link
                 to="/aide/faq/"

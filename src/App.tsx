@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Redirect, FootballClubRedirect, ClubLegacyRedirect } from "./components/Redirect";
+import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Recherche from "./pages/Recherche";
 import Disciplines from "./pages/Disciplines";
@@ -68,6 +69,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+        <ScrollToTop />
         <Routes>
 
           {/* Home */}
