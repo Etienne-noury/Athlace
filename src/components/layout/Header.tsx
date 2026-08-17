@@ -284,12 +284,19 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to="/compte/connexion/" className="hidden sm:flex">
-                <Button variant="outline" className="gap-2">
-                  <User className="h-4 w-4" />
-                  <span>Connexion</span>
-                </Button>
-              </Link>
+              <div className="hidden sm:flex items-center gap-2">
+                <Link to="/compte/connexion/">
+                  <Button variant="outline" className="gap-2">
+                    <User className="h-4 w-4" />
+                    <span>Connexion</span>
+                  </Button>
+                </Link>
+                <Link to="/compte/inscription/">
+                  <Button className="gap-2">
+                    <span>Créer un compte</span>
+                  </Button>
+                </Link>
+              </div>
             )}
 
 
