@@ -119,7 +119,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Search */}
-          <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-md">
+          <form onSubmit={handleSearch} className="hidden xl:flex w-full max-w-xs">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -132,7 +132,8 @@ export function Header() {
           </form>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1">
+
             {navItems.map((item) => (
               <div
                 key={item.id}
