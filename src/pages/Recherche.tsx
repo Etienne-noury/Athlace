@@ -25,7 +25,7 @@ import {
 import { regions } from '@/data/clubs';
 import { disciplines, getParentDisciplines } from '@/data/disciplines';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
-import { getFederationForDiscipline } from '@/lib/federations-map';
+import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 
 export default function Recherche() {
