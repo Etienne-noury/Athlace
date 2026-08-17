@@ -55,6 +55,11 @@ export default function Recherche() {
     },
   });
 
+  const { data: federationSources = [] } = useQuery({
+    queryKey: ['federations'],
+    queryFn: fetchFederationSources,
+  });
+
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedDiscipline('all');
