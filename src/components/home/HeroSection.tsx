@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/select';
 import { getParentDisciplines, categories } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { formatCount } from '@/lib/format-stats';
 
 export function HeroSection() {
   const navigate = useNavigate();
