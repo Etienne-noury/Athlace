@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { disciplines, getParentDisciplines } from '@/data/disciplines';
-import { getFederationForDiscipline } from '@/lib/federations-map';
+import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { MapPin, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { slugify } from '@/lib/geo';
 
