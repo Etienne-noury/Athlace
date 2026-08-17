@@ -6,13 +6,21 @@ import { PopularDisciplines } from '@/components/home/PopularDisciplines';
 import { FeaturedClubs } from '@/components/home/FeaturedClubs';
 import { StatsSection } from '@/components/home/StatsSection';
 import { CTASection } from '@/components/home/CTASection';
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { formatCount } from '@/lib/format-stats';
 
 
 const Index = () => {
+  const { stats, isReady } = useSiteStats();
+
   return (
     <Layout>
       <PageTitle
-        description="Trouvez, comparez et inscrivez-vous dans les clubs sportifs de France. Football, tennis, rugby, natation et plus de 100 disciplines."
+        description={
+          isReady
+            ? `Trouvez, comparez et inscrivez-vous parmi ${formatCount(stats.clubs)} clubs sportifs en France, répartis dans ${stats.federations} fédérations sportives agréées.`
+            : 'Trouvez, comparez et inscrivez-vous dans les clubs sportifs de France, toutes disciplines confondues.'
+        }
       />
       <HeroSection />
       <InteractiveMapSection />

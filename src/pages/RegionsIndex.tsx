@@ -11,7 +11,7 @@ export default function RegionsIndex() {
             Index des régions
           </h1>
           <p className="text-muted-foreground text-lg">
-            Trouvez un club sportif dans l'une des 13 régions de France métropolitaine et de Corse.
+            Trouvez un club sportif dans l'une des {REGIONS.length} régions de France métropolitaine et de Corse.
           </p>
         </div>
       </section>
