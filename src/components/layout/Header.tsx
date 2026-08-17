@@ -109,8 +109,8 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20 gap-3">
           {/* Logo + Search shortcut */}
-          <div className="flex items-center gap-1 shrink-0">
-            <Link to="/" className="flex items-center gap-2 group">
+          <div className="flex flex-1 min-w-0 items-center gap-3">
+            <Link to="/" className="flex items-center gap-2 group shrink-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#262E47] to-[#415CAF] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
                 <span className="text-xl font-bold text-white">A</span>
               </div>
@@ -118,23 +118,24 @@ export function Header() {
                 Athlace
               </span>
             </Link>
+
+            {/* Desktop Search */}
+            <form onSubmit={handleSearch} className="hidden xl:flex w-full max-w-[220px]">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Sport, ville, club..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 h-10 w-full bg-muted/50 border-muted"
+                />
+              </div>
+            </form>
           </div>
 
-          {/* Desktop Search */}
-          <form onSubmit={handleSearch} className="hidden xl:flex w-full max-w-xs">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Sport, ville, club..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 w-full bg-muted/50 border-muted"
-              />
-            </div>
-          </form>
-
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1">
+          <nav className="hidden lg:flex shrink-0 items-center justify-center gap-1">
+
 
             {navItems.map((item) => (
               <div
