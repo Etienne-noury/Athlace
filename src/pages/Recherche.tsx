@@ -332,6 +332,10 @@ export default function Recherche() {
                             <span className="text-sm font-semibold">{club.rating}</span>
                           </div>
                         )}
+                        <FavoriteButton
+                          clubId={club.id}
+                          className="absolute top-3 left-3 px-2 py-2 shadow-sm"
+                        />
                       </div>
 
                       {/* Content */}
