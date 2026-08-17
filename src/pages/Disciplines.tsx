@@ -115,7 +115,7 @@ export default function Disciplines() {
                           {discipline.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-auto">
-                          {discipline.clubCount.toLocaleString()} clubs
+                          {discipline.description}
                         </p>
                         <ArrowRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity mt-2" />
                       </div>
