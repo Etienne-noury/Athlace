@@ -9,8 +9,10 @@ import {
 } from '@/lib/federations-officielles';
 import { ArrowRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSiteStats } from '@/hooks/useSiteStats';
 
 export default function SportsIndex() {
+  const { stats } = useSiteStats();
   const { data, isLoading } = useQuery({
     queryKey: ['federations-by-categorie'],
     queryFn: fetchFederationsByCategorie,
