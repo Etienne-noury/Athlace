@@ -42,7 +42,7 @@ export function FavoriteButton({ clubId, className, withLabel = false }: Favorit
         title: 'Connexion requise',
         description: 'Connectez-vous pour enregistrer vos clubs favoris.',
       });
-      navigate('/compte/connexion');
+      navigate('/compte/connexion/');
       return;
     }
 
