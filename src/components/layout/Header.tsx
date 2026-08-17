@@ -119,7 +119,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Search */}
-          <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-md">
+          <form onSubmit={handleSearch} className="hidden xl:flex w-full max-w-xs">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -132,7 +132,8 @@ export function Header() {
           </form>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1">
+
             {navItems.map((item) => (
               <div
                 key={item.id}
@@ -155,7 +156,7 @@ export function Header() {
 
                 {/* Mega menu */}
                 {item.megaMenu && activeMega === item.id && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[900px] max-w-[95vw]">
+                  <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 pt-2 w-[900px] max-w-[95vw]">
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
                         <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
@@ -243,12 +244,8 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
-            <Link to="/clubs/" className="hidden sm:flex">
-              <Button variant="ghost" size="icon">
-                <Search className="h-5 w-5" />
-              </Button>
-            </Link>
             <Link to="/compte/mes-clubs/" className="hidden sm:flex">
+
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
               </Button>
