@@ -46,10 +46,24 @@ export default function Contact() {
           </div>
           <div className="bg-card border border-border rounded-2xl p-8">
             <h2 className="font-display text-2xl font-semibold mb-6">Nos coordonnées</h2>
+
+            <a
+              href="mailto:contact@athlace.fr"
+              className="flex items-center gap-4 rounded-xl bg-primary/10 border border-primary/20 p-5 mb-6 hover:bg-primary/15 transition-colors"
+            >
+              <span className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                <Mail className="w-6 h-6 text-primary" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm text-muted-foreground">Écrivez-nous directement</span>
+                <span className="block font-display text-lg font-semibold text-foreground break-all">
+                  contact@athlace.fr
+                </span>
+                <span className="block text-xs text-muted-foreground mt-1">Réponse sous 48h ouvrées</span>
+              </span>
+            </a>
+
             <div className="space-y-4">
-              <a href="mailto:contact@athlace.fr" className="flex items-center gap-3 text-muted-foreground hover:text-foreground">
-                <Mail className="w-5 h-5 text-primary" /> contact@athlace.fr
-              </a>
               <a href="tel:0800123456" className="flex items-center gap-3 text-muted-foreground hover:text-foreground">
                 <Phone className="w-5 h-5 text-primary" /> 0 800 123 456
               </a>
