@@ -118,11 +118,6 @@ export function Header() {
                 Athlace
               </span>
             </Link>
-            <Link to="/clubs/" className="hidden sm:block">
-              <Button variant="ghost" size="icon" aria-label="Rechercher un club">
-                <Search className="h-5 w-5 text-muted-foreground" />
-              </Button>
-            </Link>
           </div>
 
           {/* Desktop Search */}
