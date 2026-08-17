@@ -20,7 +20,7 @@ export default function SportsIndex() {
     <Layout>
       <PageTitle
         title="Tous les sports"
-        description="Découvrez les 93 fédérations sportives françaises agréées, classées par catégorie, sur Athlace."
+        description={`Découvrez les ${stats.federations} fédérations sportives françaises agréées, classées par catégorie, sur Athlace.`}
       />
       <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
