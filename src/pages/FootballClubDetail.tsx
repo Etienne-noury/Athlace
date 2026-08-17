@@ -8,7 +8,7 @@ import {
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { GoogleMiniMap } from '@/components/foot/GoogleMiniMap';
+import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
 import { SuggestUpdateDialog } from '@/components/foot/SuggestUpdateDialog';
 import { fetchFootClubById, fetchGooglePlaces } from '@/lib/api/foot';
 
@@ -85,7 +85,7 @@ export default function FootballClubDetail() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-card rounded-2xl border border-border p-6">
               <h2 className="font-display text-xl font-semibold mb-4">Localisation</h2>
-              <GoogleMiniMap
+              <ClubMiniMap
                 lat={club.lat}
                 lng={club.lng}
                 address={`${club.adresse} ${club.code_postal} ${club.ville}`}

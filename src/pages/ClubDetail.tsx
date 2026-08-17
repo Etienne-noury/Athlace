@@ -7,7 +7,7 @@ import {
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { GoogleMiniMap } from '@/components/foot/GoogleMiniMap';
+import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
 import { levels } from '@/data/clubs';
 import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
 import { getDisciplineById } from '@/data/disciplines';
@@ -145,7 +145,7 @@ export default function ClubDetail() {
             <p className="text-muted-foreground mb-4">
               {club.address}, {club.postalCode} {club.city}
             </p>
-            <GoogleMiniMap
+            <ClubMiniMap
               lat={club.coordinates.lat || null}
               lng={club.coordinates.lng || null}
               address={`${club.address}, ${club.postalCode} ${club.city}`}
