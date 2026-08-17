@@ -19,6 +19,7 @@ import { formatCount } from '@/lib/format-stats';
 
 export function HeroSection() {
   const navigate = useNavigate();
+  const { stats, isReady } = useSiteStats();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiscipline, setSelectedDiscipline] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('');
