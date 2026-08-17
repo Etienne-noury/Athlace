@@ -1,53 +1,27 @@
 import { MapPin, Trophy, Map, Database } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-
-function formatClubs(count: number): string {
-  if (count < 100) return `${count}`;
-  const rounded = Math.floor(count / 100) * 100;
-  return `${rounded.toLocaleString('fr-FR')}+`;
-}
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { formatCount, formatExact } from '@/lib/format-stats';
 
 export function StatsSection() {
-  const { data: clubsCount, isLoading: loadingClubs } = useQuery({
-    queryKey: ['stats-clubs-count'],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from('clubs_enriched')
-        .select('id', { count: 'exact', head: true });
-      if (error) throw error;
-      return count ?? 0;
-    },
-  });
+  const { stats, isReady } = useSiteStats();
 
-  const { data: fedsCount, isLoading: loadingFeds } = useQuery({
-    queryKey: ['stats-federations-count'],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from('federations_sportives')
-        .select('id', { count: 'exact', head: true });
-      if (error) throw error;
-      return count ?? 0;
-    },
-  });
-
-  const stats = [
+  const items = [
     {
       icon: MapPin,
-      value: loadingClubs ? null : formatClubs(clubsCount ?? 0),
+      value: isReady ? formatCount(stats.clubs) : null,
       label: 'Clubs référencés',
       description: 'Données publiques officielles',
     },
     {
       icon: Trophy,
-      value: loadingFeds ? null : `${fedsCount ?? 0}`,
+      value: isReady ? formatExact(stats.federations) : null,
       label: 'Fédérations sportives',
       description: 'Fédérations françaises agréées',
     },
     {
       icon: Map,
-      value: 'France entière',
-      label: 'Couverture',
+      value: isReady ? formatExact(stats.cities) : null,
+      label: 'Villes couvertes',
       description: 'Métropole et Outre-mer',
     },
     {
@@ -62,7 +36,7 @@ export function StatsSection() {
     <section className="py-16 lg:py-20 bg-foreground text-background">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {stats.map((stat, index) => (
+          {items.map((stat, index) => (
             <div
               key={stat.label}
               className="text-center animate-fade-up"
