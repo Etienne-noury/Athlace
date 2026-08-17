@@ -156,7 +156,7 @@ export function Header() {
 
                 {/* Mega menu */}
                 {item.megaMenu && activeMega === item.id && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[900px] max-w-[95vw]">
+                  <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 pt-2 w-[900px] max-w-[95vw]">
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
                         <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
