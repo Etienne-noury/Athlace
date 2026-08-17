@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -80,6 +80,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { data: federationsByCategorie } = useQuery({
     queryKey: ['federations-by-categorie'],
     queryFn: fetchFederationsByCategorie,
@@ -141,8 +142,15 @@ export function Header() {
               <div
                 key={item.id}
                 className="relative"
-                onMouseEnter={() => item.megaMenu && setActiveMega(item.id)}
-                onMouseLeave={() => setActiveMega(null)}
+                onMouseEnter={() => {
+                  if (item.megaMenu) {
+                    if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
+                    setActiveMega(item.id);
+                  }
+                }}
+                onMouseLeave={() => {
+                  megaTimeoutRef.current = setTimeout(() => setActiveMega(null), 150);
+                }}
               >
                 <Link
                   to={item.href}
@@ -159,7 +167,8 @@ export function Header() {
 
                 {/* Mega menu */}
                 {item.megaMenu && activeMega === item.id && (
-                  <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 pt-2 w-[900px] max-w-[95vw]">
+                  <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 w-[900px] max-w-[95vw]">
+                    <div className="h-3 w-full" />
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
                         <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
