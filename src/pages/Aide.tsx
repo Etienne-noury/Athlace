@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Search, ChevronDown, Mail, Phone, MessageCircle } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { formatCount } from '@/lib/format-stats';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -16,7 +18,7 @@ const faqs = [
     questions: [
       {
         q: 'Qu\'est-ce que Athlace ?',
-        a: 'Athlace est le répertoire national des clubs sportifs en France. Notre plateforme vous permet de découvrir, comparer et vous inscrire aux clubs sportifs près de chez vous, parmi plus de 100 000 clubs référencés.'
+        a: 'Athlace est le répertoire national des clubs sportifs en France. Notre plateforme vous permet de découvrir, comparer et vous inscrire aux clubs sportifs près de chez vous, parmi {{clubs}} clubs référencés.'
       },
       {
         q: 'L\'utilisation de Athlace est-elle gratuite ?',
@@ -83,10 +85,15 @@ const faqs = [
 
 export default function Aide() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { stats, isReady } = useSiteStats();
+
+  const clubsLabel = isReady ? formatCount(stats.clubs) : 'des milliers de';
 
   const filteredFaqs = faqs.map(category => ({
     ...category,
-    questions: category.questions.filter(q => 
+    questions: category.questions
+      .map(q => ({ ...q, a: q.a.replace('{{clubs}}', clubsLabel) }))
+      .filter(q => 
       q.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.a.toLowerCase().includes(searchQuery.toLowerCase())
     )
