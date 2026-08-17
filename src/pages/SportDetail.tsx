@@ -29,10 +29,15 @@ export default function SportDetail() {
     return disciplines.filter((d) => d.parentId === sport.id);
   }, [sport, isChild]);
 
+  const { data: federationSources = [] } = useQuery({
+    queryKey: ['federations'],
+    queryFn: fetchFederationSources,
+  });
+
   const federation = useMemo(() => {
     if (!sport) return undefined;
-    return getFederationForDiscipline(sport.id);
-  }, [sport]);
+    return getFederationForDiscipline(sport.id, federationSources);
+  }, [sport, federationSources]);
 
   useEffect(() => {
     if (sport) document.title = `${sport.name} — Trouver un club - Athlace`;
