@@ -351,7 +351,7 @@ export default function Recherche() {
                             {club.disciplineName}
                           </p>
                           {(() => {
-                            const fed = getFederationForDiscipline(club.discipline);
+                            const fed = getFederationForDiscipline(club.discipline, federationSources);
                             return fed ? (
                               <Badge variant="outline" className="text-[10px] gap-1 px-1.5 py-0">
                                 <span aria-hidden>{fed.icon}</span> {fed.code}
