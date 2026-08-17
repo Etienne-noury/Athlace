@@ -107,16 +107,23 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 lg:h-20 gap-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#262E47] to-[#415CAF] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <span className="text-xl font-bold text-white">A</span>
-            </div>
-            <span className="font-display text-xl font-bold text-foreground hidden sm:block">
-              Athlace
-            </span>
-          </Link>
+        <div className="flex items-center justify-between h-16 lg:h-20 gap-3">
+          {/* Logo + Search shortcut */}
+          <div className="flex items-center gap-1 shrink-0">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#262E47] to-[#415CAF] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <span className="text-xl font-bold text-white">A</span>
+              </div>
+              <span className="font-display text-xl font-bold text-foreground hidden sm:block">
+                Athlace
+              </span>
+            </Link>
+            <Link to="/clubs/" className="hidden sm:block">
+              <Button variant="ghost" size="icon" aria-label="Rechercher un club">
+                <Search className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </Link>
+          </div>
 
           {/* Desktop Search */}
           <form onSubmit={handleSearch} className="hidden xl:flex w-full max-w-xs">
@@ -243,7 +250,12 @@ export function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
+            <Link to="/clubs/" className="sm:hidden">
+              <Button variant="ghost" size="icon" aria-label="Rechercher un club">
+                <Search className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </Link>
             <Link to="/compte/mes-clubs/" className="hidden sm:flex">
 
               <Button variant="ghost" size="icon">
