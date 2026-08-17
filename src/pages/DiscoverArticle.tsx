@@ -14,9 +14,11 @@ import {
 } from '@/components/ui/accordion';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { FEDERATION_CATEGORIES, fetchFederationsByCategorie } from '@/lib/federations-officielles';
+import { useSiteStats } from '@/hooks/useSiteStats';
 
 export default function DiscoverArticle() {
   const { slug } = useParams<{ slug: string }>();
+  const { stats } = useSiteStats();
 
   const title = useMemo(() => {
     if (slug === 'guide-licences-federations') return 'Guide des licences fédérales';
@@ -54,7 +56,7 @@ export default function DiscoverArticle() {
               Guide des licences fédérales
             </h1>
             <p className="text-muted-foreground text-lg">
-              {total || 93} fédérations sportives agréées par le Ministère des Sports.
+              {total || stats.federations} fédérations sportives agréées par le Ministère des Sports.
             </p>
             <p className="text-sm text-muted-foreground mt-1">Mise à jour : {updatedAt}</p>
           </div>

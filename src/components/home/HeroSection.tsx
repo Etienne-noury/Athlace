@@ -14,9 +14,12 @@ import {
 } from '@/components/ui/select';
 import { getParentDisciplines, categories } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { formatCount } from '@/lib/format-stats';
 
 export function HeroSection() {
   const navigate = useNavigate();
+  const { stats, isReady } = useSiteStats();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiscipline, setSelectedDiscipline] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('');
@@ -59,7 +62,7 @@ export function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 animate-fade-up">
             <span className="text-sm font-medium text-white/90">
-              🇫🇷 Plus de 100 000 clubs référencés en France
+              🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs référencés en France` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
 

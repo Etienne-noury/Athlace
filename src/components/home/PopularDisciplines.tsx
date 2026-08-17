@@ -55,7 +55,7 @@ export function PopularDisciplines() {
                     {discipline.name}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {discipline.clubCount.toLocaleString()} clubs
+                    {categories[discipline.category]?.name || 'Sport'}
                   </p>
                 </div>
 
