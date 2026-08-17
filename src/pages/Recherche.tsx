@@ -91,7 +91,7 @@ export default function Recherche() {
       <div className="container mx-auto px-4 py-8">
         {/* Bandeau annuaire fédéral */}
         {(() => {
-          const fed = getFederationForDiscipline(selectedDiscipline);
+          const fed = getFederationForDiscipline(selectedDiscipline, federationSources);
           if (!fed) return null;
           const url = fed.buildSearchUrl({ city: searchQuery, postalCode: searchQuery });
           return (
