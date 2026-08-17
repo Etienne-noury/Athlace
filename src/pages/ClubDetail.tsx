@@ -116,9 +116,12 @@ export default function ClubDetail() {
                   <Badge variant="secondary">{club.disciplineName}</Badge>
                 </div>
 
-                <h1 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-3">
-                  {club.name}
-                </h1>
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <h1 className="font-display text-2xl lg:text-3xl font-bold text-foreground">
+                    {club.name}
+                  </h1>
+                  <FavoriteButton clubId={club.id} withLabel className="flex-shrink-0" />
+                </div>
 
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-1">
