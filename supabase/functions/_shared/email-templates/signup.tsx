@@ -11,6 +11,7 @@ import {
   Html,
   Link,
   Preview,
+  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
@@ -22,36 +23,44 @@ interface SignupEmailProps {
 }
 
 export const SignupEmail = ({
-  siteName,
   siteUrl,
   recipient,
   confirmationUrl,
 }: SignupEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="fr" dir="ltr">
     <Head />
-    <Preview>Confirm your email for {siteName}</Preview>
+    <Preview>Confirmez votre adresse email pour activer votre compte Athlace</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirm your email</Heading>
+        <Section style={brandBar}>
+          <Text style={brandText}>Athlace</Text>
+        </Section>
+        <Heading style={h1}>Confirmez votre adresse email</Heading>
         <Text style={text}>
-          Thanks for signing up for{' '}
+          Bienvenue sur{' '}
           <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
+            <strong>Athlace</strong>
           </Link>
-          !
+          , le répertoire national des clubs sportifs en France.
         </Text>
         <Text style={text}>
-          Please confirm your email address (
+          Il ne reste qu'une étape : confirmez votre adresse{' '}
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
-          </Link>
-          ) by clicking the button below:
+          </Link>{' '}
+          pour activer votre compte, sauvegarder vos clubs favoris et suivre votre parcours sportif.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Verify Email
+          Activer mon compte
         </Button>
         <Text style={footer}>
-          If you didn't create an account, you can safely ignore this email.
+          Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer cet email.
+          <br />
+          Une question ? Écrivez-nous à{' '}
+          <Link href="mailto:contact@athlace.fr" style={link}>
+            contact@athlace.fr
+          </Link>
+          .
         </Text>
       </Container>
     </Body>
@@ -60,27 +69,42 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = { backgroundColor: '#ffffff', fontFamily: 'Helvetica, Arial, sans-serif' }
+const container = { padding: '24px 28px', maxWidth: '560px' }
+const brandBar = {
+  backgroundColor: '#262E47',
+  borderRadius: '12px',
+  padding: '16px 20px',
+  marginBottom: '28px',
+}
+const brandText = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: 'bold' as const,
+  margin: '0',
+  letterSpacing: '0.5px',
+}
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#262E47',
   margin: '0 0 20px',
 }
 const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  fontSize: '15px',
+  color: '#55606f',
+  lineHeight: '1.6',
+  margin: '0 0 20px',
 }
-const link = { color: 'inherit', textDecoration: 'underline' }
+const link = { color: '#415CAF', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#415CAF',
   color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontSize: '15px',
+  fontWeight: 'bold' as const,
+  borderRadius: '12px',
+  padding: '14px 24px',
   textDecoration: 'none',
+  display: 'inline-block',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#8b93a1', lineHeight: '1.6', margin: '32px 0 0' }
