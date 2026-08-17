@@ -141,7 +141,10 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70">
             <div className="flex flex-wrap gap-6">
-              <a href="mailto:contact@athlace.fr" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a
+                href="mailto:contact@athlace.fr"
+                className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-semibold text-white hover:bg-white/20 transition-colors"
+              >
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
               </a>
