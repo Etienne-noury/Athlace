@@ -4,7 +4,7 @@ import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signInWithEmail, signInWithGoogle, authErrorMessage } from '@/lib/auth';
+import { signInWithEmail, authErrorMessage } from '@/lib/auth';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 
 export default function Login() {
@@ -26,14 +26,6 @@ export default function Login() {
     else navigate(from, { replace: true });
   };
 
-  const handleGoogle = async () => {
-    setLoading(true);
-    const { error } = await signInWithGoogle(from);
-    if (error) {
-      setLoading(false);
-      setError(authErrorMessage(error.message));
-    }
-  };
 
   return (
     <Layout>
@@ -94,14 +86,6 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
-            <div className="relative flex justify-center text-xs"><span className="bg-card px-2 text-muted-foreground">ou</span></div>
-          </div>
-
-          <Button variant="outline" className="w-full" onClick={handleGoogle} disabled={loading}>
-            Continuer avec Google
-          </Button>
 
           <p className="text-sm text-center mt-6 text-muted-foreground">
             Pas encore de compte ?{' '}
