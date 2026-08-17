@@ -246,7 +246,8 @@ export function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex flex-1 min-w-0 items-center justify-end gap-1">
+
             <Link to="/clubs/" className="sm:hidden">
               <Button variant="ghost" size="icon" aria-label="Rechercher un club">
                 <Search className="h-5 w-5 text-muted-foreground" />
