@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { disciplines, getParentDisciplines } from '@/data/disciplines';
-import { getFederationForDiscipline } from '@/lib/federations-map';
+import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { MapPin, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { slugify } from '@/lib/geo';
 
@@ -29,10 +29,15 @@ export default function SportDetail() {
     return disciplines.filter((d) => d.parentId === sport.id);
   }, [sport, isChild]);
 
+  const { data: federationSources = [] } = useQuery({
+    queryKey: ['federations'],
+    queryFn: fetchFederationSources,
+  });
+
   const federation = useMemo(() => {
     if (!sport) return undefined;
-    return getFederationForDiscipline(sport.id);
-  }, [sport]);
+    return getFederationForDiscipline(sport.id, federationSources);
+  }, [sport, federationSources]);
 
   useEffect(() => {
     if (sport) document.title = `${sport.name} — Trouver un club - Athlace`;

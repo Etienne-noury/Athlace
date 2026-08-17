@@ -25,7 +25,7 @@ import {
 import { regions } from '@/data/clubs';
 import { disciplines, getParentDisciplines } from '@/data/disciplines';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
-import { getFederationForDiscipline } from '@/lib/federations-map';
+import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 
 export default function Recherche() {
@@ -53,6 +53,11 @@ export default function Recherche() {
         offset: page * 100,
       });
     },
+  });
+
+  const { data: federationSources = [] } = useQuery({
+    queryKey: ['federations'],
+    queryFn: fetchFederationSources,
   });
 
   const clearFilters = () => {
@@ -86,7 +91,7 @@ export default function Recherche() {
       <div className="container mx-auto px-4 py-8">
         {/* Bandeau annuaire fédéral */}
         {(() => {
-          const fed = getFederationForDiscipline(selectedDiscipline);
+          const fed = getFederationForDiscipline(selectedDiscipline, federationSources);
           if (!fed) return null;
           const url = fed.buildSearchUrl({ city: searchQuery, postalCode: searchQuery });
           return (
@@ -346,7 +351,7 @@ export default function Recherche() {
                             {club.disciplineName}
                           </p>
                           {(() => {
-                            const fed = getFederationForDiscipline(club.discipline);
+                            const fed = getFederationForDiscipline(club.discipline, federationSources);
                             return fed ? (
                               <Badge variant="outline" className="text-[10px] gap-1 px-1.5 py-0">
                                 <span aria-hidden>{fed.icon}</span> {fed.code}

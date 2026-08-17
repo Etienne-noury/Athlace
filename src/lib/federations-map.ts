@@ -3,7 +3,8 @@
 // fédéral pour trouver l'exhaustivité des clubs d'une discipline.
 
 export interface FederationSource {
-  code: string;
+  id: string;
+  code: string | null;
   name: string;
   sport: string;
   icon: string;
@@ -14,67 +15,41 @@ export interface FederationSource {
   buildSearchUrl: (query?: { city?: string; postalCode?: string }) => string;
 }
 
-export const federationSources: Record<string, FederationSource> = {
-  FFF: {
-    code: 'FFF',
-    name: 'Fédération Française de Football',
-    sport: 'Football',
-    icon: '⚽',
-    type: 'api',
-    url: 'https://api.fff.fr',
+function iconForCategory(categorie: string): string {
+  if (categorie.includes('collectif')) return '⚽';
+  if (categorie.includes('raquette')) return '🎾';
+  if (categorie.includes('aquatique')) return '🏊';
+  if (categorie.includes('combat') || categorie.includes('martial')) return '🥋';
+  if (categorie.includes('nature') || categorie.includes('montagne')) return '🏔️';
+  if (categorie.includes('hiver') || categorie.includes('glisse')) return '🎿';
+  if (categorie.includes('fitness') || categorie.includes('danse')) return '🏋️';
+  if (categorie.includes('mécanique') || categorie.includes('aérien')) return '🏎️';
+  if (categorie.includes('précision')) return '🎯';
+  if (categorie.includes('traditionnel') || categorie.includes('régional')) return '🎪';
+  if (categorie.includes('Pêche')) return '🎣';
+  if (categorie.includes('Paralympique')) return '♿';
+  return '🏅';
+}
+
+export async function fetchFederationSources(): Promise<FederationSource[]> {
+  const { supabase } = await import('@/integrations/supabase/client');
+  const { data, error } = await supabase
+    .from('federations_sportives')
+    .select('id, nom, sigle, categorie, site_web')
+    .order('nom');
+  if (error) throw error;
+  return (data || []).map((f) => ({
+    id: f.id,
+    code: f.sigle,
+    name: f.nom,
+    sport: f.categorie,
+    icon: iconForCategory(f.categorie),
+    type: 'annuaire' as const,
+    url: f.site_web,
     buildSearchUrl: ({ city, postalCode } = {}) =>
-      `https://www.fff.fr/recherche-club.html?q=${encodeURIComponent(postalCode || city || '')}`,
-  },
-  FFT: {
-    code: 'FFT',
-    name: 'Fédération Française de Tennis',
-    sport: 'Tennis',
-    icon: '🎾',
-    type: 'annuaire',
-    url: 'https://tenup.fft.fr',
-    buildSearchUrl: ({ city, postalCode } = {}) =>
-      `https://tenup.fft.fr/recherche/clubs?q=${encodeURIComponent(postalCode || city || '')}`,
-  },
-  FFR: {
-    code: 'FFR',
-    name: 'Fédération Française de Rugby',
-    sport: 'Rugby',
-    icon: '🏉',
-    type: 'annuaire',
-    url: 'https://www.ffr.fr/ffr/le-rugby/trouver-un-club',
-    buildSearchUrl: ({ city, postalCode } = {}) =>
-      `https://www.ffr.fr/ffr/le-rugby/trouver-un-club?search=${encodeURIComponent(postalCode || city || '')}`,
-  },
-  FFVL: {
-    code: 'FFVL',
-    name: 'Fédération Française de Vol Libre',
-    sport: 'Vol libre',
-    icon: '🪂',
-    type: 'opendata',
-    url: 'https://data.ffvl.fr',
-    buildSearchUrl: () => 'https://federation.ffvl.fr/pages/structures',
-  },
-  FFN: {
-    code: 'FFN',
-    name: 'Fédération Française de Natation',
-    sport: 'Natation',
-    icon: '🏊',
-    type: 'annuaire',
-    url: 'https://www.ffnatation.fr',
-    buildSearchUrl: ({ city, postalCode } = {}) =>
-      `https://www.ffnatation.fr/clubs?q=${encodeURIComponent(postalCode || city || '')}`,
-  },
-  FFBaD: {
-    code: 'FFBaD',
-    name: 'Fédération Française de Badminton',
-    sport: 'Badminton',
-    icon: '🏸',
-    type: 'api',
-    url: 'https://www.ffbad.org',
-    buildSearchUrl: ({ city, postalCode } = {}) =>
-      `https://www.ffbad.org/pratiquer/trouver-un-club?q=${encodeURIComponent(postalCode || city || '')}`,
-  },
-};
+      `${f.site_web}?q=${encodeURIComponent(postalCode || city || '')}`,
+  }));
+}
 
 /**
  * Associe une discipline (par id ou nom) à la fédération qui en tient l'annuaire officiel.
@@ -100,10 +75,14 @@ const DISCIPLINE_TO_FEDERATION: Record<string, string> = {
   badminton: 'FFBaD',
 };
 
-export function getFederationForDiscipline(disciplineId?: string): FederationSource | null {
-  if (!disciplineId) return null;
+export function getFederationForDiscipline(
+  disciplineId?: string,
+  sources?: FederationSource[]
+): FederationSource | null {
+  if (!disciplineId || !sources) return null;
   const code = DISCIPLINE_TO_FEDERATION[disciplineId];
-  return code ? federationSources[code] : null;
+  if (!code) return null;
+  return sources.find((s) => s.code?.toUpperCase() === code.toUpperCase()) || null;
 }
 
 /** Sigle officiel (table `federations_sportives`) associé à une discipline. */
@@ -131,4 +110,3 @@ export async function fetchFederationForDiscipline(disciplineId?: string, discip
   if (error) return null;
   return data ?? null;
 }
-
