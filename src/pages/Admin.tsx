@@ -68,7 +68,7 @@ const parseTabFile = (file: File): Promise<Record<string, string>[]> =>
       console.log('Nombre de lignes brutes:', content.split('\n').length);
       Papa.parse<Record<string, string>>(content, {
         header: true,
-        delimiter: '\t',
+        delimiter: ';',
         skipEmptyLines: true,
         complete: (result) => {
           console.log('Lignes parsées:', result.data.length);
