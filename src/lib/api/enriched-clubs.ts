@@ -62,7 +62,12 @@ export interface FetchEnrichedParams {
   withCoordsOnly?: boolean;
 }
 
-export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<Club[]> {
+export interface FetchEnrichedResult {
+  clubs: Club[];
+  total: number;
+}
+
+export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<FetchEnrichedResult> {
   const {
     q,
     discipline,
@@ -78,7 +83,10 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     withCoordsOnly = true,
   } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
-  let query = supabase.from('clubs_enriched_public').select('*').limit(limit);
+  let query = supabase
+    .from('clubs_enriched_public')
+    .select('*', { count: 'exact' })
+    .limit(limit);
   if (withCoordsOnly) {
     query = query.neq('latitude', 0);
   }
@@ -107,14 +115,17 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   if (lngMin !== undefined) query = query.gte('longitude', lngMin);
   if (lngMax !== undefined) query = query.lte('longitude', lngMax);
 
-
-  const { data, error } = await query;
+  const { data, error, count } = await query;
   if (error) {
     console.error('[fetchEnrichedClubs]', error.message);
-    return [];
+    return { clubs: [], total: 0 };
   }
-  return (data as EnrichedClubRow[]).map(rowToClub);
+  return {
+    clubs: (data as EnrichedClubRow[]).map(rowToClub),
+    total: count ?? 0,
+  };
 }
+
 
 
 export async function fetchEnrichedClubById(id: string): Promise<Club | null> {
