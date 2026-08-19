@@ -24,6 +24,7 @@ export type Database = {
           discipline: string | null
           distrib: string | null
           email: string | null
+          equipements: string[] | null
           external_id: string | null
           federation_code: string
           id: string
@@ -46,6 +47,7 @@ export type Database = {
           discipline?: string | null
           distrib?: string | null
           email?: string | null
+          equipements?: string[] | null
           external_id?: string | null
           federation_code: string
           id?: string
@@ -68,6 +70,7 @@ export type Database = {
           discipline?: string | null
           distrib?: string | null
           email?: string | null
+          equipements?: string[] | null
           external_id?: string | null
           federation_code?: string
           id?: string
