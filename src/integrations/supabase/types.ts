@@ -414,6 +414,7 @@ export type Database = {
       }
     }
     Functions: {
+      enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
       site_stats: { Args: never; Returns: Json }
     }
     Enums: {
