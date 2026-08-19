@@ -87,7 +87,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   }
 
   if (discipline && discipline !== 'all') {
-    query = query.eq('discipline', discipline);
+    query = query.ilike('discipline', discipline);
   }
   if (region && region !== 'all') {
     query = query.ilike('region', `%${region}%`);

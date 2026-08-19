@@ -82,19 +82,17 @@ const MAPPING: { keywords: string[]; sigle: string }[] = [
   { keywords: ['tambourin'], sigle: 'FFJBT' },
 ];
 
-const norm = (s: string) =>
-  s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-const NORM_MAPPING = MAPPING.map((m) => ({
-  sigle: m.sigle,
-  keywords: m.keywords.map(norm),
-}));
+function matches(text: string, keyword: string): boolean {
+  const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const kw = keyword.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const regex = new RegExp(`(^|[^a-z])${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`);
+  return regex.test(normalized);
+}
 
 function matchSigle(description: string | null): string | null {
   if (!description) return null;
-  const text = norm(description);
-  for (const m of NORM_MAPPING) {
-    if (m.keywords.some((k) => text.includes(k))) return m.sigle;
+  for (const m of MAPPING) {
+    if (m.keywords.some((k) => matches(description, k))) return m.sigle;
   }
   return null;
 }
