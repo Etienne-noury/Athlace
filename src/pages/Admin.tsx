@@ -136,6 +136,9 @@ export default function Admin() {
   const [geocodeResult, setGeocodeResult] = useState<string>("");
   const [suggesting, setSuggesting] = useState(false);
   const [suggestResult, setSuggestResult] = useState<string>("");
+  const [enriching, setEnriching] = useState(false);
+  const [enrichResult, setEnrichResult] = useState<string>("");
+
   const [esFiles, setEsFiles] = useState<File[]>([]);
   const [esRunning, setEsRunning] = useState(false);
   const [esProgress, setEsProgress] = useState(0);
