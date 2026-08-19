@@ -295,6 +295,43 @@ export default function Admin() {
       </Card>
 
       <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Importer DATA ES (équipements sportifs)</h2>
+        <p className="text-sm text-muted-foreground">
+          Fichier CSV/TSV séparé par tabulations, avec en-têtes DATA ES.
+        </p>
+        <Input
+          type="file"
+          accept=".csv,.tsv,.txt,text/csv"
+          multiple
+          disabled={esRunning}
+          onChange={(e) => setEsFiles(Array.from(e.target.files || []))}
+        />
+        {esFiles.length > 0 && (
+          <p className="text-sm text-muted-foreground">{esFiles.length} fichier(s) sélectionné(s)</p>
+        )}
+        <Button onClick={runEquipementsImport} disabled={esRunning || !esFiles.length}>
+          {esRunning ? "Import en cours…" : "Lancer l'import équipements"}
+        </Button>
+        {(esRunning || esProgress > 0) && (
+          <div className="space-y-2">
+            <Progress value={esProgress} />
+            <p className="text-sm text-muted-foreground">{esStatus}</p>
+          </div>
+        )}
+        {esResult && (
+          <div className="rounded-md border p-4 space-y-1 text-sm">
+            <p><strong>Enregistrés :</strong> {esResult.upserted}</p>
+            <p><strong>Erreurs :</strong> {esResult.errors}</p>
+            {esResult.lastError && (
+              <p className="text-red-500"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
+            )}
+          </div>
+        )}
+      </Card>
+
+
+
+      <Card className="p-6 space-y-4">
         <h2 className="text-xl font-semibold">Géocodage des clubs</h2>
         <p className="text-sm text-muted-foreground">
           Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
