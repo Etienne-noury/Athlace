@@ -134,11 +134,44 @@ export default function Admin() {
   } | null>(null);
   const [geocoding, setGeocoding] = useState(false);
   const [geocodeResult, setGeocodeResult] = useState<string>("");
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestResult, setSuggestResult] = useState<string>("");
   const [esFiles, setEsFiles] = useState<File[]>([]);
   const [esRunning, setEsRunning] = useState(false);
   const [esProgress, setEsProgress] = useState(0);
   const [esStatus, setEsStatus] = useState("");
   const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
+
+  const runSuggestFederation = async () => {
+    setSuggesting(true);
+    let totalUpdated = 0;
+    let totalSkipped = 0;
+    let offset = 0;
+
+    while (true) {
+      const { data, error } = await supabase.functions.invoke("suggest-federation", {
+        body: { offset },
+      });
+      if (error || !data || data.error) {
+        setSuggestResult(`Erreur: ${error?.message || data?.error || "inconnue"}`);
+        break;
+      }
+
+      totalUpdated += data.updated || 0;
+      totalSkipped += data.skipped || 0;
+      setSuggestResult(`Assignés : ${totalUpdated} — Ignorés : ${totalSkipped}`);
+
+      if (!data.processed) break;
+      // Les clubs mis à jour sortent du filtre; on décale de ce qui reste ignoré.
+      offset += data.skipped || 0;
+      if ((data.updated || 0) === 0 && (data.skipped || 0) === 0) break;
+      await new Promise((r) => setTimeout(r, 300));
+    }
+
+    setSuggesting(false);
+    setSuggestResult((prev) => `Terminé — ${totalUpdated} assignés, ${totalSkipped} ignorés${prev.startsWith("Erreur") ? ` (${prev})` : ""}`);
+  };
+
 
   const runEquipementsImport = async () => {
     if (!esFiles.length) return;
