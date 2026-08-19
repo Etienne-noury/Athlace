@@ -24,6 +24,7 @@ export type Database = {
           discipline: string | null
           distrib: string | null
           email: string | null
+          equipements: string[] | null
           external_id: string | null
           federation_code: string
           id: string
@@ -46,6 +47,7 @@ export type Database = {
           discipline?: string | null
           distrib?: string | null
           email?: string | null
+          equipements?: string[] | null
           external_id?: string | null
           federation_code: string
           id?: string
@@ -68,6 +70,7 @@ export type Database = {
           discipline?: string | null
           distrib?: string | null
           email?: string | null
+          equipements?: string[] | null
           external_id?: string | null
           federation_code?: string
           id?: string
@@ -411,6 +414,7 @@ export type Database = {
       }
     }
     Functions: {
+      enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
       site_stats: { Args: never; Returns: Json }
     }
     Enums: {

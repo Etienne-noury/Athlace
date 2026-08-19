@@ -136,13 +136,47 @@ export default function Admin() {
   const [geocodeResult, setGeocodeResult] = useState<string>("");
   const [suggesting, setSuggesting] = useState(false);
   const [suggestResult, setSuggestResult] = useState<string>("");
+  const [enriching, setEnriching] = useState(false);
+  const [enrichResult, setEnrichResult] = useState<string>("");
+
   const [esFiles, setEsFiles] = useState<File[]>([]);
   const [esRunning, setEsRunning] = useState(false);
   const [esProgress, setEsProgress] = useState(0);
   const [esStatus, setEsStatus] = useState("");
   const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
 
+  const runEnrichFromEs = async () => {
+    setEnriching(true);
+    let gps = 0;
+    let disc = 0;
+    let equip = 0;
+
+    for (let i = 0; i < 200; i++) {
+      const { data, error } = await supabase.functions.invoke("enrich-from-es", {
+        body: { batchSize: 500 },
+      });
+      if (error || !data || data.error) {
+        setEnrichResult(`Erreur: ${error?.message || data?.error || "inconnue"}`);
+        break;
+      }
+
+      gps += data.gps || 0;
+      disc += data.disciplines || 0;
+      equip += data.equipements || 0;
+      setEnrichResult(`GPS : ${gps} — Disciplines : ${disc} — Équipements : ${equip}`);
+
+      if (!data.updated) {
+        setEnrichResult(`Terminé — GPS : ${gps}, Disciplines : ${disc}, Équipements : ${equip}`);
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 300));
+    }
+
+    setEnriching(false);
+  };
+
   const runSuggestFederation = async () => {
+
     setSuggesting(true);
     let totalUpdated = 0;
     let totalSkipped = 0;
@@ -387,6 +421,20 @@ export default function Admin() {
           <p className="text-sm">{geocodeResult}</p>
         )}
       </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Enrichissement depuis DATA ES</h2>
+        <p className="text-sm text-muted-foreground">
+          Complète les clubs RNA avec les coordonnées GPS, la discipline et les équipements
+          disponibles issus des équipements sportifs.
+        </p>
+        <Button onClick={runEnrichFromEs} disabled={enriching}>
+          {enriching ? "Enrichissement…" : "Enrichir depuis DATA ES"}
+        </Button>
+        {enrichResult && <p className="text-sm">{enrichResult}</p>}
+      </Card>
+
+
 
       <Card className="p-6 space-y-4">
         <h2 className="text-xl font-semibold">Suggestion de fédérations</h2>
