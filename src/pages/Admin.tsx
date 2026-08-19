@@ -123,6 +123,59 @@ export default function Admin() {
   } | null>(null);
   const [geocoding, setGeocoding] = useState(false);
   const [geocodeResult, setGeocodeResult] = useState<string>("");
+  const [esFiles, setEsFiles] = useState<File[]>([]);
+  const [esRunning, setEsRunning] = useState(false);
+  const [esProgress, setEsProgress] = useState(0);
+  const [esStatus, setEsStatus] = useState("");
+  const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
+
+  const runEquipementsImport = async () => {
+    if (!esFiles.length) return;
+    setEsRunning(true);
+    setEsProgress(0);
+    setEsResult(null);
+
+    let upserted = 0;
+    let errors = 0;
+    let lastError = "";
+
+    try {
+      for (let fi = 0; fi < esFiles.length; fi++) {
+        const file = esFiles[fi];
+        setEsStatus(`Lecture de ${file.name}…`);
+        const rows = await parseTabFile(file);
+        const mapped = rows.map(mapEquipementRow).filter((r) => r.external_id);
+
+        for (let i = 0; i < mapped.length; i += BATCH_SIZE) {
+          const batch = mapped.slice(i, i + BATCH_SIZE);
+          setEsStatus(
+            `${file.name} — batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
+              mapped.length / BATCH_SIZE
+            )}`
+          );
+          const { data, error } = await supabase.functions.invoke("import-equipements", {
+            body: { rows: batch },
+          });
+          if (error || data?.error || data?.errors?.length) {
+            lastError = error?.message || data?.error || data?.errors?.join("; ");
+            errors += batch.length;
+          } else {
+            upserted += data?.upserted || batch.length;
+          }
+          const fileProgress = (i + batch.length) / Math.max(mapped.length, 1);
+          setEsProgress(((fi + fileProgress) / esFiles.length) * 100);
+        }
+        setEsProgress(((fi + 1) / esFiles.length) * 100);
+      }
+      setEsStatus("Terminé");
+    } catch (e) {
+      setEsStatus(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setEsResult({ upserted, errors, lastError });
+      setEsRunning(false);
+    }
+  };
+
 
   const runGeocode = async () => {
     setGeocoding(true);
