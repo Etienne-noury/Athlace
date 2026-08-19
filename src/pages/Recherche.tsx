@@ -42,7 +42,7 @@ export default function Recherche() {
     setPage(0);
   }, [searchQuery, selectedDiscipline, selectedRegion]);
 
-  const { data: filteredClubs = [], isLoading, isFetching } = useQuery({
+  const { data: searchResult = { clubs: [], total: 0 }, isLoading, isFetching } = useQuery({
     queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion, page],
     queryFn: async () => {
       return fetchEnrichedClubs({
@@ -57,6 +57,11 @@ export default function Recherche() {
       });
     },
   });
+
+  const filteredClubs = searchResult.clubs;
+  const totalCount = searchResult.total;
+  const totalPages = Math.ceil(totalCount / 100);
+
 
   const { data: federationSources = [] } = useQuery({
     queryKey: ['federations'],

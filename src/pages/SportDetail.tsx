@@ -43,12 +43,15 @@ export default function SportDetail() {
     if (sport) document.title = `${sport.name} — Trouver un club - Athlace`;
   }, [sport]);
 
-  const { data: clubs = [], isLoading } = useQuery({
+  const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
     queryKey: ['sport-detail', sport?.name],
     queryFn: () => fetchEnrichedClubs({ discipline: sport?.name || '', limit: 100 }),
     enabled: !!sport?.name,
     staleTime: 5 * 60 * 1000,
   });
+
+  const clubs = result.clubs;
+
 
   if (!sport) {
     return (

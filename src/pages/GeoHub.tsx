@@ -69,11 +69,14 @@ export default function GeoHub() {
     return base;
   }, [sport, regionData, departmentData, cityName, page]);
 
-  const { data: clubs = [], isLoading } = useQuery({
+  const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
     queryKey: ['geo-hub', params],
     queryFn: () => fetchEnrichedClubs(params),
     staleTime: 5 * 60 * 1000,
   });
+
+  const clubs = result.clubs;
+
 
   // Sub-zones and sports for navigation
   const subZones = useMemo(() => {
