@@ -423,6 +423,20 @@ export default function Admin() {
       </Card>
 
       <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Enrichissement depuis DATA ES</h2>
+        <p className="text-sm text-muted-foreground">
+          Complète les clubs RNA avec les coordonnées GPS, la discipline et les équipements
+          disponibles issus des équipements sportifs.
+        </p>
+        <Button onClick={runEnrichFromEs} disabled={enriching}>
+          {enriching ? "Enrichissement…" : "Enrichir depuis DATA ES"}
+        </Button>
+        {enrichResult && <p className="text-sm">{enrichResult}</p>}
+      </Card>
+
+
+
+      <Card className="p-6 space-y-4">
         <h2 className="text-xl font-semibold">Suggestion de fédérations</h2>
         <p className="text-sm text-muted-foreground">
           Analyse la description des clubs sans discipline et leur associe la fédération correspondante.
