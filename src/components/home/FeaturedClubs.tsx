@@ -7,10 +7,13 @@ import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { getDisciplineById } from '@/data/disciplines';
 
 export function FeaturedClubs() {
-  const { data: featuredClubs = [], isLoading } = useQuery({
+  const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
     queryKey: ['clubs', 'featured'],
     queryFn: () => fetchEnrichedClubs({ limit: 4 }),
   });
+
+  const featuredClubs = result.clubs;
+
 
 
   return (
