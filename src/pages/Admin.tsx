@@ -59,6 +59,57 @@ const parseFile = (file: File): Promise<Record<string, string>[]> =>
     });
   });
 
+const parseTabFile = (file: File): Promise<Record<string, string>[]> =>
+  new Promise((resolve, reject) => {
+    Papa.parse<Record<string, string>>(file, {
+      header: true,
+      delimiter: "\t",
+      skipEmptyLines: true,
+      complete: (result) => resolve(result.data),
+      error: reject,
+    });
+  });
+
+const normalizeKey = (k: string) =>
+  k
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+const pick = (row: Record<string, string>, label: string): string => {
+  const target = normalizeKey(label);
+  for (const [k, v] of Object.entries(row)) {
+    if (normalizeKey(k) === target) return (v ?? "").trim();
+  }
+  return "";
+};
+
+const toNum = (v: string): number | null => {
+  if (!v) return null;
+  const n = parseFloat(v.replace(",", "."));
+  return isNaN(n) ? null : n;
+};
+
+const mapEquipementRow = (row: Record<string, string>) => ({
+  external_id: pick(row, "Numéro de l'équipement sportif") || null,
+  nom_installation: pick(row, "Nom de l'installation sportive") || null,
+  adresse: pick(row, "Adresse") || null,
+  postal_code: pick(row, "Code Postal") || null,
+  city: pick(row, "Commune nom") || null,
+  departement: pick(row, "Département Nom") || null,
+  region: pick(row, "Région Nom") || null,
+  latitude: toNum(pick(row, "Latitude")),
+  longitude: toNum(pick(row, "Longitude")),
+  type_equipement: pick(row, "Type d'équipement sportif") || null,
+  famille_equipement: pick(row, "Famille d'équipement sportif") || null,
+  activites: pick(row, "Activités") || null,
+  website: pick(row, "Adresse internet de l'équipement") || null,
+  acces_libre: pick(row, "Equipement d'accès libre").toLowerCase() === "true",
+});
+
+
 export default function Admin() {
   const [files, setFiles] = useState<File[]>([]);
   const [running, setRunning] = useState(false);
@@ -72,6 +123,59 @@ export default function Admin() {
   } | null>(null);
   const [geocoding, setGeocoding] = useState(false);
   const [geocodeResult, setGeocodeResult] = useState<string>("");
+  const [esFiles, setEsFiles] = useState<File[]>([]);
+  const [esRunning, setEsRunning] = useState(false);
+  const [esProgress, setEsProgress] = useState(0);
+  const [esStatus, setEsStatus] = useState("");
+  const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
+
+  const runEquipementsImport = async () => {
+    if (!esFiles.length) return;
+    setEsRunning(true);
+    setEsProgress(0);
+    setEsResult(null);
+
+    let upserted = 0;
+    let errors = 0;
+    let lastError = "";
+
+    try {
+      for (let fi = 0; fi < esFiles.length; fi++) {
+        const file = esFiles[fi];
+        setEsStatus(`Lecture de ${file.name}…`);
+        const rows = await parseTabFile(file);
+        const mapped = rows.map(mapEquipementRow).filter((r) => r.external_id);
+
+        for (let i = 0; i < mapped.length; i += BATCH_SIZE) {
+          const batch = mapped.slice(i, i + BATCH_SIZE);
+          setEsStatus(
+            `${file.name} — batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
+              mapped.length / BATCH_SIZE
+            )}`
+          );
+          const { data, error } = await supabase.functions.invoke("import-equipements", {
+            body: { rows: batch },
+          });
+          if (error || data?.error || data?.errors?.length) {
+            lastError = error?.message || data?.error || data?.errors?.join("; ");
+            errors += batch.length;
+          } else {
+            upserted += data?.upserted || batch.length;
+          }
+          const fileProgress = (i + batch.length) / Math.max(mapped.length, 1);
+          setEsProgress(((fi + fileProgress) / esFiles.length) * 100);
+        }
+        setEsProgress(((fi + 1) / esFiles.length) * 100);
+      }
+      setEsStatus("Terminé");
+    } catch (e) {
+      setEsStatus(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setEsResult({ upserted, errors, lastError });
+      setEsRunning(false);
+    }
+  };
+
 
   const runGeocode = async () => {
     setGeocoding(true);
@@ -189,6 +293,43 @@ export default function Admin() {
           </div>
         )}
       </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Importer DATA ES (équipements sportifs)</h2>
+        <p className="text-sm text-muted-foreground">
+          Fichier CSV/TSV séparé par tabulations, avec en-têtes DATA ES.
+        </p>
+        <Input
+          type="file"
+          accept=".csv,.tsv,.txt,text/csv"
+          multiple
+          disabled={esRunning}
+          onChange={(e) => setEsFiles(Array.from(e.target.files || []))}
+        />
+        {esFiles.length > 0 && (
+          <p className="text-sm text-muted-foreground">{esFiles.length} fichier(s) sélectionné(s)</p>
+        )}
+        <Button onClick={runEquipementsImport} disabled={esRunning || !esFiles.length}>
+          {esRunning ? "Import en cours…" : "Lancer l'import équipements"}
+        </Button>
+        {(esRunning || esProgress > 0) && (
+          <div className="space-y-2">
+            <Progress value={esProgress} />
+            <p className="text-sm text-muted-foreground">{esStatus}</p>
+          </div>
+        )}
+        {esResult && (
+          <div className="rounded-md border p-4 space-y-1 text-sm">
+            <p><strong>Enregistrés :</strong> {esResult.upserted}</p>
+            <p><strong>Erreurs :</strong> {esResult.errors}</p>
+            {esResult.lastError && (
+              <p className="text-red-500"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
+            )}
+          </div>
+        )}
+      </Card>
+
+
 
       <Card className="p-6 space-y-4">
         <h2 className="text-xl font-semibold">Géocodage des clubs</h2>
