@@ -182,6 +182,63 @@ export type Database = {
         }
         Relationships: []
       }
+      equipements_sportifs: {
+        Row: {
+          acces_libre: boolean | null
+          activites: string | null
+          adresse: string | null
+          city: string | null
+          departement: string | null
+          external_id: string | null
+          famille_equipement: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          nom_installation: string | null
+          postal_code: string | null
+          region: string | null
+          type_equipement: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          acces_libre?: boolean | null
+          activites?: string | null
+          adresse?: string | null
+          city?: string | null
+          departement?: string | null
+          external_id?: string | null
+          famille_equipement?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          nom_installation?: string | null
+          postal_code?: string | null
+          region?: string | null
+          type_equipement?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          acces_libre?: boolean | null
+          activites?: string | null
+          adresse?: string | null
+          city?: string | null
+          departement?: string | null
+          external_id?: string | null
+          famille_equipement?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          nom_installation?: string | null
+          postal_code?: string | null
+          region?: string | null
+          type_equipement?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           club_id: string
