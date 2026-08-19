@@ -387,6 +387,18 @@ export default function Admin() {
           <p className="text-sm">{geocodeResult}</p>
         )}
       </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Suggestion de fédérations</h2>
+        <p className="text-sm text-muted-foreground">
+          Analyse la description des clubs sans discipline et leur associe la fédération correspondante.
+        </p>
+        <Button onClick={runSuggestFederation} disabled={suggesting}>
+          {suggesting ? "Analyse en cours…" : "Suggérer les fédérations"}
+        </Button>
+        {suggestResult && <p className="text-sm">{suggestResult}</p>}
+      </Card>
+
     </div>
   );
 }
