@@ -87,9 +87,6 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     .from('clubs_enriched_public')
     .select('*', { count: 'exact' })
     .limit(limit);
-  if (withCoordsOnly) {
-    query = query.neq('latitude', 0);
-  }
   if (typeof offset === 'number') {
     query = query.range(offset, offset + limit - 1);
   }
