@@ -91,8 +91,9 @@ export default function Recherche() {
             Rechercher un club
           </h1>
           <p className="text-muted-foreground text-lg">
-            {filteredClubs.length} club{filteredClubs.length > 1 ? 's' : ''} trouvé{filteredClubs.length > 1 ? 's' : ''}
+            {totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}
           </p>
+
         </div>
       </section>
 
@@ -397,15 +398,18 @@ export default function Recherche() {
               >
                 ← Précédent
               </Button>
-              <span className="text-sm text-muted-foreground">Page {page + 1}</span>
+              <span className="text-sm text-muted-foreground">
+                Page {page + 1} / {totalPages || 1}
+              </span>
               <Button
                 variant="outline"
                 onClick={() => setPage((p) => p + 1)}
-                disabled={filteredClubs.length < 100 || isFetching}
+                disabled={page + 1 >= totalPages || isFetching}
               >
                 Suivant →
               </Button>
             </div>
+
 
           </div>
         </div>
