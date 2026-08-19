@@ -59,6 +59,57 @@ const parseFile = (file: File): Promise<Record<string, string>[]> =>
     });
   });
 
+const parseTabFile = (file: File): Promise<Record<string, string>[]> =>
+  new Promise((resolve, reject) => {
+    Papa.parse<Record<string, string>>(file, {
+      header: true,
+      delimiter: "\t",
+      skipEmptyLines: true,
+      complete: (result) => resolve(result.data),
+      error: reject,
+    });
+  });
+
+const normalizeKey = (k: string) =>
+  k
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+const pick = (row: Record<string, string>, label: string): string => {
+  const target = normalizeKey(label);
+  for (const [k, v] of Object.entries(row)) {
+    if (normalizeKey(k) === target) return (v ?? "").trim();
+  }
+  return "";
+};
+
+const toNum = (v: string): number | null => {
+  if (!v) return null;
+  const n = parseFloat(v.replace(",", "."));
+  return isNaN(n) ? null : n;
+};
+
+const mapEquipementRow = (row: Record<string, string>) => ({
+  external_id: pick(row, "Numéro de l'équipement sportif") || null,
+  nom_installation: pick(row, "Nom de l'installation sportive") || null,
+  adresse: pick(row, "Adresse") || null,
+  postal_code: pick(row, "Code Postal") || null,
+  city: pick(row, "Commune nom") || null,
+  departement: pick(row, "Département Nom") || null,
+  region: pick(row, "Région Nom") || null,
+  latitude: toNum(pick(row, "Latitude")),
+  longitude: toNum(pick(row, "Longitude")),
+  type_equipement: pick(row, "Type d'équipement sportif") || null,
+  famille_equipement: pick(row, "Famille d'équipement sportif") || null,
+  activites: pick(row, "Activités") || null,
+  website: pick(row, "Adresse internet de l'équipement") || null,
+  acces_libre: pick(row, "Equipement d'accès libre").toLowerCase() === "true",
+});
+
+
 export default function Admin() {
   const [files, setFiles] = useState<File[]>([]);
   const [running, setRunning] = useState(false);
