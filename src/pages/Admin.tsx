@@ -145,7 +145,38 @@ export default function Admin() {
   const [esStatus, setEsStatus] = useState("");
   const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
 
+  const runEnrichFromEs = async () => {
+    setEnriching(true);
+    let gps = 0;
+    let disc = 0;
+    let equip = 0;
+
+    for (let i = 0; i < 200; i++) {
+      const { data, error } = await supabase.functions.invoke("enrich-from-es", {
+        body: { batchSize: 500 },
+      });
+      if (error || !data || data.error) {
+        setEnrichResult(`Erreur: ${error?.message || data?.error || "inconnue"}`);
+        break;
+      }
+
+      gps += data.gps || 0;
+      disc += data.disciplines || 0;
+      equip += data.equipements || 0;
+      setEnrichResult(`GPS : ${gps} — Disciplines : ${disc} — Équipements : ${equip}`);
+
+      if (!data.updated) {
+        setEnrichResult(`Terminé — GPS : ${gps}, Disciplines : ${disc}, Équipements : ${equip}`);
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 300));
+    }
+
+    setEnriching(false);
+  };
+
   const runSuggestFederation = async () => {
+
     setSuggesting(true);
     let totalUpdated = 0;
     let totalSkipped = 0;
