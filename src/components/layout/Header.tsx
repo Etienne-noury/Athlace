@@ -198,9 +198,9 @@ export function Header() {
                             </div>
                           ))}
                         </div>
-
-                        </div>
                       )}
+
+
 
 
                       {item.type === 'clubs' && (
