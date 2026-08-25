@@ -81,11 +81,8 @@ export function Header() {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { data: federationsByCategorie } = useQuery({
-    queryKey: ['federations-by-categorie'],
-    queryFn: fetchFederationsByCategorie,
-    staleTime: 1000 * 60 * 60,
-  });
+
+
 
 
 
