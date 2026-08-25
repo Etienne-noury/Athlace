@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
-import { getDisciplineById } from "@/data/disciplines";
+import { getDisciplineById, getDisciplineQueryNames } from "@/data/disciplines";
 import "leaflet/dist/leaflet.css";
 
 
@@ -24,6 +24,7 @@ const FRANCE_ZOOM = 6;
 interface FranceMapProps {
   height?: string;
   selectedDiscipline?: string;
+  selectedSub?: string;
   selectedRegion?: string;
   maxClubs?: number;
 }
@@ -31,6 +32,7 @@ interface FranceMapProps {
 export function FranceMap({
   height = "500px",
   selectedDiscipline = "all",
+  selectedSub = "all",
   selectedRegion = "all",
   maxClubs = 100,
 }: FranceMapProps) {
@@ -43,10 +45,10 @@ export function FranceMap({
   const dynamicLimit = zoom > 10 ? 500 : zoom >= 8 ? 200 : 50;
 
   const { data: displayedClubs = [], isFetching } = useQuery({
-    queryKey: ["clubs", "map", selectedDiscipline, selectedRegion, bounds, dynamicLimit],
+    queryKey: ["clubs", "map", selectedDiscipline, selectedSub, selectedRegion, bounds, dynamicLimit],
     queryFn: async () => {
       const result = await fetchEnrichedClubs({
-        discipline: selectedDiscipline,
+        disciplines: getDisciplineQueryNames(selectedDiscipline, selectedSub),
         region: selectedRegion,
         limit: dynamicLimit,
         ...(bounds ?? {}),

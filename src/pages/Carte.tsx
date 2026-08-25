@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { Filter } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { FranceMap } from '@/components/map/FranceMap';
-import { getParentDisciplines } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
 
 export default function Carte() {
   const [selectedDiscipline, setSelectedDiscipline] = useState('all');
+  const [selectedSub, setSelectedSub] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
-  
-  const parentDisciplines = getParentDisciplines();
 
   return (
     <Layout>
@@ -35,19 +34,16 @@ export default function Carte() {
               <span className="text-sm font-medium">Filtres :</span>
             </div>
 
-            <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Discipline" />
-              </SelectTrigger>
-              <SelectContent className="bg-card z-[2000]">
-                <SelectItem value="all">Toutes les disciplines</SelectItem>
-                {[...parentDisciplines].sort((a, b) => b.popularity - a.popularity).map((d) => (
-                  <SelectItem key={d.id} value={d.id}>
-                    {d.icon} {d.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DisciplineFilter
+              sport={selectedDiscipline}
+              sub={selectedSub}
+              onSportChange={setSelectedDiscipline}
+              onSubChange={setSelectedSub}
+              showLabels={false}
+              layout="inline"
+              triggerClassName="w-[220px]"
+              contentClassName="bg-card z-[2000]"
+            />
 
             <Select value={selectedRegion} onValueChange={setSelectedRegion}>
               <SelectTrigger className="w-[200px]">
@@ -71,6 +67,7 @@ export default function Carte() {
         <FranceMap
           height="100%"
           selectedDiscipline={selectedDiscipline}
+          selectedSub={selectedSub}
           selectedRegion={selectedRegion}
           maxClubs={100}
         />
