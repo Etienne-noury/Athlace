@@ -10,9 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
