@@ -165,42 +165,40 @@ export function Header() {
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
                         <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
-                          {FEDERATION_CATEGORIES.map((categorie) => {
-                            const feds = federationsByCategorie?.[categorie] ?? [];
-                            if (feds.length === 0) return null;
-                            return (
-                              <div key={categorie}>
-                                <Link
-                                  to={`/sports/famille/${slugifyFederation(categorie)}/`}
-                                  className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
-                                >
-                                  {categorie}
-                                </Link>
-                                <ul className="space-y-1.5">
-                                  {feds.slice(0, 5).map((fed) => (
-                                    <li key={fed.id}>
-                                      <Link
-                                        to={`/sports/${slugifyFederation(fed.sigle || fed.nom)}/`}
-                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                      >
-                                        {fed.nom}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                  {feds.length > 5 && (
-                                    <li>
-                                      <Link
-                                        to={`/sports/famille/${slugifyFederation(categorie)}/`}
-                                        className="text-sm text-primary font-medium hover:underline"
-                                      >
-                                        Voir tout →
-                                      </Link>
-                                    </li>
-                                  )}
-                                </ul>
-                              </div>
-                            );
-                          })}
+                          {ARBORESCENCE.map((cat) => (
+                            <div key={cat.id}>
+                              <Link
+                                to={`/sports/famille/${cat.id}/`}
+                                className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
+                              >
+                                {cat.icon} {cat.name}
+                              </Link>
+                              <ul className="space-y-1.5">
+                                {cat.sports.slice(0, 6).map((sport) => (
+                                  <li key={sport.name}>
+                                    <Link
+                                      to={`/sports/${slugifyDiscipline(sport.name)}/`}
+                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                      {sport.name}
+                                    </Link>
+                                  </li>
+                                ))}
+                                {cat.sports.length > 6 && (
+                                  <li>
+                                    <Link
+                                      to={`/sports/famille/${cat.id}/`}
+                                      className="text-sm text-primary font-medium hover:underline"
+                                    >
+                                      Voir tout →
+                                    </Link>
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+
                         </div>
                       )}
 
