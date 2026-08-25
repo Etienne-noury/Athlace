@@ -10,10 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
 import {
   Sheet,
   SheetContent,
@@ -23,7 +26,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
-import { disciplines, getParentDisciplines, getDisciplineById } from '@/data/disciplines';
+import { ARBORESCENCE, disciplines, getDisciplineById, slugifyDiscipline } from '@/data/disciplines';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
@@ -165,14 +168,29 @@ export default function Recherche() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">Toutes les disciplines</SelectItem>
-                        {getParentDisciplines()
-                          .slice()
-                          .sort((a, b) => b.popularity - a.popularity)
-                          .map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.icon} {d.name}
-                            </SelectItem>
-                          ))}
+                        {ARBORESCENCE.map((cat) => (
+                          <SelectGroup key={cat.id}>
+                            <SelectLabel>{cat.icon} {cat.name}</SelectLabel>
+                            {cat.sports.map((sport) => {
+                              const sportId = slugifyDiscipline(sport.name);
+                              return [
+                                <SelectItem key={sportId} value={sportId}>
+                                  {sport.icon} {sport.name}
+                                </SelectItem>,
+                                ...sport.subs.map((sub) => (
+                                  <SelectItem
+                                    key={`${sportId}--${slugifyDiscipline(sub)}`}
+                                    value={`${sportId}--${slugifyDiscipline(sub)}`}
+                                    className="pl-8 text-muted-foreground"
+                                  >
+                                    {sub}
+                                  </SelectItem>
+                                )),
+                              ];
+                            })}
+                          </SelectGroup>
+                        ))}
+
                       </SelectContent>
                     </Select>
                   </div>
@@ -243,12 +261,29 @@ export default function Recherche() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Toutes</SelectItem>
-                      {getParentDisciplines()
-                        .slice()
-                        .sort((a, b) => b.popularity - a.popularity)
-                        .map((d) => (
-                          <SelectItem key={d.id} value={d.id}>{d.icon} {d.name}</SelectItem>
-                        ))}
+                      {ARBORESCENCE.map((cat) => (
+                        <SelectGroup key={cat.id}>
+                          <SelectLabel>{cat.icon} {cat.name}</SelectLabel>
+                          {cat.sports.map((sport) => {
+                            const sportId = slugifyDiscipline(sport.name);
+                            return [
+                              <SelectItem key={sportId} value={sportId}>
+                                {sport.icon} {sport.name}
+                              </SelectItem>,
+                              ...sport.subs.map((sub) => (
+                                <SelectItem
+                                  key={`${sportId}--${slugifyDiscipline(sub)}`}
+                                  value={`${sportId}--${slugifyDiscipline(sub)}`}
+                                  className="pl-8 text-muted-foreground"
+                                >
+                                  {sub}
+                                </SelectItem>
+                              )),
+                            ];
+                          })}
+                        </SelectGroup>
+                      ))}
+
                     </SelectContent>
                   </Select>
                 </div>

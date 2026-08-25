@@ -1,4 +1,4 @@
-import { disciplines } from '@/data/disciplines';
+import { ARBORESCENCE, disciplines, slugifyDiscipline } from '@/data/disciplines';
 
 export interface SportFamily {
   id: string;
@@ -7,38 +7,12 @@ export interface SportFamily {
   sports: string[]; // discipline IDs
 }
 
-export const SPORT_FAMILIES: SportFamily[] = [
-  {
-    id: 'raquette',
-    name: 'Sports de raquette',
-    icon: '🏸',
-    sports: ['badminton', 'tennis', 'tennis-de-table', 'squash', 'padel', 'beach-tennis'],
-  },
-  {
-    id: 'collectifs',
-    name: 'Sports collectifs',
-    icon: '⚽',
-    sports: ['football', 'basketball', 'volleyball', 'handball', 'rugby', 'futsal', 'beach-soccer', 'football-feminin'],
-  },
-  {
-    id: 'individuels',
-    name: 'Sports individuels',
-    icon: '🏃',
-    sports: ['course-a-pied', 'natation', 'yoga', 'golf', 'escalade', 'athletisme'],
-  },
-  {
-    id: 'arts-martiaux',
-    name: 'Arts martiaux',
-    icon: '🥋',
-    sports: ['judo', 'karate', 'boxe', 'boxe-anglaise', 'boxe-francaise', 'mma', 'taekwondo', 'aikido'],
-  },
-  {
-    id: 'fitness',
-    name: 'Fitness & bien-être',
-    icon: '💪',
-    sports: ['fitness', 'musculation', 'crossfit', 'pilates', 'zumba', 'aquagym'],
-  },
-];
+export const SPORT_FAMILIES: SportFamily[] = ARBORESCENCE.map((cat) => ({
+  id: cat.id,
+  name: cat.name,
+  icon: cat.icon,
+  sports: cat.sports.map((s) => slugifyDiscipline(s.name)),
+}));
 
 export function getFamilyById(id: string): SportFamily | undefined {
   return SPORT_FAMILIES.find((f) => f.id === id);
@@ -61,16 +35,6 @@ export function getSportById(id: string) {
 export function getDisciplineDisplayName(slug: string): string | undefined {
   const direct = disciplines.find((d) => d.id === slug);
   if (direct) return direct.name;
-  const byName = disciplines.find((d) => slugify(d.name) === slug);
+  const byName = disciplines.find((d) => slugifyDiscipline(d.name) === slug);
   return byName?.name;
 }
-
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
