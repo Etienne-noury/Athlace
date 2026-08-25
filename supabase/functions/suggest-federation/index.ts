@@ -138,31 +138,37 @@ Deno.serve(async (req) => {
 
     if (!equipements || equipements.length === 0) { skipped++; continue; }
 
-    // Étape 2 : match strict sur l'adresse
-    const matchingEquipements = equipements.filter(e => 
-      e.adresse && strictAddressMatch(club.address, e.adresse)
-    );
+    // PRIORITÉ 1 : match sur description + name RNA
+    const rnaText = `${club.description || ''} ${club.name || ''}`;
+    let match = ACTIVITES_MAP.find(m => m.pattern.test(rnaText));
 
-    // Étape 3 : si match strict trouvé, utilise les activités
-    const sourceEquipements = matchingEquipements.length > 0 ? matchingEquipements : [];
-    
-    if (sourceEquipements.length === 0) { skipped++; continue; }
+    // PRIORITÉ 2 : si pas de match RNA → utilise activités DATA ES (adresse souple)
+    if (!match) {
+      // Match souple : même code postal + au moins 1 mot de rue en commun (>4 lettres)
+      const soupleMatch = equipements.filter(e => {
+        if (!e.adresse) return false;
+        const words1 = normalize(club.address).split(' ').filter(w => w.length > 4);
+        const words2 = normalize(e.adresse).split(' ').filter(w => w.length > 4);
+        return words1.some(w => words2.includes(w));
+      });
 
-    // Étape 4 : collecte les activités + type_equipement
-    const activitesText = sourceEquipements
-      .map(e => [e.activites, e.type_equipement, e.famille_equipement].filter(Boolean).join(' '))
-      .join(' ');
+      const activitesText = soupleMatch.length > 0
+        ? soupleMatch.map(e => [e.activites, e.type_equipement].filter(Boolean).join(' ')).join(' ')
+        : '';
 
-    const equipementsList = sourceEquipements
+      if (activitesText) {
+        match = ACTIVITES_MAP.find(m => m.pattern.test(activitesText));
+      }
+    }
+
+    // Équipements : toujours depuis DATA ES adresse souple
+    const equipementsList = equipements
+      .filter(e => e.adresse && normalize(club.address).split(' ')
+        .filter(w => w.length > 4)
+        .some(w => normalize(e.adresse).split(' ').includes(w)))
       .map(e => e.type_equipement)
       .filter(Boolean)
       .filter((v, i, a) => a.indexOf(v) === i);
-
-    // Étape 5 : double vérification avec description RNA
-    const combinedText = `${activitesText} ${club.description || ''} ${club.name || ''}`;
-
-    // Étape 6 : trouve la FF
-    const match = ACTIVITES_MAP.find(m => m.pattern.test(combinedText));
 
     if (match) {
       await supabase
