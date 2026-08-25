@@ -91,7 +91,12 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     query = query.range(offset, offset + limit - 1);
   }
 
-  if (discipline && discipline !== 'all') {
+  const disciplineList = (disciplines_ ?? []).filter((d) => d && d !== 'all');
+  if (disciplineList.length > 0) {
+    // Sport parent sélectionné : on accepte le sport ET toutes ses sous-disciplines.
+    const escaped = disciplineList.map((d) => d.replace(/[,()]/g, ' '));
+    query = query.or(escaped.map((d) => `discipline.ilike.${d}`).join(','));
+  } else if (discipline && discipline !== 'all') {
     query = query.ilike('discipline', discipline);
   }
   if (region && region !== 'all') {
