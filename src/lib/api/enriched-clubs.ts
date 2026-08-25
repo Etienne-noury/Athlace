@@ -50,6 +50,8 @@ function rowToClub(r: EnrichedClubRow): Club {
 export interface FetchEnrichedParams {
   q?: string;
   discipline?: string;
+  /** Liste de libellés de disciplines (sport + sous-disciplines) : match OU. */
+  disciplines?: string[];
   region?: string;
   department?: string;
   city?: string;
@@ -71,6 +73,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   const {
     q,
     discipline,
+    disciplines: disciplines_,
     region,
     department,
     city,
