@@ -4,6 +4,7 @@ import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById, getDisciplineQueryNames } from "@/data/disciplines";
+import { getDepartmentCodesByRegionName } from "@/lib/geo";
 import "leaflet/dist/leaflet.css";
 
 
@@ -26,6 +27,7 @@ interface FranceMapProps {
   selectedDiscipline?: string;
   selectedSub?: string;
   selectedRegion?: string;
+  locationQuery?: string;
   maxClubs?: number;
 }
 
@@ -34,6 +36,7 @@ export function FranceMap({
   selectedDiscipline = "all",
   selectedSub = "all",
   selectedRegion = "all",
+  locationQuery = "",
   maxClubs = 100,
 }: FranceMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -45,11 +48,12 @@ export function FranceMap({
   const dynamicLimit = zoom > 10 ? 500 : zoom >= 8 ? 200 : 50;
 
   const { data: displayedClubs = [], isFetching } = useQuery({
-    queryKey: ["clubs", "map", selectedDiscipline, selectedSub, selectedRegion, bounds, dynamicLimit],
+    queryKey: ["clubs", "map", selectedDiscipline, selectedSub, selectedRegion, locationQuery, bounds, dynamicLimit],
     queryFn: async () => {
       const result = await fetchEnrichedClubs({
         disciplines: getDisciplineQueryNames(selectedDiscipline, selectedSub),
-        region: selectedRegion,
+        location: locationQuery,
+        postalPrefixes: getDepartmentCodesByRegionName(selectedRegion),
         limit: dynamicLimit,
         ...(bounds ?? {}),
       });

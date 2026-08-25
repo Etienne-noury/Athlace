@@ -53,4 +53,9 @@ export const regions = [
   'Bourgogne-Franche-Comté',
   'Centre-Val de Loire',
   'Corse',
+  'Guadeloupe',
+  'Martinique',
+  'Guyane',
+  'La Réunion',
+  'Mayotte',
 ];

@@ -24,6 +24,20 @@ export function findDepartmentsByRegionSlug(regionSlug: string): Department[] {
   return DEPARTMENTS.filter((d) => d.regionSlug === regionSlug);
 }
 
+/** Codes postaux à utiliser quand la colonne région des clubs n'est pas renseignée. */
+export function getDepartmentCodesByRegionName(regionName: string): string[] {
+  if (!regionName || regionName === 'all') return [];
+  const region = REGIONS.find((item) => item.name === regionName);
+  if (!region) return [];
+  return DEPARTMENTS
+    .filter((department) => department.regionSlug === region.slug)
+    .flatMap((department) => {
+      if (department.code === '2A') return ['200', '201'];
+      if (department.code === '2B') return ['202', '206'];
+      return [department.code];
+    });
+}
+
 
 
 export const REGIONS: Region[] = [
@@ -40,6 +54,11 @@ export const REGIONS: Region[] = [
   { slug: 'occitanie', name: 'Occitanie', code: '76' },
   { slug: 'pays-de-la-loire', name: 'Pays de la Loire', code: '52' },
   { slug: 'provence-alpes-cote-d-azur', name: 'Provence-Alpes-Côte d\'Azur', code: '93' },
+  { slug: 'guadeloupe', name: 'Guadeloupe', code: '01' },
+  { slug: 'martinique', name: 'Martinique', code: '02' },
+  { slug: 'guyane', name: 'Guyane', code: '03' },
+  { slug: 'la-reunion', name: 'La Réunion', code: '04' },
+  { slug: 'mayotte', name: 'Mayotte', code: '06' },
 ];
 
 export const DEPARTMENTS: Department[] = [
@@ -151,6 +170,11 @@ export const DEPARTMENTS: Department[] = [
   { slug: 'bouches-du-rhone', name: 'Bouches-du-Rhône', code: '13', regionSlug: 'provence-alpes-cote-d-azur' },
   { slug: 'var', name: 'Var', code: '83', regionSlug: 'provence-alpes-cote-d-azur' },
   { slug: 'vaucluse', name: 'Vaucluse', code: '84', regionSlug: 'provence-alpes-cote-d-azur' },
+  { slug: 'guadeloupe', name: 'Guadeloupe', code: '971', regionSlug: 'guadeloupe' },
+  { slug: 'martinique', name: 'Martinique', code: '972', regionSlug: 'martinique' },
+  { slug: 'guyane', name: 'Guyane', code: '973', regionSlug: 'guyane' },
+  { slug: 'la-reunion', name: 'La Réunion', code: '974', regionSlug: 'la-reunion' },
+  { slug: 'mayotte', name: 'Mayotte', code: '976', regionSlug: 'mayotte' },
 ];
 
 export const PARIS_ARRONDISSEMENTS = Array.from({ length: 20 }, (_, i) => ({
