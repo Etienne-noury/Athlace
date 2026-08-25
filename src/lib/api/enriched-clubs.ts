@@ -49,11 +49,14 @@ function rowToClub(r: EnrichedClubRow): Club {
 
 export interface FetchEnrichedParams {
   q?: string;
+  /** Recherche géographique dédiée : ville ou code postal. */
+  location?: string;
   discipline?: string;
   /** Liste de libellés de disciplines (sport + sous-disciplines) : match OU. */
   disciplines?: string[];
   region?: string;
   department?: string;
+  postalPrefixes?: string[];
   city?: string;
   limit?: number;
   offset?: number;
@@ -72,10 +75,12 @@ export interface FetchEnrichedResult {
 export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Promise<FetchEnrichedResult> {
   const {
     q,
+    location,
     discipline,
     disciplines: disciplines_,
     region,
     department,
+    postalPrefixes,
     city,
     limit = 30,
     offset,
@@ -108,8 +113,16 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   if (department && department !== 'all') {
     query = query.ilike('postal_code', `${department}%`);
   }
+  const prefixes = (postalPrefixes ?? []).filter(Boolean);
+  if (prefixes.length > 0) {
+    query = query.or(prefixes.map((prefix) => `postal_code.ilike.${prefix}%`).join(','));
+  }
   if (city && city !== 'all') {
     query = query.ilike('city', `%${city}%`);
+  }
+  if (location && location.trim()) {
+    const safeLocation = location.trim().replace(/[,()]/g, ' ');
+    query = query.or(`city.ilike.%${safeLocation}%,postal_code.ilike.${safeLocation}%`);
   }
   if (q && q.trim()) {
     const safe = q.trim();

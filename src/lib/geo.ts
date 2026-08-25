@@ -24,6 +24,20 @@ export function findDepartmentsByRegionSlug(regionSlug: string): Department[] {
   return DEPARTMENTS.filter((d) => d.regionSlug === regionSlug);
 }
 
+/** Codes postaux à utiliser quand la colonne région des clubs n'est pas renseignée. */
+export function getDepartmentCodesByRegionName(regionName: string): string[] {
+  if (!regionName || regionName === 'all') return [];
+  const region = REGIONS.find((item) => item.name === regionName);
+  if (!region) return [];
+  return DEPARTMENTS
+    .filter((department) => department.regionSlug === region.slug)
+    .flatMap((department) => {
+      if (department.code === '2A') return ['200', '201'];
+      if (department.code === '2B') return ['202', '206'];
+      return [department.code];
+    });
+}
+
 
 
 export const REGIONS: Region[] = [
