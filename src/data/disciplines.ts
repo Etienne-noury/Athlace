@@ -312,3 +312,19 @@ export const getCategoryOfDiscipline = (id: string) => {
   const d = getDisciplineById(id);
   return d ? categories[d.category] : undefined;
 };
+
+/**
+ * Libellés à interroger en base pour un sport parent :
+ * le nom du sport + tous ses libellés de sous-disciplines.
+ */
+export const getDisciplineQueryNames = (sportId?: string | null, subId?: string | null): string[] => {
+  if (!sportId || sportId === 'all') return [];
+  if (subId && subId !== 'all') {
+    const sub = getDisciplineById(subId);
+    return sub ? [sub.name] : [];
+  }
+  const sport = getDisciplineById(sportId);
+  if (!sport) return [];
+  const names = [sport.name, ...getSubDisciplines(sport.id).map((d) => d.name)];
+  return Array.from(new Set(names));
+};
