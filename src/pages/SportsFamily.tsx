@@ -1,33 +1,24 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  FEDERATION_CATEGORIES,
-  fetchFederationsByCategorie,
-  slugifyFederation,
-} from '@/lib/federations-officielles';
-import { ExternalLink } from 'lucide-react';
+import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
 
 export default function SportsFamily() {
   const { familyId } = useParams<{ familyId: string }>();
-  const { data, isLoading } = useQuery({
-    queryKey: ['federations-by-categorie'],
-    queryFn: fetchFederationsByCategorie,
-  });
 
   const categorie = useMemo(
-    () => FEDERATION_CATEGORIES.find((c) => slugifyFederation(c) === familyId),
+    () =>
+      ARBORESCENCE.find(
+        (c) => c.id === familyId || slugifyDiscipline(c.name) === familyId,
+      ),
     [familyId],
   );
-  const federations = categorie ? data?.[categorie] ?? [] : [];
 
   useEffect(() => {
-    if (categorie) document.title = `${categorie} - Athlace`;
+    if (categorie) document.title = `${categorie.name} - Athlace`;
   }, [categorie]);
 
   if (!categorie) {
@@ -55,48 +46,55 @@ export default function SportsFamily() {
             <span>/</span>
             <Link to="/sports/" className="hover:text-primary">Sports</Link>
             <span>/</span>
-            <span className="text-foreground">{categorie}</span>
+            <span className="text-foreground">{categorie.name}</span>
           </div>
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-3">
-            {categorie}
+            {categorie.icon} {categorie.name}
           </h1>
           <p className="text-muted-foreground text-lg">
-            {federations.length} fédération{federations.length > 1 ? 's' : ''} agréée{federations.length > 1 ? 's' : ''} dans cette catégorie.
+            {categorie.sports.length} sport{categorie.sports.length > 1 ? 's' : ''} et leurs sous-disciplines.
           </p>
         </div>
       </section>
 
       <section className="container mx-auto px-4 py-12">
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-40 rounded-xl" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {federations.map((fed) => (
-              <Card key={fed.id} className="hover:border-primary/50 transition-colors">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categorie.sports.map((sport) => {
+            const sportId = slugifyDiscipline(sport.name);
+            return (
+              <Card key={sport.name} className="hover:border-primary/50 transition-colors">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3">
-                    <h2 className="font-display font-semibold text-lg">{fed.nom}</h2>
-                    {fed.sigle && <Badge variant="secondary">{fed.sigle}</Badge>}
+                    <h2 className="font-display font-semibold text-lg">
+                      {sport.icon} {sport.name}
+                    </h2>
+                    <Badge variant="secondary">{sport.subs.length}</Badge>
                   </div>
+                  <ul className="mt-3 space-y-1 flex-1">
+                    {sport.subs.map((sub) => (
+                      <li key={sub}>
+                        <Link
+                          to={`/sports/${sportId}--${slugifyDiscipline(sub)}/`}
+                          className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          {sub}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
-                        Site fédéral <ExternalLink className="w-3 h-3 ml-2" />
-                      </a>
+                      <Link to={`/sports/${sportId}/`}>Fiche sport</Link>
                     </Button>
                     <Button variant="secondary" size="sm" asChild>
-                      <Link to={`/clubs/?q=${encodeURIComponent(fed.nom)}`}>Voir les clubs</Link>
+                      <Link to={`/clubs/?discipline=${sportId}`}>Voir les clubs</Link>
                     </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
+            );
+          })}
+        </div>
       </section>
     </Layout>
   );
