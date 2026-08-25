@@ -26,7 +26,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
-import { disciplines, getParentDisciplines, getDisciplineById } from '@/data/disciplines';
+import { ARBORESCENCE, disciplines, getDisciplineById, slugifyDiscipline } from '@/data/disciplines';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
