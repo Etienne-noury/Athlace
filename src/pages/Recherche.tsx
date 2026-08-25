@@ -165,14 +165,29 @@ export default function Recherche() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">Toutes les disciplines</SelectItem>
-                        {getParentDisciplines()
-                          .slice()
-                          .sort((a, b) => b.popularity - a.popularity)
-                          .map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.icon} {d.name}
-                            </SelectItem>
-                          ))}
+                        {ARBORESCENCE.map((cat) => (
+                          <SelectGroup key={cat.id}>
+                            <SelectLabel>{cat.icon} {cat.name}</SelectLabel>
+                            {cat.sports.map((sport) => {
+                              const sportId = slugifyDiscipline(sport.name);
+                              return [
+                                <SelectItem key={sportId} value={sportId}>
+                                  {sport.icon} {sport.name}
+                                </SelectItem>,
+                                ...sport.subs.map((sub) => (
+                                  <SelectItem
+                                    key={`${sportId}--${slugifyDiscipline(sub)}`}
+                                    value={`${sportId}--${slugifyDiscipline(sub)}`}
+                                    className="pl-8 text-muted-foreground"
+                                  >
+                                    {sub}
+                                  </SelectItem>
+                                )),
+                              ];
+                            })}
+                          </SelectGroup>
+                        ))}
+
                       </SelectContent>
                     </Select>
                   </div>
