@@ -103,7 +103,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   if (disciplineList.length > 0) {
     // Sport parent sélectionné : on accepte le sport ET toutes ses sous-disciplines.
     const escaped = disciplineList.map((d) => d.replace(/[,()]/g, ' '));
-    query = query.or(escaped.map((d) => `discipline.ilike.${d}`).join(','));
+    query = query.or(escaped.map((d) => `discipline.ilike.%${d}%`).join(','));
   } else if (discipline && discipline !== 'all') {
     query = query.ilike('discipline', discipline);
   }
