@@ -26,7 +26,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
-import { ARBORESCENCE, disciplines, getDisciplineById, slugifyDiscipline } from '@/data/disciplines';
+import { disciplines, getDisciplineQueryNames } from '@/data/disciplines';
+import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
@@ -39,21 +40,28 @@ export default function Recherche() {
   // Filters
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [selectedDiscipline, setSelectedDiscipline] = useState(searchParams.get('discipline') || 'all');
+  const [selectedSub, setSelectedSub] = useState(searchParams.get('sous-discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
 
   useEffect(() => {
     setPage(0);
-  }, [searchQuery, selectedDiscipline, selectedRegion]);
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion]);
+
+  useEffect(() => {
+    const next: Record<string, string> = {};
+    if (searchQuery) next.q = searchQuery;
+    if (selectedDiscipline !== 'all') next.discipline = selectedDiscipline;
+    if (selectedSub !== 'all') next['sous-discipline'] = selectedSub;
+    if (selectedRegion !== 'all') next.region = selectedRegion;
+    setSearchParams(next, { replace: true });
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, setSearchParams]);
 
   const { data: searchResult = { clubs: [], total: 0 }, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedRegion, page],
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, selectedRegion, page],
     queryFn: async () => {
       return fetchEnrichedClubs({
         q: searchQuery,
-        discipline:
-          selectedDiscipline === 'all'
-            ? 'all'
-            : getDisciplineById(selectedDiscipline)?.name || selectedDiscipline,
+        disciplines: getDisciplineQueryNames(selectedDiscipline, selectedSub),
         region: selectedRegion,
         limit: 100,
         offset: page * 100,
@@ -74,6 +82,7 @@ export default function Recherche() {
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedDiscipline('all');
+    setSelectedSub('all');
     setSelectedRegion('all');
     setSearchParams({});
   };
@@ -81,6 +90,7 @@ export default function Recherche() {
   const activeFiltersCount = [
     searchQuery,
     selectedDiscipline !== 'all' ? selectedDiscipline : '',
+    selectedSub !== 'all' ? selectedSub : '',
     selectedRegion !== 'all' ? selectedRegion : '',
   ].filter(Boolean).length;
 
@@ -157,43 +167,13 @@ export default function Recherche() {
                     </div>
                   </div>
 
-                  {/* Discipline */}
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Discipline
-                    </label>
-                    <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Toutes les disciplines" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Toutes les disciplines</SelectItem>
-                        {ARBORESCENCE.map((cat) => (
-                          <SelectGroup key={cat.id}>
-                            <SelectLabel>{cat.icon} {cat.name}</SelectLabel>
-                            {cat.sports.map((sport) => {
-                              const sportId = slugifyDiscipline(sport.name);
-                              return [
-                                <SelectItem key={sportId} value={sportId}>
-                                  {sport.icon} {sport.name}
-                                </SelectItem>,
-                                ...sport.subs.map((sub) => (
-                                  <SelectItem
-                                    key={`${sportId}--${slugifyDiscipline(sub)}`}
-                                    value={`${sportId}--${slugifyDiscipline(sub)}`}
-                                    className="pl-8 text-muted-foreground"
-                                  >
-                                    {sub}
-                                  </SelectItem>
-                                )),
-                              ];
-                            })}
-                          </SelectGroup>
-                        ))}
-
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Discipline (2 niveaux) */}
+                  <DisciplineFilter
+                    sport={selectedDiscipline}
+                    sub={selectedSub}
+                    onSportChange={setSelectedDiscipline}
+                    onSubChange={setSelectedSub}
+                  />
 
                   {/* Region */}
                   <div>
@@ -253,40 +233,12 @@ export default function Recherche() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Discipline</label>
-                  <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Toutes" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Toutes</SelectItem>
-                      {ARBORESCENCE.map((cat) => (
-                        <SelectGroup key={cat.id}>
-                          <SelectLabel>{cat.icon} {cat.name}</SelectLabel>
-                          {cat.sports.map((sport) => {
-                            const sportId = slugifyDiscipline(sport.name);
-                            return [
-                              <SelectItem key={sportId} value={sportId}>
-                                {sport.icon} {sport.name}
-                              </SelectItem>,
-                              ...sport.subs.map((sub) => (
-                                <SelectItem
-                                  key={`${sportId}--${slugifyDiscipline(sub)}`}
-                                  value={`${sportId}--${slugifyDiscipline(sub)}`}
-                                  className="pl-8 text-muted-foreground"
-                                >
-                                  {sub}
-                                </SelectItem>
-                              )),
-                            ];
-                          })}
-                        </SelectGroup>
-                      ))}
-
-                    </SelectContent>
-                  </Select>
-                </div>
+                <DisciplineFilter
+                  sport={selectedDiscipline}
+                  sub={selectedSub}
+                  onSportChange={setSelectedDiscipline}
+                  onSubChange={setSelectedSub}
+                />
                 <div>
                   <label className="text-sm font-medium mb-2 block">Région</label>
                   <Select value={selectedRegion} onValueChange={setSelectedRegion}>
