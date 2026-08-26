@@ -123,20 +123,3 @@ export async function fetchGooglePlaces(clubNom: string, ville: string): Promise
     return null;
   }
 }
-
-export interface SuggestionPayload {
-  data_es_id: string;
-  nom?: string;
-  ville?: string;
-  prix_adulte?: number | null;
-  prix_enfant?: number | null;
-  niveau_ligue?: string | null;
-  horaires_text?: string | null;
-  telephone?: string | null;
-  site_web?: string | null;
-}
-
-export async function submitSuggestion(payload: SuggestionPayload) {
-  const { error } = await supabase.from('clubs_foot_suggestions').insert([payload]);
-  if (error) throw error;
-}
