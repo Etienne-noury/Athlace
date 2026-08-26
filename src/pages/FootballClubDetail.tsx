@@ -105,19 +105,6 @@ export default function FootballClubDetail() {
               </div>
             )}
 
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <div>
-                  <h2 className="font-display text-xl font-semibold mb-1">Ces infos sont incomplètes ?</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Aidez la communauté en proposant une mise à jour.
-                  </p>
-                </div>
-                <Button onClick={() => setSuggestOpen(true)} className="gap-2 flex-shrink-0">
-                  <Edit3 className="w-4 h-4" /> Suggérer
-                </Button>
-              </div>
-            </div>
           </div>
 
           <aside className="space-y-6">
