@@ -18,7 +18,11 @@ export function RequireAdmin({ children }: { children: JSX.Element }) {
     }
     let cancelled = false;
     supabase
-      .rpc('has_role', { _user_id: user.id, _role: 'admin' })
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .maybeSingle()
       .then(({ data }) => {
         if (!cancelled) {
           setIsAdmin(Boolean(data));

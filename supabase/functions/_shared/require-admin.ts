@@ -29,12 +29,14 @@ export async function requireAdmin(req: Request, corsHeaders: Record<string, str
     });
   }
 
-  const { data: isAdmin, error: roleError } = await userClient.rpc("has_role", {
-    _user_id: userData.user.id,
-    _role: "admin",
-  });
+  const { data: roleRow, error: roleError } = await userClient
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userData.user.id)
+    .eq("role", "admin")
+    .maybeSingle();
 
-  if (roleError || !isAdmin) {
+  if (roleError || !roleRow) {
     return new Response(JSON.stringify({ error: "Accès réservé aux administrateurs" }), {
       status: 403,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
