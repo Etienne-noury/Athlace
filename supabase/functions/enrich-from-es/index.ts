@@ -1,5 +1,7 @@
+// Auth: caller must be authenticated and hold the 'admin' role (see _shared/require-admin.ts).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { requireAdmin } from "../_shared/require-admin.ts";
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -7,6 +9,9 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const authError = await requireAdmin(req, corsHeaders);
+    if (authError) return authError;
+
     let batchSize = 500;
     try {
       const body = await req.json();

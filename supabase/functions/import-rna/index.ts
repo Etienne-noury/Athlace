@@ -1,6 +1,8 @@
+// Auth: caller must be authenticated and hold the 'admin' role (see _shared/require-admin.ts).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { unzipSync, strFromU8 } from 'npm:fflate@0.8.2';
+import { requireAdmin } from "../_shared/require-admin.ts";
 
 const RNA_URL = 'https://www.data.gouv.fr/api/1/datasets/r/afdf9540-fdc0-4a87-9f69-8e5de6b18a51';
 const SOURCE_URL = 'https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/';
@@ -49,6 +51,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
+    const authError = await requireAdmin(req, corsHeaders);
+    if (authError) return authError;
+
     const url = new URL(req.url);
     const offset = parseInt(url.searchParams.get('offset') || '0', 10);
     const limit = parseInt(url.searchParams.get('limit') || '50000', 10);

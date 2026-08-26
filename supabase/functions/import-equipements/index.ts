@@ -1,5 +1,7 @@
 // Bulk upsert for equipements_sportifs (DATA ES).
+// Auth: caller must be authenticated and hold the 'admin' role (see _shared/require-admin.ts).
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { requireAdmin } from "../_shared/require-admin.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,6 +31,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
+    const authError = await requireAdmin(req, corsHeaders);
+    if (authError) return authError;
+
     const body = await req.json();
     const rows: Row[] = Array.isArray(body?.rows) ? body.rows : [];
     if (rows.length === 0) {

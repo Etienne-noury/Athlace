@@ -51,6 +51,7 @@ import Notifications from "./pages/Notifications";
 import Fidelity from "./pages/Fidelity";
 import { AuthProvider } from "./lib/auth";
 import { RequireAuth } from "./components/auth/RequireAuth";
+import { RequireAdmin } from "./components/auth/RequireAdmin";
 
 import MentionsLegales from "./pages/MentionsLegales";
 import CGU from "./pages/CGU";
@@ -155,7 +156,7 @@ const App = () => (
           <Route path="/favoris" element={<Navigate to="/compte/mes-clubs/" replace />} />
 
           {/* Admin & legacy routes preserved */}
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
           <Route path="/aide-old" element={<Aide />} />
           <Route path="/federations-old" element={<Federations />} />
           <Route path="/football-old" element={<Football />} />
