@@ -1,6 +1,5 @@
 // API combinant les 3 sources pour les clubs de football.
 // Source 1 : data.sports.gouv.fr (public, sans clé)
-// Source 2 : table Supabase clubs_foot (enrichissement)
 // Source 3 : edge function get-google-places (à la demande)
 
 import { supabase } from '@/integrations/supabase/client';
@@ -83,31 +82,11 @@ export async function fetchFootClubsByLocation(query: string): Promise<FootClubR
   return clubs;
 }
 
-/** Source 2 : enrichit avec les données stockées dans clubs_foot. */
+/** Source 2 supprimée : plus d'enrichissement en base pour le football. */
 export async function enrichWithSupabase(clubs: FootClubRaw[]): Promise<FootClub[]> {
-  if (clubs.length === 0) return [];
-  const ids = clubs.map((c) => c.data_es_id);
-
-  try {
-    const { data, error } = await supabase
-      .from('clubs_foot')
-      .select(
-        'data_es_id, niveau_ligue, prix_adulte, prix_enfant, site_web, telephone, horaires, google_rating, google_nb_avis',
-      )
-      .in('data_es_id', ids);
-
-    if (error) throw error;
-
-    const map = new Map<string, FootClubEnrichment>();
-    for (const row of data ?? []) {
-      map.set(row.data_es_id, row);
-    }
-    return clubs.map((c) => ({ ...c, ...(map.get(c.data_es_id) ?? {}) }));
-  } catch (err) {
-    console.warn('enrichWithSupabase failed', err);
-    return clubs;
-  }
+  return clubs;
 }
+
 
 /** Récupère un club enrichi par son ID data.sports.gouv.fr. */
 export async function fetchFootClubById(dataEsId: string): Promise<FootClub | null> {
@@ -142,21 +121,4 @@ export async function fetchGooglePlaces(clubNom: string, ville: string): Promise
     console.warn('fetchGooglePlaces failed', err);
     return null;
   }
-}
-
-export interface SuggestionPayload {
-  data_es_id: string;
-  nom?: string;
-  ville?: string;
-  prix_adulte?: number | null;
-  prix_enfant?: number | null;
-  niveau_ligue?: string | null;
-  horaires_text?: string | null;
-  telephone?: string | null;
-  site_web?: string | null;
-}
-
-export async function submitSuggestion(payload: SuggestionPayload) {
-  const { error } = await supabase.from('clubs_foot_suggestions').insert([payload]);
-  if (error) throw error;
 }
