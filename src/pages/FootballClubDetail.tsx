@@ -1,27 +1,25 @@
-import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   ChevronLeft, MapPin, Star, Phone, Globe, Clock, CreditCard,
-  Loader2, Edit3,
+  Loader2,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
-import { SuggestUpdateDialog } from '@/components/foot/SuggestUpdateDialog';
 import { fetchFootClubById, fetchGooglePlaces } from '@/lib/api/foot';
 
 export default function FootballClubDetail() {
   const { id } = useParams<{ id: string }>();
   const dataEsId = decodeURIComponent(id ?? '');
-  const [suggestOpen, setSuggestOpen] = useState(false);
 
   const { data: club, isLoading } = useQuery({
     queryKey: ['foot-club', dataEsId],
     queryFn: () => fetchFootClubById(dataEsId),
     enabled: !!dataEsId,
   });
+
 
   const { data: google } = useQuery({
     queryKey: ['foot-google', dataEsId, club?.nom, club?.ville],
