@@ -1,6 +1,5 @@
 // API combinant les 3 sources pour les clubs de football.
 // Source 1 : data.sports.gouv.fr (public, sans clé)
-// Source 2 : table Supabase clubs_foot (enrichissement)
 // Source 3 : edge function get-google-places (à la demande)
 
 import { supabase } from '@/integrations/supabase/client';
