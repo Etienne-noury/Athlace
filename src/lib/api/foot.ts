@@ -83,31 +83,11 @@ export async function fetchFootClubsByLocation(query: string): Promise<FootClubR
   return clubs;
 }
 
-/** Source 2 : enrichit avec les données stockées dans clubs_foot. */
+/** Source 2 supprimée : plus d'enrichissement en base pour le football. */
 export async function enrichWithSupabase(clubs: FootClubRaw[]): Promise<FootClub[]> {
-  if (clubs.length === 0) return [];
-  const ids = clubs.map((c) => c.data_es_id);
-
-  try {
-    const { data, error } = await supabase
-      .from('clubs_foot')
-      .select(
-        'data_es_id, niveau_ligue, prix_adulte, prix_enfant, site_web, telephone, horaires, google_rating, google_nb_avis',
-      )
-      .in('data_es_id', ids);
-
-    if (error) throw error;
-
-    const map = new Map<string, FootClubEnrichment>();
-    for (const row of data ?? []) {
-      map.set(row.data_es_id, row);
-    }
-    return clubs.map((c) => ({ ...c, ...(map.get(c.data_es_id) ?? {}) }));
-  } catch (err) {
-    console.warn('enrichWithSupabase failed', err);
-    return clubs;
-  }
+  return clubs;
 }
+
 
 /** Récupère un club enrichi par son ID data.sports.gouv.fr. */
 export async function fetchFootClubById(dataEsId: string): Promise<FootClub | null> {
