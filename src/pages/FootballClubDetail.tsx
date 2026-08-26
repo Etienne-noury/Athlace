@@ -180,13 +180,6 @@ export default function FootballClubDetail() {
         </div>
       </div>
 
-      <SuggestUpdateDialog
-        open={suggestOpen}
-        onOpenChange={setSuggestOpen}
-        dataEsId={club.data_es_id}
-        nom={club.nom}
-        ville={club.ville}
-      />
     </Layout>
   );
 }
