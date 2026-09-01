@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
+import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
 import { regions } from '@/data/clubs';
 
@@ -15,6 +16,7 @@ export default function Carte() {
   const [selectedSub, setSelectedSub] = useState(searchParams.get('sous-discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
   const [locationQuery, setLocationQuery] = useState(searchParams.get('q') || '');
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     const next: Record<string, string> = {};
@@ -39,7 +41,7 @@ export default function Carte() {
   return (
     <Layout>
       {/* Header */}
-      <section className="bg-sport-gradient text-white py-8 lg:py-12">
+      <section className="page-hero-compact bg-sport-gradient text-white py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-2xl lg:text-4xl font-bold mb-2">
             Carte des clubs sportifs
@@ -53,11 +55,37 @@ export default function Carte() {
       {/* Filters */}
       <div className="bg-card border-b border-border sticky top-0 z-[1001]">
         <div className="container mx-auto px-4 py-4">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-[auto_minmax(0,2fr)_minmax(190px,1fr)_minmax(190px,1fr)_auto] xl:items-end">
-            <div className="flex items-center gap-2 text-muted-foreground sm:col-span-2 xl:col-span-1 xl:self-center">
+          <div className="lg:hidden flex items-center justify-between gap-2 pb-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-expanded={filtersOpen}
+            >
+              <Filter className="w-4 h-4" />
+              Filtres
+              {hasActiveFilters && <span className="ml-1 h-2 w-2 rounded-full bg-primary" />}
+            </Button>
+            {hasActiveFilters && (
+              <Button type="button" variant="ghost" size="sm" onClick={clearFilters}>
+                Effacer
+              </Button>
+            )}
+          </div>
+
+          <div
+            className={cn(
+              'grid gap-4 sm:grid-cols-2 xl:grid-cols-[auto_minmax(0,2fr)_minmax(190px,1fr)_minmax(190px,1fr)_auto] xl:items-end',
+              filtersOpen ? 'mt-3 lg:mt-0' : 'hidden lg:grid',
+            )}
+          >
+            <div className="hidden xl:flex items-center gap-2 text-muted-foreground xl:col-span-1 xl:self-center">
               <Filter className="w-4 h-4" />
               <span className="text-sm font-medium">Filtres :</span>
             </div>
+
 
             <DisciplineFilter
               sport={selectedDiscipline}
@@ -121,7 +149,7 @@ export default function Carte() {
       </div>
 
       {/* Map */}
-      <div className="h-[calc(100vh-220px)]">
+      <div className="h-[calc(100dvh-220px)] min-h-[320px]">
         <FranceMap
           height="100%"
           selectedDiscipline={selectedDiscipline}
