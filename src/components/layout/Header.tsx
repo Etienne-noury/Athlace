@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -77,6 +77,21 @@ export function Header() {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Close the mobile menu whenever the route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent background scroll while the mobile panel is open
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isMenuOpen]);
 
 
 
