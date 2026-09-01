@@ -57,7 +57,7 @@ export function HeroSection() {
       <div className="absolute top-20 left-10 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
 
-      <div className="relative container mx-auto px-4 py-16 lg:py-24">
+      <div className="hero-compact relative container mx-auto px-4 py-16 lg:py-24">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 animate-fade-up">
@@ -100,7 +100,7 @@ export function HeroSection() {
                   <SelectTrigger className="h-14 w-full lg:w-56 border-0 bg-muted/50">
                     <SelectValue placeholder="Discipline" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-80 bg-card z-[2000]">
+                  <SelectContent className="max-h-[min(20rem,60dvh)] bg-card z-[2000]">
                     {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
                       const categoryDisciplines = disciplinesByCategory[categoryKey] || [];
                       if (categoryDisciplines.length === 0) return null;

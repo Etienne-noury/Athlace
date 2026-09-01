@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -78,6 +78,21 @@ export function Header() {
   const { user, profile } = useAuth();
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Close the mobile menu whenever the route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent background scroll while the mobile panel is open
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isMenuOpen]);
+
 
 
 
@@ -101,7 +116,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 lg:h-20 gap-3">
+        <div className="app-header-bar flex items-center justify-between h-16 lg:h-20 gap-3">
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
@@ -164,7 +179,7 @@ export function Header() {
                     <div className="h-3 w-full" />
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
-                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
+                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto">
                           {ARBORESCENCE.map((cat) => (
                             <div key={cat.id}>
                               <Link
@@ -319,7 +334,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border/50">
+          <div className="mobile-menu-panel lg:hidden py-4 border-t border-border/50 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
             <form onSubmit={handleSearch} className="mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -357,7 +372,7 @@ export function Header() {
                       {cat.icon} {cat.name}
                     </AccordionTrigger>
                     <AccordionContent>
-                      <ul className="flex flex-col gap-1 px-4 pb-2">
+                      <ul className="mobile-sports-list flex flex-col gap-1 px-4 pb-2">
                         {cat.sports.map((sport) => (
                           <li key={sport.name}>
                             <Link
@@ -386,16 +401,45 @@ export function Header() {
               </Accordion>
 
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
-                <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full gap-2">
-                    <User className="h-4 w-4" />
-                    Mon Compte
-                  </Button>
-                </Link>
-                {!user && (
-                  <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full">Créer un compte</Button>
-                  </Link>
+                {user ? (
+                  <>
+                    <div className="px-1 pb-1 text-sm text-muted-foreground truncate">{user.email}</div>
+                    <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="outline" className="w-full gap-2">
+                        <User className="h-4 w-4" />
+                        Mon Compte
+                      </Button>
+                    </Link>
+                    <Link to="/compte/mes-clubs/" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full gap-2">
+                        <Heart className="h-4 w-4" />
+                        Mes clubs
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="w-full text-destructive"
+                      onClick={async () => {
+                        setIsMenuOpen(false);
+                        await signOut();
+                        navigate('/');
+                      }}
+                    >
+                      Déconnexion
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/compte/connexion/" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="outline" className="w-full gap-2">
+                        <User className="h-4 w-4" />
+                        Connexion
+                      </Button>
+                    </Link>
+                    <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full">Créer un compte</Button>
+                    </Link>
+                  </>
                 )}
               </div>
               <Link
