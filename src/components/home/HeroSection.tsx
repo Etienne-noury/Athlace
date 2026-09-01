@@ -100,7 +100,7 @@ export function HeroSection() {
                   <SelectTrigger className="h-14 w-full lg:w-56 border-0 bg-muted/50">
                     <SelectValue placeholder="Discipline" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-80 bg-card z-[2000]">
+                  <SelectContent className="max-h-[min(20rem,60dvh)] bg-card z-[2000]">
                     {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
                       const categoryDisciplines = disciplinesByCategory[categoryKey] || [];
                       if (categoryDisciplines.length === 0) return null;

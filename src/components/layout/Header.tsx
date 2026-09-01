@@ -179,7 +179,7 @@ export function Header() {
                     <div className="h-3 w-full" />
                     <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                       {item.type === 'sports' && (
-                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[70vh] overflow-y-auto">
+                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto">
                           {ARBORESCENCE.map((cat) => (
                             <div key={cat.id}>
                               <Link
@@ -372,7 +372,7 @@ export function Header() {
                       {cat.icon} {cat.name}
                     </AccordionTrigger>
                     <AccordionContent>
-                      <ul className="flex flex-col gap-1 px-4 pb-2">
+                      <ul className="mobile-sports-list flex flex-col gap-1 px-4 pb-2">
                         {cat.sports.map((sport) => (
                           <li key={sport.name}>
                             <Link
