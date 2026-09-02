@@ -43,7 +43,7 @@ export function FranceMap({
 }: FranceMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<L.LayerGroup | null>(null);
+  const markersRef = useRef<L.MarkerClusterGroup | null>(null);
   const [bounds, setBounds] = useState<{ latMin: number; latMax: number; lngMin: number; lngMax: number } | null>(null);
   const [zoom, setZoom] = useState<number>(FRANCE_ZOOM);
 
@@ -81,7 +81,23 @@ export function FranceMap({
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
-    const markers = L.layerGroup().addTo(map);
+    const markers = L.markerClusterGroup({
+      disableClusteringAtZoom: 14,
+      spiderfyOnMaxZoom: false,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: true,
+      maxClusterRadius: 60,
+      iconCreateFunction: (cluster) => {
+        const count = cluster.getChildCount();
+        const size = count < 10 ? 40 : count < 50 ? 52 : 64;
+        const tier = count < 10 ? "sm" : count < 50 ? "md" : "lg";
+        return L.divIcon({
+          html: `<span aria-label="${count} clubs dans cette zone">${count}</span>`,
+          className: `athlace-cluster athlace-cluster--${tier}`,
+          iconSize: L.point(size, size),
+        });
+      },
+    }).addTo(map);
     mapRef.current = map;
     markersRef.current = markers;
 
