@@ -259,3 +259,28 @@
     margin-bottom: 1.25rem;
   }
 }
+
+/* Bulles de regroupement de clubs sur la carte */
+.athlace-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-family: inherit;
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary) / 0.9);
+  border: 3px solid hsl(var(--background));
+  box-shadow: 0 4px 12px hsl(var(--foreground) / 0.25);
+  transition: transform 0.15s ease;
+}
+.athlace-cluster:hover {
+  transform: scale(1.06);
+}
+.athlace-cluster--sm { font-size: 0.8125rem; }
+.athlace-cluster--md { font-size: 0.9375rem; }
+.athlace-cluster--lg {
+  font-size: 1.0625rem;
+  background: hsl(var(--accent) / 0.95);
+  color: hsl(var(--accent-foreground));
+}
