@@ -6,6 +6,8 @@ import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById, getDisciplineQueryNames } from "@/data/disciplines";
 import { getDepartmentCodesByRegionName } from "@/lib/geo";
 import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
 
 
 // Fix Leaflet default marker icons (Vite bundling)
