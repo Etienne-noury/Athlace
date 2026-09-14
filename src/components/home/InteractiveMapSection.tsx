@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Navigation, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { FranceMap } from '@/components/map/FranceMap';
-import { getParentDisciplines } from '@/data/disciplines';
 
 export function InteractiveMapSection() {
   const [selectedDiscipline, setSelectedDiscipline] = useState('all');
-  const parentDisciplines = getParentDisciplines().slice(0, 20); // Top 20 disciplines
+  const [selectedSub, setSelectedSub] = useState('all');
 
   return (
     <section className="py-12 lg:py-16 bg-muted/30">
@@ -25,22 +24,22 @@ export function InteractiveMapSection() {
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Filter */}
-            <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-              <SelectTrigger className="w-[200px] bg-card">
-                <Filter className="w-4 h-4 mr-2 text-muted-foreground" />
-                <SelectValue placeholder="Filtrer par sport" />
-              </SelectTrigger>
-              <SelectContent className="bg-card z-[2000]">
-                <SelectItem value="all">Tous les sports</SelectItem>
-                {parentDisciplines.map((d) => (
-                  <SelectItem key={d.id} value={d.id}>
-                    {d.icon} {d.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-muted-foreground pb-2">
+              <Filter className="w-4 h-4" />
+              <span className="text-sm font-medium">Filtres :</span>
+            </div>
+
+            <DisciplineFilter
+              sport={selectedDiscipline}
+              sub={selectedSub}
+              onSportChange={setSelectedDiscipline}
+              onSubChange={setSelectedSub}
+              showLabels={false}
+              layout="inline"
+              triggerClassName="w-[220px] bg-card"
+              contentClassName="z-[2000]"
+            />
 
             <Link to="/carte">
               <Button variant="outline" className="gap-2">
@@ -52,9 +51,10 @@ export function InteractiveMapSection() {
         </div>
 
         {/* Map */}
-        <FranceMap 
-          height="450px" 
+        <FranceMap
+          height="450px"
           selectedDiscipline={selectedDiscipline}
+          selectedSub={selectedSub}
         />
 
         {/* Features */}
