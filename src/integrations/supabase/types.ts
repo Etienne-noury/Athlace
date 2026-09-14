@@ -316,6 +316,23 @@ export type Database = {
     }
     Functions: {
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
+      map_club_clusters: {
+        Args: {
+          p_disciplines?: string[]
+          p_lat_max: number
+          p_lat_min: number
+          p_lng_max: number
+          p_lng_min: number
+          p_location?: string
+          p_postal_prefixes?: string[]
+          p_precision: number
+        }
+        Returns: {
+          cnt: number
+          lat: number
+          lng: number
+        }[]
+      }
       site_stats: { Args: never; Returns: Json }
     }
     Enums: {
