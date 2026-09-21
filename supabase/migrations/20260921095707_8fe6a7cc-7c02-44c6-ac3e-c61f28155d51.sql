@@ -1,0 +1,1 @@
+TRUNCATE TABLE public.clubs_enriched;
