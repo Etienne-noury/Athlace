@@ -5,14 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
+import { resolveWaldec, WALDEC_NON_CLUB_CODES } from "@/lib/waldec-map";
 
 const SOURCE_URL =
   "https://www.data.gouv.fr/fr/datasets/repertoire-national-des-associations/";
+const NOT_DISSOLVED = "0001-01-01";
+const NA = { sigle: "N/A", discipline: "N/A" };
+
+/** Code WALDEC "011XXX" à partir d'objet_social1/2, ou null si association non sportive. */
+function extractWaldecSport(row: Record<string, string>): string | null {
+  for (const code of [row.objet_social1, row.objet_social2]) {
+    const trimmed = (code || "").trim();
+    if (trimmed.startsWith("011") && trimmed.length >= 6) return trimmed.slice(0, 6);
+  }
+  return null;
+}
 
 function isSport(row: Record<string, string>): boolean {
-  const raw = (row.objet_social1 || '').replace(/\D/g, '');
-  const code = parseInt(raw, 10);
-  return code >= 11000 && code <= 11999;
+  // Association active et non dissoute uniquement
+  if (row.position !== "A" || row.date_disso !== NOT_DISSOLVED) return false;
+  const waldecCode = extractWaldecSport(row);
+  if (!waldecCode || WALDEC_NON_CLUB_CODES.has(waldecCode)) return false;
+  return true;
 }
 
 const mapRow = (row: Record<string, string>) => {
@@ -22,12 +36,15 @@ const mapRow = (row: Record<string, string>) => {
     row.adrs_libvoie,
   ].filter((p) => p && p.trim()).join(' ').trim();
 
+  const waldecCode = extractWaldecSport(row) || '';
+  const resolved = resolveWaldec(waldecCode, row.titre || '', row.objet || '') ?? NA;
+
   return {
-    federation_code: 'RNA',
+    federation_code: resolved.sigle,
     external_id: row.id || null,
     name: row.titre || 'Sans nom',
     description: row.objet || null,
-    discipline: null,
+    discipline: resolved.discipline,
     address: address || null,
     complement: row.adrs_complement || null,
     distrib: row.adrs_distrib || null,
