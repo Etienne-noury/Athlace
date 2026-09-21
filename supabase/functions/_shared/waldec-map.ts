@@ -156,7 +156,7 @@ function normalize(s: string): string {
   return (s || '')
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
+    .replace(/[̀-ͯ]/g, ''); // eslint-disable-line no-misleading-character-class
 }
 
 /**
