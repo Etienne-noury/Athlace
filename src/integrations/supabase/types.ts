@@ -170,7 +170,7 @@ export type Database = {
           id: string
           is_paralympique: boolean
           nom: string
-          sigle: string | null
+          sigle: string
           site_web: string
           updated_at: string
         }
@@ -179,7 +179,7 @@ export type Database = {
           id?: string
           is_paralympique?: boolean
           nom: string
-          sigle?: string | null
+          sigle: string
           site_web: string
           updated_at?: string
         }
@@ -188,7 +188,7 @@ export type Database = {
           id?: string
           is_paralympique?: boolean
           nom?: string
-          sigle?: string | null
+          sigle?: string
           site_web?: string
           updated_at?: string
         }
