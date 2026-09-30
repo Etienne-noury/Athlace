@@ -7,7 +7,7 @@ import { fetchFederationSources, type Federation } from '@/data/federations';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
   api: { label: 'API publique', icon: Code2, className: 'bg-primary/10 text-primary border-primary/20' },
-  opendata: { label: 'Open Data', icon: Database, className: 'bg-accent/10 text-accent border-accent/20' },
+  opendata: { label: 'Open Data', icon: Database, className: 'bg-tint-100 text-blue-500 border-border' },
   annuaire: { label: 'Annuaire en ligne', icon: Globe, className: 'bg-muted text-muted-foreground border-border' },
 };
 

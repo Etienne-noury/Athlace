@@ -64,7 +64,7 @@ export function HeroSection() {
           </div>
 
           {/* Title */}
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-cream-100 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <h1 className="font-display text-heading-1 md:text-display font-bold text-cream-100 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             Trouvez{' '}
             <span className="text-lime-500">
               LE
