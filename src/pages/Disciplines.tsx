@@ -89,7 +89,7 @@ export default function Disciplines() {
                 {/* Category header */}
                 <div className="flex items-center gap-3 mb-5">
                   <div className={cn(
-                    "w-3 h-3 rounded-full",
+                    "w-3 h-3 rounded-pill",
                     categoryInfo.color
                   )} />
                   <h2 className="font-display text-xl lg:text-2xl font-bold text-foreground">

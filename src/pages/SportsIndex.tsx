@@ -43,7 +43,7 @@ export default function SportsIndex() {
                   <Link
                     key={sport.name}
                     to={`/sports/${slugifyDiscipline(sport.name)}/`}
-                    className="px-3 py-1 bg-muted rounded-full text-sm hover:bg-primary/10 hover:text-primary transition-colors"
+                    className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     {sport.name}
                   </Link>

@@ -91,7 +91,7 @@ export default function Favorites() {
                     {club.city || 'France'}
                   </div>
                   {club.discipline && (
-                    <span className="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
+                    <span className="inline-block mt-2 text-xs px-2 py-1 rounded-pill bg-muted text-muted-foreground">
                       {club.discipline}
                     </span>
                   )}

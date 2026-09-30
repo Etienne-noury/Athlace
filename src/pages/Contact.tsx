@@ -51,7 +51,7 @@ export default function Contact() {
               href="mailto:contact@athlace.fr"
               className="flex items-center gap-4 rounded-xl bg-primary/10 border border-primary/20 p-5 mb-6 hover:bg-primary/15 transition-colors"
             >
-              <span className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+              <span className="w-12 h-12 rounded-pill bg-primary/15 flex items-center justify-center shrink-0">
                 <Mail className="w-6 h-6 text-primary" />
               </span>
               <span className="min-w-0">

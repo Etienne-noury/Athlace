@@ -105,7 +105,7 @@ export function HeroSection() {
                       return (
                         <SelectGroup key={categoryKey}>
                           <SelectLabel className="flex items-center gap-2 font-semibold text-foreground">
-                            <div className={`w-2 h-2 rounded-full ${categoryInfo.color}`} />
+                            <div className={`w-2 h-2 rounded-pill ${categoryInfo.color}`} />
                             {categoryInfo.name}
                           </SelectLabel>
                           {categoryDisciplines.slice(0, 8).map((d) => (

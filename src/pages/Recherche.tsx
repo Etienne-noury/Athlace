@@ -293,7 +293,7 @@ export default function Recherche() {
               </div>
             ) : filteredClubs.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <div className="w-20 h-20 rounded-pill bg-muted flex items-center justify-center mx-auto mb-4">
                   <Search className="w-10 h-10 text-muted-foreground" />
                 </div>
                 <h3 className="font-display text-xl font-semibold text-foreground mb-2">
@@ -327,7 +327,7 @@ export default function Recherche() {
                           </span>
                         </div>
                         {club.rating > 0 && (
-                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface/90 backdrop-blur-sm rounded-full px-2 py-1">
+                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface/90 backdrop-blur-sm rounded-pill px-2 py-1">
                             <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
                             <span className="text-sm font-semibold">{club.rating}</span>
                           </div>
@@ -361,7 +361,7 @@ export default function Recherche() {
                           <span>{[club.city, club.region].filter(Boolean).join(', ')}</span>
                         </div>
                         <div className="flex items-center justify-end pt-4 border-t border-border/50">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-pill bg-primary/10 flex items-center justify-center">
                             <ArrowRight className="w-5 h-5 text-primary" />
                           </div>
                         </div>

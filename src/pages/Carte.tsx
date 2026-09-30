@@ -66,7 +66,7 @@ export default function Carte() {
             >
               <Filter className="w-4 h-4" />
               Filtres
-              {hasActiveFilters && <span className="ml-1 h-2 w-2 rounded-full bg-primary" />}
+              {hasActiveFilters && <span className="ml-1 h-2 w-2 rounded-pill bg-primary" />}
             </Button>
             {hasActiveFilters && (
               <Button type="button" variant="ghost" size="sm" onClick={clearFilters}>
