@@ -70,7 +70,7 @@ export default function Favorites() {
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
         ) : favorites.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border rounded-2xl bg-muted/30">
+          <div className="text-center py-16 border border-dashed border-border rounded-2xl bg-muted">
             <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">Vous n'avez pas encore de club favori.</p>
             <Button className="mt-4" asChild>
@@ -82,7 +82,7 @@ export default function Favorites() {
             {favorites.map((club) => (
               <div
                 key={club.favoriteId}
-                className="p-5 bg-card border border-border rounded-xl hover:border-primary/50 transition-colors flex items-start justify-between gap-4"
+                className="p-5 bg-card border border-border rounded-xl hover:border-border transition-colors flex items-start justify-between gap-4"
               >
                 <Link to={`/club/${club.clubId}`} className="flex-1">
                   <h2 className="font-display font-semibold">{club.name}</h2>

@@ -78,7 +78,7 @@ export default function Football() {
         )}
 
         {query && isError && (
-          <div className="flex items-start gap-3 bg-destructive/10 text-destructive rounded-xl p-4 max-w-2xl mx-auto">
+          <div className="flex items-start gap-3 bg-destructive text-destructive rounded-xl p-4 max-w-2xl mx-auto">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium">Service data.sports.gouv.fr indisponible</p>

@@ -96,7 +96,7 @@ export default function Recherche() {
   return (
     <Layout>
       {/* Header */}
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Rechercher un club
@@ -115,7 +115,7 @@ export default function Recherche() {
           if (!fed) return null;
           const url = fed.buildSearchUrl({ city: searchQuery, postalCode: searchQuery });
           return (
-            <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="mb-6 rounded-2xl border border-border bg-tint-100 p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <div className="text-3xl" aria-hidden>{fed.icon}</div>
               <div className="flex-1">
                 <p className="font-display font-semibold text-foreground">
@@ -313,7 +313,7 @@ export default function Recherche() {
                 {filteredClubs.map((club) => (
                   <Link key={club.id} to={`/club/${club.id}`}>
                     <div className={cn(
-                      "bg-card rounded-2xl border border-border/50 overflow-hidden card-hover",
+                      "bg-card rounded-2xl border border-border overflow-hidden card-hover",
                       viewMode === 'list' && 'flex'
                     )}>
                       {/* Image */}
@@ -327,7 +327,7 @@ export default function Recherche() {
                           </span>
                         </div>
                         {club.rating > 0 && (
-                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface/90 backdrop-blur-sm rounded-pill px-2 py-1">
+                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-glass backdrop-blur-sm rounded-pill px-2 py-1">
                             <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
                             <span className="text-sm font-semibold">{club.rating}</span>
                           </div>
@@ -360,8 +360,8 @@ export default function Recherche() {
                           <MapPin className="w-4 h-4" />
                           <span>{[club.city, club.region].filter(Boolean).join(', ')}</span>
                         </div>
-                        <div className="flex items-center justify-end pt-4 border-t border-border/50">
-                          <div className="w-10 h-10 rounded-pill bg-primary/10 flex items-center justify-center">
+                        <div className="flex items-center justify-end pt-4 border-t border-border">
+                          <div className="w-10 h-10 rounded-pill bg-tint-100 flex items-center justify-center">
                             <ArrowRight className="w-5 h-5 text-primary" />
                           </div>
                         </div>

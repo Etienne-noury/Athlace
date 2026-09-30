@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 export default function Recruitment() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground">Recrutement</h1>
           <p className="text-muted-foreground mt-2">Rejoignez l'aventure Athlace.</p>

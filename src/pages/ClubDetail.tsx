@@ -95,7 +95,7 @@ export default function ClubDetail() {
         <div className="relative container mx-auto px-4 pt-8">
           <Link
             to="/clubs/"
-            className="inline-flex items-center gap-2 text-cream-100/80 hover:text-cream-100 mb-6"
+            className="inline-flex items-center gap-2 text-cream-100 hover:text-cream-100 mb-6"
           >
             <ChevronLeft className="w-5 h-5" />
             Retour aux résultats

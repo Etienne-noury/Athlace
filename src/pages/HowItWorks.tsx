@@ -27,7 +27,7 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground">Comment ça marche ?</h1>
           <p className="text-muted-foreground mt-2">Quatre étapes simples pour trouver votre club idéal.</p>
@@ -37,7 +37,7 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {STEPS.map((step, i) => (
             <div key={i} className="bg-card border border-border rounded-2xl p-6">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                 <step.icon className="w-6 h-6 text-primary" />
               </div>
               <div className="text-sm font-bold text-primary mb-2">Étape {i + 1}</div>

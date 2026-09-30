@@ -161,7 +161,7 @@ export default function Profile() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Mon compte</h1>
           <p className="text-muted-foreground">Gérez votre profil et vos préférences.</p>
@@ -269,7 +269,7 @@ export default function Profile() {
               </form>
             </div>
 
-            <div className="bg-card border border-destructive/30 rounded-2xl p-6">
+            <div className="bg-card border border-destructive rounded-2xl p-6">
               <h2 className="font-display text-xl font-semibold mb-2">Supprimer mon compte</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Cette action est définitive : votre profil, vos favoris et votre photo seront supprimés.

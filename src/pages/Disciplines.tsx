@@ -109,7 +109,7 @@ export default function Disciplines() {
                       className="group animate-fade-up"
                       style={{ animationDelay: `${index * 0.02}s` }}
                     >
-                      <div className="bg-card rounded-xl p-4 border border-border/50 card-hover h-full flex flex-col items-center text-center">
+                      <div className="bg-card rounded-xl p-4 border border-border card-hover h-full flex flex-col items-center text-center">
                         <span className="text-4xl mb-3">{discipline.icon}</span>
                         <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm leading-tight mb-2">
                           {discipline.name}

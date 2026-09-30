@@ -5,7 +5,7 @@ import { REGIONS } from '@/lib/geo';
 export default function RegionsIndex() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Index des régions
@@ -23,7 +23,7 @@ export default function RegionsIndex() {
               <Link
                 key={region.slug}
                 to={`/clubs/${region.slug}/`}
-                className="group p-6 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors"
+                className="group p-6 bg-card rounded-xl border border-border hover:border-border transition-colors"
               >
                 <h2 className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
                   {region.name}

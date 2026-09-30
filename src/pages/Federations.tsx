@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { fetchFederationSources, type Federation } from '@/data/federations';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
-  api: { label: 'API publique', icon: Code2, className: 'bg-primary/10 text-primary border-primary/20' },
+  api: { label: 'API publique', icon: Code2, className: 'bg-tint-100 text-primary border-border' },
   opendata: { label: 'Open Data', icon: Database, className: 'bg-tint-100 text-blue-500 border-border' },
   annuaire: { label: 'Annuaire en ligne', icon: Globe, className: 'bg-muted text-muted-foreground border-border' },
 };
@@ -49,7 +49,7 @@ export default function Federations() {
                       <div className="text-sm text-muted-foreground">{fed.sport}</div>
                     </div>
                   </div>
-                  <p className="text-sm text-foreground/80 mb-4 flex-1">{fed.name}</p>
+                  <p className="text-sm text-foreground mb-4 flex-1">{fed.name}</p>
                   <Badge variant="outline" className={`${meta.className} w-fit mb-4 gap-1`}>
                     <Icon className="w-3 h-3" />
                     {meta.label}
@@ -69,7 +69,7 @@ export default function Federations() {
           </div>
         )}
 
-        <div className="mt-12 p-6 rounded-xl bg-muted/50 border border-border">
+        <div className="mt-12 p-6 rounded-xl bg-muted border border-border">
           <h2 className="font-display font-semibold text-lg mb-2">À propos de ces sources</h2>
           <p className="text-sm text-muted-foreground">
             Athlace s'appuie principalement sur les données ouvertes de <strong>data.sports.gouv.fr</strong> (Ministère des Sports).

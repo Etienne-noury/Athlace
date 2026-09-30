@@ -42,20 +42,20 @@ export function StatsSection() {
               className="text-center animate-fade-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-background/10 mb-4">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-background mb-4">
                 <stat.icon className="w-7 h-7 text-background" />
               </div>
               <div className="font-display text-2xl lg:text-4xl font-bold mb-1">
                 {stat.value === null ? (
-                  <span className="inline-block h-8 w-24 rounded bg-background/10 animate-pulse align-middle" />
+                  <span className="inline-block h-8 w-24 rounded bg-background animate-pulse align-middle" />
                 ) : (
                   stat.value
                 )}
               </div>
-              <div className="font-medium text-background/90 mb-1">
+              <div className="font-medium text-background mb-1">
                 {stat.label}
               </div>
-              <div className="text-sm text-background/60">
+              <div className="text-sm text-background">
                 {stat.description}
               </div>
             </div>

@@ -17,7 +17,7 @@ export default function SportsIndex() {
         title="Tous les sports"
         description={`Explorez ${totalSports} sports et ${totalSubs} sous-disciplines classés par catégorie sur Athlace.`}
       />
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Tous les sports
@@ -33,7 +33,7 @@ export default function SportsIndex() {
           {ARBORESCENCE.map((categorie) => (
             <div
               key={categorie.id}
-              className="p-6 bg-card rounded-2xl border border-border hover:border-primary/50 transition-colors"
+              className="p-6 bg-card rounded-2xl border border-border hover:border-border transition-colors"
             >
               <h2 className="font-display text-2xl font-semibold mb-4">
                 {categorie.icon} {categorie.name}
@@ -43,7 +43,7 @@ export default function SportsIndex() {
                   <Link
                     key={sport.name}
                     to={`/sports/${slugifyDiscipline(sport.name)}/`}
-                    className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-primary/10 hover:text-primary transition-colors"
+                    className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-tint-100 hover:text-primary transition-colors"
                   >
                     {sport.name}
                   </Link>

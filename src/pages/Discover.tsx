@@ -27,7 +27,7 @@ const GUIDES = [
 export default function Discover() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Découvrir le sport
@@ -42,7 +42,7 @@ export default function Discover() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {GUIDES.map((guide) => (
             <Link key={guide.slug} to={`/decouvrir/${guide.slug}/`}>
-              <Card className="group hover:border-primary/50 transition-colors h-full">
+              <Card className="group hover:border-border transition-colors h-full">
                 <CardContent className="p-6">
                   <guide.icon className="w-10 h-10 text-primary mb-4" />
                   <h2 className="font-display text-xl font-semibold group-hover:text-primary transition-colors">

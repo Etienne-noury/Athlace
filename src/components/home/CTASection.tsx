@@ -10,11 +10,11 @@ export function CTASection() {
           {/* For Users */}
           <div className="relative bg-blue-500 rounded-3xl p-8 lg:p-10 overflow-hidden">
             {/* Decorative */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-surface/10 rounded-pill -translate-y-1/2 translate-x-1/2" />
-             <div className="absolute bottom-0 left-0 w-32 h-32 bg-surface/5 rounded-pill translate-y-1/2 -translate-x-1/2" />
+             <div className="absolute top-0 right-0 w-64 h-64 bg-glass rounded-pill -translate-y-1/2 translate-x-1/2" />
+             <div className="absolute bottom-0 left-0 w-32 h-32 bg-glass rounded-pill translate-y-1/2 -translate-x-1/2" />
             
             <div className="relative">
-               <div className="w-14 h-14 rounded-2xl bg-surface/20 flex items-center justify-center mb-6">
+               <div className="w-14 h-14 rounded-2xl bg-glass flex items-center justify-center mb-6">
                  <UserPlus className="w-7 h-7 text-cream-100" />
               </div>
               
@@ -22,7 +22,7 @@ export function CTASection() {
                 Vous êtes sportif ?
               </h3>
               
-               <p className="text-surface-alt/80 text-lg mb-8 leading-relaxed">
+               <p className="text-surface-alt text-lg mb-8 leading-relaxed">
                 Créez votre compte gratuit pour sauvegarder vos clubs favoris, 
                 suivre vos inscriptions et recevoir des recommandations personnalisées.
               </p>

@@ -173,7 +173,7 @@ export default function Aide() {
 
             <div className="space-y-4">
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Email</h3>
@@ -186,7 +186,7 @@ export default function Aide() {
               </div>
 
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Phone className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Téléphone</h3>
@@ -199,7 +199,7 @@ export default function Aide() {
               </div>
 
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <MessageCircle className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Chat en ligne</h3>

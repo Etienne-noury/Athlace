@@ -84,7 +84,7 @@ export function FavoriteButton({ clubId, className, withLabel = false }: Favorit
       aria-pressed={isFavorite}
       aria-label={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
       className={cn(
-        'inline-flex items-center gap-2 rounded-pill bg-background/90 backdrop-blur-sm border border-border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-60',
+        'inline-flex items-center gap-2 rounded-pill bg-background backdrop-blur-sm border border-border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-60',
         className
       )}
     >

@@ -39,7 +39,7 @@ export function PopularDisciplines() {
               style={{ animationDelay: `${index * 0.05}s` }}
             >
 
-              <div className="relative bg-card rounded-2xl p-6 border border-border/50 card-hover overflow-hidden">
+              <div className="relative bg-card rounded-2xl p-6 border border-border card-hover overflow-hidden">
                 {/* Background gradient */}
                 <div className={cn(
                   "absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300",
@@ -60,7 +60,7 @@ export function PopularDisciplines() {
                 </div>
 
                 {/* Arrow */}
-                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-pill bg-primary/10 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-pill bg-tint-100 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                   <ArrowRight className="w-4 h-4 text-primary" />
                 </div>
               </div>

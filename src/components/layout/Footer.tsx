@@ -62,7 +62,7 @@ export function Footer() {
               <img src="/logos/symbol.png" alt="" className="h-10 w-auto object-contain" />
               <img src="/logos/wordmark-white.png" alt="Athlace" className="h-7 w-auto object-contain" />
             </div>
-            <p className="text-surface-alt/80 text-sm leading-relaxed">
+            <p className="text-surface-alt text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.
             </p>
             <div className="flex gap-3">
@@ -73,7 +73,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-pill bg-surface/10 flex items-center justify-center hover:bg-surface/20 transition-colors"
+                  className="w-9 h-9 rounded-pill bg-glass flex items-center justify-center hover:bg-glass transition-colors"
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -90,7 +90,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-surface-alt/80 hover:text-cream-100 transition-colors text-sm"
+                      className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                     >
                       {link.label}
                     </Link>
@@ -102,7 +102,7 @@ export function Footer() {
         </div>
 
         {/* Secondary link grid */}
-        <div className="mt-12 pt-8 border-t border-surface/10">
+        <div className="mt-12 pt-8 border-t border-glass-border">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {Object.entries(footerLinks).slice(3).map(([title, links]) => (
               <div key={title}>
@@ -115,14 +115,14 @@ export function Footer() {
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-surface-alt/80 hover:text-cream-100 transition-colors text-sm"
+                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                         >
                           {link.label}
                         </a>
                       ) : (
                         <Link
                           to={link.href}
-                          className="text-surface-alt/80 hover:text-cream-100 transition-colors text-sm"
+                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                         >
                           {link.label}
                         </Link>
@@ -136,12 +136,12 @@ export function Footer() {
         </div>
 
         {/* Contact */}
-        <div className="mt-12 pt-8 border-t border-surface/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt/80">
+        <div className="mt-12 pt-8 border-t border-glass-border">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
             <div className="flex flex-wrap gap-6">
               <a
                 href="mailto:contact@athlace.fr"
-                className="flex items-center gap-2 rounded-pill bg-surface/10 px-4 py-2 font-semibold text-cream-100 hover:bg-surface/20 transition-colors"
+                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-semibold text-cream-100 hover:bg-glass transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
@@ -159,7 +159,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 pt-8 border-t border-surface/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt/70">
+        <div className="mt-8 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
           <p>© 2026 Athlace. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-6">
             {footerLinks['Informations légales'].map((link) => (

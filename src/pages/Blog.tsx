@@ -27,7 +27,7 @@ const POSTS = [
 export default function Blog() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Blog Athlace
@@ -42,7 +42,7 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {POSTS.map((post) => (
             <Link key={post.id} to={`/blog/${post.id}/`}>
-              <Card className="group hover:border-primary/50 transition-colors h-full">
+              <Card className="group hover:border-border transition-colors h-full">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                     <Calendar className="w-3 h-3" /> {post.date}

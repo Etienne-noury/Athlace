@@ -39,7 +39,7 @@ export default function SportsFamily() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
             <Link to="/" className="hover:text-primary">Accueil</Link>
@@ -62,7 +62,7 @@ export default function SportsFamily() {
           {categorie.sports.map((sport) => {
             const sportId = slugifyDiscipline(sport.name);
             return (
-              <Card key={sport.name} className="hover:border-primary/50 transition-colors">
+              <Card key={sport.name} className="hover:border-border transition-colors">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3">
                     <h2 className="font-display font-semibold text-lg">

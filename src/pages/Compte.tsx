@@ -28,7 +28,7 @@ export default function Compte() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Espace membre</h1>
           <p className="text-muted-foreground text-lg">
@@ -46,7 +46,7 @@ export default function Compte() {
               <Link
                 key={card.to}
                 to={card.to}
-                className="p-6 bg-card border border-border rounded-2xl hover:border-primary/50 transition-colors"
+                className="p-6 bg-card border border-border rounded-2xl hover:border-border transition-colors"
               >
                 <card.icon className="w-8 h-8 text-primary mb-4" />
                 <h2 className="font-display text-lg font-semibold">{card.title}</h2>

@@ -53,7 +53,7 @@ export default function ResetPassword() {
 
           {invalidLink ? (
             <div className="space-y-4 mt-4">
-              <div className="p-4 bg-destructive/10 text-destructive rounded-lg text-sm text-center">
+              <div className="p-4 bg-destructive text-destructive rounded-lg text-sm text-center">
                 Ce lien de réinitialisation est invalide ou expiré.
               </div>
               <Button variant="outline" className="w-full" asChild>
@@ -61,14 +61,14 @@ export default function ResetPassword() {
               </Button>
             </div>
           ) : done ? (
-            <div className="p-4 bg-primary/10 text-primary rounded-lg text-sm text-center mt-4">
+            <div className="p-4 bg-tint-100 text-primary rounded-lg text-sm text-center mt-4">
               Mot de passe mis à jour. Redirection…
             </div>
           ) : (
             <>
               <p className="text-muted-foreground text-center mb-6">Choisissez un nouveau mot de passe.</p>
               {error && (
-                <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm" role="alert">
+                <div className="mb-4 p-3 bg-destructive text-destructive rounded-lg text-sm" role="alert">
                   {error}
                 </div>
               )}
