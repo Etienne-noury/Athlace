@@ -78,7 +78,7 @@ export function HeroSection() {
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
-            <div className="bg-surface backdrop-blur-sm rounded-2xl p-3 shadow-sm">
+            <div className="bg-surface rounded-2xl p-3 shadow-sm">
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
                 <div className="flex-1 relative">
