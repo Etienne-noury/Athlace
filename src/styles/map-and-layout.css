@@ -1,0 +1,23 @@
+/* Layout and Leaflet presentation kept apart from the supplied brand tokens. */
+.bg-hero-gradient, .bg-sport-gradient { background-color: hsl(var(--blue-500)); }
+.card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 16px hsl(var(--ink) / .08); }
+@keyframes athlace-fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-up { animation: athlace-fade-up .4s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .animate-fade-up { animation: none; } .card-hover { transition: none; } }
+.athlace-cluster { display:flex; align-items:center; justify-content:center; border-radius:var(--radius-pill); font-weight:700; font-family:inherit; color:hsl(var(--primary-foreground)); background:hsl(var(--primary) / .95); border:3px solid hsl(var(--background)); box-shadow:0 4px 12px hsl(var(--ink) / .2); transition:transform .15s ease; }
+.athlace-cluster:hover { transform:scale(1.06); }
+.athlace-cluster--sm { font-size: .8125rem; }
+.athlace-cluster--md { font-size: .9375rem; }
+.athlace-cluster--lg { font-size: 1.0625rem; background:hsl(var(--blue-700)); }
+@media (max-height:500px) and (orientation:landscape) {
+ .app-header-bar { height:3.5rem; }
+ .mobile-menu-panel { max-height:calc(100dvh - 3.5rem); padding-top:.5rem; padding-bottom:.5rem; }
+ .mobile-sports-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:.75rem; }
+ .page-hero-compact { padding-top:1rem; padding-bottom:1rem; }
+ .page-hero-compact h1 { font-size:1.25rem; line-height:1.75rem; margin-bottom:.25rem; }
+ .page-hero-compact p { font-size:.875rem; line-height:1.25rem; }
+ .hero-compact { padding-top:1.5rem; padding-bottom:1.5rem; }
+ .hero-compact h1 { font-size:1.75rem; line-height:2.1rem; margin-bottom:.75rem; }
+ .hero-compact > div > p { font-size:1rem; line-height:1.5rem; margin-bottom:1.25rem; }
+}
