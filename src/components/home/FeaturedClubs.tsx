@@ -58,7 +58,7 @@ export function FeaturedClubs() {
 
                   {/* Rating */}
                   {club.rating > 0 && (
-                     <div className="absolute top-3 right-3 flex items-center gap-1 bg-glass backdrop-blur-sm rounded-pill px-2 py-1">
+                     <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface backdrop-blur-sm rounded-pill px-2 py-1">
                        <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
                       <span className="text-sm font-semibold">{club.rating}</span>
                     </div>
