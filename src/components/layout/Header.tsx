@@ -120,12 +120,8 @@ export function Header() {
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#262E47] to-[#415CAF] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                <span className="text-xl font-bold text-white">A</span>
-              </div>
-              <span className="font-display text-xl font-bold text-foreground hidden sm:block">
-                Athlace
-              </span>
+              <img src="/logos/symbol.png" alt="" className="h-10 w-auto shrink-0 object-contain transition-transform group-hover:scale-105" />
+              <img src="/logos/wordmark-blue.png" alt="Athlace" className="hidden sm:block h-6 w-auto object-contain" />
             </Link>
 
           </div>
