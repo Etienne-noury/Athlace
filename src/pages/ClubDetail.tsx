@@ -110,7 +110,7 @@ export default function ClubDetail() {
 
               <div className="flex-1">
                 <div className="flex flex-wrap items-start gap-3 mb-3">
-                  <Badge className={cn('text-primary-foreground border-0', levels[club.level].color)}>
+                  <Badge className={cn('text-cream-100 border-0', levels[club.level].color)}>
                     {levels[club.level].name}
                   </Badge>
                   <Badge variant="secondary">{club.disciplineName}</Badge>
