@@ -139,7 +139,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'hiver',
     name: "Sports d'hiver & glisse",
-    color: 'bg-cyan-500',
+    color: 'bg-blue-500',
     icon: '⛷️',
     sports: [
       { name: 'Ski', icon: '⛷️', popularity: 7, subs: ['Ski alpin', 'Ski nordique (de fond, saut, biathlon)', 'Ski artistique (bosses, sauts, skicross)', 'Surf des neiges / Snowboard'] },
