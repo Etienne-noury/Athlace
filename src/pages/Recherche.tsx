@@ -327,8 +327,8 @@ export default function Recherche() {
                           </span>
                         </div>
                         {club.rating > 0 && (
-                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
-                            <Star className="w-4 h-4 fill-warning text-warning" />
+                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface/90 backdrop-blur-sm rounded-full px-2 py-1">
+                            <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
                             <span className="text-sm font-semibold">{club.rating}</span>
                           </div>
                         )}
@@ -347,7 +347,7 @@ export default function Recherche() {
                           {(() => {
                             const fed = getFederationForDiscipline(club.discipline, federationSources);
                             return fed ? (
-                              <Badge variant="outline" className="text-[10px] gap-1 px-1.5 py-0">
+                              <Badge variant="outline" className="text-micro gap-1 px-1.5 py-0">
                                 <span aria-hidden>{fed.icon}</span> {fed.code}
                               </Badge>
                             ) : null;

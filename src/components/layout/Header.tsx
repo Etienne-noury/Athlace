@@ -263,7 +263,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="hidden sm:flex gap-2">
                     <Avatar className="h-6 w-6">
-                      <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-micro">{initials}</AvatarFallback>
                     </Avatar>
                     <span className="max-w-[120px] truncate">{displayName}</span>
                     <ChevronDown className="h-3 w-3" />

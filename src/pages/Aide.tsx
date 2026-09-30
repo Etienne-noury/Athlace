@@ -102,12 +102,12 @@ export default function Aide() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="bg-sport-gradient text-white py-12 lg:py-16">
+      <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-display text-3xl lg:text-5xl font-bold mb-4">
             Centre d'aide
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-surface-alt text-lg max-w-2xl mx-auto mb-8">
             Trouvez rapidement des réponses à vos questions sur Athlace
           </p>
 
@@ -118,7 +118,7 @@ export default function Aide() {
               placeholder="Rechercher dans la FAQ..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-14 text-base bg-white text-foreground"
+              className="pl-12 h-14 text-base bg-surface text-foreground"
             />
           </div>
         </div>

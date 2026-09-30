@@ -90,12 +90,12 @@ export default function ClubDetail() {
     <Layout>
       {/* Hero */}
       <section className="relative">
-        <div className="absolute inset-0 h-64 lg:h-80 bg-gradient-to-br from-primary/90 to-primary" />
+        <div className="absolute inset-0 h-64 lg:h-80 bg-blue-500" />
 
         <div className="relative container mx-auto px-4 pt-8">
           <Link
             to="/clubs/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6"
+            className="inline-flex items-center gap-2 text-cream-100/80 hover:text-cream-100 mb-6"
           >
             <ChevronLeft className="w-5 h-5" />
             Retour aux résultats
@@ -110,7 +110,7 @@ export default function ClubDetail() {
 
               <div className="flex-1">
                 <div className="flex flex-wrap items-start gap-3 mb-3">
-                  <Badge className={cn('text-white border-0', levels[club.level].color)}>
+                  <Badge className={cn('text-primary-foreground border-0', levels[club.level].color)}>
                     {levels[club.level].name}
                   </Badge>
                   <Badge variant="secondary">{club.disciplineName}</Badge>

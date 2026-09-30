@@ -19,12 +19,12 @@ export default function Federations() {
 
   return (
     <Layout>
-      <section className="bg-hero-gradient text-white py-16 lg:py-20">
+      <section className="bg-blue-500 text-cream-100 py-16 lg:py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-display text-4xl lg:text-5xl font-bold mb-4">
             Annuaire des fédérations
           </h1>
-          <p className="text-lg lg:text-xl text-white/90 max-w-2xl mx-auto">
+          <p className="text-lg lg:text-xl text-surface-alt max-w-2xl mx-auto">
             Les fédérations sportives françaises qui exposent leurs clubs en open data ou via un annuaire public.
           </p>
         </div>

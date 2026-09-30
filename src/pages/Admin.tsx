@@ -383,7 +383,7 @@ export default function Admin() {
             <p><strong>Importées :</strong> {result.imported}</p>
             <p><strong>Erreurs :</strong> {result.errors}</p>
             {result.lastError && (
-              <p className="text-red-500"><strong>Dernière erreur :</strong> {result.lastError}</p>
+              <p className="text-destructive"><strong>Dernière erreur :</strong> {result.lastError}</p>
             )}
           </div>
         )}
@@ -418,7 +418,7 @@ export default function Admin() {
             <p><strong>Enregistrés :</strong> {esResult.upserted}</p>
             <p><strong>Erreurs :</strong> {esResult.errors}</p>
             {esResult.lastError && (
-              <p className="text-red-500"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
+              <p className="text-destructive"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
             )}
           </div>
         )}

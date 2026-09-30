@@ -41,12 +41,12 @@ export default function Carte() {
   return (
     <Layout>
       {/* Header */}
-      <section className="page-hero-compact bg-sport-gradient text-white py-8 lg:py-12">
+      <section className="page-hero-compact bg-blue-500 text-cream-100 py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-2xl lg:text-4xl font-bold mb-2">
             Carte des clubs sportifs
           </h1>
-          <p className="text-white/80 text-lg">
+          <p className="text-surface-alt text-lg">
             Visualisez et trouvez tous les clubs de France
           </p>
         </div>

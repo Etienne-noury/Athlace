@@ -46,12 +46,12 @@ export default function Disciplines() {
   return (
     <Layout>
       {/* Header */}
-      <section className="bg-sport-gradient text-white py-12 lg:py-16">
+      <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-5xl font-bold mb-4">
             Disciplines sportives
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl">
+          <p className="text-surface-alt text-lg max-w-2xl">
             Explorez les grandes familles de sports pratiquées en France.
             Cliquez sur une discipline pour voir les clubs et ses variantes.
           </p>
