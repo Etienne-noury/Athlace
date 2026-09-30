@@ -4,7 +4,7 @@
 @keyframes athlace-fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-up { animation: athlace-fade-up .4s ease-out both; }
 @media (prefers-reduced-motion: reduce) { .animate-fade-up { animation: none; } .card-hover { transition: none; } }
-.athlace-cluster { display:flex; align-items:center; justify-content:center; border-radius:var(--radius-pill); font-weight:700; font-family:inherit; color:hsl(var(--primary-foreground)); background:hsl(var(--primary) / .95); border:3px solid hsl(var(--background)); box-shadow:0 4px 12px hsl(var(--ink) / .2); transition:transform .15s ease; }
+.athlace-cluster { display:flex; align-items:center; justify-content:center; border-radius:var(--radius-pill); font-weight:700; font-family:inherit; color:hsl(var(--primary-foreground)); background:hsl(var(--primary)); border:3px solid hsl(var(--background)); box-shadow:0 4px 12px hsl(var(--ink) / .2); transition:transform .15s ease; }
 .athlace-cluster:hover { transform:scale(1.06); }
 .athlace-cluster--sm { font-size: .8125rem; }
 .athlace-cluster--md { font-size: .9375rem; }
