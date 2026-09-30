@@ -62,7 +62,7 @@ export default function FootballClubDetail() {
     <Layout>
       <section className="bg-blue-500 text-cream-100 py-8">
         <div className="container mx-auto px-4">
-          <Link to="/football" className="inline-flex items-center gap-2 text-surface-alt hover:text-white mb-4">
+          <Link to="/football" className="inline-flex items-center gap-2 text-surface-alt hover:text-cream-100 mb-4">
             <ChevronLeft className="w-5 h-5" /> Retour à l'annuaire
           </Link>
           <div className="flex flex-wrap items-start gap-3 mb-2">

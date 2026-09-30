@@ -63,7 +63,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'raquette',
     name: 'Sports de raquette',
-    color: 'bg-green-500',
+    color: 'bg-blue-500',
     icon: '🎾',
     sports: [
       { name: 'Tennis', icon: '🎾', popularity: 9, subs: ['Tennis', 'Courte paume', 'Padel', 'Pickleball', 'Beach tennis', 'Tennis-fauteuil'] },
@@ -76,7 +76,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'aquatique',
     name: 'Sports aquatiques',
-    color: 'bg-blue-400',
+    color: 'bg-blue-500',
     icon: '🏊',
     sports: [
       { name: 'Natation', icon: '🏊', popularity: 9, subs: ['Natation course sportive', 'Natation en eau libre', 'Natation artistique (synchronisée)', 'Plongeon', 'Water-polo'] },
@@ -96,7 +96,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'combat',
     name: 'Arts martiaux & combat',
-    color: 'bg-orange-500',
+    color: 'bg-blue-500',
     icon: '🥋',
     sports: [
       { name: 'Judo-jujitsu', icon: '🥋', popularity: 8, subs: ['Judo', 'Jujitsu', 'Taïso'] },
@@ -117,7 +117,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'nature',
     name: 'Sports nature & montagne',
-    color: 'bg-emerald-600',
+    color: 'bg-blue-500',
     icon: '🏔️',
     sports: [
       { name: 'Montagne et escalade', icon: '🧗', popularity: 7, subs: ['Escalade (bloc, difficulté, vitesse)', 'Escalade sur PAH', 'Escalade sur Via ferrata/Corda', 'Escalade dans les arbres', 'Canyonisme', 'Raquette à neige', 'Ski-alpinisme'] },
@@ -150,7 +150,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'fitness',
     name: 'Fitness, danse & force',
-    color: 'bg-pink-500',
+    color: 'bg-blue-500',
     icon: '💪',
     sports: [
       { name: 'Gymnastique', icon: '🤸', popularity: 7, subs: ['Gymnastique artistique', 'Gymnastique rythmique', 'Gymnastique acrobatique', 'Gymnastique aérobic', 'Trampoline / Double mini-tramp', 'Tumbling', 'Parkour'] },
@@ -177,7 +177,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'mecanique',
     name: 'Sports mécaniques & aériens',
-    color: 'bg-red-500',
+    color: 'bg-blue-500',
     icon: '🏎️',
     sports: [
       { name: 'Sport automobile', icon: '🏎️', popularity: 5, subs: ['Sport automobile sur circuit', 'Rallye', 'Course de côte', 'Karting'] },
@@ -195,7 +195,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'precision',
     name: 'Sports de précision',
-    color: 'bg-purple-500',
+    color: 'bg-blue-500',
     icon: '🎯',
     sports: [
       { name: 'Tir', icon: '🎯', popularity: 5, subs: ['Tir à la carabine', 'Tir au pistolet', 'Tir sur cible mobile', 'Arbalète', 'Armes anciennes', 'Bench rest', 'Silhouettes métalliques', 'Tir sportif de vitesse', 'Tir aux armes réglementaires'] },
@@ -212,7 +212,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'traditionnel',
     name: 'Sports traditionnels & régionaux',
-    color: 'bg-amber-600',
+    color: 'bg-blue-500',
     icon: '🐂',
     sports: [
       { name: 'Course camarguaise', icon: '🐂', popularity: 2, subs: ['Course camarguaise'] },
@@ -223,7 +223,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'peche',
     name: 'Pêche',
-    color: 'bg-teal-600',
+    color: 'bg-blue-500',
     icon: '🎣',
     sports: [
       { name: 'Pêches sportives', icon: '🎣', popularity: 3, subs: ['Pêche en mer', 'Pêche au coup en eau douce', 'Pêche sportive à la mouche et au lancer'] },
@@ -232,7 +232,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: 'paralympique',
     name: 'Paralympiques',
-    color: 'bg-indigo-500',
+    color: 'bg-blue-500',
     icon: '♿',
     sports: [
       { name: 'Handisport', icon: '♿', popularity: 5, subs: ['Athlétisme handisport', 'Basket-ball en fauteuil roulant', 'Boccia', 'Cécifoot', 'Escrime fauteuil', 'Rugby fauteuil', 'Natation handisport', 'Ski para-alpin'] },
