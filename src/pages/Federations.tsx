@@ -58,7 +58,7 @@ export default function Federations() {
                     href={fed.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-medium hover:bg-blue-700 transition-colors"
                   >
                     Accéder à l'annuaire
                     <ExternalLink className="w-4 h-4" />
