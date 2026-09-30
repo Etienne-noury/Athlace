@@ -6,8 +6,8 @@ import { Card } from '@/components/ui/card';
 import { fetchFederationSources, type Federation } from '@/data/federations';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
-  api: { label: 'API publique', icon: Code2, className: 'bg-primary/10 text-primary border-primary/20' },
-  opendata: { label: 'Open Data', icon: Database, className: 'bg-accent/10 text-accent border-accent/20' },
+  api: { label: 'API publique', icon: Code2, className: 'bg-tint-100 text-primary border-border' },
+  opendata: { label: 'Open Data', icon: Database, className: 'bg-tint-100 text-blue-500 border-border' },
   annuaire: { label: 'Annuaire en ligne', icon: Globe, className: 'bg-muted text-muted-foreground border-border' },
 };
 
@@ -19,12 +19,12 @@ export default function Federations() {
 
   return (
     <Layout>
-      <section className="bg-hero-gradient text-white py-16 lg:py-20">
+      <section className="bg-blue-500 text-cream-100 py-16 lg:py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-display text-4xl lg:text-5xl font-bold mb-4">
             Annuaire des fédérations
           </h1>
-          <p className="text-lg lg:text-xl text-white/90 max-w-2xl mx-auto">
+          <p className="text-lg lg:text-xl text-surface-alt max-w-2xl mx-auto">
             Les fédérations sportives françaises qui exposent leurs clubs en open data ou via un annuaire public.
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function Federations() {
                       <div className="text-sm text-muted-foreground">{fed.sport}</div>
                     </div>
                   </div>
-                  <p className="text-sm text-foreground/80 mb-4 flex-1">{fed.name}</p>
+                  <p className="text-sm text-foreground mb-4 flex-1">{fed.name}</p>
                   <Badge variant="outline" className={`${meta.className} w-fit mb-4 gap-1`}>
                     <Icon className="w-3 h-3" />
                     {meta.label}
@@ -58,7 +58,7 @@ export default function Federations() {
                     href={fed.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-medium hover:bg-blue-700 transition-colors"
                   >
                     Accéder à l'annuaire
                     <ExternalLink className="w-4 h-4" />
@@ -69,7 +69,7 @@ export default function Federations() {
           </div>
         )}
 
-        <div className="mt-12 p-6 rounded-xl bg-muted/50 border border-border">
+        <div className="mt-12 p-6 rounded-xl bg-muted border border-border">
           <h2 className="font-display font-semibold text-lg mb-2">À propos de ces sources</h2>
           <p className="text-sm text-muted-foreground">
             Athlace s'appuie principalement sur les données ouvertes de <strong>data.sports.gouv.fr</strong> (Ministère des Sports).

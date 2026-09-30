@@ -8,7 +8,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 export default function Contact() {
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl font-bold text-foreground">Contactez-nous</h1>
           <p className="text-muted-foreground mt-2">Une question, une suggestion ou un problème ? Écrivez-nous.</p>
@@ -49,9 +49,9 @@ export default function Contact() {
 
             <a
               href="mailto:contact@athlace.fr"
-              className="flex items-center gap-4 rounded-xl bg-primary/10 border border-primary/20 p-5 mb-6 hover:bg-primary/15 transition-colors"
+              className="flex items-center gap-4 rounded-xl bg-tint-100 border border-border p-5 mb-6 hover:bg-tint-100 transition-colors"
             >
-              <span className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+              <span className="w-12 h-12 rounded-pill bg-tint-100 flex items-center justify-center shrink-0">
                 <Mail className="w-6 h-6 text-primary" />
               </span>
               <span className="min-w-0">

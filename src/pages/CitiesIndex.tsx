@@ -44,7 +44,7 @@ export default function CitiesIndex() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Index des villes
@@ -70,7 +70,7 @@ export default function CitiesIndex() {
                 <Link
                   key={`${city.city}-${city.region}`}
                   to={`/clubs/${slugify(city.region)}/${slug}/`}
-                  className="group p-4 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors"
+                  className="group p-4 bg-card rounded-xl border border-border hover:border-border transition-colors"
                 >
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />

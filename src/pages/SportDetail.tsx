@@ -73,7 +73,7 @@ export default function SportDetail() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
             <Link to="/" className="hover:text-primary">Accueil</Link>
@@ -121,7 +121,7 @@ export default function SportDetail() {
                     <Link
                       key={sub.id}
                       to={`/sports/${sub.id}/`}
-                      className="p-4 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors"
+                      className="p-4 bg-card rounded-xl border border-border hover:border-border transition-colors"
                     >
                       <h3 className="font-display font-semibold">{sub.name}</h3>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -144,7 +144,7 @@ export default function SportDetail() {
                 </div>
               )}
               {!isLoading && clubs.length === 0 && (
-                <div className="text-center py-10 border border-dashed border-border rounded-xl bg-muted/30">
+                <div className="text-center py-10 border border-dashed border-border rounded-xl bg-muted">
                   <p className="text-muted-foreground">
                     Aucun club référencé pour le moment.
                   </p>
@@ -152,7 +152,7 @@ export default function SportDetail() {
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {clubs.map((club) => (
-                  <Card key={club.id} className="group hover:border-primary/50 transition-colors">
+                  <Card key={club.id} className="group hover:border-border transition-colors">
                     <CardContent className="p-5">
                       <Link to={`/club/${club.id}`} className="block">
                         <h3 className="font-display font-semibold text-lg group-hover:text-primary transition-colors">

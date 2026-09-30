@@ -47,7 +47,7 @@ export default function DiscoverArticle() {
 
     return (
       <Layout>
-        <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+        <section className="bg-muted border-b border-border py-8 lg:py-12">
           <div className="container mx-auto px-4">
             <Button variant="ghost" className="mb-4 -ml-3" asChild>
               <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
@@ -89,7 +89,7 @@ export default function DiscoverArticle() {
                     <AccordionContent>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
                         {feds.map((fed) => (
-                          <Card key={fed.id} className="hover:border-primary/50 transition-colors">
+                          <Card key={fed.id} className="hover:border-border transition-colors">
                             <CardContent className="p-5">
                               <div className="flex items-start justify-between gap-3">
                                 <h2 className="font-display text-base font-semibold">{fed.nom}</h2>
@@ -118,7 +118,7 @@ export default function DiscoverArticle() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <Button variant="ghost" className="mb-4 -ml-3" asChild>
             <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>

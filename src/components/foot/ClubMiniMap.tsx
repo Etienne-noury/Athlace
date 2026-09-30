@@ -24,7 +24,7 @@ export function ClubMiniMap({ lat, lng, address, className = '' }: Props) {
           loading="lazy"
         />
       ) : (
-        <div className="w-full h-24 rounded-xl border border-border bg-muted/40 flex items-center justify-center text-sm text-muted-foreground gap-2 px-4 text-center">
+        <div className="w-full h-24 rounded-xl border border-border bg-muted flex items-center justify-center text-sm text-muted-foreground gap-2 px-4 text-center">
           <MapPin className="w-4 h-4 flex-shrink-0" />
           <span>Coordonnées GPS non disponibles pour ce club</span>
         </div>

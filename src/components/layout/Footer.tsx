@@ -53,18 +53,16 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#262E47] text-white mt-auto">
+    <footer className="bg-blue-500 text-cream-100 mt-auto">
       <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#415CAF] to-[#D5DC3C] flex items-center justify-center">
-                <span className="text-xl font-bold text-white">A</span>
-              </div>
-              <span className="font-display text-xl font-bold">Athlace</span>
+              <img src="/logos/symbol.png" alt="" className="h-10 w-auto object-contain" />
+              <img src="/logos/wordmark-white.png" alt="Athlace" className="h-7 w-auto object-contain" />
             </div>
-            <p className="text-white/70 text-sm leading-relaxed">
+            <p className="text-surface-alt text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.
             </p>
             <div className="flex gap-3">
@@ -75,7 +73,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="w-9 h-9 rounded-pill bg-glass flex items-center justify-center hover:bg-glass transition-colors"
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -92,7 +90,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-white/70 hover:text-white transition-colors text-sm"
+                      className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                     >
                       {link.label}
                     </Link>
@@ -104,7 +102,7 @@ export function Footer() {
         </div>
 
         {/* Secondary link grid */}
-        <div className="mt-12 pt-8 border-t border-white/10">
+        <div className="mt-12 pt-8 border-t border-glass-border">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {Object.entries(footerLinks).slice(3).map(([title, links]) => (
               <div key={title}>
@@ -117,14 +115,14 @@ export function Footer() {
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-white/70 hover:text-white transition-colors text-sm"
+                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                         >
                           {link.label}
                         </a>
                       ) : (
                         <Link
                           to={link.href}
-                          className="text-white/70 hover:text-white transition-colors text-sm"
+                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
                         >
                           {link.label}
                         </Link>
@@ -138,17 +136,17 @@ export function Footer() {
         </div>
 
         {/* Contact */}
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70">
+        <div className="mt-12 pt-8 border-t border-glass-border">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
             <div className="flex flex-wrap gap-6">
               <a
                 href="mailto:contact@athlace.fr"
-                className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-semibold text-white hover:bg-white/20 transition-colors"
+                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-semibold text-cream-100 hover:bg-glass transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
               </a>
-              <a href="tel:0800123456" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="tel:0800123456" className="flex items-center gap-2 hover:text-cream-100 transition-colors">
                 <Phone className="w-4 h-4" />
                 0 800 123 456
               </a>
@@ -161,11 +159,11 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
+        <div className="mt-8 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
           <p>© 2026 Athlace. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-6">
             {footerLinks['Informations légales'].map((link) => (
-              <Link key={link.href} to={link.href} className="hover:text-white transition-colors">
+              <Link key={link.href} to={link.href} className="hover:text-cream-100 transition-colors">
                 {link.label}
               </Link>
             ))}

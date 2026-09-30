@@ -228,16 +228,16 @@ export function FranceMap({
       <div ref={containerRef} className="h-full w-full" />
 
       {isFetching && (
-        <div className="absolute top-4 right-4 bg-card/95 backdrop-blur-sm rounded-full px-3 py-2 shadow-lg border border-border z-[1000] flex items-center gap-2 text-sm">
+        <div className="absolute top-4 right-4 bg-card backdrop-blur-sm rounded-pill px-3 py-2 shadow-lg border border-border z-[1000] flex items-center gap-2 text-sm">
           <Loader2 className="w-4 h-4 animate-spin text-primary" />
           Chargement…
         </div>
       )}
 
       {/* Overlay info */}
-      <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000]">
+      <div className="absolute bottom-4 left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-pill bg-tint-100 flex items-center justify-center">
             <MapPin className="w-5 h-5 text-primary" />
           </div>
           <div>

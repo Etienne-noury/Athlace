@@ -176,7 +176,7 @@ export default function CSVUploader() {
       {busy && <Progress value={progress} />}
 
       {(totals.upserted || totals.inserted || totals.errors) > 0 && (
-        <div className="rounded-md border bg-muted/30 p-4 text-sm grid grid-cols-3 gap-2">
+        <div className="rounded-md border bg-muted p-4 text-sm grid grid-cols-3 gap-2">
           <div><strong>Upserts:</strong> {totals.upserted}</div>
           <div><strong>Inserts:</strong> {totals.inserted}</div>
           <div><strong>Erreurs:</strong> {totals.errors}</div>
@@ -184,7 +184,7 @@ export default function CSVUploader() {
       )}
 
       {logs.length > 0 && (
-        <pre className="text-xs bg-muted/30 rounded p-3 max-h-72 overflow-auto whitespace-pre-wrap">
+        <pre className="text-xs bg-muted rounded p-3 max-h-72 overflow-auto whitespace-pre-wrap">
           {logs.join('\n')}
         </pre>
       )}

@@ -33,7 +33,7 @@ export function FootClubCard({ club }: Props) {
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
         {club.google_rating != null && (
           <span className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-warning text-warning" />
+            <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
             <span className="font-semibold text-foreground">{club.google_rating.toFixed(1)}</span>
             {club.google_nb_avis != null && (
               <span className="text-muted-foreground">({club.google_nb_avis})</span>

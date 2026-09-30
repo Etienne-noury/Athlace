@@ -1,111 +1,58 @@
 import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate";
+import animate from "tailwindcss-animate";
+
+const v = (n: string) => `hsl(var(--${n}))`;
 
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
-      fontFamily: {
-        sans: ['Outfit', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
-      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
-        },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        border: v("border"), input: v("input"), ring: v("ring"),
+        background: v("background"), foreground: v("foreground"),
+        primary: { DEFAULT: v("primary"), foreground: v("primary-foreground") },
+        secondary: { DEFAULT: v("secondary"), foreground: v("secondary-foreground") },
+        destructive: { DEFAULT: v("destructive"), foreground: v("destructive-foreground") },
+        muted: { DEFAULT: v("muted"), foreground: v("muted-foreground") },
+        accent: { DEFAULT: v("accent"), foreground: v("accent-foreground") },
+        popover: { DEFAULT: v("popover"), foreground: v("popover-foreground") },
+        card: { DEFAULT: v("card"), foreground: v("card-foreground") },
+        blue: { 500: v("blue-500"), 700: v("blue-700") },
+        lime: { 500: v("lime-500") },
+        cream: { 100: v("cream-100") },
+        ink: v("ink"),
+        slate: { 500: v("slate-500"), 600: v("slate-600") },
+        olive: { 900: v("olive-900") },
+        tint: { 100: v("tint-100") },
+        surface: { DEFAULT: v("surface"), alt: v("surface-alt") },
+        overlay: "var(--overlay)",
+        glass: { DEFAULT: "var(--glass)", border: "var(--glass-border)" },
       },
+      fontFamily: {
+        display: ['"Outfit"', "system-ui", "sans-serif"],
+        sans: ['"Figtree"', "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        display: ["42px", { lineHeight: "48px", fontWeight: "800" }],
+        "heading-1": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+        "heading-2": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+        title: ["20px", { lineHeight: "28px", fontWeight: "700" }],
+        subtitle: ["16px", { lineHeight: "24px", fontWeight: "700" }],
+        "label-title": ["14px", { lineHeight: "20px", fontWeight: "700" }],
+        "body-lg": ["18px", { lineHeight: "28px" }],
+        body: ["15px", { lineHeight: "24px" }],
+        small: ["14px", { lineHeight: "20px" }],
+        caption: ["13px", { lineHeight: "18px" }],
+        micro: ["12px", { lineHeight: "16px" }],
+      },
+      spacing: { "s-1": "4px", "s-2": "8px", "s-3": "12px", "s-4": "16px", "s-6": "24px", "s-8": "32px", "s-12": "48px", "s-16": "64px" },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "var(--radius-sm)", md: "var(--radius-md)", lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)", "2xl": "var(--radius-2xl)", "3xl": "var(--radius-3xl)", pill: "var(--radius-pill)",
       },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        "fade-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        "scale-in": {
-          from: { opacity: "0", transform: "scale(0.95)" },
-          to: { opacity: "1", transform: "scale(1)" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
-        "fade-up": "fade-up 0.5s ease-out",
-        "scale-in": "scale-in 0.3s ease-out",
-      },
+      backdropBlur: { glass: "12px" },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [animate],
 } satisfies Config;

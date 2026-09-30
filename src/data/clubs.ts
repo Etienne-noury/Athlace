@@ -33,10 +33,10 @@ export interface Club {
 }
 
 export const levels = {
-  'loisir': { name: 'Loisir', color: 'bg-green-500', stars: 1 },
+  'loisir': { name: 'Loisir', color: 'bg-blue-500', stars: 1 },
   'competition-regionale': { name: 'Compétition Régionale', color: 'bg-blue-500', stars: 2 },
-  'competition-nationale': { name: 'Compétition Nationale', color: 'bg-orange-500', stars: 3 },
-  'elite': { name: 'Élite', color: 'bg-accent', stars: 4 },
+  'competition-nationale': { name: 'Compétition Nationale', color: 'bg-blue-700', stars: 3 },
+  'elite': { name: 'Élite', color: 'bg-blue-700', stars: 4 },
 } as const;
 
 export const regions = [

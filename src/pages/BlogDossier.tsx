@@ -20,7 +20,7 @@ export default function BlogDossier() {
 
   return (
     <Layout>
-      <section className="bg-muted/30 border-b border-border py-8 lg:py-12">
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <Button variant="ghost" className="mb-4 -ml-3" asChild>
             <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour au blog</Link>

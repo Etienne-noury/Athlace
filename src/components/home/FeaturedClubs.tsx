@@ -17,7 +17,7 @@ export function FeaturedClubs() {
 
 
   return (
-    <section className="py-16 lg:py-24 bg-muted/30">
+    <section className="py-16 lg:py-24 bg-muted">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
@@ -47,9 +47,9 @@ export function FeaturedClubs() {
               className="group animate-fade-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="bg-card rounded-2xl border border-border/50 overflow-hidden card-hover h-full flex flex-col">
+              <div className="bg-card rounded-2xl border border-border overflow-hidden card-hover h-full flex flex-col">
                 {/* Image placeholder */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-primary/20 to-accent/20 relative">
+                <div className="aspect-[4/3] bg-tint-100 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-5xl opacity-50">
                       {getDisciplineById(club.discipline)?.icon || '🏆'}
@@ -58,8 +58,8 @@ export function FeaturedClubs() {
 
                   {/* Rating */}
                   {club.rating > 0 && (
-                    <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
-                      <Star className="w-4 h-4 fill-warning text-warning" />
+                     <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface backdrop-blur-sm rounded-pill px-2 py-1">
+                       <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
                       <span className="text-sm font-semibold">{club.rating}</span>
                     </div>
                   )}

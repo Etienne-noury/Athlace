@@ -46,12 +46,12 @@ export default function Disciplines() {
   return (
     <Layout>
       {/* Header */}
-      <section className="bg-sport-gradient text-white py-12 lg:py-16">
+      <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-5xl font-bold mb-4">
             Disciplines sportives
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl">
+          <p className="text-surface-alt text-lg max-w-2xl">
             Explorez les grandes familles de sports pratiquées en France.
             Cliquez sur une discipline pour voir les clubs et ses variantes.
           </p>
@@ -89,7 +89,7 @@ export default function Disciplines() {
                 {/* Category header */}
                 <div className="flex items-center gap-3 mb-5">
                   <div className={cn(
-                    "w-3 h-3 rounded-full",
+                    "w-3 h-3 rounded-pill",
                     categoryInfo.color
                   )} />
                   <h2 className="font-display text-xl lg:text-2xl font-bold text-foreground">
@@ -109,7 +109,7 @@ export default function Disciplines() {
                       className="group animate-fade-up"
                       style={{ animationDelay: `${index * 0.02}s` }}
                     >
-                      <div className="bg-card rounded-xl p-4 border border-border/50 card-hover h-full flex flex-col items-center text-center">
+                      <div className="bg-card rounded-xl p-4 border border-border card-hover h-full flex flex-col items-center text-center">
                         <span className="text-4xl mb-3">{discipline.icon}</span>
                         <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm leading-tight mb-2">
                           {discipline.name}

@@ -37,12 +37,12 @@ export default function Football() {
 
   return (
     <Layout>
-      <section className="bg-gradient-to-br from-primary/90 to-primary text-white py-12 lg:py-16">
+      <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl lg:text-4xl font-bold mb-3">
             Annuaire des clubs de football en France
           </h1>
-          <p className="text-white/80 mb-6 max-w-2xl">
+          <p className="text-surface-alt mb-6 max-w-2xl">
             Trouvez un club près de chez vous. Recherchez par ville ou code postal.
           </p>
           <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-2 max-w-2xl">
@@ -78,7 +78,7 @@ export default function Football() {
         )}
 
         {query && isError && (
-          <div className="flex items-start gap-3 bg-destructive/10 text-destructive rounded-xl p-4 max-w-2xl mx-auto">
+          <div className="flex items-start gap-3 bg-destructive text-destructive rounded-xl p-4 max-w-2xl mx-auto">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium">Service data.sports.gouv.fr indisponible</p>

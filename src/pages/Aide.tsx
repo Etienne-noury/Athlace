@@ -102,12 +102,12 @@ export default function Aide() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="bg-sport-gradient text-white py-12 lg:py-16">
+      <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-display text-3xl lg:text-5xl font-bold mb-4">
             Centre d'aide
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-surface-alt text-lg max-w-2xl mx-auto mb-8">
             Trouvez rapidement des réponses à vos questions sur Athlace
           </p>
 
@@ -118,7 +118,7 @@ export default function Aide() {
               placeholder="Rechercher dans la FAQ..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-14 text-base bg-white text-foreground"
+              className="pl-12 h-14 text-base bg-surface text-foreground"
             />
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function Aide() {
 
             <div className="space-y-4">
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Email</h3>
@@ -186,7 +186,7 @@ export default function Aide() {
               </div>
 
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Phone className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Téléphone</h3>
@@ -199,7 +199,7 @@ export default function Aide() {
               </div>
 
               <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <MessageCircle className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Chat en ligne</h3>

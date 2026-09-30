@@ -114,18 +114,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border/50">
+    <header className="sticky top-0 z-50 bg-surface backdrop-blur border-b border-border">
       <div className="container mx-auto px-4">
         <div className="app-header-bar flex items-center justify-between h-16 lg:h-20 gap-3">
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#262E47] to-[#415CAF] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                <span className="text-xl font-bold text-white">A</span>
-              </div>
-              <span className="font-display text-xl font-bold text-foreground hidden sm:block">
-                Athlace
-              </span>
+              <img src="/logos/symbol.png" alt="" className="h-10 w-auto shrink-0 object-contain transition-transform group-hover:scale-105" />
+              <img src="/logos/wordmark-blue.png" alt="Athlace" className="h-6 w-auto max-w-[min(36vw,160px)] object-contain" />
             </Link>
 
           </div>
@@ -153,7 +149,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1.5",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground hover:bg-blue-700"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
@@ -267,7 +263,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="hidden sm:flex gap-2">
                     <Avatar className="h-6 w-6">
-                      <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-micro">{initials}</AvatarFallback>
                     </Avatar>
                     <span className="max-w-[120px] truncate">{displayName}</span>
                     <ChevronDown className="h-3 w-3" />
@@ -322,7 +318,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="mobile-menu-panel lg:hidden py-4 border-t border-border/50 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
+          <div className="mobile-menu-panel lg:hidden py-4 border-t border-border max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
             <form onSubmit={handleSearch} className="mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -344,7 +340,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground hover:bg-blue-700"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
@@ -388,7 +384,7 @@ export function Header() {
 
               </Accordion>
 
-              <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
+              <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
                 {user ? (
                   <>
                     <div className="px-1 pb-1 text-sm text-muted-foreground truncate">{user.email}</div>

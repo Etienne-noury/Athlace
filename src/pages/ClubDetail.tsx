@@ -90,12 +90,12 @@ export default function ClubDetail() {
     <Layout>
       {/* Hero */}
       <section className="relative">
-        <div className="absolute inset-0 h-64 lg:h-80 bg-gradient-to-br from-primary/90 to-primary" />
+        <div className="absolute inset-0 h-64 lg:h-80 bg-blue-500" />
 
         <div className="relative container mx-auto px-4 pt-8">
           <Link
             to="/clubs/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6"
+            className="inline-flex items-center gap-2 text-cream-100 hover:text-cream-100 mb-6"
           >
             <ChevronLeft className="w-5 h-5" />
             Retour aux résultats
@@ -104,13 +104,13 @@ export default function ClubDetail() {
 
           <div className="bg-card rounded-2xl shadow-xl border border-border p-6 lg:p-8">
             <div className="flex flex-col lg:flex-row gap-6">
-              <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl bg-tint-100 flex items-center justify-center flex-shrink-0">
                 <span className="text-5xl lg:text-6xl">{discipline?.icon || '🏆'}</span>
               </div>
 
               <div className="flex-1">
                 <div className="flex flex-wrap items-start gap-3 mb-3">
-                  <Badge className={cn('text-white border-0', levels[club.level].color)}>
+                  <Badge className={cn('text-cream-100 border-0', levels[club.level].color)}>
                     {levels[club.level].name}
                   </Badge>
                   <Badge variant="secondary">{club.disciplineName}</Badge>
