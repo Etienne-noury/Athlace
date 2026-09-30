@@ -49,7 +49,7 @@ export function FeaturedClubs() {
             >
               <div className="bg-card rounded-2xl border border-border overflow-hidden card-hover h-full flex flex-col">
                 {/* Image placeholder */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-primary/20 to-accent/20 relative">
+                <div className="aspect-[4/3] bg-tint-100 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-5xl opacity-50">
                       {getDisciplineById(club.discipline)?.icon || '🏆'}

@@ -318,7 +318,7 @@ export default function Recherche() {
                     )}>
                       {/* Image */}
                       <div className={cn(
-                        "bg-gradient-to-br from-primary/20 to-accent/20 relative",
+                        "bg-tint-100 relative",
                         viewMode === 'grid' ? 'aspect-[4/3]' : 'w-48 h-32 flex-shrink-0'
                       )}>
                         <div className="absolute inset-0 flex items-center justify-center">
