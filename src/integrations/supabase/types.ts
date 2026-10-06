@@ -14,6 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      clubs: {
+        Row: {
+          address: string | null
+          address_complement: string | null
+          city: string | null
+          claimed_by_club: boolean
+          created_at: string
+          creation_date: string | null
+          department_code: string | null
+          description: string | null
+          discipline: string
+          email: string | null
+          external_id: string
+          federation_code: string
+          id: string
+          latitude: number | null
+          level: string | null
+          longitude: number | null
+          name: string
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          scraped_at: string | null
+          source_url: string | null
+          sub_disciplines: string[] | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          address_complement?: string | null
+          city?: string | null
+          claimed_by_club?: boolean
+          created_at?: string
+          creation_date?: string | null
+          department_code?: string | null
+          description?: string | null
+          discipline: string
+          email?: string | null
+          external_id: string
+          federation_code: string
+          id?: string
+          latitude?: number | null
+          level?: string | null
+          longitude?: number | null
+          name: string
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          scraped_at?: string | null
+          source_url?: string | null
+          sub_disciplines?: string[] | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          address_complement?: string | null
+          city?: string | null
+          claimed_by_club?: boolean
+          created_at?: string
+          creation_date?: string | null
+          department_code?: string | null
+          description?: string | null
+          discipline?: string
+          email?: string | null
+          external_id?: string
+          federation_code?: string
+          id?: string
+          latitude?: number | null
+          level?: string | null
+          longitude?: number | null
+          name?: string
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          scraped_at?: string | null
+          source_url?: string | null
+          sub_disciplines?: string[] | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       clubs_enriched: {
         Row: {
           address: string | null
