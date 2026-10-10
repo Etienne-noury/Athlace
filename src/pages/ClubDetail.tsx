@@ -134,6 +134,19 @@ export default function ClubDetail() {
                   <FavoriteButton clubId={club.id} withLabel className="flex-shrink-0" />
                 </div>
 
+                {(club as EnrichedClub).subDisciplines && (club as EnrichedClub).subDisciplines!.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {(club as EnrichedClub).subDisciplines!.map((sub) => (
+                      <span
+                        key={sub}
+                        className="text-xs px-3 py-1 rounded-pill bg-surface-alt text-blue-500"
+                      >
+                        {sub}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
@@ -217,7 +230,40 @@ export default function ClubDetail() {
           <ComingSoonSection icon={CreditCard} title="Prix" />
           <ComingSoonSection icon={Star} title="Avis" />
           <ComingSoonSection icon={Trophy} title="Niveau" />
-          <ComingSoonSection icon={Phone} title="Contact" />
+          {/* Contact */}
+          <div className="bg-card rounded-2xl border border-border p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Phone className="w-5 h-5 text-primary" />
+              <h2 className="font-display text-xl font-semibold text-foreground">
+                Contact
+              </h2>
+            </div>
+            {contact?.email || contact?.phone ? (
+              <div className="space-y-2">
+                {contact.email && (
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="flex items-center gap-2 text-primary hover:underline break-all"
+                  >
+                    <Mail className="w-4 h-4 flex-shrink-0" />
+                    {contact.email}
+                  </a>
+                )}
+                {contact.phone && (
+                  <a
+                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                    className="flex items-center gap-2 text-primary hover:underline"
+                  >
+                    <Phone className="w-4 h-4 flex-shrink-0" />
+                    {contact.phone}
+                  </a>
+                )}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Aucun contact disponible pour ce club.</p>
+            )}
+          </div>
+
           <ComingSoonSection icon={Clock} title="Horaires" />
         </div>
       </div>
