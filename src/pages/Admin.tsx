@@ -162,6 +162,12 @@ export default function Admin() {
   const [esStatus, setEsStatus] = useState("");
   const [esResult, setEsResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
 
+  const [clFiles, setClFiles] = useState<File[]>([]);
+  const [clRunning, setClRunning] = useState(false);
+  const [clProgress, setClProgress] = useState(0);
+  const [clStatus, setClStatus] = useState("");
+  const [clResult, setClResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
+
   const runEnrichFromEs = async () => {
     setEnriching(true);
     let gps = 0;
@@ -268,6 +274,50 @@ export default function Admin() {
     } finally {
       setEsResult({ upserted, errors, lastError });
       setEsRunning(false);
+    }
+  };
+
+  const runClubsImport = async () => {
+    if (!clFiles.length) return;
+    setClRunning(true);
+    setClProgress(0);
+    setClResult(null);
+    let upserted = 0;
+    let errors = 0;
+    let lastError = "";
+    try {
+      for (let fi = 0; fi < clFiles.length; fi++) {
+        const file = clFiles[fi];
+        setClStatus(`Lecture de ${file.name}…`);
+        const rows = await new Promise<Record<string, string>[]>((resolve, reject) => {
+          Papa.parse<Record<string, string>>(file, {
+            header: true,
+            delimiter: ",",
+            skipEmptyLines: true,
+            complete: (r) => resolve(r.data),
+            error: (err) => reject(err),
+          });
+        });
+        for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+          const batch = rows.slice(i, i + BATCH_SIZE);
+          setClStatus(`${file.name} — lot ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(rows.length / BATCH_SIZE)}`);
+          const { data, error } = await supabase.functions.invoke("import-clubs", { body: { rows: batch } });
+          if (error || data?.error || data?.errors?.length) {
+            lastError = error?.message || data?.error || data?.errors?.join("; ");
+            errors += batch.length;
+          } else {
+            upserted += data?.upserted ?? 0;
+          }
+          setClProgress(((fi + (i + batch.length) / Math.max(rows.length, 1)) / clFiles.length) * 100);
+        }
+        setClProgress(((fi + 1) / clFiles.length) * 100);
+      }
+      setClStatus("Terminé");
+    } catch (e) {
+      setClStatus(`Erreur: ${(e as Error).message}`);
+    } finally {
+      setClResult({ upserted, errors, lastError });
+      setClRunning(false);
     }
   };
 
@@ -419,6 +469,41 @@ export default function Admin() {
             <p><strong>Erreurs :</strong> {esResult.errors}</p>
             {esResult.lastError && (
               <p className="text-destructive"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
+            )}
+          </div>
+        )}
+      </Card>
+
+      <Card className="p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Import clubs fédéraux (table clubs)</h2>
+        <p className="text-sm text-muted-foreground">
+          Fichier(s) CSV séparé(s) par des virgules, avec en-têtes identiques aux colonnes de la table clubs.
+        </p>
+        <Input
+          type="file"
+          accept=".csv,text/csv"
+          multiple
+          disabled={clRunning}
+          onChange={(e) => setClFiles(Array.from(e.target.files || []))}
+        />
+        {clFiles.length > 0 && (
+          <p className="text-sm text-muted-foreground">{clFiles.length} fichier(s) sélectionné(s)</p>
+        )}
+        <Button onClick={runClubsImport} disabled={clRunning || !clFiles.length}>
+          {clRunning ? "Import en cours…" : "Lancer l'import clubs"}
+        </Button>
+        {(clRunning || clProgress > 0) && (
+          <div className="space-y-2">
+            <Progress value={clProgress} />
+            <p className="text-sm text-muted-foreground">{clStatus}</p>
+          </div>
+        )}
+        {clResult && (
+          <div className="rounded-md border p-4 space-y-1 text-sm">
+            <p><strong>Enregistrés :</strong> {clResult.upserted}</p>
+            <p><strong>Erreurs :</strong> {clResult.errors}</p>
+            {clResult.lastError && (
+              <p className="text-destructive"><strong>Dernière erreur :</strong> {clResult.lastError}</p>
             )}
           </div>
         )}
