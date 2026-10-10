@@ -360,6 +360,7 @@ export default function Admin() {
     } finally {
       setClResult({ upserted, errors, lastError });
       setClRunning(false);
+      refreshStats();
     }
   };
 
