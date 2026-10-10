@@ -28,6 +28,7 @@ export type Database = {
           email: string | null
           external_id: string
           federation_code: string
+          geocode_failed: boolean
           id: string
           latitude: number | null
           level: string | null
@@ -55,6 +56,7 @@ export type Database = {
           email?: string | null
           external_id: string
           federation_code: string
+          geocode_failed?: boolean
           id?: string
           latitude?: number | null
           level?: string | null
@@ -82,6 +84,7 @@ export type Database = {
           email?: string | null
           external_id?: string
           federation_code?: string
+          geocode_failed?: boolean
           id?: string
           latitude?: number | null
           level?: string | null
