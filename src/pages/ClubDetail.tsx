@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, Phone, Globe, Star, Clock,
-  ChevronLeft, CreditCard, Loader2, Info, Calendar, Trophy,
+  ChevronLeft, CreditCard, Loader2, Info, Calendar, Trophy, Mail,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
 import { levels } from '@/data/clubs';
-import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
+import { fetchEnrichedClubById, type EnrichedClub } from '@/lib/api/enriched-clubs';
+import { supabase } from '@/integrations/supabase/client';
 import { getDisciplineById } from '@/data/disciplines';
 import { cn } from '@/lib/utils';
 import type { Club } from '@/data/clubs';
@@ -56,6 +57,16 @@ export default function ClubDetail() {
     queryKey: ['club', id],
     queryFn: () => fetchEnrichedClubById(id || ''),
     enabled: !!id,
+  });
+  const cleanId = id?.startsWith('fed:') ? id.slice(4) : id;
+  const { data: contact } = useQuery({
+    queryKey: ['club-contact', cleanId],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_club_contact', { p_club_id: cleanId });
+      if (error || !data?.length) return null;
+      return data[0] as { email: string | null; phone: string | null };
+    },
+    enabled: !!cleanId,
   });
   const discipline = club ? getDisciplineById(club.discipline) : null;
 
