@@ -175,6 +175,41 @@ export default function Admin() {
   const [clStatus, setClStatus] = useState("");
   const [clResult, setClResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
 
+  const queryClient = useQueryClient();
+
+  // Compteurs en direct, lus depuis la vue publique des clubs (miroir de la table clubs).
+  const { data: stats } = useQuery({
+    queryKey: ["admin-clubs-stats"],
+    queryFn: async () => {
+      const { count: total } = await supabase
+        .from("clubs_public")
+        .select("id", { count: "exact", head: true });
+      const { count: withoutCoords } = await supabase
+        .from("clubs_public")
+        .select("id", { count: "exact", head: true })
+        .is("latitude", null);
+
+      const codes = new Set<string>();
+      let from = 0;
+      for (;;) {
+        const { data, error } = await supabase
+          .from("clubs_public")
+          .select("federation_code")
+          .range(from, from + 999);
+        if (error || !data || data.length === 0) break;
+        data.forEach((r) => {
+          if (r.federation_code) codes.add(r.federation_code);
+        });
+        if (data.length < 1000) break;
+        from += 1000;
+      }
+      return { total: total ?? 0, withoutCoords: withoutCoords ?? 0, federations: codes.size };
+    },
+  });
+
+  const refreshStats = () => queryClient.invalidateQueries({ queryKey: ["admin-clubs-stats"] });
+
+
   const runEnrichFromEs = async () => {
     setEnriching(true);
     let gps = 0;
