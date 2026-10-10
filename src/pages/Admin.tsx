@@ -364,6 +364,31 @@ export default function Admin() {
     }
   };
 
+  const [checking, setChecking] = useState(false);
+  const [checkResult, setCheckResult] = useState<{ checked: number; reset: number; error: string } | null>(null);
+
+  const runCheckPositions = async () => {
+    setChecking(true);
+    let checked = 0;
+    let reset = 0;
+    let errMsg = "";
+    setCheckResult({ checked, reset, error: "" });
+    while (true) {
+      const { data, error } = await supabase.functions.invoke("check-club-positions");
+      if (error || !data || data.error) {
+        errMsg = error?.message ?? data?.error ?? "Réponse vide";
+        break;
+      }
+      checked += data.checked || 0;
+      reset += data.reset || 0;
+      setCheckResult({ checked, reset, error: "" });
+      if ((data.remaining || 0) === 0 || (data.checked || 0) === 0) break;
+    }
+    setCheckResult({ checked, reset, error: errMsg });
+    setChecking(false);
+    refreshStats();
+  };
+
 
   const runGeocode = async () => {
     setGeocoding(true);
