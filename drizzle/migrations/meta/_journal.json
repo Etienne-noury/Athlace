@@ -29,6 +29,13 @@
       "when": 1791669069313,
       "tag": "0003_clubs_public_view_and_contact",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791670173438,
+      "tag": "0004_clubs_position_checked_at",
+      "breakpoints": true
     }
   ]
 }

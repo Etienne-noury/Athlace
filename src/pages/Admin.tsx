@@ -364,6 +364,31 @@ export default function Admin() {
     }
   };
 
+  const [checking, setChecking] = useState(false);
+  const [checkResult, setCheckResult] = useState<{ checked: number; reset: number; error: string } | null>(null);
+
+  const runCheckPositions = async () => {
+    setChecking(true);
+    let checked = 0;
+    let reset = 0;
+    let errMsg = "";
+    setCheckResult({ checked, reset, error: "" });
+    while (true) {
+      const { data, error } = await supabase.functions.invoke("check-club-positions");
+      if (error || !data || data.error) {
+        errMsg = error?.message ?? data?.error ?? "Réponse vide";
+        break;
+      }
+      checked += data.checked || 0;
+      reset += data.reset || 0;
+      setCheckResult({ checked, reset, error: "" });
+      if ((data.remaining || 0) === 0 || (data.checked || 0) === 0) break;
+    }
+    setCheckResult({ checked, reset, error: errMsg });
+    setChecking(false);
+    refreshStats();
+  };
+
 
   const runGeocode = async () => {
     setGeocoding(true);
@@ -513,6 +538,28 @@ export default function Admin() {
             </div>
           )}
         </Card>
+
+        <Card className="space-y-4 rounded-2xl p-6">
+          <h3 className="font-display text-lg font-semibold text-ink">
+            Vérifier les positions des clubs
+          </h3>
+          <p className="text-small text-slate-500">
+            Compare la position de chaque club au centre de sa commune (seuil 30 km, 120 km en
+            Guyane). Les positions trop éloignées sont remises à zéro pour être re-géocodées.
+          </p>
+          <Button onClick={runCheckPositions} disabled={checking}>
+            {checking ? "Vérification…" : "Vérifier les positions"}
+          </Button>
+          {(checking || checkResult) && (
+            <p className="text-small">
+              Vérifiés : {checkResult?.checked ?? 0} — Positions remises à zéro : {checkResult?.reset ?? 0}
+            </p>
+          )}
+          {checkResult?.error && (
+            <p className="text-small text-destructive">Erreur : {checkResult.error}</p>
+          )}
+        </Card>
+
 
         <Card className="space-y-4 rounded-2xl p-6">
           <h3 className="font-display text-lg font-semibold text-ink">
