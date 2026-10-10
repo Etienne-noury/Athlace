@@ -5,5 +5,3 @@ project_id = "eoptlujvecbtorzrluoi"
     verify_jwt = false
   [functions.get-google-places]
     verify_jwt = true
-  [functions.scrape-federation]
-    verify_jwt = true
