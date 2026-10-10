@@ -39,11 +39,16 @@ const str = (v: unknown): string | null => {
   return s === "" ? null : s;
 };
 
-const num = (v: unknown): number | null => {
+const num = (v: unknown, min?: number, max?: number): number | null => {
   const s = str(v);
   if (s === null) return null;
   const n = Number(s.replace(",", "."));
-  return Number.isFinite(n) ? n : null;
+  if (!Number.isFinite(n)) return null;
+  // Treat 0 and out-of-range values as missing coordinates.
+  if (n === 0) return null;
+  if (min !== undefined && n < min) return null;
+  if (max !== undefined && n > max) return null;
+  return n;
 };
 
 function parseArray(v: unknown): string[] | null {
@@ -127,8 +132,8 @@ Deno.serve(async (req) => {
         city: str(r.city),
         department_code,
         region,
-        latitude: num(r.latitude),
-        longitude: num(r.longitude),
+        latitude: num(r.latitude, -90, 90),
+        longitude: num(r.longitude, -180, 180),
         phone: str(r.phone),
         email: str(r.email),
         website: str(r.website),
