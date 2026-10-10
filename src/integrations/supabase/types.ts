@@ -400,9 +400,97 @@ export type Database = {
         }
         Relationships: []
       }
+      clubs_public: {
+        Row: {
+          address: string | null
+          address_complement: string | null
+          city: string | null
+          claimed_by_club: boolean | null
+          created_at: string | null
+          creation_date: string | null
+          department_code: string | null
+          description: string | null
+          discipline: string | null
+          external_id: string | null
+          federation_code: string | null
+          geocode_failed: boolean | null
+          id: string | null
+          latitude: number | null
+          level: string | null
+          longitude: number | null
+          name: string | null
+          postal_code: string | null
+          region: string | null
+          scraped_at: string | null
+          source_url: string | null
+          sub_disciplines: string[] | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          address_complement?: string | null
+          city?: string | null
+          claimed_by_club?: boolean | null
+          created_at?: string | null
+          creation_date?: string | null
+          department_code?: string | null
+          description?: string | null
+          discipline?: string | null
+          external_id?: string | null
+          federation_code?: string | null
+          geocode_failed?: boolean | null
+          id?: string | null
+          latitude?: number | null
+          level?: string | null
+          longitude?: number | null
+          name?: string | null
+          postal_code?: string | null
+          region?: string | null
+          scraped_at?: string | null
+          source_url?: string | null
+          sub_disciplines?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          address_complement?: string | null
+          city?: string | null
+          claimed_by_club?: boolean | null
+          created_at?: string | null
+          creation_date?: string | null
+          department_code?: string | null
+          description?: string | null
+          discipline?: string | null
+          external_id?: string | null
+          federation_code?: string | null
+          geocode_failed?: boolean | null
+          id?: string | null
+          latitude?: number | null
+          level?: string | null
+          longitude?: number | null
+          name?: string | null
+          postal_code?: string | null
+          region?: string | null
+          scraped_at?: string | null
+          source_url?: string | null
+          sub_disciplines?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
+      get_club_contact: {
+        Args: { p_club_id: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
+      }
       map_club_clusters: {
         Args: {
           p_disciplines?: string[]
