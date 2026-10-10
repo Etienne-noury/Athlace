@@ -75,13 +75,14 @@ Deno.serve(async (req) => {
 
   if (list.length > 0) {
     // 1 seul appel batch à l'API Adresse
-    const csv = ['id,city,postal_code',
-      ...list.map((c) => [c.id, c.city, c.postal_code].map(csvCell).join(','))].join('\n');
+    // L'API attend pour type= le nom d'une colonne du CSV (filtre par ligne)
+    const csv = ['id,city,postal_code,type',
+      ...list.map((c) => [c.id, c.city, c.postal_code, 'municipality'].map(csvCell).join(','))].join('\n');
     const form = new FormData();
     form.append('data', new Blob([csv], { type: 'text/csv' }), 'clubs.csv');
     form.append('columns', 'city');
     form.append('postcode', 'postal_code');
-    form.append('type', 'municipality');
+    form.append('type', 'type');
 
     const res = await fetch('https://api-adresse.data.gouv.fr/search/csv/', { method: 'POST', body: form });
     if (!res.ok) {
@@ -92,8 +93,9 @@ Deno.serve(async (req) => {
     const rows = parseCsv(await res.text());
     const header = rows.shift() ?? [];
     const iId = header.indexOf('id');
-    const iLat = header.indexOf('result_latitude');
-    const iLng = header.indexOf('result_longitude');
+    const col = (a: string, b: string) => (header.indexOf(a) >= 0 ? header.indexOf(a) : header.indexOf(b));
+    const iLat = col('result_latitude', 'latitude');
+    const iLng = col('result_longitude', 'longitude');
     const muni = new Map<string, { lat: number; lng: number }>();
     for (const r of rows) {
       const lat = parseFloat(r[iLat]);
