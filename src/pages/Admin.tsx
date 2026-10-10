@@ -512,9 +512,9 @@ export default function Admin() {
 
 
       <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Géocodage des clubs</h2>
+        <h2 className="text-xl font-semibold">Géocodage (table clubs)</h2>
         <p className="text-sm text-muted-foreground">
-          Géocode jusqu'à 50 clubs sans coordonnées via l'API adresse.data.gouv.fr.
+          Géocode jusqu'à 50 clubs de la table clubs sans coordonnées via l'API adresse.data.gouv.fr (adresse complète, puis centre de la commune en secours).
         </p>
         <Button onClick={runGeocode} disabled={geocoding}>
           {geocoding ? "Géocodage…" : "Géocoder TOUS les clubs"}
