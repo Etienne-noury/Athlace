@@ -39,12 +39,14 @@ const str = (v: unknown): string | null => {
   return s === "" ? null : s;
 };
 
+// Treat 0, out-of-range and metropolitan-out-of-rectangle values as missing.
+// Mainland France (+ Corsica): lat 41–51.5, lng -5.5–10. Overseas (97x/98x):
+// full world ranges still apply, checked below after department derivation.
 const num = (v: unknown, min?: number, max?: number): number | null => {
   const s = str(v);
   if (s === null) return null;
   const n = Number(s.replace(",", "."));
   if (!Number.isFinite(n)) return null;
-  // Treat 0 and out-of-range values as missing coordinates.
   if (n === 0) return null;
   if (min !== undefined && n < min) return null;
   if (max !== undefined && n > max) return null;
@@ -119,6 +121,20 @@ Deno.serve(async (req) => {
       const department_code = str(r.department_code) ?? deptFromPostal(postal_code);
       const region = str(r.region) ?? (department_code ? DEPT_REGION[department_code.toUpperCase()] ?? null : null);
 
+      // Coordinates: world-range check first, then metropolitan rectangle.
+      // If the club is not overseas (no department or not 97x/98x), coordinates
+      // must fall inside mainland France + Corsica (lat 41–51.5, lng -5.5–10),
+      // otherwise they are recorded as missing.
+      let latitude = num(r.latitude, -90, 90);
+      let longitude = num(r.longitude, -180, 180);
+      const isOverseas =
+        department_code !== null &&
+        (department_code.startsWith("97") || department_code.startsWith("98"));
+      if (!isOverseas && latitude !== null &&
+          (latitude < 41 || latitude > 51.5)) latitude = null;
+      if (!isOverseas && longitude !== null &&
+          (longitude < -5.5 || longitude > 10)) longitude = null;
+
       cleaned.push({
         federation_code,
         external_id,
@@ -132,8 +148,8 @@ Deno.serve(async (req) => {
         city: str(r.city),
         department_code,
         region,
-        latitude: num(r.latitude, -90, 90),
-        longitude: num(r.longitude, -180, 180),
+        latitude,
+        longitude,
         phone: str(r.phone),
         email: str(r.email),
         website: str(r.website),
