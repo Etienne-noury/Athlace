@@ -1,0 +1,1 @@
+ALTER TABLE public.clubs ADD COLUMN geocode_failed boolean NOT NULL DEFAULT false;
