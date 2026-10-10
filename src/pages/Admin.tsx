@@ -443,156 +443,233 @@ export default function Admin() {
   };
 
   return (
-    <div className="container mx-auto max-w-2xl py-10 space-y-6">
-      <h1 className="text-3xl font-bold">Import RNA — Clubs sportifs</h1>
+    <div className="container mx-auto max-w-2xl py-10 space-y-10">
+      <header className="space-y-6">
+        <h1 className="font-display text-3xl font-extrabold text-ink">Administration Athlace</h1>
 
-      <Card className="p-6 space-y-4">
-        <Input
-          type="file"
-          accept=".csv"
-          multiple
-          disabled={running}
-          onChange={(e) => setFiles(Array.from(e.target.files || []))}
-        />
-        {files.length > 0 && (
-          <p className="text-sm text-muted-foreground">
-            {files.length} fichier(s) sélectionné(s)
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl bg-tint-100 p-4">
+            <p className="font-display text-3xl font-extrabold text-blue-500">
+              {stats ? stats.total.toLocaleString("fr-FR") : "—"}
+            </p>
+            <p className="text-small text-slate-600">Clubs référencés</p>
+          </div>
+          <div className="rounded-2xl bg-tint-100 p-4">
+            <p className="font-display text-3xl font-extrabold text-blue-500">
+              {stats ? stats.withoutCoords.toLocaleString("fr-FR") : "—"}
+            </p>
+            <p className="text-small text-slate-600">Sans coordonnées GPS</p>
+          </div>
+          <div className="rounded-2xl bg-tint-100 p-4">
+            <p className="font-display text-3xl font-extrabold text-blue-500">
+              {stats ? stats.federations.toLocaleString("fr-FR") : "—"}
+            </p>
+            <p className="text-small text-slate-600">Fédérations représentées</p>
+          </div>
+        </div>
+      </header>
+
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="font-display text-2xl font-bold text-ink">Clubs fédéraux</h2>
+          <p className="text-body text-slate-600">
+            Importez les clubs depuis les CSV fédéraux, puis géocodez ceux qui n'ont pas de
+            coordonnées. Ces clubs sont ceux affichés sur le site.
           </p>
-        )}
+        </div>
 
-        <Button onClick={runImport} disabled={running || !files.length}>
-          {running ? "Import en cours…" : "Lancer l'import"}
-        </Button>
+        <Card className="space-y-4 rounded-2xl p-6">
+          <h3 className="font-display text-lg font-semibold text-ink">Importer un CSV de clubs</h3>
+          <p className="text-small text-slate-500">
+            Fichier(s) CSV séparé(s) par des virgules, avec en-têtes identiques aux colonnes de la
+            table clubs.
+          </p>
+          <Input
+            type="file"
+            accept=".csv,text/csv"
+            multiple
+            disabled={clRunning}
+            onChange={(e) => setClFiles(Array.from(e.target.files || []))}
+          />
+          {clFiles.length > 0 && (
+            <p className="text-small text-slate-500">{clFiles.length} fichier(s) sélectionné(s)</p>
+          )}
+          <Button onClick={runClubsImport} disabled={clRunning || !clFiles.length}>
+            {clRunning ? "Import en cours…" : "Lancer l'import clubs"}
+          </Button>
+          {(clRunning || clProgress > 0) && (
+            <div className="space-y-2">
+              <Progress value={clProgress} />
+              <p className="text-small text-slate-500">{clStatus}</p>
+            </div>
+          )}
+          {clResult && (
+            <div className="space-y-1 rounded-md border p-4 text-small">
+              <p><strong>Enregistrés :</strong> {clResult.upserted}</p>
+              <p><strong>Erreurs :</strong> {clResult.errors}</p>
+              {clResult.lastError && (
+                <p className="text-destructive"><strong>Dernière erreur :</strong> {clResult.lastError}</p>
+              )}
+            </div>
+          )}
+        </Card>
 
-        {(running || progress > 0) && (
-          <div className="space-y-2">
-            <Progress value={progress} />
-            <p className="text-sm text-muted-foreground">{status}</p>
-          </div>
-        )}
+        <Card className="space-y-4 rounded-2xl p-6">
+          <h3 className="font-display text-lg font-semibold text-ink">
+            Géocoder les clubs sans coordonnées
+          </h3>
+          <p className="text-small text-slate-500">
+            Géocode jusqu'à 50 clubs de la table clubs sans coordonnées via l'API
+            adresse.data.gouv.fr (adresse complète, puis centre de la commune en secours).
+          </p>
+          <Button onClick={runGeocode} disabled={geocoding}>
+            {geocoding ? "Géocodage…" : "Géocoder TOUS les clubs"}
+          </Button>
+          {geocodeResult && <p className="text-small">{geocodeResult}</p>}
+        </Card>
+      </section>
 
-        {result && (
-          <div className="rounded-md border p-4 space-y-1 text-sm">
-            <p><strong>Lignes filtrées (sport) :</strong> {result.filtered}</p>
-            <p><strong>Importées :</strong> {result.imported}</p>
-            <p><strong>Erreurs :</strong> {result.errors}</p>
-            {result.lastError && (
-              <p className="text-destructive"><strong>Dernière erreur :</strong> {result.lastError}</p>
-            )}
-          </div>
-        )}
-      </Card>
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="font-display text-2xl font-bold text-ink">Équipements sportifs</h2>
+          <p className="text-body text-slate-600">
+            Importez le référentiel des équipements sportifs (DATA ES), utilisé pour enrichir les
+            clubs et afficher les installations.
+          </p>
+        </div>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Importer DATA ES (équipements sportifs)</h2>
-        <p className="text-sm text-muted-foreground">
-          Fichier CSV/TSV séparé par tabulations, avec en-têtes DATA ES.
-        </p>
-        <Input
-          type="file"
-          accept=".csv,.tsv,.txt,text/csv"
-          multiple
-          disabled={esRunning}
-          onChange={(e) => setEsFiles(Array.from(e.target.files || []))}
-        />
-        {esFiles.length > 0 && (
-          <p className="text-sm text-muted-foreground">{esFiles.length} fichier(s) sélectionné(s)</p>
-        )}
-        <Button onClick={runEquipementsImport} disabled={esRunning || !esFiles.length}>
-          {esRunning ? "Import en cours…" : "Lancer l'import équipements"}
-        </Button>
-        {(esRunning || esProgress > 0) && (
-          <div className="space-y-2">
-            <Progress value={esProgress} />
-            <p className="text-sm text-muted-foreground">{esStatus}</p>
-          </div>
-        )}
-        {esResult && (
-          <div className="rounded-md border p-4 space-y-1 text-sm">
-            <p><strong>Enregistrés :</strong> {esResult.upserted}</p>
-            <p><strong>Erreurs :</strong> {esResult.errors}</p>
-            {esResult.lastError && (
-              <p className="text-destructive"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
-            )}
-          </div>
-        )}
-      </Card>
+        <Card className="space-y-4 rounded-2xl p-6">
+          <h3 className="font-display text-lg font-semibold text-ink">
+            Importer les équipements DATA ES
+          </h3>
+          <p className="text-small text-slate-500">
+            Fichier CSV/TSV séparé par tabulations, avec en-têtes DATA ES.
+          </p>
+          <Input
+            type="file"
+            accept=".csv,.tsv,.txt,text/csv"
+            multiple
+            disabled={esRunning}
+            onChange={(e) => setEsFiles(Array.from(e.target.files || []))}
+          />
+          {esFiles.length > 0 && (
+            <p className="text-small text-slate-500">{esFiles.length} fichier(s) sélectionné(s)</p>
+          )}
+          <Button onClick={runEquipementsImport} disabled={esRunning || !esFiles.length}>
+            {esRunning ? "Import en cours…" : "Lancer l'import équipements"}
+          </Button>
+          {(esRunning || esProgress > 0) && (
+            <div className="space-y-2">
+              <Progress value={esProgress} />
+              <p className="text-small text-slate-500">{esStatus}</p>
+            </div>
+          )}
+          {esResult && (
+            <div className="space-y-1 rounded-md border p-4 text-small">
+              <p><strong>Enregistrés :</strong> {esResult.upserted}</p>
+              <p><strong>Erreurs :</strong> {esResult.errors}</p>
+              {esResult.lastError && (
+                <p className="text-destructive"><strong>Dernière erreur :</strong> {esResult.lastError}</p>
+              )}
+            </div>
+          )}
+        </Card>
+      </section>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Import clubs fédéraux (table clubs)</h2>
-        <p className="text-sm text-muted-foreground">
-          Fichier(s) CSV séparé(s) par des virgules, avec en-têtes identiques aux colonnes de la table clubs.
-        </p>
-        <Input
-          type="file"
-          accept=".csv,text/csv"
-          multiple
-          disabled={clRunning}
-          onChange={(e) => setClFiles(Array.from(e.target.files || []))}
-        />
-        {clFiles.length > 0 && (
-          <p className="text-sm text-muted-foreground">{clFiles.length} fichier(s) sélectionné(s)</p>
-        )}
-        <Button onClick={runClubsImport} disabled={clRunning || !clFiles.length}>
-          {clRunning ? "Import en cours…" : "Lancer l'import clubs"}
-        </Button>
-        {(clRunning || clProgress > 0) && (
-          <div className="space-y-2">
-            <Progress value={clProgress} />
-            <p className="text-sm text-muted-foreground">{clStatus}</p>
-          </div>
-        )}
-        {clResult && (
-          <div className="rounded-md border p-4 space-y-1 text-sm">
-            <p><strong>Enregistrés :</strong> {clResult.upserted}</p>
-            <p><strong>Erreurs :</strong> {clResult.errors}</p>
-            {clResult.lastError && (
-              <p className="text-destructive"><strong>Dernière erreur :</strong> {clResult.lastError}</p>
-            )}
-          </div>
-        )}
-      </Card>
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="font-display text-2xl font-bold text-ink">
+            Archives RNA (non affichées sur le site)
+          </h2>
+          <p className="text-body text-slate-600">
+            Outils d'enrichissement de l'ancienne base RNA (clubs_enriched). Cette base n'est plus
+            affichée sur le site.
+          </p>
+        </div>
 
+        <Accordion type="single" collapsible className="space-y-4">
+          <AccordionItem value="rna-import" className="border-none">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+              Importer le RNA (archives)
+            </AccordionTrigger>
+            <AccordionContent className="pt-4">
+              <div className="space-y-4">
+                <p className="text-small text-slate-500">
+                  Fichier(s) CSV du Répertoire national des associations (séparateur
+                  point-virgule). Seules les associations sportives actives sont importées.
+                </p>
+                <Input
+                  type="file"
+                  accept=".csv"
+                  multiple
+                  disabled={running}
+                  onChange={(e) => setFiles(Array.from(e.target.files || []))}
+                />
+                {files.length > 0 && (
+                  <p className="text-small text-slate-500">
+                    {files.length} fichier(s) sélectionné(s)
+                  </p>
+                )}
+                <Button onClick={runImport} disabled={running || !files.length}>
+                  {running ? "Import en cours…" : "Lancer l'import"}
+                </Button>
+                {(running || progress > 0) && (
+                  <div className="space-y-2">
+                    <Progress value={progress} />
+                    <p className="text-small text-slate-500">{status}</p>
+                  </div>
+                )}
+                {result && (
+                  <div className="space-y-1 rounded-md border p-4 text-small">
+                    <p><strong>Lignes filtrées (sport) :</strong> {result.filtered}</p>
+                    <p><strong>Importées :</strong> {result.imported}</p>
+                    <p><strong>Erreurs :</strong> {result.errors}</p>
+                    {result.lastError && (
+                      <p className="text-destructive"><strong>Dernière erreur :</strong> {result.lastError}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
+          <AccordionItem value="rna-enrich" className="border-none">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+              Enrichir les clubs RNA depuis DATA ES
+            </AccordionTrigger>
+            <AccordionContent className="pt-4">
+              <div className="space-y-4">
+                <p className="text-small text-slate-500">
+                  Complète les clubs RNA avec les coordonnées GPS, la discipline et les équipements
+                  disponibles issus des équipements sportifs.
+                </p>
+                <Button onClick={runEnrichFromEs} disabled={enriching}>
+                  {enriching ? "Enrichissement…" : "Enrichir depuis DATA ES"}
+                </Button>
+                {enrichResult && <p className="text-small">{enrichResult}</p>}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Géocodage (table clubs)</h2>
-        <p className="text-sm text-muted-foreground">
-          Géocode jusqu'à 50 clubs de la table clubs sans coordonnées via l'API adresse.data.gouv.fr (adresse complète, puis centre de la commune en secours).
-        </p>
-        <Button onClick={runGeocode} disabled={geocoding}>
-          {geocoding ? "Géocodage…" : "Géocoder TOUS les clubs"}
-        </Button>
-        {geocodeResult && (
-          <p className="text-sm">{geocodeResult}</p>
-        )}
-      </Card>
-
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Enrichissement depuis DATA ES</h2>
-        <p className="text-sm text-muted-foreground">
-          Complète les clubs RNA avec les coordonnées GPS, la discipline et les équipements
-          disponibles issus des équipements sportifs.
-        </p>
-        <Button onClick={runEnrichFromEs} disabled={enriching}>
-          {enriching ? "Enrichissement…" : "Enrichir depuis DATA ES"}
-        </Button>
-        {enrichResult && <p className="text-sm">{enrichResult}</p>}
-      </Card>
-
-
-
-      <Card className="p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Suggestion de fédérations</h2>
-        <p className="text-sm text-muted-foreground">
-          Analyse la description des clubs sans discipline et leur associe la fédération correspondante.
-        </p>
-        <Button onClick={runSuggestFederation} disabled={suggesting}>
-          {suggesting ? "Analyse en cours…" : "Suggérer les fédérations"}
-        </Button>
-        {suggestResult && <p className="text-sm">{suggestResult}</p>}
-      </Card>
-
+          <AccordionItem value="rna-federations" className="border-none">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+              Suggérer les fédérations
+            </AccordionTrigger>
+            <AccordionContent className="pt-4">
+              <div className="space-y-4">
+                <p className="text-small text-slate-500">
+                  Analyse la description des clubs sans discipline et leur associe la fédération
+                  correspondante.
+                </p>
+                <Button onClick={runSuggestFederation} disabled={suggesting}>
+                  {suggesting ? "Analyse en cours…" : "Suggérer les fédérations"}
+                </Button>
+                {suggestResult && <p className="text-small">{suggestResult}</p>}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
     </div>
   );
 }
