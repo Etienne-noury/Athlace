@@ -39,12 +39,14 @@ const str = (v: unknown): string | null => {
   return s === "" ? null : s;
 };
 
+// Treat 0, out-of-range and metropolitan-out-of-rectangle values as missing.
+// Mainland France (+ Corsica): lat 41–51.5, lng -5.5–10. Overseas (97x/98x):
+// full world ranges still apply, checked below after department derivation.
 const num = (v: unknown, min?: number, max?: number): number | null => {
   const s = str(v);
   if (s === null) return null;
   const n = Number(s.replace(",", "."));
   if (!Number.isFinite(n)) return null;
-  // Treat 0 and out-of-range values as missing coordinates.
   if (n === 0) return null;
   if (min !== undefined && n < min) return null;
   if (max !== undefined && n > max) return null;
