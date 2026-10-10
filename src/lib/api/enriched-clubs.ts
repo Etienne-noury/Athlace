@@ -2,7 +2,7 @@
 // Complète l'API gouvernementale equipements-sportifs en apportant l'affiliation
 // fédérale officielle et le site web public du club. Les contacts directs
 // (téléphone, email) ne sont volontairement pas exposés par la vue publique
-// `clubs_enriched_public` pour des raisons de confidentialité (RGPD).
+// `clubs_public` pour des raisons de confidentialité (RGPD).
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Club } from '@/data/clubs';
@@ -13,8 +13,11 @@ export interface EnrichedClubRow {
   federation_code: string;
   name: string;
   discipline: string | null;
+  sub_disciplines: string[] | null;
   address: string | null;
+  address_complement: string | null;
   postal_code: string | null;
+  department_code: string | null;
   city: string | null;
   region: string | null;
   latitude: number | null;
@@ -24,9 +27,12 @@ export interface EnrichedClubRow {
   description: string | null;
 }
 
-function rowToClub(r: EnrichedClubRow): Club {
+export type EnrichedClub = Club & { subDisciplines?: string[] };
+
+function rowToClub(r: EnrichedClubRow): EnrichedClub {
   const d = disciplines.find((x) => x.id === r.discipline);
   return {
+    subDisciplines: r.sub_disciplines ?? undefined,
     id: `fed:${r.id}`,
     name: r.name,
     discipline: r.discipline ?? 'multisport',
@@ -92,7 +98,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
   } = params;
   // Use the public view that excludes sensitive columns (phone, email, raw).
   let query = supabase
-    .from('clubs_enriched_public')
+    .from('clubs_public')
     .select('*', { count: 'exact' })
     .limit(limit);
   if (typeof offset === 'number') {
@@ -111,7 +117,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     query = query.ilike('region', `%${region}%`);
   }
   if (department && department !== 'all') {
-    query = query.ilike('postal_code', `${department}%`);
+    query = query.ilike('department_code', `${department}%`);
   }
   const prefixes = (postalPrefixes ?? []).filter(Boolean);
   if (prefixes.length > 0) {
@@ -146,10 +152,10 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
 
 
 
-export async function fetchEnrichedClubById(id: string): Promise<Club | null> {
+export async function fetchEnrichedClubById(id: string): Promise<EnrichedClub | null> {
   const cleanId = id.startsWith('fed:') ? id.slice(4) : id;
   const { data, error } = await supabase
-    .from('clubs_enriched_public')
+    .from('clubs_public')
     .select('*')
     .eq('id', cleanId)
     .single();

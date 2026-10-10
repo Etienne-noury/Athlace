@@ -17,7 +17,7 @@ export default function CitiesIndex() {
     queryKey: ['cities-index'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clubs_enriched_public')
+        .from('clubs_public')
         .select('city, region')
         .neq('latitude', 0)
         .order('city');
