@@ -1,0 +1,1 @@
+ALTER TABLE public.clubs ADD COLUMN IF NOT EXISTS position_checked_at timestamptz;

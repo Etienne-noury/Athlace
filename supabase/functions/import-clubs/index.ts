@@ -169,6 +169,23 @@ Deno.serve(async (req) => {
     const errors: string[] = [];
     let upserted = 0;
     if (cleaned.length > 0) {
+      // Reset position_checked_at when coordinates change (or row is new);
+      // keep the existing value otherwise.
+      const existing = new Map<string, { latitude: number | null; longitude: number | null; position_checked_at: string | null }>();
+      const extIds = [...new Set(cleaned.map((c) => c.external_id))];
+      for (let i = 0; i < extIds.length; i += 200) {
+        const { data } = await supabase
+          .from("clubs")
+          .select("federation_code, external_id, latitude, longitude, position_checked_at")
+          .in("external_id", extIds.slice(i, i + 200));
+        for (const e of data ?? []) existing.set(`${e.federation_code}::${e.external_id}`, e);
+      }
+      for (const c of cleaned as Array<Record<string, unknown>>) {
+        const e = existing.get(`${c.federation_code}::${c.external_id}`);
+        const same = e && e.latitude === c.latitude && e.longitude === c.longitude;
+        c.position_checked_at = same ? e!.position_checked_at : null;
+      }
+
       const { error, count } = await supabase
         .from("clubs")
         .upsert(cleaned, { onConflict: "federation_code,external_id", count: "exact" });

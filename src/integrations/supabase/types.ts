@@ -35,6 +35,7 @@ export type Database = {
           longitude: number | null
           name: string
           phone: string | null
+          position_checked_at: string | null
           postal_code: string | null
           region: string | null
           scraped_at: string | null
@@ -63,6 +64,7 @@ export type Database = {
           longitude?: number | null
           name: string
           phone?: string | null
+          position_checked_at?: string | null
           postal_code?: string | null
           region?: string | null
           scraped_at?: string | null
@@ -91,6 +93,7 @@ export type Database = {
           longitude?: number | null
           name?: string
           phone?: string | null
+          position_checked_at?: string | null
           postal_code?: string | null
           region?: string | null
           scraped_at?: string | null
