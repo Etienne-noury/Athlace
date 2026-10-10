@@ -385,6 +385,7 @@ export default function Admin() {
 
     setGeocoding(false);
     setGeocodeResult(`Terminé — ${totalGeocoded} géocodés, ${totalFailed} échecs`);
+    refreshStats();
   };
 
   const runImport = async () => {
