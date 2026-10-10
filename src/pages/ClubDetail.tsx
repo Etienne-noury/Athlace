@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, Phone, Globe, Star, Clock,
-  ChevronLeft, CreditCard, Loader2, Info, Calendar, Trophy,
+  ChevronLeft, CreditCard, Loader2, Info, Calendar, Trophy, Mail,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
 import { levels } from '@/data/clubs';
-import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
+import { fetchEnrichedClubById, type EnrichedClub } from '@/lib/api/enriched-clubs';
+import { supabase } from '@/integrations/supabase/client';
 import { getDisciplineById } from '@/data/disciplines';
 import { cn } from '@/lib/utils';
 import type { Club } from '@/data/clubs';
@@ -56,6 +57,16 @@ export default function ClubDetail() {
     queryKey: ['club', id],
     queryFn: () => fetchEnrichedClubById(id || ''),
     enabled: !!id,
+  });
+  const cleanId = id?.startsWith('fed:') ? id.slice(4) : id;
+  const { data: contact } = useQuery({
+    queryKey: ['club-contact', cleanId],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_club_contact', { p_club_id: cleanId });
+      if (error || !data?.length) return null;
+      return data[0] as { email: string | null; phone: string | null };
+    },
+    enabled: !!cleanId,
   });
   const discipline = club ? getDisciplineById(club.discipline) : null;
 
@@ -122,6 +133,19 @@ export default function ClubDetail() {
                   </h1>
                   <FavoriteButton clubId={club.id} withLabel className="flex-shrink-0" />
                 </div>
+
+                {(club as EnrichedClub).subDisciplines && (club as EnrichedClub).subDisciplines!.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {(club as EnrichedClub).subDisciplines!.map((sub) => (
+                      <span
+                        key={sub}
+                        className="text-xs px-3 py-1 rounded-pill bg-surface-alt text-blue-500"
+                      >
+                        {sub}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-1">
@@ -206,7 +230,40 @@ export default function ClubDetail() {
           <ComingSoonSection icon={CreditCard} title="Prix" />
           <ComingSoonSection icon={Star} title="Avis" />
           <ComingSoonSection icon={Trophy} title="Niveau" />
-          <ComingSoonSection icon={Phone} title="Contact" />
+          {/* Contact */}
+          <div className="bg-card rounded-2xl border border-border p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Phone className="w-5 h-5 text-primary" />
+              <h2 className="font-display text-xl font-semibold text-foreground">
+                Contact
+              </h2>
+            </div>
+            {contact?.email || contact?.phone ? (
+              <div className="space-y-2">
+                {contact.email && (
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="flex items-center gap-2 text-primary hover:underline break-all"
+                  >
+                    <Mail className="w-4 h-4 flex-shrink-0" />
+                    {contact.email}
+                  </a>
+                )}
+                {contact.phone && (
+                  <a
+                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                    className="flex items-center gap-2 text-primary hover:underline"
+                  >
+                    <Phone className="w-4 h-4 flex-shrink-0" />
+                    {contact.phone}
+                  </a>
+                )}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Aucun contact disponible pour ce club.</p>
+            )}
+          </div>
+
           <ComingSoonSection icon={Clock} title="Horaires" />
         </div>
       </div>

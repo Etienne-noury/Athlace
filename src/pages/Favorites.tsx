@@ -33,7 +33,7 @@ export default function Favorites() {
 
       const ids = rows.map((r) => r.club_id);
       const { data: clubs } = await supabase
-        .from('clubs_enriched')
+        .from('clubs_public')
         .select('id, name, city, discipline')
         .in('id', ids);
 
