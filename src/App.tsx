@@ -78,6 +78,11 @@ const App = () => (
 
           {/* Sports hub */}
           <Route path="/sports/" element={<SportsIndex />} />
+          <Route path="/sports/famille/hiver/" element={<Redirect to="/sports/famille/glisse/" />} />
+          <Route path="/sports/famille/fitness/" element={<Redirect to="/sports/famille/forme/" />} />
+          <Route path="/sports/famille/traditionnel/" element={<Redirect to="/sports/famille/traditions/" />} />
+          <Route path="/sports/famille/paralympique/" element={<Redirect to="/sports/famille/handicap/" />} />
+          <Route path="/sports/famille/peche/" element={<Redirect to="/sports/famille/nature/" />} />
           <Route path="/sports/famille/:familyId/" element={<SportsFamily />} />
           <Route path="/sports/:sportId/" element={<SportDetail />} />
 

@@ -314,9 +314,13 @@ export const getCategoryOfDiscipline = (id: string) => {
   return d ? categories[d.category] : undefined;
 };
 
+const SPORT_NODES: Record<string, SportNode> = Object.fromEntries(
+  ARBORESCENCE.flatMap((c) => c.sports.map((s) => [slugifyDiscipline(s.name), s])),
+);
+
 /**
- * Libellés à interroger en base pour un sport parent :
- * le nom du sport + tous ses libellés de sous-disciplines.
+ * Libellés à interroger en base (clubs.discipline) pour un sport : sport.match.
+ * Avec une sous-discipline : son libellé exact.
  */
 export const getDisciplineQueryNames = (sportId?: string | null, subId?: string | null): string[] => {
   if (!sportId || sportId === 'all') return [];
@@ -326,6 +330,6 @@ export const getDisciplineQueryNames = (sportId?: string | null, subId?: string 
   }
   const sport = getDisciplineById(sportId);
   if (!sport) return [];
-  const names = [sport.name, ...getSubDisciplines(sport.id).map((d) => d.name)];
-  return Array.from(new Set(names));
+  const node = SPORT_NODES[sport.id];
+  return node ? Array.from(new Set(node.match)) : [sport.name];
 };
