@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
@@ -26,7 +27,8 @@ export function HeroSection() {
   const [selectedRegion, setSelectedRegion] = useState('');
 
   // Get parent disciplines organized by category
-  const parentDisciplines = getParentDisciplines();
+  const parentDisciplines = [...getParentDisciplines()].sort((a, b) => b.popularity - a.popularity);
+  const avail = useAvailableDisciplines();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
