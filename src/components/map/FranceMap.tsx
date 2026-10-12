@@ -4,7 +4,7 @@ import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
-import { getDisciplineById, getDisciplineQueryNames } from "@/data/disciplines";
+import { getDisciplineById, getDisciplineQueryNames, getSubDisciplineValue } from "@/data/disciplines";
 import { getDepartmentCodesByRegionName } from "@/lib/geo";
 import "leaflet/dist/leaflet.css";
 
@@ -66,13 +66,14 @@ export function FranceMap({
   const [bounds, setBounds] = useState<{ latMin: number; latMax: number; lngMin: number; lngMax: number } | null>(null);
   const [zoom, setZoom] = useState<number>(FRANCE_ZOOM);
 
-  const disciplineNames = getDisciplineQueryNames(selectedDiscipline, selectedSub);
+  const disciplineNames = getDisciplineQueryNames(selectedDiscipline);
+  const subDiscipline = getSubDisciplineValue(selectedDiscipline, selectedSub);
   const postalPrefixes = getDepartmentCodesByRegionName(selectedRegion);
   const clusterMode = zoom < INDIVIDUAL_ZOOM;
 
   // Bulles agrégées côté base : le nombre affiché est le nombre exact de clubs.
   const { data: clusters = [], isFetching: isFetchingClusters } = useQuery({
-    queryKey: ["clubs", "map-clusters", disciplineNames, postalPrefixes, locationQuery, bounds, zoom],
+    queryKey: ["clubs", "map-clusters", disciplineNames, subDiscipline, postalPrefixes, locationQuery, bounds, zoom],
     queryFn: async (): Promise<ClusterCell[]> => {
       if (!bounds) return [];
       const { data, error } = await supabase.rpc("map_club_clusters", {
@@ -84,6 +85,7 @@ export function FranceMap({
         p_disciplines: disciplineNames.length > 0 ? disciplineNames : null,
         p_postal_prefixes: postalPrefixes.length > 0 ? postalPrefixes : null,
         p_location: locationQuery?.trim() || null,
+        p_sub_discipline: subDiscipline,
       });
       if (error) {
         console.error("[map_club_clusters]", error.message);
@@ -99,6 +101,7 @@ export function FranceMap({
     queryFn: async () => {
       const result = await fetchEnrichedClubs({
         disciplines: disciplineNames,
+        subDiscipline,
         location: locationQuery,
         postalPrefixes,
         limit: maxClubs,

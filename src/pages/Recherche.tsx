@@ -24,7 +24,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
-import { disciplines, getDisciplineQueryNames } from '@/data/disciplines';
+import { disciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
@@ -59,7 +59,8 @@ export default function Recherche() {
     queryFn: async () => {
       return fetchEnrichedClubs({
         q: searchQuery,
-        disciplines: getDisciplineQueryNames(selectedDiscipline, selectedSub),
+        disciplines: getDisciplineQueryNames(selectedDiscipline),
+        subDiscipline: getSubDisciplineValue(selectedDiscipline, selectedSub),
         region: selectedRegion,
         limit: 100,
         offset: page * 100,
