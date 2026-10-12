@@ -209,7 +209,7 @@ export default function Profile() {
                     {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Camera className="w-4 h-4 mr-2" />}
                     Changer la photo
                   </Button>
-                  <p className="text-xs text-muted-foreground mt-2">JPG, PNG ou WebP — 2 Mo max.</p>
+                  <p className="text-xs text-muted-foreground mt-2">JPG, PNG ou WebP - 2 Mo max.</p>
                 </div>
               </div>
 

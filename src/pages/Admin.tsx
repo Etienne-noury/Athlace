@@ -229,10 +229,10 @@ export default function Admin() {
       gps += data.gps || 0;
       disc += data.disciplines || 0;
       equip += data.equipements || 0;
-      setEnrichResult(`GPS : ${gps} — Disciplines : ${disc} — Équipements : ${equip}`);
+      setEnrichResult(`GPS : ${gps} - Disciplines : ${disc} - Équipements : ${equip}`);
 
       if (!data.updated) {
-        setEnrichResult(`Terminé — GPS : ${gps}, Disciplines : ${disc}, Équipements : ${equip}`);
+        setEnrichResult(`Terminé - GPS : ${gps}, Disciplines : ${disc}, Équipements : ${equip}`);
         break;
       }
       await new Promise((r) => setTimeout(r, 300));
@@ -259,7 +259,7 @@ export default function Admin() {
 
       totalUpdated += data.updated || 0;
       totalSkipped += data.skipped || 0;
-      setSuggestResult(`Assignés : ${totalUpdated} — Ignorés : ${totalSkipped}`);
+      setSuggestResult(`Assignés : ${totalUpdated} - Ignorés : ${totalSkipped}`);
 
       if (!data.processed) break;
       // Les clubs mis à jour sortent du filtre; on décale de ce qui reste ignoré.
@@ -269,7 +269,7 @@ export default function Admin() {
     }
 
     setSuggesting(false);
-    setSuggestResult((prev) => `Terminé — ${totalUpdated} assignés, ${totalSkipped} ignorés${prev.startsWith("Erreur") ? ` (${prev})` : ""}`);
+    setSuggestResult((prev) => `Terminé - ${totalUpdated} assignés, ${totalSkipped} ignorés${prev.startsWith("Erreur") ? ` (${prev})` : ""}`);
   };
 
 
@@ -293,7 +293,7 @@ export default function Admin() {
         for (let i = 0; i < mapped.length; i += BATCH_SIZE) {
           const batch = mapped.slice(i, i + BATCH_SIZE);
           setEsStatus(
-            `${file.name} — batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
+            `${file.name} - batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
               mapped.length / BATCH_SIZE
             )}`
           );
@@ -347,7 +347,7 @@ export default function Admin() {
         });
         for (let i = 0; i < rows.length; i += BATCH_SIZE) {
           const batch = rows.slice(i, i + BATCH_SIZE);
-          setClStatus(`${file.name} — lot ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(rows.length / BATCH_SIZE)}`);
+          setClStatus(`${file.name} - lot ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(rows.length / BATCH_SIZE)}`);
           const { data, error } = await supabase.functions.invoke("import-clubs", { body: { rows: batch } });
           for (const c of (data?.ignored_columns ?? []) as string[]) ignored.add(c);
           venues += data?.venues_inserted ?? 0;
@@ -414,7 +414,7 @@ export default function Admin() {
 
       totalGeocoded += data.geocoded || 0;
       totalFailed += data.failed || 0;
-      setGeocodeResult(`Géocodés : ${totalGeocoded} — Échecs : ${totalFailed}`);
+      setGeocodeResult(`Géocodés : ${totalGeocoded} - Échecs : ${totalFailed}`);
 
       if ((data.geocoded || 0) === 0 && (data.failed || 0) === 0) break;
 
@@ -422,7 +422,7 @@ export default function Admin() {
     }
 
     setGeocoding(false);
-    setGeocodeResult(`Terminé — ${totalGeocoded} géocodés, ${totalFailed} échecs`);
+    setGeocodeResult(`Terminé - ${totalGeocoded} géocodés, ${totalFailed} échecs`);
     refreshStats();
   };
 
@@ -449,7 +449,7 @@ export default function Admin() {
         for (let i = 0; i < mapped.length; i += BATCH_SIZE) {
           const batch = mapped.slice(i, i + BATCH_SIZE);
           setStatus(
-            `${file.name} — batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
+            `${file.name} - batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(
               mapped.length / BATCH_SIZE
             )}`
           );
@@ -488,19 +488,19 @@ export default function Admin() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-2xl bg-tint-100 p-4">
             <p className="font-display text-3xl font-extrabold text-blue-500">
-              {stats ? stats.total.toLocaleString("fr-FR") : "—"}
+              {stats ? stats.total.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Clubs référencés</p>
           </div>
           <div className="rounded-2xl bg-tint-100 p-4">
             <p className="font-display text-3xl font-extrabold text-blue-500">
-              {stats ? stats.withoutCoords.toLocaleString("fr-FR") : "—"}
+              {stats ? stats.withoutCoords.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Sans coordonnées GPS</p>
           </div>
           <div className="rounded-2xl bg-tint-100 p-4">
             <p className="font-display text-3xl font-extrabold text-blue-500">
-              {stats ? stats.federations.toLocaleString("fr-FR") : "—"}
+              {stats ? stats.federations.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Fédérations représentées</p>
           </div>
@@ -571,7 +571,7 @@ export default function Admin() {
           </Button>
           {(checking || checkResult) && (
             <p className="text-small">
-              Vérifiés : {checkResult?.checked ?? 0} — Positions remises à zéro : {checkResult?.reset ?? 0}
+              Vérifiés : {checkResult?.checked ?? 0} - Positions remises à zéro : {checkResult?.reset ?? 0}
             </p>
           )}
           {checkResult?.error && (

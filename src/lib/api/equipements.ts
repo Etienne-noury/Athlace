@@ -70,7 +70,7 @@ export function mapRecordToClub(r: ApiRecord): Club {
     },
     description:
       `${r.equip_type_name ?? 'Équipement sportif'}${
-        sports.length ? ` — sports pratiqués : ${sports.join(', ')}.` : '.'
+        sports.length ? ` - sports pratiqués : ${sports.join(', ')}.` : '.'
       }`,
     amenities,
   };

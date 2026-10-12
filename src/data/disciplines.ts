@@ -276,7 +276,7 @@ function buildDisciplines(): Discipline[] {
           name: sub,
           category: category.id,
           icon: sport.icon,
-          description: `${sub} — sous-discipline de ${sport.name}.`,
+          description: `${sub} - sous-discipline de ${sport.name}.`,
           popularity: Math.max(1, (sport.popularity ?? 3) - 2),
           clubCount: 0,
           parentId: sportId,

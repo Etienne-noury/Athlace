@@ -121,7 +121,7 @@ export default function Recherche() {
               <div className="text-3xl" aria-hidden>{fed.icon}</div>
               <div className="flex-1">
                 <p className="font-display font-semibold text-foreground">
-                  Annuaire officiel — {fed.name}
+                  Annuaire officiel - {fed.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Retrouvez l'exhaustivité des clubs affiliés{searchQuery ? ` à "${searchQuery}"` : ''} sur le site fédéral.

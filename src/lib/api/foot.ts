@@ -40,7 +40,7 @@ export interface GooglePlaces {
 const SPORTS_GOUV_URL =
   'https://data.sports.gouv.fr/api/explore/v2.1/catalog/datasets/equipements-sportifs/records';
 
-/** Source 1 : data.sports.gouv.fr — recherche par ville OU code postal. */
+/** Source 1 : data.sports.gouv.fr - recherche par ville OU code postal. */
 export async function fetchFootClubsByLocation(query: string): Promise<FootClubRaw[]> {
   const q = query.trim();
   if (!q) return [];

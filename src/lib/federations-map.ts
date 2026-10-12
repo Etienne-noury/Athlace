@@ -43,7 +43,7 @@ export async function fetchFederationSources(): Promise<FederationSource[]> {
     sport: found?.sport.name ?? 'À classer',
     category: found?.category.name ?? 'À classer',
     sportSlug: found ? slugify(found.sport.name) : null,
-    icon: found ? iconForCategory(found.category.id) : '🏅',
+    icon: found?.sport.icon || (found ? iconForCategory(found.category.id) : '🏅'),
     type: 'annuaire' as const,
     url: f.site_web,
     buildSearchUrl: ({ city, postalCode } = {}) =>
@@ -81,7 +81,13 @@ export function getFederationForDiscipline(
   sources?: FederationSource[]
 ): FederationSource | null {
   if (!disciplineId || !sources) return null;
-  const code = DISCIPLINE_TO_FEDERATION[disciplineId];
+  let code: string | undefined = DISCIPLINE_TO_FEDERATION[disciplineId];
+  if (!code) {
+    for (const cat of ARBORESCENCE) {
+      const sp = cat.sports.find((x) => slugify(x.name) === disciplineId || x.name === disciplineId);
+      if (sp?.feds[0]) { code = sp.feds[0]; break; }
+    }
+  }
   if (!code) return null;
   return sources.find((s) => s.code?.toUpperCase() === code.toUpperCase()) || null;
 }

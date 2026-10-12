@@ -8,7 +8,7 @@ interface PageTitleProps {
 const SITE_NAME = 'Athlace';
 
 export function PageTitle({ title, description }: PageTitleProps) {
-  const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
+  const fullTitle = title ? `${title} - ${SITE_NAME}` : SITE_NAME;
   return (
     <Helmet>
       <title>{fullTitle}</title>
