@@ -165,6 +165,7 @@ export type Database = {
           facebook_url: string | null
           federation_code: string
           geocode_failed: boolean
+          helloasso_url: string | null
           id: string
           instagram_url: string | null
           labels: string[] | null
@@ -172,8 +173,13 @@ export type Database = {
           league: string | null
           level: string | null
           licensees_female: number | null
+          licensees_senior_female: number | null
+          licensees_senior_male: number | null
           licensees_total: number | null
           licensees_youth: number | null
+          licensees_youth_female: number | null
+          licensees_youth_male: number | null
+          linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
           min_age: number | null
@@ -191,9 +197,11 @@ export type Database = {
           source_url: string | null
           structure_type: string | null
           sub_disciplines: string[] | null
+          tiktok_url: string | null
           twitter_url: string | null
           updated_at: string
           website: string | null
+          youtube_url: string | null
         }
         Insert: {
           accessibility?: string[] | null
@@ -219,6 +227,7 @@ export type Database = {
           facebook_url?: string | null
           federation_code: string
           geocode_failed?: boolean
+          helloasso_url?: string | null
           id?: string
           instagram_url?: string | null
           labels?: string[] | null
@@ -226,8 +235,13 @@ export type Database = {
           league?: string | null
           level?: string | null
           licensees_female?: number | null
+          licensees_senior_female?: number | null
+          licensees_senior_male?: number | null
           licensees_total?: number | null
           licensees_youth?: number | null
+          licensees_youth_female?: number | null
+          licensees_youth_male?: number | null
+          linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
           min_age?: number | null
@@ -245,9 +259,11 @@ export type Database = {
           source_url?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          tiktok_url?: string | null
           twitter_url?: string | null
           updated_at?: string
           website?: string | null
+          youtube_url?: string | null
         }
         Update: {
           accessibility?: string[] | null
@@ -273,6 +289,7 @@ export type Database = {
           facebook_url?: string | null
           federation_code?: string
           geocode_failed?: boolean
+          helloasso_url?: string | null
           id?: string
           instagram_url?: string | null
           labels?: string[] | null
@@ -280,8 +297,13 @@ export type Database = {
           league?: string | null
           level?: string | null
           licensees_female?: number | null
+          licensees_senior_female?: number | null
+          licensees_senior_male?: number | null
           licensees_total?: number | null
           licensees_youth?: number | null
+          licensees_youth_female?: number | null
+          licensees_youth_male?: number | null
+          linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
           min_age?: number | null
@@ -299,9 +321,11 @@ export type Database = {
           source_url?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          tiktok_url?: string | null
           twitter_url?: string | null
           updated_at?: string
           website?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
@@ -628,6 +652,7 @@ export type Database = {
           facebook_url: string | null
           federation_code: string | null
           geocode_failed: boolean | null
+          helloasso_url: string | null
           id: string | null
           instagram_url: string | null
           labels: string[] | null
@@ -635,8 +660,13 @@ export type Database = {
           league: string | null
           level: string | null
           licensees_female: number | null
+          licensees_senior_female: number | null
+          licensees_senior_male: number | null
           licensees_total: number | null
           licensees_youth: number | null
+          licensees_youth_female: number | null
+          licensees_youth_male: number | null
+          linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
           min_age: number | null
@@ -653,9 +683,11 @@ export type Database = {
           source_url: string | null
           structure_type: string | null
           sub_disciplines: string[] | null
+          tiktok_url: string | null
           twitter_url: string | null
           updated_at: string | null
           website: string | null
+          youtube_url: string | null
         }
         Insert: {
           accessibility?: string[] | null
@@ -680,6 +712,7 @@ export type Database = {
           facebook_url?: string | null
           federation_code?: string | null
           geocode_failed?: boolean | null
+          helloasso_url?: string | null
           id?: string | null
           instagram_url?: string | null
           labels?: string[] | null
@@ -687,8 +720,13 @@ export type Database = {
           league?: string | null
           level?: string | null
           licensees_female?: number | null
+          licensees_senior_female?: number | null
+          licensees_senior_male?: number | null
           licensees_total?: number | null
           licensees_youth?: number | null
+          licensees_youth_female?: number | null
+          licensees_youth_male?: number | null
+          linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
           min_age?: number | null
@@ -705,9 +743,11 @@ export type Database = {
           source_url?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          tiktok_url?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
+          youtube_url?: string | null
         }
         Update: {
           accessibility?: string[] | null
@@ -732,6 +772,7 @@ export type Database = {
           facebook_url?: string | null
           federation_code?: string | null
           geocode_failed?: boolean | null
+          helloasso_url?: string | null
           id?: string | null
           instagram_url?: string | null
           labels?: string[] | null
@@ -739,8 +780,13 @@ export type Database = {
           league?: string | null
           level?: string | null
           licensees_female?: number | null
+          licensees_senior_female?: number | null
+          licensees_senior_male?: number | null
           licensees_total?: number | null
           licensees_youth?: number | null
+          licensees_youth_female?: number | null
+          licensees_youth_male?: number | null
+          linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
           min_age?: number | null
@@ -757,9 +803,11 @@ export type Database = {
           source_url?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          tiktok_url?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
