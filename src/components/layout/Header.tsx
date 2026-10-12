@@ -70,11 +70,43 @@ const clubMenuLinks = [
   { label: 'Tous les clubs', href: '/clubs/', icon: Search },
 ];
 
+type Avail = ReturnType<typeof useAvailableDisciplines>;
+
+function SportMenuLink({
+  sport,
+  avail,
+  className,
+  onClick,
+}: {
+  sport: string;
+  avail: Avail;
+  className?: string;
+  onClick?: () => void;
+}) {
+  const id = slugifyDiscipline(sport);
+  if (!avail.isSportAvailable(id)) {
+    return (
+      <span className={cn(className, 'opacity-50 cursor-not-allowed hover:text-muted-foreground')} aria-disabled="true">
+        {sport} <span className="text-xs">· Bientôt</span>
+      </span>
+    );
+  }
+  return (
+    <Link to={`/sports/${id}/`} onClick={onClick} className={className}>
+      {sport}
+      {avail.isReady && (
+        <span className="ml-1 text-xs opacity-70">({formatClubCount(avail.sportCount(id))})</span>
+      )}
+    </Link>
+  );
+}
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const avail = useAvailableDisciplines();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
