@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { WaitlistAdmin } from "@/components/admin/WaitlistAdmin";
 import { resolveWaldec, WALDEC_NON_CLUB_CODES } from "@/lib/waldec-map";
 
 const SOURCE_URL =
@@ -640,6 +641,8 @@ export default function Admin() {
           )}
         </Card>
       </section>
+
+      <WaitlistAdmin />
 
       <section className="space-y-4">
         <div className="space-y-1">
