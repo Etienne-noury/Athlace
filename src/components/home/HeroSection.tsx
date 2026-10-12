@@ -27,7 +27,7 @@ export function HeroSection() {
   const [selectedRegion, setSelectedRegion] = useState('');
 
   // Get parent disciplines organized by category
-  const parentDisciplines = [...getParentDisciplines()].sort((a, b) => b.popularity - a.popularity);
+  const parentDisciplines = getParentDisciplines();
   const avail = useAvailableDisciplines();
 
   const handleSearch = (e: React.FormEvent) => {
