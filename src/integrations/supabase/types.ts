@@ -142,6 +142,7 @@ export type Database = {
       }
       clubs: {
         Row: {
+          access_conditions: string[] | null
           accessibility: string[] | null
           acronym: string | null
           address: string | null
@@ -156,6 +157,7 @@ export type Database = {
           committee: string | null
           competition_categories: string[] | null
           competitions: string[] | null
+          courses: string[] | null
           created_at: string
           creation_date: string | null
           department_code: string | null
@@ -167,6 +169,7 @@ export type Database = {
           federation_code: string
           geocode_failed: boolean
           helloasso_url: string | null
+          holes_total: number | null
           id: string
           instagram_url: string | null
           labels: string[] | null
@@ -188,6 +191,7 @@ export type Database = {
           phone: string | null
           position_checked_at: string | null
           postal_code: string | null
+          practice_info: string | null
           practice_types: string[] | null
           price_info: string | null
           region: string | null
@@ -205,6 +209,7 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
           address?: string | null
@@ -219,6 +224,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          courses?: string[] | null
           created_at?: string
           creation_date?: string | null
           department_code?: string | null
@@ -230,6 +236,7 @@ export type Database = {
           federation_code: string
           geocode_failed?: boolean
           helloasso_url?: string | null
+          holes_total?: number | null
           id?: string
           instagram_url?: string | null
           labels?: string[] | null
@@ -251,6 +258,7 @@ export type Database = {
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_info?: string | null
           practice_types?: string[] | null
           price_info?: string | null
           region?: string | null
@@ -268,6 +276,7 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
           address?: string | null
@@ -282,6 +291,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          courses?: string[] | null
           created_at?: string
           creation_date?: string | null
           department_code?: string | null
@@ -293,6 +303,7 @@ export type Database = {
           federation_code?: string
           geocode_failed?: boolean
           helloasso_url?: string | null
+          holes_total?: number | null
           id?: string
           instagram_url?: string | null
           labels?: string[] | null
@@ -314,6 +325,7 @@ export type Database = {
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_info?: string | null
           practice_types?: string[] | null
           price_info?: string | null
           region?: string | null
@@ -633,6 +645,7 @@ export type Database = {
       }
       clubs_public: {
         Row: {
+          access_conditions: string[] | null
           accessibility: string[] | null
           acronym: string | null
           address: string | null
@@ -647,6 +660,7 @@ export type Database = {
           committee: string | null
           competition_categories: string[] | null
           competitions: string[] | null
+          courses: string[] | null
           created_at: string | null
           creation_date: string | null
           department_code: string | null
@@ -657,6 +671,7 @@ export type Database = {
           federation_code: string | null
           geocode_failed: boolean | null
           helloasso_url: string | null
+          holes_total: number | null
           id: string | null
           instagram_url: string | null
           labels: string[] | null
@@ -677,6 +692,7 @@ export type Database = {
           name: string | null
           position_checked_at: string | null
           postal_code: string | null
+          practice_info: string | null
           practice_types: string[] | null
           price_info: string | null
           region: string | null
@@ -694,6 +710,7 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
           address?: string | null
@@ -708,6 +725,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
           department_code?: string | null
@@ -718,6 +736,7 @@ export type Database = {
           federation_code?: string | null
           geocode_failed?: boolean | null
           helloasso_url?: string | null
+          holes_total?: number | null
           id?: string | null
           instagram_url?: string | null
           labels?: string[] | null
@@ -738,6 +757,7 @@ export type Database = {
           name?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_info?: string | null
           practice_types?: string[] | null
           price_info?: string | null
           region?: string | null
@@ -755,6 +775,7 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
           address?: string | null
@@ -769,6 +790,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
           department_code?: string | null
@@ -779,6 +801,7 @@ export type Database = {
           federation_code?: string | null
           geocode_failed?: boolean | null
           helloasso_url?: string | null
+          holes_total?: number | null
           id?: string | null
           instagram_url?: string | null
           labels?: string[] | null
@@ -799,6 +822,7 @@ export type Database = {
           name?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_info?: string | null
           practice_types?: string[] | null
           price_info?: string | null
           region?: string | null
