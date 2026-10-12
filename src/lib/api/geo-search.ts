@@ -55,9 +55,12 @@ export async function fetchClubsNear(params: {
   region?: string;
   limit?: number;
   offset?: number;
+  /** Rayon imposé (pages suivantes). */
+  radiusKm?: number;
 }): Promise<{ clubs: (EnrichedClub & { distanceKm: number })[]; total: number; radiusKm: number }> {
   // Élargit le rayon jusqu'à trouver au moins un club.
-  for (const radius of NEAR_RADII) {
+  const radii = params.radiusKm ? [params.radiusKm] : NEAR_RADII;
+  for (const radius of radii) {
     const { data, error } = await supabase.rpc('clubs_near', {
       p_lat: params.lat,
       p_lng: params.lng,
@@ -73,7 +76,7 @@ export async function fetchClubsNear(params: {
       return { clubs: [], total: 0, radiusKm: radius };
     }
     const rows = data ?? [];
-    if (rows.length > 0 || radius === NEAR_RADII[NEAR_RADII.length - 1] || (params.offset ?? 0) > 0) {
+    if (rows.length > 0 || radius === radii[radii.length - 1]) {
       return {
         clubs: rows.map((r) => ({ ...rowToClub(r.club as unknown as EnrichedClubRow), distanceKm: r.distance_km })),
         total: Number(rows[0]?.total ?? 0),
