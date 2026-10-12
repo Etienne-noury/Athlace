@@ -2,9 +2,8 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Map } from 'lucide-react';
+import { MapPin, ChevronDown, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
