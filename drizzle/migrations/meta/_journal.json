@@ -99,6 +99,13 @@
       "when": 1791832696792,
       "tag": "0013_add_clubs_trainings_fleet_opening_hours_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1791835328623,
+      "tag": "0014_map_club_clusters_sub_discipline",
+      "breakpoints": true
     }
   ]
 }
