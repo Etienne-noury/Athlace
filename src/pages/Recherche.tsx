@@ -29,7 +29,7 @@ import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchClubsNear, resolveCity } from '@/lib/api/geo-search';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
-import type { Club } from '@/data/clubs';
+import type { EnrichedClub as Club } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 
