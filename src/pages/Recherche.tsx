@@ -133,7 +133,7 @@ export default function Recherche() {
           </h1>
           <p className="text-muted-foreground text-lg">
             {totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}
-            {nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour de ${nearCity.name}` : ''}
+            {nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
           </p>
 
         </div>
