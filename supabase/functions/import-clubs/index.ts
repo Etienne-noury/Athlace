@@ -301,6 +301,11 @@ Deno.serve(async (req) => {
       }
       for (const c of cleaned as Array<Record<string, unknown>>) {
         const e = existing.get(`${c.federation_code}::${c.external_id}`);
+        // Keep already-known coordinates when the CSV has none.
+        if (e && c.latitude == null && c.longitude == null && e.latitude != null && e.longitude != null) {
+          c.latitude = e.latitude;
+          c.longitude = e.longitude;
+        }
         const same = e && e.latitude === c.latitude && e.longitude === c.longitude;
         c.position_checked_at = same ? e!.position_checked_at : null;
       }

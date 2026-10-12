@@ -157,5 +157,6 @@ export function resolveWaldec(
   for (const c of candidates) {
     if (c.keywords?.some((kw) => hay.includes(kw))) return c;
   }
-  return candidates[0];
+  // Fallback: the generic entry (no keywords), otherwise the last one.
+  return candidates.find((c) => !c.keywords?.length) ?? candidates[candidates.length - 1];
 }

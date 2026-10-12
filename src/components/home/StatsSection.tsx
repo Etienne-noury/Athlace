@@ -47,7 +47,7 @@ export function StatsSection() {
               </div>
               <div className="font-display text-2xl lg:text-4xl font-bold mb-1">
                 {stat.value === null ? (
-                  <span className="inline-block h-8 w-24 rounded bg-background animate-pulse align-middle" />
+                  <span className="inline-block h-8 w-24 rounded bg-background/20 animate-pulse align-middle" />
                 ) : (
                   stat.value
                 )}
