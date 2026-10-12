@@ -78,6 +78,13 @@
       "when": 1791832180159,
       "tag": "0010_add_clubs_access_courses_holes_practice",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1791832547319,
+      "tag": "0011_add_clubs_outing_membership_columns",
+      "breakpoints": true
     }
   ]
 }

@@ -186,8 +186,11 @@ export type Database = {
           linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
+          membership_fee: number | null
           min_age: number | null
           name: string
+          outing_durations: string[] | null
+          outing_places: string[] | null
           phone: string | null
           position_checked_at: string | null
           postal_code: string | null
@@ -203,6 +206,7 @@ export type Database = {
           structure_type: string | null
           sub_disciplines: string[] | null
           tiktok_url: string | null
+          transports: string[] | null
           twitter_url: string | null
           updated_at: string
           website: string | null
@@ -253,8 +257,11 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          membership_fee?: number | null
           min_age?: number | null
           name: string
+          outing_durations?: string[] | null
+          outing_places?: string[] | null
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
@@ -270,6 +277,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
           website?: string | null
@@ -320,8 +328,11 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          membership_fee?: number | null
           min_age?: number | null
           name?: string
+          outing_durations?: string[] | null
+          outing_places?: string[] | null
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
@@ -337,6 +348,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
           website?: string | null
@@ -688,8 +700,11 @@ export type Database = {
           linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
+          membership_fee: number | null
           min_age: number | null
           name: string | null
+          outing_durations: string[] | null
+          outing_places: string[] | null
           position_checked_at: string | null
           postal_code: string | null
           practice_info: string | null
@@ -704,6 +719,7 @@ export type Database = {
           structure_type: string | null
           sub_disciplines: string[] | null
           tiktok_url: string | null
+          transports: string[] | null
           twitter_url: string | null
           updated_at: string | null
           website: string | null
@@ -753,8 +769,11 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          membership_fee?: number | null
           min_age?: number | null
           name?: string | null
+          outing_durations?: string[] | null
+          outing_places?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -769,6 +788,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
@@ -818,8 +838,11 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          membership_fee?: number | null
           min_age?: number | null
           name?: string | null
+          outing_durations?: string[] | null
+          outing_places?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -834,6 +857,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
