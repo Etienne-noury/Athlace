@@ -20,27 +20,19 @@ export function HeroSection() {
   const navigate = useNavigate();
   const { stats, isReady } = useSiteStats();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDiscipline, setSelectedDiscipline] = useState('');
+  const [selectedDiscipline, setSelectedDiscipline] = useState('all');
+  const [selectedSub, setSelectedSub] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('');
 
   // Get parent disciplines organized by category
   const parentDisciplines = getParentDisciplines();
-  
-  const getDisciplinesByCategory = () => {
-    const result: Record<string, typeof parentDisciplines> = {};
-    Object.keys(categories).forEach(cat => {
-      result[cat] = parentDisciplines.filter(d => d.category === cat);
-    });
-    return result;
-  };
-  
-  const disciplinesByCategory = getDisciplinesByCategory();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (searchQuery) params.set('q', searchQuery);
-    if (selectedDiscipline) params.set('discipline', selectedDiscipline);
+    if (selectedDiscipline !== 'all') params.set('discipline', selectedDiscipline);
+    if (selectedSub !== 'all') params.set('sous-discipline', selectedSub);
     if (selectedRegion) params.set('region', selectedRegion);
     navigate(`/clubs/?${params.toString()}`);
   };
