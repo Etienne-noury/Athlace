@@ -23,9 +23,9 @@ const Index = () => {
         }
       />
       <HeroSection />
-      <StatsSection />
-      <PopularDisciplines />
       <InteractiveMapSection />
+      <PopularDisciplines />
+      <StatsSection />
       <FeaturedClubs />
       <CTASection />
     </Layout>
