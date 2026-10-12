@@ -64,6 +64,13 @@
       "when": 1791824239946,
       "tag": "0008_add_clubs_social_and_licensee_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791824622550,
+      "tag": "0009_add_clubs_competition_categories",
+      "breakpoints": true
     }
   ]
 }
