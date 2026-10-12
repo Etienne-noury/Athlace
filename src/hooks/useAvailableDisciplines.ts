@@ -36,6 +36,7 @@ export function useAvailableDisciplines() {
 
     const sports: Record<string, SportAvailability> = {};
     const categories: Record<string, boolean> = {};
+    let availableSportCount = 0;
     for (const cat of ARBORESCENCE) {
       let catOk = false;
       for (const sport of cat.sports) {
@@ -51,7 +52,10 @@ export function useAvailableDisciplines() {
           }
         }
         sports[slugifyDiscipline(sport.name)] = { available: count > 0, count, subs: subTotals };
-        if (count > 0) catOk = true;
+        if (count > 0) {
+          catOk = true;
+          availableSportCount += 1;
+        }
       }
       categories[cat.id] = catOk;
     }
