@@ -75,7 +75,7 @@ export function HeroSection() {
             <div className="bg-surface rounded-2xl p-3 shadow-sm">
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
-                <div className="flex-1 relative">
+                <div className="flex-1 min-w-0 lg:min-w-[220px] relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
@@ -93,6 +93,7 @@ export function HeroSection() {
                   onSportChange={setSelectedDiscipline}
                   onSubChange={setSelectedSub}
                   showLabels={false}
+                  showSub={false}
                   layout="inline"
                   className="w-full lg:w-auto"
                   triggerClassName="h-14 w-full lg:w-56 border-0 bg-muted"
