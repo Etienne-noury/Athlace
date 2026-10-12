@@ -43,6 +43,13 @@
       "when": 1791823370445,
       "tag": "0005_clubs_columns_rpc",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791823651767,
+      "tag": "0006_club_venues_schedules",
+      "breakpoints": true
     }
   ]
 }

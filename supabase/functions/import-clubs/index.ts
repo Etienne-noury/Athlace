@@ -112,6 +112,51 @@ const RESERVED = new Set([
   "postal_code", "department_code", "region", "latitude", "longitude", "position_checked_at",
 ]);
 
+// Child tables fed from JSON columns "venues" / "schedules" of the CSV.
+const VENUE_COLS: Record<string, string> = {
+  name: "text", kind: "text", address: "text", address_complement: "text", postal_code: "text",
+  city: "text", latitude: "double precision", longitude: "double precision", is_main: "boolean",
+  accessibility: "ARRAY", amenities: "ARRAY",
+};
+const SCHEDULE_COLS: Record<string, string> = {
+  venue_name: "text", day: "text", start_time: "time", end_time: "time", title: "text",
+  category: "text", level: "text", discipline: "text", notes: "text",
+};
+
+function toHHMM(v: unknown): string | null {
+  const s = str(v);
+  if (s === null) return null;
+  const m = s.match(/^(\d{1,2})\s*[:hH]\s*(\d{2})?/);
+  if (!m) return null;
+  const h = Number(m[1]), mi = Number(m[2] ?? "0");
+  if (h > 23 || mi > 59) return null;
+  return `${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
+}
+
+// Returns undefined when the field is absent/empty (leave existing rows),
+// null when JSON is invalid, or the cleaned list of rows.
+function parseChildren(v: unknown, cols: Record<string, string>): Record<string, unknown>[] | null | undefined {
+  let arr: unknown = v;
+  if (typeof v === "string") {
+    const s = v.trim();
+    if (!s) return undefined;
+    try { arr = JSON.parse(s); } catch { return null; }
+  } else if (v === null || v === undefined) return undefined;
+  if (!Array.isArray(arr)) return null;
+  const out: Record<string, unknown>[] = [];
+  for (const o of arr) {
+    if (!o || typeof o !== "object" || Array.isArray(o)) continue;
+    const row: Record<string, unknown> = {};
+    for (const [k, val] of Object.entries(o as Record<string, unknown>)) {
+      const t = cols[k];
+      if (!t) continue;
+      row[k] = t === "time" ? toHHMM(val) : convert(val, t, "");
+    }
+    out.push(row);
+  }
+  return out;
+}
+
 function deptFromPostal(cp: string | null): string | null {
   if (!cp) return null;
   const c = cp.replace(/\s/g, "");
@@ -131,7 +176,7 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const rows: Raw[] = Array.isArray(body?.rows) ? body.rows : [];
     if (rows.length === 0) {
-      return new Response(JSON.stringify({ received: 0, cleaned: 0, upserted: 0, errors: [], ignored_columns: [] }), {
+      return new Response(JSON.stringify({ received: 0, cleaned: 0, upserted: 0, venues_inserted: 0, schedules_inserted: 0, json_errors: 0, errors: [], ignored_columns: [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -154,12 +199,14 @@ Deno.serve(async (req) => {
     }
     const ignored = new Set<string>();
     for (const r of rows) {
-      if (r && typeof r === "object") for (const k of Object.keys(r)) if (!columns.has(k)) ignored.add(k);
+      if (r && typeof r === "object") for (const k of Object.keys(r)) if (!columns.has(k) && k !== "venues" && k !== "schedules") ignored.add(k);
     }
 
     const now = new Date().toISOString();
     const seen = new Set<string>();
     const cleaned = [];
+    const children = new Map<string, { venues?: Record<string, unknown>[]; schedules?: Record<string, unknown>[] }>();
+    let json_errors = 0;
     for (const r of rows) {
       if (!r || typeof r !== "object") continue;
       const federation_code = str(r.federation_code);
@@ -196,6 +243,13 @@ Deno.serve(async (req) => {
         generic[k] = convert(v, col.data_type, col.udt_name);
       }
 
+      const ch: { venues?: Record<string, unknown>[]; schedules?: Record<string, unknown>[] } = {};
+      const v = parseChildren(r.venues, VENUE_COLS);
+      if (v === null) json_errors++; else if (v !== undefined) ch.venues = v;
+      const sc = parseChildren(r.schedules, SCHEDULE_COLS);
+      if (sc === null) json_errors++; else if (sc !== undefined) ch.schedules = sc;
+      if (ch.venues || ch.schedules) children.set(key, ch);
+
       cleaned.push({
         ...generic,
         federation_code,
@@ -213,6 +267,8 @@ Deno.serve(async (req) => {
 
     const errors: string[] = [];
     let upserted = 0;
+    let venues_inserted = 0;
+    let schedules_inserted = 0;
     if (cleaned.length > 0) {
       // Reset position_checked_at when coordinates change (or row is new);
       // keep the existing value otherwise.
@@ -231,15 +287,44 @@ Deno.serve(async (req) => {
         c.position_checked_at = same ? e!.position_checked_at : null;
       }
 
-      const { error, count } = await supabase
+      const { data: upRows, error, count } = await supabase
         .from("clubs")
-        .upsert(cleaned, { onConflict: "federation_code,external_id", count: "exact" });
+        .upsert(cleaned, { onConflict: "federation_code,external_id", count: "exact" })
+        .select("id, federation_code, external_id");
       if (error) errors.push(error.message);
-      else upserted = count ?? cleaned.length;
+      else {
+        upserted = count ?? cleaned.length;
+        if (children.size > 0) {
+          const idByKey = new Map<string, string>();
+          for (const u of upRows ?? []) idByKey.set(`${u.federation_code}::${u.external_id}`, u.id);
+          for (const [table, field] of [["club_venues", "venues"], ["club_schedules", "schedules"]] as const) {
+            const ids: string[] = [];
+            const inserts: Record<string, unknown>[] = [];
+            for (const [k, ch] of children) {
+              const list = ch[field];
+              const id = idByKey.get(k);
+              if (!list || !id) continue;
+              ids.push(id);
+              for (const row of list) inserts.push({ ...row, club_id: id });
+            }
+            if (ids.length === 0) continue;
+            for (let i = 0; i < ids.length; i += 200) {
+              const { error: dErr } = await supabase.from(table).delete().in("club_id", ids.slice(i, i + 200));
+              if (dErr) errors.push(`${table}: ${dErr.message}`);
+            }
+            for (let i = 0; i < inserts.length; i += 500) {
+              const { error: iErr } = await supabase.from(table).insert(inserts.slice(i, i + 500));
+              if (iErr) errors.push(`${table}: ${iErr.message}`);
+              else if (field === "venues") venues_inserted += inserts.slice(i, i + 500).length;
+              else schedules_inserted += inserts.slice(i, i + 500).length;
+            }
+          }
+        }
+      }
     }
 
     return new Response(
-      JSON.stringify({ received: rows.length, cleaned: cleaned.length, upserted, errors, ignored_columns: [...ignored].sort() }),
+      JSON.stringify({ received: rows.length, cleaned: cleaned.length, upserted, venues_inserted, schedules_inserted, json_errors, errors, ignored_columns: [...ignored].sort() }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
