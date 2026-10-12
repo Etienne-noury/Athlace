@@ -16,7 +16,7 @@ import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { getParentDisciplines } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
 import { useSiteStats } from '@/hooks/useSiteStats';
-import { formatCount } from '@/lib/format-stats';
+import { formatCount, formatExact } from '@/lib/format-stats';
 
 export function HeroSection() {
   const navigate = useNavigate();
@@ -29,6 +29,14 @@ export function HeroSection() {
   // Get parent disciplines organized by category
   const parentDisciplines = getParentDisciplines();
   const avail = useAvailableDisciplines();
+
+  // Les 5 sports disponibles avec le plus de clubs ; repli sur l'ordre de l'arborescence tant que les données ne sont pas chargées.
+  const ranked = parentDisciplines
+    .map((d) => ({ id: d.id, clubs: avail.sportCount(d.id) }))
+    .filter((d) => d.clubs > 0)
+    .sort((a, b) => b.clubs - a.clubs)
+    .map((d) => parentDisciplines.find((p) => p.id === d.id)!);
+  const popularSports = (ranked.length ? ranked : parentDisciplines).slice(0, 5);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +61,7 @@ export function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
             <span className="text-sm font-medium text-cream-100">
-              🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs référencés en France` : 'Clubs sportifs référencés en France'}
+              🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(stats.federations_covered)} fédérations agréées` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
 
@@ -67,7 +75,7 @@ export function HeroSection() {
           </h1>
 
           <p className="text-lg md:text-xl text-surface-alt mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            Le répertoire national des clubs sportifs. Découvrez, comparez et inscrivez-vous aux clubs près de chez vous.
+            Tous les clubs des fédérations sportives agréées, réunis au même endroit. Découvrez, comparez et bientôt inscrivez-vous en ligne.
           </p>
 
           {/* Search Form */}
@@ -136,7 +144,7 @@ export function HeroSection() {
           {/* Quick Links */}
           <div className="mt-6 flex flex-wrap justify-center gap-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <span className="text-surface-alt text-sm">Populaires :</span>
-            {parentDisciplines.slice(0, 5).map((d) => {
+            {popularSports.map((d) => {
               const ok = avail.isSportAvailable(d.id);
               return (
                 <button
