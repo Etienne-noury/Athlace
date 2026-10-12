@@ -1,3 +1,6 @@
+import { ARBORESCENCE, slugifyDiscipline as slugify } from '@/data/disciplines';
+import { findSportForSigle } from '@/lib/federations-officielles';
+
 // Mapping discipline → fédération + générateurs d'URL d'annuaire officiel.
 // Permet de proposer aux utilisateurs un lien direct vers l'annuaire
 // fédéral pour trouver l'exhaustivité des clubs d'une discipline.
@@ -11,44 +14,42 @@ export interface FederationSource {
   type: 'api' | 'opendata' | 'annuaire';
   /** URL principale de la fédération (page d'accueil annuaire). */
   url: string;
+  /** Nom de la catégorie ARBORESCENCE (« À classer » si sigle inconnu). */
+  category: string;
+  /** Slug du sport de l'arborescence, null si non classé. */
+  sportSlug: string | null;
   /** Construit l'URL de recherche d'annuaire, optionnellement filtrée par ville/CP. */
   buildSearchUrl: (query?: { city?: string; postalCode?: string }) => string;
 }
 
-function iconForCategory(categorie: string): string {
-  if (categorie.includes('collectif')) return '⚽';
-  if (categorie.includes('raquette')) return '🎾';
-  if (categorie.includes('aquatique')) return '🏊';
-  if (categorie.includes('combat') || categorie.includes('martial')) return '🥋';
-  if (categorie.includes('nature') || categorie.includes('montagne')) return '🏔️';
-  if (categorie.includes('hiver') || categorie.includes('glisse')) return '🎿';
-  if (categorie.includes('fitness') || categorie.includes('danse')) return '🏋️';
-  if (categorie.includes('mécanique') || categorie.includes('aérien')) return '🏎️';
-  if (categorie.includes('précision')) return '🎯';
-  if (categorie.includes('traditionnel') || categorie.includes('régional')) return '🎪';
-  if (categorie.includes('Pêche')) return '🎣';
-  if (categorie.includes('Paralympique')) return '♿';
-  return '🏅';
+/** Icône d'une catégorie (id ou nom), lue dans ARBORESCENCE. */
+export function iconForCategory(categorie: string): string {
+  return ARBORESCENCE.find((c) => c.id === categorie || c.name === categorie)?.icon ?? '🏅';
 }
 
 export async function fetchFederationSources(): Promise<FederationSource[]> {
   const { supabase } = await import('@/integrations/supabase/client');
   const { data, error } = await supabase
     .from('federations_sportives')
-    .select('id, nom, sigle, categorie, site_web')
+    .select('id, nom, sigle, site_web')
     .order('nom');
   if (error) throw error;
-  return (data || []).map((f) => ({
+  return (data || []).map((f) => {
+    const found = findSportForSigle(f.sigle);
+    return {
     id: f.id,
     code: f.sigle,
     name: f.nom,
-    sport: f.categorie,
-    icon: iconForCategory(f.categorie),
+    sport: found?.sport.name ?? 'À classer',
+    category: found?.category.name ?? 'À classer',
+    sportSlug: found ? slugify(found.sport.name) : null,
+    icon: found ? iconForCategory(found.category.id) : '🏅',
     type: 'annuaire' as const,
     url: f.site_web,
     buildSearchUrl: ({ city, postalCode } = {}) =>
       `${f.site_web}?q=${encodeURIComponent(postalCode || city || '')}`,
-  }));
+    };
+  });
 }
 
 /**
@@ -99,7 +100,7 @@ export async function fetchFederationForDiscipline(disciplineId?: string, discip
 
   let query = supabase
     .from('federations_sportives')
-    .select('id, nom, sigle, categorie, site_web, is_paralympique')
+    .select('id, nom, sigle, site_web, is_paralympique')
     .limit(1);
 
   query = sigle

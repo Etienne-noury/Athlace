@@ -1,5 +1,8 @@
 import { ExternalLink, Database, Globe, Code2, Loader2 } from 'lucide-react';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { groupFederationsByArborescence } from '@/lib/federations-officielles';
 import { Layout } from '@/components/layout/Layout';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -16,6 +19,10 @@ export default function Federations() {
     queryKey: ['federations'],
     queryFn: fetchFederationSources,
   });
+  const groups = useMemo(
+    () => groupFederationsByArborescence(federations, (f) => f.code),
+    [federations],
+  );
 
   return (
     <Layout>
@@ -36,8 +43,20 @@ export default function Federations() {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {federations.map((fed) => {
+          <div className="space-y-12">
+            {groups.map((cat) => (
+              <div key={cat.id}>
+                <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+                  {cat.icon} {cat.name}
+                </h2>
+                <div className="space-y-8">
+                  {cat.sports.map((sport) => (
+                    <div key={sport.sportName}>
+                      <h3 className="font-display font-semibold text-lg text-foreground mb-4">
+                        {sport.sportIcon} {sport.sportName}
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sport.federations.map((fed) => {
               const meta = typeMeta[fed.type];
               const Icon = meta.icon;
               return (
@@ -63,9 +82,23 @@ export default function Federations() {
                     Accéder à l'annuaire
                     <ExternalLink className="w-4 h-4" />
                   </a>
+                  {fed.sportSlug && (
+                    <Link
+                      to={`/sports/${fed.sportSlug}/`}
+                      className="mt-2 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-surface-alt text-blue-500 font-medium hover:bg-tint-100 transition-colors"
+                    >
+                      Voir le sport {fed.sport}
+                    </Link>
+                  )}
                 </Card>
               );
             })}
+                                </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
