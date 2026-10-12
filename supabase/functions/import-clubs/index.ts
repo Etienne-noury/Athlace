@@ -73,6 +73,21 @@ function parseArray(v: unknown): string[] | null {
   return out;
 }
 
+/** Supprime les espaces en trop et dédoublonne sans tenir compte de la casse (garde la 1re écriture). */
+function cleanLabels(values: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of values) {
+    const v = String(raw).replace(/\s+/g, " ").trim();
+    if (!v) continue;
+    const key = v.toLocaleLowerCase("fr");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(v);
+  }
+  return out;
+}
+
 function convert(v: unknown, dataType: string, udt: string): unknown {
   if (dataType === "ARRAY") {
     if (Array.isArray(v)) return parseArray(v);
@@ -241,6 +256,9 @@ Deno.serve(async (req) => {
         const col = columns.get(k);
         if (!col || RESERVED.has(k)) continue;
         generic[k] = convert(v, col.data_type, col.udt_name);
+        if ((k === "sub_disciplines" || k === "dance_families") && Array.isArray(generic[k])) {
+          generic[k] = cleanLabels(generic[k] as string[]);
+        }
       }
 
       const ch: { venues?: Record<string, unknown>[]; schedules?: Record<string, unknown>[] } = {};
