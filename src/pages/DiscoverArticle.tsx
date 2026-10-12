@@ -32,13 +32,15 @@ export default function DiscoverArticle() {
   }, [title]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['federations-by-categorie'],
+    queryKey: ['federations-by-arborescence'],
     queryFn: fetchFederationsByCategorie,
     enabled: slug === 'guide-licences-federations',
   });
 
+  const groups = Array.isArray(data) ? data : [];
+
   if (slug === 'guide-licences-federations') {
-    const total = (data ?? []).reduce((acc, c) => acc + c.sports.reduce((n, s) => n + s.federations.length, 0), 0);
+    const total = groups.reduce((acc, c) => acc + c.sports.reduce((n, s) => n + s.federations.length, 0), 0);
     const updatedAt = new Date().toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
@@ -71,7 +73,7 @@ export default function DiscoverArticle() {
             </div>
           ) : (
             <Accordion type="multiple" className="space-y-3">
-              {(data ?? []).map((categorie) => {
+              {groups.map((categorie) => {
                 const count = categorie.sports.reduce((n, sp) => n + sp.federations.length, 0);
                 return (
                   <AccordionItem
