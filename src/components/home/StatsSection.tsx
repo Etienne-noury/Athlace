@@ -1,9 +1,11 @@
-import { MapPin, Trophy, Map, Clock } from 'lucide-react';
+import { MapPin, Trophy, Map, Activity } from 'lucide-react';
 import { useSiteStats } from '@/hooks/useSiteStats';
+import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { formatCount, formatExact } from '@/lib/format-stats';
 
 export function StatsSection() {
   const { stats, isReady } = useSiteStats();
+  const { availableSportCount, isReady: sportsReady } = useAvailableDisciplines();
 
   const items = [
     {
@@ -25,10 +27,10 @@ export function StatsSection() {
       description: 'Métropole et Outre-mer',
     },
     {
-      icon: Clock,
-      value: isReady ? formatExact(stats.schedules) : null,
-      label: 'Créneaux horaires',
-      description: 'Horaires d\'entraînement publiés',
+      icon: Activity,
+      value: sportsReady ? formatExact(availableSportCount) : null,
+      label: 'Sports disponibles',
+      description: 'Et d\'autres chaque mois',
     },
   ];
 
