@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, UserPlus, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SoonBadge } from '@/components/ui/SoonBadge';
 
 export function CTASection() {
   return (
@@ -22,9 +23,12 @@ export function CTASection() {
                 Vous êtes sportif ?
               </h3>
               
-               <p className="text-surface-alt text-lg mb-8 leading-relaxed">
-                Créez votre compte gratuit pour sauvegarder vos clubs favoris, 
-                suivre vos inscriptions et recevoir des recommandations personnalisées.
+               <p className="text-surface-alt text-lg mb-3 leading-relaxed">
+                Créez votre compte gratuit pour sauvegarder vos clubs favoris.
+              </p>
+              <p className="flex flex-wrap items-center gap-2 text-surface-alt text-sm mb-8 leading-relaxed">
+                <SoonBadge className="border-glass-border bg-glass text-surface-alt" />
+                Suivi de vos inscriptions et recommandations personnalisées
               </p>
               
               <Link to="/compte/inscription/">
@@ -52,8 +56,9 @@ export function CTASection() {
               </h3>
               
               <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                Référencez gratuitement votre club sur Athlace, gérez vos inscriptions 
-                en ligne et augmentez votre visibilité auprès de milliers de sportifs.
+                Votre fiche existe déjà grâce aux données de votre fédération. Bientôt,
+                complétez-la vous-même en quelques minutes : tarifs, horaires, photos,
+                présentation.
               </p>
               
               <Link to="/pour-les-clubs/">
