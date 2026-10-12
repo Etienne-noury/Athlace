@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, Phone, Globe, Star, Clock, ChevronLeft, CreditCard, Loader2, Info,
   Trophy, Mail, Users, Award, Accessibility, Dumbbell, ExternalLink,
-  Facebook, Instagram, Twitter, Linkedin, Youtube, Music2, UserPlus, Building2,
+  Facebook, Instagram, Twitter, Linkedin, Youtube, Music2, UserPlus, Building2, Navigation,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
@@ -172,6 +172,12 @@ export default function ClubDetail() {
   const r = club.row;
   const discipline = getDisciplineById(club.discipline);
   const registerUrl = r?.registration_url || r?.helloasso_url || null;
+  const fullAddress = [club.address, r?.address_complement, `${club.postalCode} ${club.city}`.trim()].filter(Boolean).join(', ');
+  const directionsUrl = club.coordinates?.lat && club.coordinates?.lng
+    ? `https://www.google.com/maps/dir/?api=1&destination=${club.coordinates.lat},${club.coordinates.lng}`
+    : fullAddress
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`
+      : null;
   const socials = [
     { url: r?.facebook_url, icon: Facebook, label: 'Facebook' },
     { url: r?.instagram_url, icon: Instagram, label: 'Instagram' },
@@ -180,7 +186,7 @@ export default function ClubDetail() {
     { url: r?.youtube_url, icon: Youtube, label: 'YouTube' },
     { url: r?.tiktok_url, icon: Music2, label: 'TikTok' },
   ].filter((s) => !!s.url);
-  const hasActions = registerUrl || club.website || contact?.email || contact?.phone || socials.length > 0;
+  const hasActions = registerUrl || club.website || contact?.email || contact?.phone || socials.length > 0 || !!directionsUrl;
 
   const total = r?.licensees_total ?? null;
   const pct = (n: number | null | undefined) => (total && n != null ? Math.round((n / total) * 100) : null);
@@ -204,7 +210,6 @@ export default function ClubDetail() {
 
   const cityLine = [club.city, r?.league].filter(Boolean).join(' · ');
   const updatedAt = formatDate(r?.scraped_at);
-  const fullAddress = [club.address, r?.address_complement, `${club.postalCode} ${club.city}`.trim()].filter(Boolean).join(', ');
 
   return (
     <Layout>
@@ -271,6 +276,11 @@ export default function ClubDetail() {
                 {contact?.phone && (
                   <Button asChild variant="secondary" className="rounded-pill">
                     <a href={`tel:${contact.phone.replace(/\s/g, '')}`}><Phone className="w-4 h-4" /> {contact.phone}</a>
+                  </Button>
+                )}
+                {directionsUrl && (
+                  <Button asChild variant="secondary" className="rounded-pill">
+                    <a href={directionsUrl} target="_blank" rel="noopener noreferrer"><Navigation className="w-4 h-4" /> Itinéraire</a>
                   </Button>
                 )}
                 {socials.length > 0 && (
