@@ -4,6 +4,7 @@ import { ArrowRight, Navigation, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { FranceMap } from '@/components/map/FranceMap';
+import { SoonBadge } from '@/components/ui/SoonBadge';
 
 export function InteractiveMapSection() {
   const [selectedDiscipline, setSelectedDiscipline] = useState('all');
@@ -60,14 +61,15 @@ export function InteractiveMapSection() {
         {/* Features */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           {[
-            { icon: '📍', text: 'Localisation précise' },
-            { icon: '🔍', text: 'Filtrage par sport' },
-            { icon: '⭐', text: 'Avis des membres' },
-            { icon: '🗺️', text: 'Itinéraire GPS' },
+            { icon: '📍', text: 'Localisation des clubs', soon: false },
+            { icon: '🔍', text: 'Filtre par sport et sous-discipline', soon: false },
+            { icon: '🗺️', text: 'Itinéraire GPS', soon: false },
+            { icon: '⭐', text: 'Avis des membres', soon: true },
           ].map((feature, index) => (
             <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
               <span className="text-lg">{feature.icon}</span>
-              {feature.text}
+              <span>{feature.text}</span>
+              {feature.soon && <SoonBadge />}
             </div>
           ))}
         </div>
