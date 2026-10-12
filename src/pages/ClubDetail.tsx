@@ -121,9 +121,11 @@ export default function ClubDetail() {
 
               <div className="flex-1">
                 <div className="flex flex-wrap items-start gap-3 mb-3">
-                  <Badge className={cn('text-cream-100 border-0', levels[club.level].color)}>
-                    {levels[club.level].name}
-                  </Badge>
+                  {club.levelLabel && (
+                    <Badge className={cn('text-cream-100 border-0', levels[club.level].color)}>
+                      {club.levelLabel}
+                    </Badge>
+                  )}
                   <Badge variant="secondary">{club.disciplineName}</Badge>
                 </div>
 
@@ -229,7 +231,20 @@ export default function ClubDetail() {
           {/* À venir */}
           <ComingSoonSection icon={CreditCard} title="Prix" />
           <ComingSoonSection icon={Star} title="Avis" />
-          <ComingSoonSection icon={Trophy} title="Niveau" />
+          {/* Niveau */}
+          {club.levelLabel ? (
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Trophy className="w-5 h-5 text-primary" />
+                <h2 className="font-display text-xl font-semibold text-foreground">
+                  Niveau
+                </h2>
+              </div>
+              <p className="text-muted-foreground">{club.levelLabel}</p>
+            </div>
+          ) : (
+            <ComingSoonSection icon={Trophy} title="Niveau" />
+          )}
           {/* Contact */}
           <div className="bg-card rounded-2xl border border-border p-6">
             <div className="flex items-center gap-3 mb-4">
