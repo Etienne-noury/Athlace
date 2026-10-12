@@ -168,6 +168,7 @@ export type Database = {
           external_id: string
           facebook_url: string | null
           federation_code: string
+          fleet: string | null
           geocode_failed: boolean
           helloasso_url: string | null
           holes_total: number | null
@@ -190,6 +191,7 @@ export type Database = {
           membership_fee: number | null
           min_age: number | null
           name: string
+          opening_hours: string | null
           outing_durations: string[] | null
           outing_places: string[] | null
           phone: string | null
@@ -208,6 +210,7 @@ export type Database = {
           structure_type: string | null
           sub_disciplines: string[] | null
           tiktok_url: string | null
+          trainings: string[] | null
           transports: string[] | null
           twitter_url: string | null
           updated_at: string
@@ -242,6 +245,7 @@ export type Database = {
           external_id: string
           facebook_url?: string | null
           federation_code: string
+          fleet?: string | null
           geocode_failed?: boolean
           helloasso_url?: string | null
           holes_total?: number | null
@@ -264,6 +268,7 @@ export type Database = {
           membership_fee?: number | null
           min_age?: number | null
           name: string
+          opening_hours?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -282,6 +287,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          trainings?: string[] | null
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
@@ -316,6 +322,7 @@ export type Database = {
           external_id?: string
           facebook_url?: string | null
           federation_code?: string
+          fleet?: string | null
           geocode_failed?: boolean
           helloasso_url?: string | null
           holes_total?: number | null
@@ -338,6 +345,7 @@ export type Database = {
           membership_fee?: number | null
           min_age?: number | null
           name?: string
+          opening_hours?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -356,6 +364,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          trainings?: string[] | null
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
@@ -691,6 +700,7 @@ export type Database = {
           external_id: string | null
           facebook_url: string | null
           federation_code: string | null
+          fleet: string | null
           geocode_failed: boolean | null
           helloasso_url: string | null
           holes_total: number | null
@@ -713,6 +723,7 @@ export type Database = {
           membership_fee: number | null
           min_age: number | null
           name: string | null
+          opening_hours: string | null
           outing_durations: string[] | null
           outing_places: string[] | null
           photo_urls: string[] | null
@@ -730,6 +741,7 @@ export type Database = {
           structure_type: string | null
           sub_disciplines: string[] | null
           tiktok_url: string | null
+          trainings: string[] | null
           transports: string[] | null
           twitter_url: string | null
           updated_at: string | null
@@ -763,6 +775,7 @@ export type Database = {
           external_id?: string | null
           facebook_url?: string | null
           federation_code?: string | null
+          fleet?: string | null
           geocode_failed?: boolean | null
           helloasso_url?: string | null
           holes_total?: number | null
@@ -785,6 +798,7 @@ export type Database = {
           membership_fee?: number | null
           min_age?: number | null
           name?: string | null
+          opening_hours?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
@@ -802,6 +816,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          trainings?: string[] | null
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
@@ -835,6 +850,7 @@ export type Database = {
           external_id?: string | null
           facebook_url?: string | null
           federation_code?: string | null
+          fleet?: string | null
           geocode_failed?: boolean | null
           helloasso_url?: string | null
           holes_total?: number | null
@@ -857,6 +873,7 @@ export type Database = {
           membership_fee?: number | null
           min_age?: number | null
           name?: string | null
+          opening_hours?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
@@ -874,6 +891,7 @@ export type Database = {
           structure_type?: string | null
           sub_disciplines?: string[] | null
           tiktok_url?: string | null
+          trainings?: string[] | null
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
