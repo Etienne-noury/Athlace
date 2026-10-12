@@ -142,10 +142,19 @@ export type Database = {
       }
       clubs: {
         Row: {
+          accessibility: string[] | null
+          acronym: string | null
           address: string | null
           address_complement: string | null
+          affiliation_number: string | null
+          age_categories: string[] | null
+          amenities: string[] | null
+          audiences: string[] | null
           city: string | null
           claimed_by_club: boolean
+          colors: string | null
+          committee: string | null
+          competitions: string[] | null
           created_at: string
           creation_date: string | null
           department_code: string | null
@@ -153,28 +162,53 @@ export type Database = {
           discipline: string
           email: string | null
           external_id: string
+          facebook_url: string | null
           federation_code: string
           geocode_failed: boolean
           id: string
+          instagram_url: string | null
+          labels: string[] | null
           latitude: number | null
+          league: string | null
           level: string | null
+          licensees_female: number | null
+          licensees_total: number | null
+          licensees_youth: number | null
+          logo_url: string | null
           longitude: number | null
+          min_age: number | null
           name: string
           phone: string | null
           position_checked_at: string | null
           postal_code: string | null
+          practice_types: string[] | null
+          price_info: string | null
           region: string | null
+          registration_url: string | null
+          rna_number: string | null
           scraped_at: string | null
+          siret: string | null
           source_url: string | null
+          structure_type: string | null
           sub_disciplines: string[] | null
+          twitter_url: string | null
           updated_at: string
           website: string | null
         }
         Insert: {
+          accessibility?: string[] | null
+          acronym?: string | null
           address?: string | null
           address_complement?: string | null
+          affiliation_number?: string | null
+          age_categories?: string[] | null
+          amenities?: string[] | null
+          audiences?: string[] | null
           city?: string | null
           claimed_by_club?: boolean
+          colors?: string | null
+          committee?: string | null
+          competitions?: string[] | null
           created_at?: string
           creation_date?: string | null
           department_code?: string | null
@@ -182,28 +216,53 @@ export type Database = {
           discipline: string
           email?: string | null
           external_id: string
+          facebook_url?: string | null
           federation_code: string
           geocode_failed?: boolean
           id?: string
+          instagram_url?: string | null
+          labels?: string[] | null
           latitude?: number | null
+          league?: string | null
           level?: string | null
+          licensees_female?: number | null
+          licensees_total?: number | null
+          licensees_youth?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          min_age?: number | null
           name: string
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_types?: string[] | null
+          price_info?: string | null
           region?: string | null
+          registration_url?: string | null
+          rna_number?: string | null
           scraped_at?: string | null
+          siret?: string | null
           source_url?: string | null
+          structure_type?: string | null
           sub_disciplines?: string[] | null
+          twitter_url?: string | null
           updated_at?: string
           website?: string | null
         }
         Update: {
+          accessibility?: string[] | null
+          acronym?: string | null
           address?: string | null
           address_complement?: string | null
+          affiliation_number?: string | null
+          age_categories?: string[] | null
+          amenities?: string[] | null
+          audiences?: string[] | null
           city?: string | null
           claimed_by_club?: boolean
+          colors?: string | null
+          committee?: string | null
+          competitions?: string[] | null
           created_at?: string
           creation_date?: string | null
           department_code?: string | null
@@ -211,20 +270,36 @@ export type Database = {
           discipline?: string
           email?: string | null
           external_id?: string
+          facebook_url?: string | null
           federation_code?: string
           geocode_failed?: boolean
           id?: string
+          instagram_url?: string | null
+          labels?: string[] | null
           latitude?: number | null
+          league?: string | null
           level?: string | null
+          licensees_female?: number | null
+          licensees_total?: number | null
+          licensees_youth?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          min_age?: number | null
           name?: string
           phone?: string | null
           position_checked_at?: string | null
           postal_code?: string | null
+          practice_types?: string[] | null
+          price_info?: string | null
           region?: string | null
+          registration_url?: string | null
+          rna_number?: string | null
           scraped_at?: string | null
+          siret?: string | null
           source_url?: string | null
+          structure_type?: string | null
           sub_disciplines?: string[] | null
+          twitter_url?: string | null
           updated_at?: string
           website?: string | null
         }
@@ -531,80 +606,158 @@ export type Database = {
       }
       clubs_public: {
         Row: {
+          accessibility: string[] | null
+          acronym: string | null
           address: string | null
           address_complement: string | null
+          affiliation_number: string | null
+          age_categories: string[] | null
+          amenities: string[] | null
+          audiences: string[] | null
           city: string | null
           claimed_by_club: boolean | null
+          colors: string | null
+          committee: string | null
+          competitions: string[] | null
           created_at: string | null
           creation_date: string | null
           department_code: string | null
           description: string | null
           discipline: string | null
           external_id: string | null
+          facebook_url: string | null
           federation_code: string | null
           geocode_failed: boolean | null
           id: string | null
+          instagram_url: string | null
+          labels: string[] | null
           latitude: number | null
+          league: string | null
           level: string | null
+          licensees_female: number | null
+          licensees_total: number | null
+          licensees_youth: number | null
+          logo_url: string | null
           longitude: number | null
+          min_age: number | null
           name: string | null
+          position_checked_at: string | null
           postal_code: string | null
+          practice_types: string[] | null
+          price_info: string | null
           region: string | null
+          registration_url: string | null
+          rna_number: string | null
           scraped_at: string | null
+          siret: string | null
           source_url: string | null
+          structure_type: string | null
           sub_disciplines: string[] | null
+          twitter_url: string | null
           updated_at: string | null
           website: string | null
         }
         Insert: {
+          accessibility?: string[] | null
+          acronym?: string | null
           address?: string | null
           address_complement?: string | null
+          affiliation_number?: string | null
+          age_categories?: string[] | null
+          amenities?: string[] | null
+          audiences?: string[] | null
           city?: string | null
           claimed_by_club?: boolean | null
+          colors?: string | null
+          committee?: string | null
+          competitions?: string[] | null
           created_at?: string | null
           creation_date?: string | null
           department_code?: string | null
           description?: string | null
           discipline?: string | null
           external_id?: string | null
+          facebook_url?: string | null
           federation_code?: string | null
           geocode_failed?: boolean | null
           id?: string | null
+          instagram_url?: string | null
+          labels?: string[] | null
           latitude?: number | null
+          league?: string | null
           level?: string | null
+          licensees_female?: number | null
+          licensees_total?: number | null
+          licensees_youth?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          min_age?: number | null
           name?: string | null
+          position_checked_at?: string | null
           postal_code?: string | null
+          practice_types?: string[] | null
+          price_info?: string | null
           region?: string | null
+          registration_url?: string | null
+          rna_number?: string | null
           scraped_at?: string | null
+          siret?: string | null
           source_url?: string | null
+          structure_type?: string | null
           sub_disciplines?: string[] | null
+          twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
         }
         Update: {
+          accessibility?: string[] | null
+          acronym?: string | null
           address?: string | null
           address_complement?: string | null
+          affiliation_number?: string | null
+          age_categories?: string[] | null
+          amenities?: string[] | null
+          audiences?: string[] | null
           city?: string | null
           claimed_by_club?: boolean | null
+          colors?: string | null
+          committee?: string | null
+          competitions?: string[] | null
           created_at?: string | null
           creation_date?: string | null
           department_code?: string | null
           description?: string | null
           discipline?: string | null
           external_id?: string | null
+          facebook_url?: string | null
           federation_code?: string | null
           geocode_failed?: boolean | null
           id?: string | null
+          instagram_url?: string | null
+          labels?: string[] | null
           latitude?: number | null
+          league?: string | null
           level?: string | null
+          licensees_female?: number | null
+          licensees_total?: number | null
+          licensees_youth?: number | null
+          logo_url?: string | null
           longitude?: number | null
+          min_age?: number | null
           name?: string | null
+          position_checked_at?: string | null
           postal_code?: string | null
+          practice_types?: string[] | null
+          price_info?: string | null
           region?: string | null
+          registration_url?: string | null
+          rna_number?: string | null
           scraped_at?: string | null
+          siret?: string | null
           source_url?: string | null
+          structure_type?: string | null
           sub_disciplines?: string[] | null
+          twitter_url?: string | null
           updated_at?: string | null
           website?: string | null
         }

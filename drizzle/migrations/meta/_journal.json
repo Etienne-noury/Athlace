@@ -50,6 +50,13 @@
       "when": 1791823651767,
       "tag": "0006_club_venues_schedules",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791823760499,
+      "tag": "0007_add_clubs_profile_columns",
+      "breakpoints": true
     }
   ]
 }
