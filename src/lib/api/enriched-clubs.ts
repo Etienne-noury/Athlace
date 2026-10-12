@@ -106,7 +106,7 @@ export interface FetchEnrichedParams {
 }
 
 export interface FetchEnrichedResult {
-  clubs: Club[];
+  clubs: EnrichedClub[];
   total: number;
 }
 
