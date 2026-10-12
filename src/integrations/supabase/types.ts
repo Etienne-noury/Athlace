@@ -927,6 +927,7 @@ export type Database = {
           udt_name: string
         }[]
       }
+      home_stats: { Args: never; Returns: Json }
       map_club_clusters: {
         Args: {
           p_disciplines?: string[]
