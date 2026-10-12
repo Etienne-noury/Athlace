@@ -5,7 +5,7 @@ import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
-import { disciplines, getParentDisciplines } from '@/data/disciplines';
+import { disciplines, getParentDisciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { MapPin, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { slugify } from '@/lib/geo';
@@ -44,8 +44,13 @@ export default function SportDetail() {
   }, [sport]);
 
   const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
-    queryKey: ['sport-detail', sport?.name],
-    queryFn: () => fetchEnrichedClubs({ discipline: sport?.name || '', limit: 100 }),
+    queryKey: ['sport-detail', sport?.id],
+    queryFn: () =>
+      fetchEnrichedClubs({
+        disciplines: getDisciplineQueryNames(sport?.parentId ?? sport?.id),
+        subDiscipline: sport?.parentId ? getSubDisciplineValue(sport.parentId, sport.id) : null,
+        limit: 100,
+      }),
     enabled: !!sport?.name,
     staleTime: 5 * 60 * 1000,
   });

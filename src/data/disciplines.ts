@@ -319,17 +319,26 @@ const SPORT_NODES: Record<string, SportNode> = Object.fromEntries(
 );
 
 /**
- * Libellés à interroger en base (clubs.discipline) pour un sport : sport.match.
- * Avec une sous-discipline : son libellé exact.
+ * Libellés à interroger en base (clubs.discipline) pour un sport : uniquement sport.match.
  */
-export const getDisciplineQueryNames = (sportId?: string | null, subId?: string | null): string[] => {
+export const getDisciplineQueryNames = (sportId?: string | null): string[] => {
   if (!sportId || sportId === 'all') return [];
-  if (subId && subId !== 'all') {
-    const sub = getDisciplineById(subId);
-    return sub ? [sub.name] : [];
-  }
   const sport = getDisciplineById(sportId);
   if (!sport) return [];
-  const node = SPORT_NODES[sport.id];
-  return node ? Array.from(new Set(node.match)) : [sport.name];
+  const parent = sport.parentId ?? sport.id;
+  const node = SPORT_NODES[parent];
+  return node ? Array.from(new Set(node.match)) : [];
+};
+
+/**
+ * Valeur exacte de sous-discipline à chercher dans clubs.sub_disciplines
+ * (clubs.dance_families pour la Danse). null si aucune sous-discipline choisie.
+ */
+export const getSubDisciplineValue = (sportId?: string | null, subId?: string | null): string | null => {
+  if (!sportId || sportId === 'all' || !subId || subId === 'all') return null;
+  const sub = getDisciplineById(subId);
+  if (!sub || !sub.parentId) return null;
+  const sport = getDisciplineById(sportId);
+  if (sport && sub.parentId !== sport.id) return null;
+  return sub.name;
 };

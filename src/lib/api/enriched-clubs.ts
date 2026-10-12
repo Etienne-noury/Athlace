@@ -75,6 +75,8 @@ export interface FetchEnrichedParams {
   discipline?: string;
   /** Liste de libellés de disciplines (sport + sous-disciplines) : match OU. */
   disciplines?: string[];
+  /** Sous-discipline exacte : clubs.sub_disciplines (dance_families pour la Danse) doit la contenir. */
+  subDiscipline?: string | null;
   region?: string;
   department?: string;
   postalPrefixes?: string[];
@@ -99,6 +101,7 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
     location,
     discipline,
     disciplines: disciplines_,
+    subDiscipline,
     region,
     department,
     postalPrefixes,
@@ -122,11 +125,14 @@ export async function fetchEnrichedClubs(params: FetchEnrichedParams = {}): Prom
 
   const disciplineList = (disciplines_ ?? []).filter((d) => d && d !== 'all');
   if (disciplineList.length > 0) {
-    // Sport parent sélectionné : on accepte le sport ET toutes ses sous-disciplines.
-    const escaped = disciplineList.map((d) => d.replace(/[,()]/g, ' '));
-    query = query.or(escaped.map((d) => `discipline.ilike.%${d}%`).join(','));
+    // Sport sélectionné : clubs.discipline doit être l'une des valeurs `match` du sport.
+    query = query.in('discipline', disciplineList);
   } else if (discipline && discipline !== 'all') {
     query = query.ilike('discipline', discipline);
+  }
+  if (subDiscipline) {
+    const isDanse = disciplineList.length > 0 && disciplineList.every((d) => d === 'Danse');
+    query = query.contains(isDanse ? 'dance_families' : 'sub_disciplines', [subDiscipline]);
   }
   if (region && region !== 'all') {
     query = query.ilike('region', `%${region}%`);

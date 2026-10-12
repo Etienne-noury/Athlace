@@ -929,6 +929,7 @@ export type Database = {
           p_location?: string
           p_postal_prefixes?: string[]
           p_precision: number
+          p_sub_discipline?: string
         }
         Returns: {
           cnt: number
