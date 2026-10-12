@@ -83,32 +83,18 @@ export function HeroSection() {
                   />
                 </div>
 
-                {/* Discipline Select with Categories */}
-                <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-                  <SelectTrigger className="h-14 w-full lg:w-56 border-0 bg-muted">
-                    <SelectValue placeholder="Discipline" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[min(20rem,60dvh)] bg-card z-[2000]">
-                    {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
-                      const categoryDisciplines = disciplinesByCategory[categoryKey] || [];
-                      if (categoryDisciplines.length === 0) return null;
-                      
-                      return (
-                        <SelectGroup key={categoryKey}>
-                          <SelectLabel className="flex items-center gap-2 font-semibold text-foreground">
-                            <div className={`w-2 h-2 rounded-pill ${categoryInfo.color}`} />
-                            {categoryInfo.name}
-                          </SelectLabel>
-                          {categoryDisciplines.slice(0, 8).map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.icon} {d.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
+                {/* Discipline Filter (sport + sous-discipline) */}
+                <DisciplineFilter
+                  sport={selectedDiscipline}
+                  sub={selectedSub}
+                  onSportChange={setSelectedDiscipline}
+                  onSubChange={setSelectedSub}
+                  showLabels={false}
+                  layout="inline"
+                  className="w-full lg:w-auto"
+                  triggerClassName="h-14 w-full lg:w-56 border-0 bg-muted"
+                  contentClassName="z-[2000]"
+                />
 
                 {/* Region Select */}
                 <Select value={selectedRegion} onValueChange={setSelectedRegion}>
