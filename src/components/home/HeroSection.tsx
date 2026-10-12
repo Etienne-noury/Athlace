@@ -6,13 +6,12 @@ import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getParentDisciplines, categories } from '@/data/disciplines';
+import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
+import { getParentDisciplines } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { formatCount } from '@/lib/format-stats';
@@ -21,27 +20,19 @@ export function HeroSection() {
   const navigate = useNavigate();
   const { stats, isReady } = useSiteStats();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDiscipline, setSelectedDiscipline] = useState('');
+  const [selectedDiscipline, setSelectedDiscipline] = useState('all');
+  const [selectedSub, setSelectedSub] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('');
 
   // Get parent disciplines organized by category
   const parentDisciplines = getParentDisciplines();
-  
-  const getDisciplinesByCategory = () => {
-    const result: Record<string, typeof parentDisciplines> = {};
-    Object.keys(categories).forEach(cat => {
-      result[cat] = parentDisciplines.filter(d => d.category === cat);
-    });
-    return result;
-  };
-  
-  const disciplinesByCategory = getDisciplinesByCategory();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (searchQuery) params.set('q', searchQuery);
-    if (selectedDiscipline) params.set('discipline', selectedDiscipline);
+    if (selectedDiscipline !== 'all') params.set('discipline', selectedDiscipline);
+    if (selectedSub !== 'all') params.set('sous-discipline', selectedSub);
     if (selectedRegion) params.set('region', selectedRegion);
     navigate(`/clubs/?${params.toString()}`);
   };
@@ -92,32 +83,18 @@ export function HeroSection() {
                   />
                 </div>
 
-                {/* Discipline Select with Categories */}
-                <Select value={selectedDiscipline} onValueChange={setSelectedDiscipline}>
-                  <SelectTrigger className="h-14 w-full lg:w-56 border-0 bg-muted">
-                    <SelectValue placeholder="Discipline" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[min(20rem,60dvh)] bg-card z-[2000]">
-                    {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
-                      const categoryDisciplines = disciplinesByCategory[categoryKey] || [];
-                      if (categoryDisciplines.length === 0) return null;
-                      
-                      return (
-                        <SelectGroup key={categoryKey}>
-                          <SelectLabel className="flex items-center gap-2 font-semibold text-foreground">
-                            <div className={`w-2 h-2 rounded-pill ${categoryInfo.color}`} />
-                            {categoryInfo.name}
-                          </SelectLabel>
-                          {categoryDisciplines.slice(0, 8).map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.icon} {d.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
+                {/* Discipline Filter (sport + sous-discipline) */}
+                <DisciplineFilter
+                  sport={selectedDiscipline}
+                  sub={selectedSub}
+                  onSportChange={setSelectedDiscipline}
+                  onSubChange={setSelectedSub}
+                  showLabels={false}
+                  layout="inline"
+                  className="w-full lg:w-auto"
+                  triggerClassName="h-14 w-full lg:w-56 border-0 bg-muted"
+                  contentClassName="z-[2000]"
+                />
 
                 {/* Region Select */}
                 <Select value={selectedRegion} onValueChange={setSelectedRegion}>
