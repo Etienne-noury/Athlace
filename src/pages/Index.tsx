@@ -18,8 +18,8 @@ const Index = () => {
       <PageTitle
         description={
           isReady
-            ? `Trouvez et comparez ${formatCount(stats.clubs)} clubs sportifs en France, issus de ${stats.federations_covered} fédérations sportives agréées — et bientôt inscrivez-vous en ligne.`
-            : 'Trouvez et comparez les clubs sportifs de France, toutes fédérations agréées confondues — et bientôt inscrivez-vous en ligne.'
+            ? `Trouvez et comparez ${formatCount(stats.clubs)} clubs sportifs en France, issus de ${stats.federations_covered} fédérations sportives agréées - et bientôt inscrivez-vous en ligne.`
+            : 'Trouvez et comparez les clubs sportifs de France, toutes fédérations agréées confondues - et bientôt inscrivez-vous en ligne.'
         }
       />
       <HeroSection />

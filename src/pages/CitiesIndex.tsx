@@ -79,7 +79,7 @@ export default function CitiesIndex() {
                         {city.city}
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        {city.region} — {city.count} club{city.count > 1 ? 's' : ''}
+                        {city.region} - {city.count} club{city.count > 1 ? 's' : ''}
                       </p>
                     </div>
                   </div>

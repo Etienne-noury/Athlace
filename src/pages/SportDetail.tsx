@@ -48,7 +48,7 @@ export default function SportDetail() {
   }, [sport, federationSources]);
 
   useEffect(() => {
-    if (sport) document.title = `${sport.name} — Trouver un club - Athlace`;
+    if (sport) document.title = `${sport.name} - Trouver un club - Athlace`;
   }, [sport]);
 
   const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({

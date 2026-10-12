@@ -37,8 +37,8 @@ export function WaitlistAdmin() {
                   <td className="py-2 pr-4">{new Date(r.created_at).toLocaleDateString('fr-FR')}</td>
                   <td className="pr-4">{r.club_name}</td>
                   <td className="pr-4"><a className="text-primary underline" href={`mailto:${r.email}`}>{r.email}</a></td>
-                  <td className="pr-4">{r.sport ?? '—'}</td>
-                  <td>{r.members_estimate ?? '—'}</td>
+                  <td className="pr-4">{r.sport ?? '-'}</td>
+                  <td>{r.members_estimate ?? '-'}</td>
                 </tr>
               ))}
             </tbody>
