@@ -51,7 +51,7 @@ const SPORT_BY_MATCH = new Map(
   ARBORESCENCE.flatMap((c) => c.sports.flatMap((s) => s.match.map((m) => [m.toLowerCase(), s] as const))),
 );
 
-function rowToClub(r: EnrichedClubRow): EnrichedClub {
+export function rowToClub(r: EnrichedClubRow): EnrichedClub {
   const sport = r.discipline ? SPORT_BY_MATCH.get(r.discipline.toLowerCase()) : undefined;
   const full = r as unknown as ClubPublicRow;
   const subs = (sport?.name === 'Danse' ? full.dance_families : r.sub_disciplines) ?? [];
