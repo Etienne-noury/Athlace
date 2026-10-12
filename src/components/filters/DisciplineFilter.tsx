@@ -26,6 +26,8 @@ interface DisciplineFilterProps {
   onSubChange: (value: string) => void;
   /** Affiche les libellés au-dessus des champs */
   showLabels?: boolean;
+  /** Affiche le menu sous-discipline (désactivé dans le hero) */
+  showSub?: boolean;
   className?: string;
   triggerClassName?: string;
   contentClassName?: string;
@@ -38,6 +40,7 @@ export function DisciplineFilter({
   onSportChange,
   onSubChange,
   showLabels = true,
+  showSub = true,
   className,
   triggerClassName,
   contentClassName,
@@ -154,7 +157,7 @@ export function DisciplineFilter({
         </Popover>
       </div>
 
-      {subs.length > 0 && (
+      {showSub && subs.length > 0 && (
         <div className="min-w-0">
           {showLabels && (
             <label className="text-sm font-medium text-foreground mb-2 block">
