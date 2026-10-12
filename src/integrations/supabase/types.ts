@@ -903,6 +903,14 @@ export type Database = {
       }
     }
     Functions: {
+      available_disciplines: {
+        Args: never
+        Returns: {
+          clubs: number
+          discipline: string
+          subs: Json
+        }[]
+      }
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
       get_club_contact: {
         Args: { p_club_id: string }

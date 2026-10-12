@@ -9,6 +9,7 @@ import { disciplines, getParentDisciplines, getDisciplineQueryNames, getSubDisci
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { MapPin, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { slugify } from '@/lib/geo';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 
 export default function SportDetail() {
   const { sportId } = useParams<{ sportId: string }>();
@@ -24,10 +25,17 @@ export default function SportDetail() {
     return disciplines.find((d) => d.id === sport.parentId);
   }, [sport]);
 
+  const avail = useAvailableDisciplines();
   const subDisciplines = useMemo(() => {
     if (!sport || isChild) return [];
-    return disciplines.filter((d) => d.parentId === sport.id);
-  }, [sport, isChild]);
+    return disciplines.filter((d) => d.parentId === sport.id && avail.isSubAvailable(sport.id, d.name));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sport, isChild, avail.isReady]);
+  const sportAvailable = !sport
+    ? false
+    : sport.parentId
+      ? avail.isSportAvailable(sport.parentId) && avail.isSubAvailable(sport.parentId, sport.name)
+      : avail.isSportAvailable(sport.id);
 
   const { data: federationSources = [] } = useQuery({
     queryKey: ['federations'],
@@ -150,9 +158,18 @@ export default function SportDetail() {
               )}
               {!isLoading && clubs.length === 0 && (
                 <div className="text-center py-10 border border-dashed border-border rounded-xl bg-muted">
-                  <p className="text-muted-foreground">
-                    Aucun club référencé pour le moment.
-                  </p>
+                  {!sportAvailable ? (
+                    <>
+                      <p className="font-display font-semibold text-lg text-foreground">
+                        Ce sport arrive bientôt sur Athlace
+                      </p>
+                      <p className="text-muted-foreground mt-1">
+                        Les clubs de {sport.name} seront référencés prochainement.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-muted-foreground">Aucun club référencé pour le moment.</p>
+                  )}
                 </div>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -203,21 +220,33 @@ export default function SportDetail() {
               <CardContent className="p-5">
                 <h3 className="font-display font-semibold mb-3">Autres sports</h3>
                 <div className="flex flex-wrap gap-2">
-                  {parentSports.slice(0, 12).map((s) => (
-                    <Button
-                      key={s.id}
-                      variant={s.id === sport.id ? 'default' : 'outline'}
-                      size="sm"
-                      asChild={s.id !== sport.id}
-                      disabled={s.id === sport.id}
-                    >
-                      {s.id === sport.id ? (
-                        <span>{s.name}</span>
-                      ) : (
-                        <Link to={`/sports/${s.id}/`}>{s.name}</Link>
-                      )}
-                    </Button>
-                  ))}
+                  {parentSports.slice(0, 12).map((s) => {
+                    const ok = avail.isSportAvailable(s.id);
+                    const linkable = s.id !== sport.id && ok;
+                    return (
+                      <Button
+                        key={s.id}
+                        variant={s.id === sport.id ? 'default' : 'outline'}
+                        size="sm"
+                        asChild={linkable}
+                        disabled={!linkable}
+                      >
+                        {linkable ? (
+                          <Link to={`/sports/${s.id}/`}>
+                            {s.name}
+                            {avail.isReady && (
+                              <span className="ml-1 opacity-70">({formatClubCount(avail.sportCount(s.id))})</span>
+                            )}
+                          </Link>
+                        ) : (
+                          <span>
+                            {s.name}
+                            {s.id !== sport.id && <span className="ml-1 text-xs">· Bientôt</span>}
+                          </span>
+                        )}
+                      </Button>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

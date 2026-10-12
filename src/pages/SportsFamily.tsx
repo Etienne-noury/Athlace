@@ -5,9 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
+import { cn } from '@/lib/utils';
 
 export default function SportsFamily() {
   const { familyId } = useParams<{ familyId: string }>();
+  const avail = useAvailableDisciplines();
 
   const categorie = useMemo(
     () =>
@@ -61,17 +64,21 @@ export default function SportsFamily() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categorie.sports.map((sport) => {
             const sportId = slugifyDiscipline(sport.name);
+            const ok = avail.isSportAvailable(sportId);
+            const subs = sport.subs.filter((sub) => ok && avail.isSubAvailable(sportId, sub));
             return (
-              <Card key={sport.name} className="hover:border-border transition-colors">
+              <Card key={sport.name} className={cn('hover:border-border transition-colors', !ok && 'opacity-60')}>
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3">
                     <h2 className="font-display font-semibold text-lg">
                       {sport.icon} {sport.name}
                     </h2>
-                    <Badge variant="secondary">{sport.subs.length}</Badge>
+                    <Badge variant="secondary">
+                      {!ok ? 'Bientôt' : avail.isReady ? `${formatClubCount(avail.sportCount(sportId))} clubs` : sport.subs.length}
+                    </Badge>
                   </div>
                   <ul className="mt-3 space-y-1 flex-1">
-                    {sport.subs.map((sub) => (
+                    {subs.map((sub) => (
                       <li key={sub}>
                         <Link
                           to={`/sports/${sportId}--${slugifyDiscipline(sub)}/`}
@@ -82,6 +89,7 @@ export default function SportsFamily() {
                       </li>
                     ))}
                   </ul>
+                  {ok ? (
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
                       <Link to={`/sports/${sportId}/`}>Fiche sport</Link>
@@ -90,6 +98,9 @@ export default function SportsFamily() {
                       <Link to={`/clubs/?discipline=${sportId}`}>Voir les clubs</Link>
                     </Button>
                   </div>
+                  ) : (
+                    <p className="mt-4 text-sm text-muted-foreground">Ce sport arrive bientôt sur Athlace.</p>
+                  )}
                 </CardContent>
               </Card>
             );

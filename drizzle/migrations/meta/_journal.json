@@ -106,6 +106,13 @@
       "when": 1791835328623,
       "tag": "0014_map_club_clusters_sub_discipline",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1791835722931,
+      "tag": "0015_available_disciplines",
+      "breakpoints": true
     }
   ]
 }

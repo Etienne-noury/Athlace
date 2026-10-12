@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -69,11 +70,43 @@ const clubMenuLinks = [
   { label: 'Tous les clubs', href: '/clubs/', icon: Search },
 ];
 
+type Avail = ReturnType<typeof useAvailableDisciplines>;
+
+function SportMenuLink({
+  sport,
+  avail,
+  className,
+  onClick,
+}: {
+  sport: string;
+  avail: Avail;
+  className?: string;
+  onClick?: () => void;
+}) {
+  const id = slugifyDiscipline(sport);
+  if (!avail.isSportAvailable(id)) {
+    return (
+      <span className={cn(className, 'opacity-50 cursor-not-allowed hover:text-muted-foreground')} aria-disabled="true">
+        {sport} <span className="text-xs">· Bientôt</span>
+      </span>
+    );
+  }
+  return (
+    <Link to={`/sports/${id}/`} onClick={onClick} className={className}>
+      {sport}
+      {avail.isReady && (
+        <span className="ml-1 text-xs opacity-70">({formatClubCount(avail.sportCount(id))})</span>
+      )}
+    </Link>
+  );
+}
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const avail = useAvailableDisciplines();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -166,21 +199,22 @@ export function Header() {
                         <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto">
                           {ARBORESCENCE.map((cat) => (
                             <div key={cat.id}>
-                              <Link
-                                to={`/sports/famille/${cat.id}/`}
-                                className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
-                              >
-                                {cat.icon} {cat.name}
-                              </Link>
+                              {avail.isCategoryAvailable(cat.id) ? (
+                                <Link
+                                  to={`/sports/famille/${cat.id}/`}
+                                  className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
+                                >
+                                  {cat.icon} {cat.name}
+                                </Link>
+                              ) : (
+                                <span className="font-display font-semibold text-sm text-muted-foreground opacity-60 block mb-2">
+                                  {cat.icon} {cat.name} · Bientôt
+                                </span>
+                              )}
                               <ul className="space-y-1.5">
                                 {cat.sports.slice(0, 6).map((sport) => (
                                   <li key={sport.name}>
-                                    <Link
-                                      to={`/sports/${slugifyDiscipline(sport.name)}/`}
-                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      {sport.name}
-                                    </Link>
+                                    <SportMenuLink sport={sport.name} avail={avail} className="text-sm text-muted-foreground hover:text-foreground transition-colors" />
                                   </li>
                                 ))}
                                 {cat.sports.length > 6 && (
@@ -359,13 +393,12 @@ export function Header() {
                       <ul className="mobile-sports-list flex flex-col gap-1 px-4 pb-2">
                         {cat.sports.map((sport) => (
                           <li key={sport.name}>
-                            <Link
-                              to={`/sports/${slugifyDiscipline(sport.name)}/`}
+                            <SportMenuLink
+                              sport={sport.name}
+                              avail={avail}
                               onClick={() => setIsMenuOpen(false)}
                               className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
-                            >
-                              {sport.name}
-                            </Link>
+                            />
                           </li>
                         ))}
                         <li>

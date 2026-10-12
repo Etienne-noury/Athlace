@@ -3,8 +3,10 @@ import { Layout } from '@/components/layout/Layout';
 import { PageTitle } from '@/components/PageTitle';
 import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
 import { ArrowRight } from 'lucide-react';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 
 export default function SportsIndex() {
+  const avail = useAvailableDisciplines();
   const totalSports = ARBORESCENCE.reduce((acc, c) => acc + c.sports.length, 0);
   const totalSubs = ARBORESCENCE.reduce(
     (acc, c) => acc + c.sports.reduce((s, sport) => s + sport.subs.length, 0),
@@ -39,22 +41,43 @@ export default function SportsIndex() {
                 {categorie.icon} {categorie.name}
               </h2>
               <div className="flex flex-wrap gap-2 mb-4">
-                {categorie.sports.map((sport) => (
-                  <Link
-                    key={sport.name}
-                    to={`/sports/${slugifyDiscipline(sport.name)}/`}
-                    className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-tint-100 hover:text-primary transition-colors"
-                  >
-                    {sport.name}
-                  </Link>
-                ))}
+                {categorie.sports.map((sport) => {
+                  const id = slugifyDiscipline(sport.name);
+                  if (!avail.isSportAvailable(id)) {
+                    return (
+                      <span
+                        key={sport.name}
+                        aria-disabled="true"
+                        className="px-3 py-1 bg-muted rounded-pill text-sm text-muted-foreground opacity-60 cursor-not-allowed"
+                      >
+                        {sport.name} · Bientôt
+                      </span>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={sport.name}
+                      to={`/sports/${id}/`}
+                      className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-tint-100 hover:text-primary transition-colors"
+                    >
+                      {sport.name}
+                      {avail.isReady && (
+                        <span className="ml-1 text-muted-foreground">({formatClubCount(avail.sportCount(id))})</span>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
-              <Link
-                to={`/sports/famille/${categorie.id}/`}
-                className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-              >
-                Voir la catégorie {categorie.name} <ArrowRight className="w-4 h-4 ml-1" />
-              </Link>
+              {avail.isCategoryAvailable(categorie.id) ? (
+                <Link
+                  to={`/sports/famille/${categorie.id}/`}
+                  className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                >
+                  Voir la catégorie {categorie.name} <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              ) : (
+                <span className="text-sm text-muted-foreground">Catégorie bientôt disponible</span>
+              )}
             </div>
           ))}
         </div>

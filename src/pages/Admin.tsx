@@ -369,6 +369,10 @@ export default function Admin() {
       setClResult({ upserted, errors, lastError, ignored: [...ignored].sort(), venues, schedules, jsonErrors });
       setClRunning(false);
       refreshStats();
+      if (upserted > 0) {
+        queryClient.invalidateQueries({ queryKey: ['available-disciplines'] });
+        queryClient.invalidateQueries({ queryKey: ['site-stats'] });
+      }
     }
   };
 

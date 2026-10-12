@@ -1,4 +1,6 @@
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, MapPin, ChevronDown, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,6 +28,7 @@ export function HeroSection() {
 
   // Get parent disciplines organized by category
   const parentDisciplines = getParentDisciplines();
+  const avail = useAvailableDisciplines();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,15 +135,28 @@ export function HeroSection() {
           {/* Quick Links */}
           <div className="mt-6 flex flex-wrap justify-center gap-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <span className="text-surface-alt text-sm">Populaires :</span>
-            {parentDisciplines.slice(0, 5).map((d) => (
-              <button
-                key={d.id}
-                onClick={() => navigate(`/clubs/?discipline=${d.id}`)}
-                className="px-3 py-1.5 rounded-pill bg-glass text-cream-100 text-sm hover:bg-glass transition-colors"
-              >
-                {d.icon} {d.name}
-              </button>
-            ))}
+            {parentDisciplines.slice(0, 5).map((d) => {
+              const ok = avail.isSportAvailable(d.id);
+              return (
+                <button
+                  key={d.id}
+                  type="button"
+                  disabled={!ok}
+                  onClick={() => ok && navigate(`/clubs/?discipline=${d.id}`)}
+                  className={cn(
+                    'px-3 py-1.5 rounded-pill bg-glass text-cream-100 text-sm hover:bg-glass transition-colors',
+                    !ok && 'opacity-50 cursor-not-allowed',
+                  )}
+                >
+                  {d.icon} {d.name}
+                  {avail.isReady && (
+                    <span className="ml-1 opacity-80">
+                      · {ok ? formatClubCount(avail.sportCount(d.id)) : 'Bientôt'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
 
           </div>
         </div>

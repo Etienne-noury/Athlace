@@ -6,6 +6,7 @@ import { groupFederationsByArborescence } from '@/lib/federations-officielles';
 import { Layout } from '@/components/layout/Layout';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { fetchFederationSources, type Federation } from '@/data/federations';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
@@ -15,6 +16,7 @@ const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; 
 };
 
 export default function Federations() {
+  const avail = useAvailableDisciplines();
   const { data: federations = [], isLoading } = useQuery({
     queryKey: ['federations'],
     queryFn: fetchFederationSources,
@@ -57,6 +59,7 @@ export default function Federations() {
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sport.federations.map((fed) => {
+              const sportOk = !!sport.sportSlug && avail.isSportAvailable(sport.sportSlug);
               const meta = typeMeta[fed.type];
               const Icon = meta.icon;
               return (
@@ -69,6 +72,11 @@ export default function Federations() {
                     </div>
                   </div>
                   <p className="text-sm text-foreground mb-4 flex-1">{fed.name}</p>
+                  {avail.isReady && (
+                    <Badge variant={sportOk ? 'default' : 'secondary'} className="w-fit mb-2">
+                      {sportOk ? 'Disponible' : 'Bientôt'}
+                    </Badge>
+                  )}
                   <Badge variant="outline" className={`${meta.className} w-fit mb-4 gap-1`}>
                     <Icon className="w-3 h-3" />
                     {meta.label}
@@ -82,7 +90,7 @@ export default function Federations() {
                     Accéder à l'annuaire
                     <ExternalLink className="w-4 h-4" />
                   </a>
-                  {fed.sportSlug && (
+                  {fed.sportSlug && sportOk && (
                     <Link
                       to={`/sports/${fed.sportSlug}/`}
                       className="mt-2 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-surface-alt text-blue-500 font-medium hover:bg-tint-100 transition-colors"
