@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
 
-interface Row {
+export interface Row {
   discipline: string;
   clubs: number;
   subs: Record<string, number> | null;
@@ -22,6 +22,39 @@ export async function fetchAvailableDisciplines(): Promise<Row[]> {
   return Array.isArray(data) ? (data as unknown as Row[]) : [];
 }
 
+/** Calcule la disponibilité à partir des lignes renvoyées par available_disciplines(). */
+export function computeDisciplineAvailability(rows: Row[]) {
+  const byDisc = new Map<string, Row>();
+  for (const r of rows) byDisc.set(r.discipline, r);
+
+  const sports: Record<string, SportAvailability> = {};
+  const categories: Record<string, boolean> = {};
+  let availableSportCount = 0;
+  for (const cat of ARBORESCENCE) {
+    let catOk = false;
+    for (const sport of cat.sports) {
+      let count = 0;
+      const subTotals: Record<string, number> = {};
+      for (const m of sport.match) {
+        const row = byDisc.get(m);
+        if (!row) continue;
+        count += Number(row.clubs) || 0;
+        for (const s of sport.subs) {
+          const n = Number(row.subs?.[s]) || 0;
+          if (n > 0) subTotals[s] = (subTotals[s] ?? 0) + n;
+        }
+      }
+      sports[slugifyDiscipline(sport.name)] = { available: count > 0, count, subs: subTotals };
+      if (count > 0) {
+        catOk = true;
+        availableSportCount += 1;
+      }
+    }
+    categories[cat.id] = catOk;
+  }
+  return { sports, categories, availableSportCount };
+}
+
 /** Disponibilité des sports, sous-disciplines et catégories selon les clubs réellement en base. */
 export function useAvailableDisciplines() {
   const query = useQuery({
@@ -30,37 +63,10 @@ export function useAvailableDisciplines() {
     staleTime: 1000 * 60 * 60,
   });
 
-  const value = useMemo(() => {
-    const byDisc = new Map<string, Row>();
-    for (const r of query.data ?? []) byDisc.set(r.discipline, r);
-
-    const sports: Record<string, SportAvailability> = {};
-    const categories: Record<string, boolean> = {};
-    let availableSportCount = 0;
-    for (const cat of ARBORESCENCE) {
-      let catOk = false;
-      for (const sport of cat.sports) {
-        let count = 0;
-        const subTotals: Record<string, number> = {};
-        for (const m of sport.match) {
-          const row = byDisc.get(m);
-          if (!row) continue;
-          count += Number(row.clubs) || 0;
-          for (const s of sport.subs) {
-            const n = Number(row.subs?.[s]) || 0;
-            if (n > 0) subTotals[s] = (subTotals[s] ?? 0) + n;
-          }
-        }
-        sports[slugifyDiscipline(sport.name)] = { available: count > 0, count, subs: subTotals };
-        if (count > 0) {
-          catOk = true;
-          availableSportCount += 1;
-        }
-      }
-      categories[cat.id] = catOk;
-    }
-    return { sports, categories, availableSportCount };
-  }, [query.data]);
+  const value = useMemo(
+    () => computeDisciplineAvailability(query.data ?? []),
+    [query.data],
+  );
 
   const isReady = !!query.data;
   const getSport = (sportId?: string | null): SportAvailability =>
