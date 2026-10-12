@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, MapPin, Star, ArrowRight, Grid3X3, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
+import { Search, MapPin, ArrowRight, Grid3X3, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
+import { ClubCardVisual, ClubCardBody } from '@/components/clubs/ClubCardContent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -317,50 +318,19 @@ export default function Recherche() {
                       "bg-card rounded-2xl border border-border overflow-hidden card-hover",
                       viewMode === 'list' && 'flex'
                     )}>
-                      {/* Image */}
-                      <div className={cn(
-                        "bg-tint-100 relative",
-                        viewMode === 'grid' ? 'aspect-[4/3]' : 'w-48 h-32 flex-shrink-0'
-                      )}>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-4xl opacity-50">
-                            {disciplines.find(d => d.id === club.discipline)?.icon || '🏆'}
-                          </span>
-                        </div>
-                        {club.rating > 0 && (
-                          <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface backdrop-blur-sm rounded-pill px-2 py-1">
-                            <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
-                            <span className="text-sm font-semibold">{club.rating}</span>
-                          </div>
-                        )}
+                      <ClubCardVisual
+                        club={club}
+                        className={viewMode === 'grid' ? 'aspect-[4/3]' : 'w-48 h-32 flex-shrink-0'}
+                      >
                         <FavoriteButton
                           clubId={club.id}
                           className="absolute top-3 left-3 px-2 py-2 shadow-sm"
                         />
-                      </div>
+                      </ClubCardVisual>
 
                       {/* Content */}
                       <div className="p-5 flex-1">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <p className="text-sm text-primary font-medium">
-                            {club.disciplineName}
-                          </p>
-                          {(() => {
-                            const fed = getFederationForDiscipline(club.discipline, federationSources);
-                            return fed ? (
-                              <Badge variant="outline" className="text-micro gap-1 px-1.5 py-0">
-                                <span aria-hidden>{fed.icon}</span> {fed.code}
-                              </Badge>
-                            ) : null;
-                          })()}
-                        </div>
-                        <h3 className="font-display font-semibold text-lg text-foreground mb-2 line-clamp-2">
-                          {club.name}
-                        </h3>
-                        <div className="flex items-center gap-1 text-muted-foreground text-sm mb-4">
-                          <MapPin className="w-4 h-4" />
-                          <span>{[club.city, club.region].filter(Boolean).join(', ')}</span>
-                        </div>
+                        <div className="mb-4"><ClubCardBody club={club} /></div>
                         <div className="flex items-center justify-end pt-4 border-t border-border">
                           <div className="w-10 h-10 rounded-pill bg-tint-100 flex items-center justify-center">
                             <ArrowRight className="w-5 h-5 text-primary" />
