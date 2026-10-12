@@ -2,9 +2,8 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Map } from 'lucide-react';
+import { MapPin, ChevronDown, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -12,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { getParentDisciplines } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
@@ -83,16 +83,14 @@ export function HeroSection() {
             <div className="bg-surface rounded-2xl p-3 shadow-sm">
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
-                <div className="flex-1 min-w-0 lg:min-w-[220px] relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Ville, code postal ou nom de club..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 h-14 text-base border-0 bg-muted focus-visible:ring-primary"
-                  />
-                </div>
+                <SearchAutocomplete
+                  className="flex-1 min-w-0 lg:min-w-[220px]"
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
+                  placeholder="Ville, code postal, sport ou club..."
+                  inputClassName="pl-12 h-14 text-base border-0 bg-muted focus-visible:ring-primary"
+                />
 
                 {/* Discipline Filter (sport + sous-discipline) */}
                 <DisciplineFilter

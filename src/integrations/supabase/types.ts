@@ -938,6 +938,23 @@ export type Database = {
           subs: Json
         }[]
       }
+      clubs_near: {
+        Args: {
+          p_disciplines?: string[]
+          p_lat: number
+          p_limit?: number
+          p_lng: number
+          p_offset?: number
+          p_radius_km?: number
+          p_region?: string
+          p_sub?: string
+        }
+        Returns: {
+          club: Json
+          distance_km: number
+          total: number
+        }[]
+      }
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
       get_club_contact: {
         Args: { p_club_id: string }
