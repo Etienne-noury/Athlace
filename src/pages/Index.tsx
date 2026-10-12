@@ -18,15 +18,15 @@ const Index = () => {
       <PageTitle
         description={
           isReady
-            ? `Trouvez, comparez et inscrivez-vous parmi ${formatCount(stats.clubs)} clubs sportifs en France, issus de ${stats.federations_covered} fédérations sportives agréées.`
-            : 'Trouvez, comparez et inscrivez-vous dans les clubs sportifs de France, toutes disciplines confondues.'
+            ? `Trouvez et comparez ${formatCount(stats.clubs)} clubs sportifs en France, issus de ${stats.federations_covered} fédérations sportives agréées — et bientôt inscrivez-vous en ligne.`
+            : 'Trouvez et comparez les clubs sportifs de France, toutes fédérations agréées confondues — et bientôt inscrivez-vous en ligne.'
         }
       />
       <HeroSection />
-      <InteractiveMapSection />
-      <PopularDisciplines />
-      <FeaturedClubs />
       <StatsSection />
+      <PopularDisciplines />
+      <InteractiveMapSection />
+      <FeaturedClubs />
       <CTASection />
     </Layout>
   );
