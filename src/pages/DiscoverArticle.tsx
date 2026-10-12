@@ -60,7 +60,7 @@ export default function DiscoverArticle() {
               Guide des licences fédérales
             </h1>
             <p className="text-muted-foreground text-lg">
-              {total || stats.federations} fédérations sportives agréées par le Ministère des Sports.
+              {total || stats.federations_total} fédérations sportives agréées par le Ministère des Sports.
             </p>
             <p className="text-sm text-muted-foreground mt-1">Mise à jour : {updatedAt}</p>
           </div>
