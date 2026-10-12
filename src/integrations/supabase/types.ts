@@ -154,6 +154,7 @@ export type Database = {
           claimed_by_club: boolean
           colors: string | null
           committee: string | null
+          competition_categories: string[] | null
           competitions: string[] | null
           created_at: string
           creation_date: string | null
@@ -216,6 +217,7 @@ export type Database = {
           claimed_by_club?: boolean
           colors?: string | null
           committee?: string | null
+          competition_categories?: string[] | null
           competitions?: string[] | null
           created_at?: string
           creation_date?: string | null
@@ -278,6 +280,7 @@ export type Database = {
           claimed_by_club?: boolean
           colors?: string | null
           committee?: string | null
+          competition_categories?: string[] | null
           competitions?: string[] | null
           created_at?: string
           creation_date?: string | null
@@ -642,6 +645,7 @@ export type Database = {
           claimed_by_club: boolean | null
           colors: string | null
           committee: string | null
+          competition_categories: string[] | null
           competitions: string[] | null
           created_at: string | null
           creation_date: string | null
@@ -702,6 +706,7 @@ export type Database = {
           claimed_by_club?: boolean | null
           colors?: string | null
           committee?: string | null
+          competition_categories?: string[] | null
           competitions?: string[] | null
           created_at?: string | null
           creation_date?: string | null
@@ -762,6 +767,7 @@ export type Database = {
           claimed_by_club?: boolean | null
           colors?: string | null
           committee?: string | null
+          competition_categories?: string[] | null
           competitions?: string[] | null
           created_at?: string | null
           creation_date?: string | null
