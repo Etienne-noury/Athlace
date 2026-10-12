@@ -7,7 +7,6 @@ import { Redirect, FootballClubRedirect, ClubLegacyRedirect } from "./components
 import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Recherche from "./pages/Recherche";
-import Disciplines from "./pages/Disciplines";
 import ClubDetail from "./pages/ClubDetail";
 import Carte from "./pages/Carte";
 import Aide from "./pages/Aide";
