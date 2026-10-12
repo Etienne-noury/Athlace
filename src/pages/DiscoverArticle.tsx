@@ -15,10 +15,12 @@ import {
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { fetchFederationsByCategorie } from '@/lib/federations-officielles';
 import { useSiteStats } from '@/hooks/useSiteStats';
+import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 
 export default function DiscoverArticle() {
   const { slug } = useParams<{ slug: string }>();
   const { stats } = useSiteStats();
+  const avail = useAvailableDisciplines();
 
   const title = useMemo(() => {
     if (slug === 'guide-licences-federations') return 'Guide des licences fédérales';
@@ -102,7 +104,14 @@ export default function DiscoverArticle() {
                                   <CardContent className="p-5">
                                     <div className="flex items-start justify-between gap-3">
                                       <h4 className="font-display text-base font-semibold">{fed.nom}</h4>
-                                      {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
+                                      <div className="flex flex-wrap gap-1 justify-end">
+                                        {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
+                                        {avail.isReady && (
+                                          <Badge variant={sport.sportSlug && avail.isSportAvailable(sport.sportSlug) ? 'default' : 'secondary'}>
+                                            {sport.sportSlug && avail.isSportAvailable(sport.sportSlug) ? 'Disponible' : 'Bientôt'}
+                                          </Badge>
+                                        )}
+                                      </div>
                                     </div>
                                     <div className="mt-4 flex flex-wrap gap-2">
                                       <Button variant="outline" size="sm" asChild>
@@ -110,7 +119,7 @@ export default function DiscoverArticle() {
                                           Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
                                         </a>
                                       </Button>
-                                      {sport.sportSlug && (
+                                      {sport.sportSlug && avail.isSportAvailable(sport.sportSlug) && (
                                         <Button variant="secondary" size="sm" asChild>
                                           <Link to={`/sports/${sport.sportSlug}/`}>Voir le sport {sport.sportName}</Link>
                                         </Button>
