@@ -92,6 +92,13 @@
       "when": 1791832648692,
       "tag": "0012_add_clubs_dance_photo_video_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791832696792,
+      "tag": "0013_add_clubs_trainings_fleet_opening_hours_columns",
+      "breakpoints": true
     }
   ]
 }
