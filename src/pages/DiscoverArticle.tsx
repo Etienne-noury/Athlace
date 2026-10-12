@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { FEDERATION_CATEGORIES, fetchFederationsByCategorie } from '@/lib/federations-officielles';
+import { fetchFederationsByCategorie } from '@/lib/federations-officielles';
 import { useSiteStats } from '@/hooks/useSiteStats';
 
 export default function DiscoverArticle() {
@@ -38,7 +38,7 @@ export default function DiscoverArticle() {
   });
 
   if (slug === 'guide-licences-federations') {
-    const total = Object.values(data ?? {}).reduce((acc, list) => acc + list.length, 0);
+    const total = (data ?? []).reduce((acc, c) => acc + c.sports.reduce((n, s) => n + s.federations.length, 0), 0);
     const updatedAt = new Date().toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
@@ -71,37 +71,54 @@ export default function DiscoverArticle() {
             </div>
           ) : (
             <Accordion type="multiple" className="space-y-3">
-              {FEDERATION_CATEGORIES.map((categorie) => {
-                const feds = data?.[categorie] ?? [];
-                if (feds.length === 0) return null;
+              {(data ?? []).map((categorie) => {
+                const count = categorie.sports.reduce((n, sp) => n + sp.federations.length, 0);
                 return (
                   <AccordionItem
-                    key={categorie}
-                    value={categorie}
+                    key={categorie.id}
+                    value={categorie.id}
                     className="border border-border rounded-xl px-4 bg-card"
                   >
                     <AccordionTrigger className="hover:no-underline">
                       <span className="flex items-center gap-3 text-left">
-                        <span className="font-display font-semibold text-lg">{categorie}</span>
-                        <Badge variant="secondary">{feds.length}</Badge>
+                        <span className="font-display font-semibold text-lg">
+                          {categorie.icon} {categorie.name}
+                        </span>
+                        <Badge variant="secondary">{count}</Badge>
                       </span>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
-                        {feds.map((fed) => (
-                          <Card key={fed.id} className="hover:border-border transition-colors">
-                            <CardContent className="p-5">
-                              <div className="flex items-start justify-between gap-3">
-                                <h2 className="font-display text-base font-semibold">{fed.nom}</h2>
-                                {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
-                              </div>
-                              <Button variant="outline" size="sm" className="mt-4" asChild>
-                                <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
-                                  Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
-                                </a>
-                              </Button>
-                            </CardContent>
-                          </Card>
+                      <div className="space-y-6 pb-2">
+                        {categorie.sports.map((sport) => (
+                          <div key={sport.sportName}>
+                            <h3 className="font-display font-semibold text-foreground mb-3">
+                              {sport.sportIcon} {sport.sportName}
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {sport.federations.map((fed) => (
+                                <Card key={fed.id} className="hover:border-border transition-colors">
+                                  <CardContent className="p-5">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <h4 className="font-display text-base font-semibold">{fed.nom}</h4>
+                                      {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
+                                    </div>
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                      <Button variant="outline" size="sm" asChild>
+                                        <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
+                                          Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
+                                        </a>
+                                      </Button>
+                                      {sport.sportSlug && (
+                                        <Button variant="secondary" size="sm" asChild>
+                                          <Link to={`/sports/${sport.sportSlug}/`}>Voir le sport {sport.sportName}</Link>
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </AccordionContent>
