@@ -14,6 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
+      club_schedules: {
+        Row: {
+          category: string | null
+          club_id: string
+          created_at: string | null
+          day: string | null
+          discipline: string | null
+          end_time: string | null
+          id: string
+          level: string | null
+          notes: string | null
+          start_time: string | null
+          title: string | null
+          venue_name: string | null
+        }
+        Insert: {
+          category?: string | null
+          club_id: string
+          created_at?: string | null
+          day?: string | null
+          discipline?: string | null
+          end_time?: string | null
+          id?: string
+          level?: string | null
+          notes?: string | null
+          start_time?: string | null
+          title?: string | null
+          venue_name?: string | null
+        }
+        Update: {
+          category?: string | null
+          club_id?: string
+          created_at?: string | null
+          day?: string | null
+          discipline?: string | null
+          end_time?: string | null
+          id?: string
+          level?: string | null
+          notes?: string | null
+          start_time?: string | null
+          title?: string | null
+          venue_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_schedules_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_schedules_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_venues: {
+        Row: {
+          accessibility: string[] | null
+          address: string | null
+          address_complement: string | null
+          amenities: string[] | null
+          city: string | null
+          club_id: string
+          created_at: string | null
+          id: string
+          is_main: boolean | null
+          kind: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string | null
+          postal_code: string | null
+        }
+        Insert: {
+          accessibility?: string[] | null
+          address?: string | null
+          address_complement?: string | null
+          amenities?: string[] | null
+          city?: string | null
+          club_id: string
+          created_at?: string | null
+          id?: string
+          is_main?: boolean | null
+          kind?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          postal_code?: string | null
+        }
+        Update: {
+          accessibility?: string[] | null
+          address?: string | null
+          address_complement?: string | null
+          amenities?: string[] | null
+          city?: string | null
+          club_id?: string
+          created_at?: string | null
+          id?: string
+          is_main?: boolean | null
+          kind?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          postal_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_venues_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_venues_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clubs: {
         Row: {
           address: string | null
