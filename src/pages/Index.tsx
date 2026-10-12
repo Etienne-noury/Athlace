@@ -2,6 +2,7 @@ import { Layout } from '@/components/layout/Layout';
 import { PageTitle } from '@/components/PageTitle';
 import { HeroSection } from '@/components/home/HeroSection';
 import { InteractiveMapSection } from '@/components/home/InteractiveMapSection';
+import { ClubDataSection } from '@/components/home/ClubDataSection';
 import { PopularDisciplines } from '@/components/home/PopularDisciplines';
 import { FeaturedClubs } from '@/components/home/FeaturedClubs';
 import { StatsSection } from '@/components/home/StatsSection';
@@ -26,6 +27,7 @@ const Index = () => {
       <StatsSection />
       <PopularDisciplines />
       <InteractiveMapSection />
+      <ClubDataSection />
       <FeaturedClubs />
       <CTASection />
     </Layout>
