@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -5,11 +6,13 @@ import type { EnrichedClub } from '@/lib/api/enriched-clubs';
 
 /** Visuel d'une carte club : logo réel s'il existe, sinon icône du sport. */
 export function ClubCardVisual({ club, className, children }: { club: EnrichedClub; className?: string; children?: React.ReactNode }) {
+  const [broken, setBroken] = useState(false);
+  const logo = club.logoUrl && !broken ? club.logoUrl : null;
   return (
-    <div className={cn('relative', club.logoUrl ? 'bg-card' : 'bg-tint-100', className)}>
+    <div className={cn('relative', logo ? 'bg-card' : 'bg-tint-100', className)}>
       <div className="absolute inset-0 flex items-center justify-center p-4">
-        {club.logoUrl ? (
-          <img src={club.logoUrl} alt={`Logo de ${club.name}`} loading="lazy" className="max-w-full max-h-full object-contain" />
+        {logo ? (
+          <img src={logo} onError={() => setBroken(true)} alt={`Logo de ${club.name}`} loading="lazy" className="max-w-full max-h-full object-contain" />
         ) : (
           <span className="text-5xl opacity-50" aria-hidden>{club.icon}</span>
         )}
