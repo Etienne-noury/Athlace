@@ -47,7 +47,7 @@ export function useSiteStats() {
   });
 
   return {
-    stats: query.data ?? EMPTY,
+    stats: { ...EMPTY, ...(query.data ?? {}) },
     isLoading: query.isLoading,
     isReady: !!query.data,
   };
