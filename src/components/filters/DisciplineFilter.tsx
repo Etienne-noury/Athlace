@@ -17,6 +17,7 @@ import {
   getSubDisciplines,
   slugifyDiscipline,
 } from '@/data/disciplines';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 
 interface DisciplineFilterProps {
   sport: string;
@@ -46,7 +47,10 @@ export function DisciplineFilter({
   const [subOpen, setSubOpen] = useState(false);
 
   const selectedSport = sport !== 'all' ? getDisciplineById(sport) : undefined;
-  const subs = selectedSport ? getSubDisciplines(selectedSport.id) : [];
+  const avail = useAvailableDisciplines();
+  const subs = selectedSport
+    ? getSubDisciplines(selectedSport.id).filter((d) => avail.isSubAvailable(selectedSport.id, d.name))
+    : [];
   const selectedSub = sub !== 'all' ? getDisciplineById(sub) : undefined;
 
   const selectSport = (value: string) => {
@@ -116,11 +120,15 @@ export function DisciplineFilter({
                   <CommandGroup key={cat.id} heading={`${cat.icon} ${cat.name}`}>
                     {cat.sports.map((s) => {
                       const sportId = slugifyDiscipline(s.name);
+                      const ok = avail.isSportAvailable(sportId);
                       return (
                         <CommandItem
                           key={sportId}
                           value={`${s.name} ${cat.name}`}
-                          onSelect={() => selectSport(sportId)}
+                          disabled={!ok}
+                          aria-disabled={!ok}
+                          className={cn(!ok && 'opacity-50')}
+                          onSelect={() => ok && selectSport(sportId)}
                         >
                           <Check
                             className={cn(
@@ -129,7 +137,12 @@ export function DisciplineFilter({
                             )}
                           />
                           <span className="mr-2">{s.icon}</span>
-                          {s.name}
+                          <span className="flex-1 truncate">{s.name}</span>
+                          {avail.isReady && (
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              {ok ? formatClubCount(avail.sportCount(sportId)) : 'Bientôt'}
+                            </span>
+                          )}
                         </CommandItem>
                       );
                     })}
