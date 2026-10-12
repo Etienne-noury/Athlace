@@ -28,6 +28,9 @@ import { regions } from '@/data/clubs';
 import { disciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
+import { fetchClubsNear, resolveCity } from '@/lib/api/geo-search';
+import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
+import type { Club } from '@/data/clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 
@@ -55,9 +58,35 @@ export default function Recherche() {
     setSearchParams(next, { replace: true });
   }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, setSearchParams]);
 
-  const { data: searchResult = { clubs: [], total: 0 }, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, selectedRegion, page],
-    queryFn: async () => {
+  // Si la saisie correspond à une commune, on cherche les clubs autour (rayon élargi si besoin).
+  const { data: nearCity = null, isFetching: cityFetching } = useQuery({
+    queryKey: ['resolve-city', searchQuery.trim().toLowerCase()],
+    queryFn: () => resolveCity(searchQuery),
+    enabled: searchQuery.trim().length >= 2,
+    staleTime: 60 * 60 * 1000,
+  });
+  const cityReady = searchQuery.trim().length < 2 || !cityFetching;
+  const [nearRadius, setNearRadius] = useState<number | undefined>(undefined);
+  useEffect(() => { setNearRadius(undefined); }, [nearCity, selectedDiscipline, selectedSub, selectedRegion]);
+
+  const { data: searchResult = { clubs: [], total: 0 } as { clubs: Club[]; total: number; radiusKm?: number }, isLoading, isFetching } = useQuery({
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, selectedRegion, page, nearCity?.lat, nearCity?.lng],
+    enabled: cityReady,
+    queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
+      if (nearCity) {
+        const r = await fetchClubsNear({
+          lat: nearCity.lat,
+          lng: nearCity.lng,
+          disciplines: getDisciplineQueryNames(selectedDiscipline),
+          sub: getSubDisciplineValue(selectedDiscipline, selectedSub),
+          region: selectedRegion,
+          limit: 100,
+          offset: page * 100,
+          radiusKm: page > 0 ? nearRadius : undefined,
+        });
+        if (page === 0) setNearRadius(r.radiusKm);
+        return r;
+      }
       return fetchEnrichedClubs({
         q: searchQuery,
         disciplines: getDisciplineQueryNames(selectedDiscipline),
@@ -105,6 +134,7 @@ export default function Recherche() {
           </h1>
           <p className="text-muted-foreground text-lg">
             {totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}
+            {nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour de ${nearCity.name}` : ''}
           </p>
 
         </div>
@@ -156,15 +186,14 @@ export default function Recherche() {
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Recherche
                     </label>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Ville, code postal..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
+                    <SearchAutocomplete
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
+                      placeholder="Ville, code postal, sport..."
+                      iconClassName="left-3 h-4 w-4"
+                      inputClassName="pl-10"
+                    />
                   </div>
 
                   {/* Discipline (2 niveaux) */}
@@ -227,10 +256,13 @@ export default function Recherche() {
                 {/* Same filters as sidebar */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">Recherche</label>
-                  <Input
-                    placeholder="Ville, code postal..."
+                  <SearchAutocomplete
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={setSearchQuery}
+                    onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
+                    placeholder="Ville, code postal, sport..."
+                    iconClassName="left-3 h-4 w-4"
+                    inputClassName="pl-10"
                   />
                 </div>
                 <DisciplineFilter
