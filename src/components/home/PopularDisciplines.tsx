@@ -3,9 +3,11 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getPopularDisciplines, categories } from '@/data/disciplines';
 import { cn } from '@/lib/utils';
+import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 
 export function PopularDisciplines() {
   const disciplines = getPopularDisciplines(8);
+  const avail = useAvailableDisciplines();
 
   return (
     <section className="py-16 lg:py-24 bg-background">
@@ -31,13 +33,9 @@ export function PopularDisciplines() {
 
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-          {disciplines.map((discipline, index) => (
-            <Link
-              key={discipline.id}
-              to={`/sports/${discipline.id}/`}
-              className="group"
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
+          {disciplines.map((discipline, index) => {
+            const ok = avail.isSportAvailable(discipline.id);
+            const card = (
 
               <div className="relative bg-card rounded-2xl p-6 border border-border card-hover overflow-hidden">
                 {/* Background gradient */}
@@ -57,6 +55,11 @@ export function PopularDisciplines() {
                   <p className="text-sm text-muted-foreground">
                     {categories[discipline.category]?.name || 'Sport'}
                   </p>
+                  {avail.isReady && (
+                    <p className="text-xs font-medium text-muted-foreground mt-1">
+                      {ok ? `${formatClubCount(avail.sportCount(discipline.id))} clubs` : 'Bientôt'}
+                    </p>
+                  )}
                 </div>
 
                 {/* Arrow */}
@@ -64,8 +67,22 @@ export function PopularDisciplines() {
                   <ArrowRight className="w-4 h-4 text-primary" />
                 </div>
               </div>
-            </Link>
-          ))}
+            );
+            return ok ? (
+              <Link
+                key={discipline.id}
+                to={`/sports/${discipline.id}/`}
+                className="group"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                {card}
+              </Link>
+            ) : (
+              <div key={discipline.id} aria-disabled="true" className="opacity-50 cursor-not-allowed">
+                {card}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
