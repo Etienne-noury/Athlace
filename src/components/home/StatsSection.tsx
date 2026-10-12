@@ -1,4 +1,4 @@
-import { MapPin, Trophy, Map, Activity } from 'lucide-react';
+import { MapPin, Map, Activity } from 'lucide-react';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { formatCount, formatExact } from '@/lib/format-stats';
@@ -13,12 +13,6 @@ export function StatsSection() {
       value: isReady ? formatCount(stats.clubs) : null,
       label: 'Clubs référencés',
       description: 'Données publiques officielles',
-    },
-    {
-      icon: Trophy,
-      value: isReady ? `${formatExact(stats.federations_covered)} / ${formatExact(stats.federations_total)}` : null,
-      label: 'Fédérations couvertes',
-      description: 'Fédérations françaises agréées',
     },
     {
       icon: Map,
@@ -41,7 +35,7 @@ export function StatsSection() {
   return (
     <section className="py-16 lg:py-20 bg-foreground text-background">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12">
           {items.map((stat, index) => (
             <div
               key={stat.label}
