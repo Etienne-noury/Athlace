@@ -1,4 +1,4 @@
-import { MapPin, Trophy, Map, Database } from 'lucide-react';
+import { MapPin, Trophy, Map, Clock } from 'lucide-react';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { formatCount, formatExact } from '@/lib/format-stats';
 
@@ -14,8 +14,8 @@ export function StatsSection() {
     },
     {
       icon: Trophy,
-      value: isReady ? formatExact(stats.federations) : null,
-      label: 'Fédérations sportives',
+      value: isReady ? `${formatExact(stats.federations_covered)} / ${formatExact(stats.federations_total)}` : null,
+      label: 'Fédérations couvertes',
       description: 'Fédérations françaises agréées',
     },
     {
@@ -25,12 +25,16 @@ export function StatsSection() {
       description: 'Métropole et Outre-mer',
     },
     {
-      icon: Database,
-      value: '100%',
-      label: 'Données ouvertes',
-      description: 'Open data gouvernemental',
+      icon: Clock,
+      value: isReady ? formatExact(stats.schedules) : null,
+      label: 'Créneaux horaires',
+      description: 'Horaires d\'entraînement publiés',
     },
   ];
+
+  const lastUpdate = stats.last_update
+    ? new Date(stats.last_update).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
 
   return (
     <section className="py-16 lg:py-20 bg-foreground text-background">
@@ -61,6 +65,10 @@ export function StatsSection() {
             </div>
           ))}
         </div>
+        <p className="mt-10 text-center text-sm text-background">
+          Source : annuaires officiels des fédérations agréées
+          {lastUpdate && ` · mis à jour le ${lastUpdate}`}
+        </p>
       </div>
     </section>
   );
