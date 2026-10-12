@@ -140,6 +140,33 @@ export type Database = {
           },
         ]
       }
+      club_waitlist: {
+        Row: {
+          club_name: string
+          created_at: string
+          email: string
+          id: string
+          members_estimate: string | null
+          sport: string | null
+        }
+        Insert: {
+          club_name: string
+          created_at?: string
+          email: string
+          id?: string
+          members_estimate?: string | null
+          sport?: string | null
+        }
+        Update: {
+          club_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          members_estimate?: string | null
+          sport?: string | null
+        }
+        Relationships: []
+      }
       clubs: {
         Row: {
           access_conditions: string[] | null
