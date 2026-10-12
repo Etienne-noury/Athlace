@@ -134,7 +134,7 @@ export const ARBORESCENCE: CategoryNode[] = [
     color: "bg-blue-500",
     icon: "🏔️",
     sports: [
-      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Randonnée Pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Cyclotourisme","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"]},
+      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Cyclotourisme","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"]},
       {"name":"Escalade","icon":"🧗","popularity":7,"feds":["FFME"],"match":["Montagne et escalade","Escalade"],"subs":[]},
       {"name":"Alpinisme et montagne","icon":"⛰️","popularity":5,"feds":["FFCAM"],"match":["Clubs alpins et de montagne","Alpinisme et montagne"],"subs":[]},
       {"name":"Spéléologie","icon":"🕳️","popularity":2,"feds":["FFS"],"match":["Spéléologie"],"subs":[]},
