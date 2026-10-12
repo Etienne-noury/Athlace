@@ -494,6 +494,14 @@ export type Database = {
           phone: string
         }[]
       }
+      get_clubs_columns: {
+        Args: never
+        Returns: {
+          column_name: string
+          data_type: string
+          udt_name: string
+        }[]
+      }
       map_club_clusters: {
         Args: {
           p_disciplines?: string[]

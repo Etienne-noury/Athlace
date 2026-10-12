@@ -73,6 +73,45 @@ function parseArray(v: unknown): string[] | null {
   return out;
 }
 
+function convert(v: unknown, dataType: string, udt: string): unknown {
+  if (dataType === "ARRAY") {
+    if (Array.isArray(v)) return parseArray(v);
+    const s = str(v);
+    if (s === null) return null;
+    if (s.startsWith("{")) return parseArray(s);
+    return s.split(";").map((x) => x.trim()).filter(Boolean);
+  }
+  const s = str(v);
+  if (s === null) return null;
+  if (["integer", "bigint", "smallint"].includes(dataType)) {
+    const n = Number(s.replace(",", "."));
+    return Number.isFinite(n) ? Math.trunc(n) : null;
+  }
+  if (["numeric", "double precision", "real"].includes(dataType)) {
+    const n = Number(s.replace(",", "."));
+    return Number.isFinite(n) ? n : null;
+  }
+  if (dataType === "boolean") {
+    const b = s.toLowerCase();
+    if (["true", "oui", "1", "t", "yes"].includes(b)) return true;
+    if (["false", "non", "0", "f", "no"].includes(b)) return false;
+    return null;
+  }
+  if (dataType === "date") {
+    const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    const iso = m ? `${m[3]}-${m[2]}-${m[1]}` : s.slice(0, 10);
+    return /^\d{4}-\d{2}-\d{2}$/.test(iso) && !isNaN(Date.parse(iso)) ? iso : null;
+  }
+  void udt;
+  return s;
+}
+
+// Columns handled by the dedicated logic below (or managed server-side).
+const RESERVED = new Set([
+  "id", "created_at", "updated_at", "federation_code", "external_id", "name", "discipline",
+  "postal_code", "department_code", "region", "latitude", "longitude", "position_checked_at",
+]);
+
 function deptFromPostal(cp: string | null): string | null {
   if (!cp) return null;
   const c = cp.replace(/\s/g, "");
@@ -92,7 +131,7 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const rows: Raw[] = Array.isArray(body?.rows) ? body.rows : [];
     if (rows.length === 0) {
-      return new Response(JSON.stringify({ received: 0, cleaned: 0, upserted: 0, errors: [] }), {
+      return new Response(JSON.stringify({ received: 0, cleaned: 0, upserted: 0, errors: [], ignored_columns: [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -101,6 +140,21 @@ Deno.serve(async (req) => {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const { data: colRows, error: colErr } = await supabase.rpc("get_clubs_columns");
+    if (colErr) throw new Error(`Lecture des colonnes impossible: ${colErr.message}`);
+    const columns = new Map<string, { data_type: string; udt_name: string }>();
+    for (const c of (colRows ?? []) as Array<{ column_name: string; data_type: string; udt_name: string }>) {
+      columns.set(c.column_name, c);
+    }
+    const ignored = new Set<string>();
+    for (const r of rows) {
+      if (r && typeof r === "object") for (const k of Object.keys(r)) if (!columns.has(k)) ignored.add(k);
     }
 
     const now = new Date().toISOString();
@@ -135,36 +189,27 @@ Deno.serve(async (req) => {
       if (!isOverseas && longitude !== null &&
           (longitude < -5.5 || longitude > 10)) longitude = null;
 
+      const generic: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(r)) {
+        const col = columns.get(k);
+        if (!col || RESERVED.has(k)) continue;
+        generic[k] = convert(v, col.data_type, col.udt_name);
+      }
+
       cleaned.push({
+        ...generic,
         federation_code,
         external_id,
         name,
         discipline,
-        sub_disciplines: parseArray(r.sub_disciplines),
-        level: str(r.level),
-        address: str(r.address),
-        address_complement: str(r.address_complement),
         postal_code,
-        city: str(r.city),
         department_code,
         region,
         latitude,
         longitude,
-        phone: str(r.phone),
-        email: str(r.email),
-        website: str(r.website),
-        description: str(r.description),
-        creation_date: str(r.creation_date),
-        source_url: str(r.source_url),
-        scraped_at: str(r.scraped_at),
         updated_at: now,
       });
     }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
 
     const errors: string[] = [];
     let upserted = 0;
@@ -194,7 +239,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ received: rows.length, cleaned: cleaned.length, upserted, errors }),
+      JSON.stringify({ received: rows.length, cleaned: cleaned.length, upserted, errors, ignored_columns: [...ignored].sort() }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
