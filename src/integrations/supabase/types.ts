@@ -160,6 +160,7 @@ export type Database = {
           courses: string[] | null
           created_at: string
           creation_date: string | null
+          dance_families: string[] | null
           department_code: string | null
           description: string | null
           discipline: string
@@ -192,6 +193,7 @@ export type Database = {
           outing_durations: string[] | null
           outing_places: string[] | null
           phone: string | null
+          photo_urls: string[] | null
           position_checked_at: string | null
           postal_code: string | null
           practice_info: string | null
@@ -209,6 +211,7 @@ export type Database = {
           transports: string[] | null
           twitter_url: string | null
           updated_at: string
+          video_url: string | null
           website: string | null
           youtube_url: string | null
         }
@@ -231,6 +234,7 @@ export type Database = {
           courses?: string[] | null
           created_at?: string
           creation_date?: string | null
+          dance_families?: string[] | null
           department_code?: string | null
           description?: string | null
           discipline: string
@@ -263,6 +267,7 @@ export type Database = {
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
+          photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -280,6 +285,7 @@ export type Database = {
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
+          video_url?: string | null
           website?: string | null
           youtube_url?: string | null
         }
@@ -302,6 +308,7 @@ export type Database = {
           courses?: string[] | null
           created_at?: string
           creation_date?: string | null
+          dance_families?: string[] | null
           department_code?: string | null
           description?: string | null
           discipline?: string
@@ -334,6 +341,7 @@ export type Database = {
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
+          photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -351,6 +359,7 @@ export type Database = {
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string
+          video_url?: string | null
           website?: string | null
           youtube_url?: string | null
         }
@@ -675,6 +684,7 @@ export type Database = {
           courses: string[] | null
           created_at: string | null
           creation_date: string | null
+          dance_families: string[] | null
           department_code: string | null
           description: string | null
           discipline: string | null
@@ -705,6 +715,7 @@ export type Database = {
           name: string | null
           outing_durations: string[] | null
           outing_places: string[] | null
+          photo_urls: string[] | null
           position_checked_at: string | null
           postal_code: string | null
           practice_info: string | null
@@ -722,6 +733,7 @@ export type Database = {
           transports: string[] | null
           twitter_url: string | null
           updated_at: string | null
+          video_url: string | null
           website: string | null
           youtube_url: string | null
         }
@@ -744,6 +756,7 @@ export type Database = {
           courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
+          dance_families?: string[] | null
           department_code?: string | null
           description?: string | null
           discipline?: string | null
@@ -774,6 +787,7 @@ export type Database = {
           name?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
+          photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -791,6 +805,7 @@ export type Database = {
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
+          video_url?: string | null
           website?: string | null
           youtube_url?: string | null
         }
@@ -813,6 +828,7 @@ export type Database = {
           courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
+          dance_families?: string[] | null
           department_code?: string | null
           description?: string | null
           discipline?: string | null
@@ -843,6 +859,7 @@ export type Database = {
           name?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
+          photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
@@ -860,6 +877,7 @@ export type Database = {
           transports?: string[] | null
           twitter_url?: string | null
           updated_at?: string | null
+          video_url?: string | null
           website?: string | null
           youtube_url?: string | null
         }
