@@ -59,7 +59,7 @@ export function useAvailableDisciplines() {
       }
       categories[cat.id] = catOk;
     }
-    return { sports, categories };
+    return { sports, categories, availableSportCount };
   }, [query.data]);
 
   const isReady = !!query.data;
@@ -75,6 +75,8 @@ export function useAvailableDisciplines() {
     isSubAvailable: (sportId: string, subName: string) =>
       !isReady || (getSport(sportId).subs[subName] ?? 0) > 0,
     isCategoryAvailable: (catId: string) => !isReady || !!value.categories[catId],
+    /** Nombre de sports ayant au moins un club en base. */
+    availableSportCount: value.availableSportCount,
   };
 }
 
