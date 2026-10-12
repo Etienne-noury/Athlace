@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, UserPlus, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SoonBadge } from '@/components/ui/SoonBadge';
 
 export function CTASection() {
   return (
@@ -23,12 +22,8 @@ export function CTASection() {
                 Vous êtes sportif ?
               </h3>
               
-               <p className="text-surface-alt text-lg mb-3 leading-relaxed">
-                Créez votre compte gratuit pour sauvegarder vos clubs favoris.
-              </p>
-              <p className="flex flex-wrap items-center gap-2 text-surface-alt text-sm mb-8 leading-relaxed">
-                <SoonBadge className="border-transparent bg-cream-100 text-blue-700 text-xs" />
-                Suivi de vos inscriptions et recommandations personnalisées
+              <p className="text-surface-alt text-lg mb-8 leading-relaxed">
+                Créez votre compte gratuit pour enregistrer vos clubs favoris et retrouver en un clic leur lien d'inscription.
               </p>
               
               <Link to="/compte/inscription/">
@@ -56,17 +51,24 @@ export function CTASection() {
               </h3>
               
               <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                Votre fiche existe déjà grâce aux données de votre fédération. Bientôt,
-                complétez-la vous-même en quelques minutes : tarifs, horaires, photos,
-                présentation.
+                Votre fiche existe déjà grâce aux données de votre fédération. Complétez-la gratuitement pour qu'elle soit à
+                jour, et découvrez bientôt Athlace Club pour gérer et animer votre club.
               </p>
               
-              <Link to="/pour-les-clubs/">
-                <Button size="lg" variant="outline" className="gap-2 border-2">
-                  Inscrire mon club
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/compte/mon-club/">
+                  <Button size="lg" className="gap-2">
+                    Compléter ma fiche
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link to="/pour-les-clubs/">
+                  <Button size="lg" variant="secondary" className="gap-2">
+                    Découvrir l'offre club
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
 
             </div>
           </div>
