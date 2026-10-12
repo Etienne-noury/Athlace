@@ -7,6 +7,9 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Club } from '@/data/clubs';
 import { disciplines } from '@/data/disciplines';
+import type { Tables } from '@/integrations/supabase/types';
+
+export type ClubPublicRow = Tables<'clubs_public'>;
 
 export interface EnrichedClubRow {
   id: string;
@@ -33,11 +36,14 @@ export type EnrichedClub = Club & {
   subDisciplines?: string[];
   levelLabel: string | null;
   dateCreation?: string | null;
+  /** Ligne complète de clubs_public (toutes colonnes). */
+  row?: ClubPublicRow;
 };
 
 function rowToClub(r: EnrichedClubRow): EnrichedClub {
   const d = disciplines.find((x) => x.id === r.discipline);
   return {
+    row: r as unknown as ClubPublicRow,
     subDisciplines: r.sub_disciplines ?? undefined,
     id: `fed:${r.id}`,
     name: r.name,
