@@ -173,7 +173,7 @@ export default function Admin() {
   const [clRunning, setClRunning] = useState(false);
   const [clProgress, setClProgress] = useState(0);
   const [clStatus, setClStatus] = useState("");
-  const [clResult, setClResult] = useState<{ upserted: number; errors: number; lastError: string } | null>(null);
+  const [clResult, setClResult] = useState<{ upserted: number; errors: number; lastError: string; ignored: string[] } | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -327,6 +327,7 @@ export default function Admin() {
     let upserted = 0;
     let errors = 0;
     let lastError = "";
+    const ignored = new Set<string>();
     try {
       for (let fi = 0; fi < clFiles.length; fi++) {
         const file = clFiles[fi];
@@ -344,6 +345,7 @@ export default function Admin() {
           const batch = rows.slice(i, i + BATCH_SIZE);
           setClStatus(`${file.name} — lot ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(rows.length / BATCH_SIZE)}`);
           const { data, error } = await supabase.functions.invoke("import-clubs", { body: { rows: batch } });
+          for (const c of (data?.ignored_columns ?? []) as string[]) ignored.add(c);
           if (error || data?.error || data?.errors?.length) {
             lastError = error?.message || data?.error || data?.errors?.join("; ");
             errors += batch.length;
@@ -358,7 +360,7 @@ export default function Admin() {
     } catch (e) {
       setClStatus(`Erreur: ${(e as Error).message}`);
     } finally {
-      setClResult({ upserted, errors, lastError });
+      setClResult({ upserted, errors, lastError, ignored: [...ignored].sort() });
       setClRunning(false);
       refreshStats();
     }
@@ -532,6 +534,7 @@ export default function Admin() {
             <div className="space-y-1 rounded-md border p-4 text-small">
               <p><strong>Enregistrés :</strong> {clResult.upserted}</p>
               <p><strong>Erreurs :</strong> {clResult.errors}</p>
+              <p><strong>Colonnes du CSV ignorées :</strong> {clResult.ignored.length ? clResult.ignored.join(", ") : "aucune"}</p>
               {clResult.lastError && (
                 <p className="text-destructive"><strong>Dernière erreur :</strong> {clResult.lastError}</p>
               )}
