@@ -6,13 +6,12 @@ import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getParentDisciplines, categories } from '@/data/disciplines';
+import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
+import { getParentDisciplines } from '@/data/disciplines';
 import { regions } from '@/data/clubs';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { formatCount } from '@/lib/format-stats';
