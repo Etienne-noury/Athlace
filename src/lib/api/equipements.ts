@@ -64,14 +64,10 @@ export function mapRecordToClub(r: ApiRecord): Club {
     region: r.reg_nom || '',
     phone: '',
     email: '',
-    level: 'loisir',
-    licensePrice: { adult: 0, child: 0 },
     coordinates: {
       lat: r.equip_coordonnees?.lat ?? 0,
       lng: r.equip_coordonnees?.lon ?? 0,
     },
-    rating: 0,
-    reviewCount: 0,
     description:
       `${r.equip_type_name ?? 'Équipement sportif'}${
         sports.length ? ` — sports pratiqués : ${sports.join(', ')}.` : '.'

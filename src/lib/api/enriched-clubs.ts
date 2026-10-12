@@ -6,7 +6,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Club } from '@/data/clubs';
-import { disciplines } from '@/data/disciplines';
+import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
 import type { Tables } from '@/integrations/supabase/types';
 
 export type ClubPublicRow = Tables<'clubs_public'>;
@@ -35,31 +35,46 @@ export interface EnrichedClubRow {
 export type EnrichedClub = Club & {
   subDisciplines?: string[];
   levelLabel: string | null;
+  /** Icône du sport (ARBORESCENCE) */
+  icon: string;
+  federationCode: string | null;
+  departmentCode: string | null;
+  logoUrl: string | null;
+  /** Jusqu'à 3 badges réels : sous-disciplines (familles pour la Danse) puis labels */
+  tags: string[];
   dateCreation?: string | null;
   /** Ligne complète de clubs_public (toutes colonnes). */
   row?: ClubPublicRow;
 };
 
+const SPORT_BY_MATCH = new Map(
+  ARBORESCENCE.flatMap((c) => c.sports.flatMap((s) => s.match.map((m) => [m.toLowerCase(), s] as const))),
+);
+
 function rowToClub(r: EnrichedClubRow): EnrichedClub {
-  const d = disciplines.find((x) => x.id === r.discipline);
+  const sport = r.discipline ? SPORT_BY_MATCH.get(r.discipline.toLowerCase()) : undefined;
+  const full = r as unknown as ClubPublicRow;
+  const subs = (sport?.name === 'Danse' ? full.dance_families : r.sub_disciplines) ?? [];
+  const tags = Array.from(new Set([...subs, ...(full.labels ?? [])].filter(Boolean))).slice(0, 3);
   return {
     row: r as unknown as ClubPublicRow,
     subDisciplines: r.sub_disciplines ?? undefined,
     id: `fed:${r.id}`,
     name: r.name,
-    discipline: r.discipline ?? 'multisport',
-    disciplineName: d?.name ?? r.discipline ?? 'Multisport',
+    discipline: sport ? slugifyDiscipline(sport.name) : r.discipline ?? 'multisport',
+    disciplineName: sport?.name ?? r.discipline ?? 'Multisport',
+    icon: sport?.icon ?? '🏆',
+    federationCode: r.federation_code || null,
+    departmentCode: r.department_code,
+    logoUrl: full.logo_url ?? null,
+    tags,
     address: r.address ?? '',
     city: r.city ?? '',
     postalCode: r.postal_code ?? '',
     region: r.region ?? '',
     phone: '',
     email: '',
-    level: 'loisir',
-    licensePrice: { adult: 0, child: 0 },
     coordinates: { lat: r.latitude ?? 0, lng: r.longitude ?? 0 },
-    rating: 0,
-    reviewCount: 0,
     description: r.description || null,
     amenities: [],
     website: r.website ?? undefined,
@@ -91,7 +106,7 @@ export interface FetchEnrichedParams {
 }
 
 export interface FetchEnrichedResult {
-  clubs: Club[];
+  clubs: EnrichedClub[];
   total: number;
 }
 

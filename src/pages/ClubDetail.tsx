@@ -12,7 +12,6 @@ import { VenuesMap, type VenuePoint } from '@/components/clubs/VenuesMap';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
-import { levels } from '@/data/clubs';
 import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
@@ -230,7 +229,7 @@ export default function ClubDetail() {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-start gap-3 mb-3">
                   {club.levelLabel && (
-                    <Badge className={cn('text-cream-100 border-0', levels[club.level].color)}>{club.levelLabel}</Badge>
+                    <Badge>{club.levelLabel}</Badge>
                   )}
                   <Badge variant="secondary">{club.disciplineName}</Badge>
                 </div>

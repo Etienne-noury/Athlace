@@ -15,29 +15,14 @@ export interface Club {
   email: string;
   website?: string;
   logo?: string;
-  level: 'loisir' | 'competition-regionale' | 'competition-nationale' | 'elite';
-  licensePrice: {
-    adult: number;
-    child: number;
-    senior?: number;
-  };
   coordinates: {
     lat: number;
     lng: number;
   };
-  rating: number;
-  reviewCount: number;
   description: string;
   schedule?: string[];
   amenities?: string[];
 }
-
-export const levels = {
-  'loisir': { name: 'Loisir', color: 'bg-blue-500', stars: 1 },
-  'competition-regionale': { name: 'Compétition Régionale', color: 'bg-blue-500', stars: 2 },
-  'competition-nationale': { name: 'Compétition Nationale', color: 'bg-blue-700', stars: 3 },
-  'elite': { name: 'Élite', color: 'bg-blue-700', stars: 4 },
-} as const;
 
 export const regions = [
   'Île-de-France',

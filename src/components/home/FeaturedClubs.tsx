@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Star, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { ClubCardVisual, ClubCardBody } from '@/components/clubs/ClubCardContent';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
-import { getDisciplineById } from '@/data/disciplines';
 
 export function FeaturedClubs() {
   const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
@@ -26,7 +26,7 @@ export function FeaturedClubs() {
               Clubs recommandés
             </h2>
             <p className="text-muted-foreground text-lg">
-              Les clubs les mieux notés par notre communauté
+              Une sélection de clubs référencés sur Athlace
             </p>
           </div>
           <Link to="/clubs/">
@@ -48,37 +48,9 @@ export function FeaturedClubs() {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="bg-card rounded-2xl border border-border overflow-hidden card-hover h-full flex flex-col">
-                {/* Image placeholder */}
-                <div className="aspect-[4/3] bg-tint-100 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-5xl opacity-50">
-                      {getDisciplineById(club.discipline)?.icon || '🏆'}
-                    </span>
-                  </div>
-
-                  {/* Rating */}
-                  {club.rating > 0 && (
-                     <div className="absolute top-3 right-3 flex items-center gap-1 bg-surface backdrop-blur-sm rounded-pill px-2 py-1">
-                       <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
-                      <span className="text-sm font-semibold">{club.rating}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
+                <ClubCardVisual club={club} className="aspect-[4/3]" />
                 <div className="p-5 flex-1 flex flex-col">
-                  <div className="flex-1">
-                    <p className="text-sm text-primary font-medium mb-1">
-                      {club.disciplineName}
-                    </p>
-                    <h3 className="font-display font-semibold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {club.name}
-                    </h3>
-                    <div className="flex items-center gap-1 text-muted-foreground text-sm">
-                      <MapPin className="w-4 h-4" />
-                      <span>{club.city}</span>
-                    </div>
-                  </div>
+                  <ClubCardBody club={club} />
                 </div>
               </div>
             </Link>
