@@ -23,11 +23,17 @@ export interface EnrichedClubRow {
   latitude: number | null;
   longitude: number | null;
   website: string | null;
+  level: string | null;
+  creation_date: string | null;
   source_url: string;
   description: string | null;
 }
 
-export type EnrichedClub = Club & { subDisciplines?: string[] };
+export type EnrichedClub = Club & {
+  subDisciplines?: string[];
+  levelLabel: string | null;
+  dateCreation?: string | null;
+};
 
 function rowToClub(r: EnrichedClubRow): EnrichedClub {
   const d = disciplines.find((x) => x.id === r.discipline);
@@ -50,6 +56,9 @@ function rowToClub(r: EnrichedClubRow): EnrichedClub {
     reviewCount: 0,
     description: r.description || null,
     amenities: [],
+    website: r.website ?? undefined,
+    levelLabel: r.level ?? null,
+    dateCreation: r.creation_date,
   };
 }
 
