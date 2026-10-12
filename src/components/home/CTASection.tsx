@@ -27,7 +27,7 @@ export function CTASection() {
                 Créez votre compte gratuit pour sauvegarder vos clubs favoris.
               </p>
               <p className="flex flex-wrap items-center gap-2 text-surface-alt text-sm mb-8 leading-relaxed">
-                <SoonBadge className="border-glass-border bg-glass text-surface-alt" />
+                <SoonBadge className="border-transparent bg-cream-100 text-blue-700 text-xs" />
                 Suivi de vos inscriptions et recommandations personnalisées
               </p>
               
