@@ -290,12 +290,12 @@ Deno.serve(async (req) => {
     if (cleaned.length > 0) {
       // Reset position_checked_at when coordinates change (or row is new);
       // keep the existing value otherwise.
-      const existing = new Map<string, { latitude: number | null; longitude: number | null; position_checked_at: string | null }>();
+      const existing = new Map<string, { id: string; latitude: number | null; longitude: number | null; position_checked_at: string | null }>();
       const extIds = [...new Set(cleaned.map((c) => c.external_id))];
       for (let i = 0; i < extIds.length; i += 200) {
         const { data } = await supabase
           .from("clubs")
-          .select("federation_code, external_id, latitude, longitude, position_checked_at")
+          .select("id, federation_code, external_id, latitude, longitude, position_checked_at")
           .in("external_id", extIds.slice(i, i + 200));
         for (const e of data ?? []) existing.set(`${e.federation_code}::${e.external_id}`, e);
       }
@@ -308,6 +308,57 @@ Deno.serve(async (req) => {
         }
         const same = e && e.latitude === c.latitude && e.longitude === c.longitude;
         c.position_checked_at = same ? e!.position_checked_at : null;
+      }
+
+      // Field-level protection (club_field_status): locked fields keep the
+      // club's validated value; the federation value is stored for review.
+      type FieldStatus = { club_id: string; field: string; source: string; club_value: string | null; locked: boolean; conflict: boolean };
+      const existingIds = [...existing.values()].map((e) => e.id);
+      const statusByClub = new Map<string, FieldStatus[]>();
+      for (let i = 0; i < existingIds.length; i += 200) {
+        const { data, error: sErr } = await supabase
+          .from("club_field_status")
+          .select("club_id, field, source, club_value, locked, conflict")
+          .in("club_id", existingIds.slice(i, i + 200));
+        if (sErr) throw new Error(`Lecture club_field_status impossible: ${sErr.message}`);
+        for (const s of (data ?? []) as FieldStatus[]) {
+          const list = statusByClub.get(s.club_id) ?? [];
+          list.push(s);
+          statusByClub.set(s.club_id, list);
+        }
+      }
+      const asText = (v: unknown): string | null =>
+        v === null || v === undefined ? null : Array.isArray(v) ? JSON.stringify(v) : String(v);
+      const statusUpdates: Array<{ club_id: string; field: string; source: string; federation_value: string | null; conflict: boolean }> = [];
+      if (statusByClub.size > 0) {
+        const lockedFields = new Set<string>();
+        for (const list of statusByClub.values()) for (const s of list) if (s.locked && columns.has(s.field)) lockedFields.add(s.field);
+        const current = new Map<string, Record<string, unknown>>();
+        if (lockedFields.size > 0) {
+          const lockedClubIds = [...statusByClub.entries()].filter(([, l]) => l.some((s) => s.locked)).map(([id]) => id);
+          const sel = ["id", ...lockedFields].join(", ");
+          for (let i = 0; i < lockedClubIds.length; i += 200) {
+            const { data, error: cErr } = await supabase.from("clubs").select(sel).in("id", lockedClubIds.slice(i, i + 200));
+            if (cErr) throw new Error(`Lecture des valeurs verrouillées impossible: ${cErr.message}`);
+            for (const row of (data ?? []) as unknown as Record<string, unknown>[]) current.set(String(row.id), row);
+          }
+        }
+        for (const c of cleaned as Array<Record<string, unknown>>) {
+          const e = existing.get(`${c.federation_code}::${c.external_id}`);
+          const list = e ? statusByClub.get(e.id) : undefined;
+          if (!e || !list) continue;
+          for (const s of list) {
+            if (!(s.field in c) || s.field === "updated_at" || s.field === "position_checked_at") continue;
+            const fedValue = asText(c[s.field]);
+            if (s.locked) {
+              const cur = current.get(e.id);
+              c[s.field] = cur ? cur[s.field] ?? null : null;
+              statusUpdates.push({ club_id: e.id, field: s.field, source: s.source, federation_value: fedValue, conflict: fedValue !== s.club_value });
+            } else {
+              statusUpdates.push({ club_id: e.id, field: s.field, source: s.source, federation_value: fedValue, conflict: s.conflict });
+            }
+          }
+        }
       }
 
       const { data: upRows, error, count } = await supabase
