@@ -63,7 +63,7 @@ function StepCard({ step, percent }: { step: number; percent: number }) {
           <div key={i} className={cn('h-1.5 flex-1 rounded-pill', i < step ? 'bg-primary' : 'bg-tint-100')} />
         ))}
       </div>
-      <Progress value={percent} aria-label={`Fiche complète à ${percent} %`} className="h-2" />
+      <Progress value={percent} aria-label={`Fiche complète à ${percent} %`} className="h-2 bg-tint-100" />
     </div>
   );
 }
