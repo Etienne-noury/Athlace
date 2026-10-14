@@ -141,6 +141,13 @@
       "when": 1792008467175,
       "tag": "0019_club_submissions_and_prices",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1792008519342,
+      "tag": "0020_club_field_status",
+      "breakpoints": true
     }
   ]
 }
