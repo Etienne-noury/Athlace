@@ -1139,6 +1139,7 @@ export type Database = {
           subs: Json
         }[]
       }
+      club_value_as_text: { Args: { v: Json }; Returns: string }
       clubs_near: {
         Args: {
           p_disciplines?: string[]
