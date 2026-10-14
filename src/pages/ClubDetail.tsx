@@ -192,7 +192,7 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
         </Section>
       )}
 
-      {(signup.length > 0 || registerUrl) && (signup.length > 0) && (
+      {(signup.length > 0 || registerUrl) && (
         <Section icon={UserPlus} title="S'inscrire">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {signup.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
