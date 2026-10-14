@@ -5,6 +5,7 @@ import {
   MapPin, Phone, Globe, Star, Clock, ChevronLeft, CreditCard, Loader2, Info,
   Trophy, Mail, Users, Award, Accessibility, Dumbbell, ExternalLink,
   Facebook, Instagram, Twitter, Linkedin, Youtube, Music2, UserPlus, Building2, Navigation,
+  BadgeCheck, Euro, ListChecks, Gauge, Sparkles,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
@@ -88,6 +89,163 @@ function availability(notes: string | null): 'full' | 'open' | null {
   if (/complet/.test(n)) return 'full';
   if (/places?\s+disponibles?/.test(n)) return 'open';
   return null;
+}
+
+const yn = (b: boolean) => (b ? 'Oui' : 'Non');
+const PRACTICE_MODE: Record<string, string> = { loisir: 'Loisir', competition: 'Compétition', les_deux: 'Loisir et compétition' };
+
+function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<ReturnType<typeof fetchEnrichedClubById>>>['row'] & object; clubId: string }) {
+  const { data: prices = [] } = useQuery({
+    queryKey: ['club-prices', clubId],
+    queryFn: async () => {
+      const { data } = await supabase.from('club_prices').select('*').eq('club_id', clubId).order('amount');
+      return data ?? [];
+    },
+  });
+  const { data: answers = [] } = useQuery({
+    queryKey: ['club-sport-answers', clubId],
+    queryFn: async () => {
+      const { data: a } = await supabase.from('club_sport_answers').select('question_key, value').eq('club_id', clubId);
+      if (!a?.length) return [];
+      const { data: qs } = await supabase.from('sport_questions').select('key, label, type, sort, federation_code')
+        .in('key', a.map((x) => x.question_key));
+      const pick = (k: string) =>
+        (qs ?? []).find((q) => q.key === k && q.federation_code === r.federation_code) ?? (qs ?? []).find((q) => q.key === k);
+      return a
+        .filter((x) => x.value != null && x.value !== '')
+        .map((x) => {
+          const q = pick(x.question_key);
+          let value = x.value as string;
+          if (value === 'true') value = 'Oui';
+          else if (value === 'false') value = 'Non';
+          else if (value.startsWith('[')) { try { value = (JSON.parse(value) as string[]).join(', '); } catch { /* texte brut */ } }
+          return { key: x.question_key, label: q?.label ?? x.question_key, value, sort: q?.sort ?? 999 };
+        })
+        .sort((a, b) => a.sort - b.sort);
+    },
+  });
+
+  const registerUrl = r.registration_url || r.helloasso_url || null;
+  const regPeriod = r.registration_start || r.registration_end
+    ? [r.registration_start && `du ${formatDate(r.registration_start)}`, r.registration_end && `au ${formatDate(r.registration_end)}`].filter(Boolean).join(' ')
+    : null;
+
+  const signup: { label: string; value: React.ReactNode }[] = [];
+  if (r.trial_sessions != null) signup.push({ label: "Séance d'essai", value: r.trial_sessions > 0 ? `${r.trial_sessions} séance${r.trial_sessions > 1 ? 's' : ''} gratuite${r.trial_sessions > 1 ? 's' : ''}` : 'Non' });
+  if (regPeriod) signup.push({ label: "Période d'inscription", value: regPeriod });
+  if (r.season_start) signup.push({ label: 'Date de reprise', value: formatDate(r.season_start) });
+  if (r.waitlist != null) signup.push({ label: "Liste d'attente", value: yn(r.waitlist) });
+  if (r.required_documents) signup.push({ label: 'Pièces à fournir', value: <span className="whitespace-pre-line">{r.required_documents}</span> });
+
+  const prereq: { label: string; value: React.ReactNode }[] = [];
+  if (r.beginners_accepted != null) prereq.push({ label: 'Débutants acceptés', value: yn(r.beginners_accepted) });
+  if (r.min_age != null || r.max_age != null) {
+    prereq.push({
+      label: 'Âge',
+      value: r.min_age != null && r.max_age != null ? `De ${r.min_age} à ${r.max_age} ans`
+        : r.min_age != null ? `À partir de ${r.min_age} ans` : `Jusqu'à ${r.max_age} ans`,
+    });
+  }
+  if (r.required_level) prereq.push({ label: 'Niveau requis', value: r.required_level });
+  if (r.medical_required != null) prereq.push({ label: 'Certificat ou questionnaire de santé', value: r.medical_required ? 'Demandé' : 'Non demandé' });
+  if (r.other_conditions) prereq.push({ label: 'Autres conditions', value: <span className="whitespace-pre-line">{r.other_conditions}</span> });
+
+  const level: { label: string; value: React.ReactNode }[] = [];
+  if (r.practice_mode) level.push({ label: 'Pratique', value: PRACTICE_MODE[r.practice_mode] ?? r.practice_mode });
+  if (r.league) level.push({ label: 'Ligue ou division', value: r.league });
+  if (r.qualified_coaches != null) level.push({ label: 'Encadrants diplômés', value: r.qualified_coaches });
+  const hasAtmosphere = r.atmosphere != null && r.atmosphere >= 1 && r.atmosphere <= 5;
+
+  const hasPrices = prices.length > 0 || has(r.accepted_aids) || r.installments != null;
+
+  return (
+    <>
+      {hasPrices && (
+        <Section icon={Euro} title="Tarifs">
+          <div className="space-y-4">
+            {prices.length > 0 && (
+              <ul className="divide-y divide-border rounded-xl border border-border">
+                {prices.map((p) => (
+                  <li key={p.id} className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-3">
+                    <span className="text-sm text-foreground">
+                      {p.label}
+                      {p.includes_license && <span className="ml-2 text-xs text-muted-foreground">licence incluse</span>}
+                    </span>
+                    <span className="font-display font-bold text-blue-500">
+                      {Number(p.amount).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} €
+                      <span className="ml-1 text-xs font-normal text-muted-foreground">/ {p.period}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {has(r.accepted_aids) && (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Aides acceptées</p>
+                <Pills items={r.accepted_aids} />
+              </div>
+            )}
+            {r.installments != null && (
+              <p className="text-sm text-foreground">Paiement en plusieurs fois : {yn(r.installments)}</p>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {(signup.length > 0 || registerUrl) && (signup.length > 0) && (
+        <Section icon={UserPlus} title="S'inscrire">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {signup.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
+          </div>
+          {registerUrl && (
+            <Button asChild className="rounded-pill mt-4">
+              <a href={registerUrl} target="_blank" rel="noopener noreferrer"><UserPlus className="w-4 h-4" /> S'inscrire en ligne</a>
+            </Button>
+          )}
+        </Section>
+      )}
+
+      {prereq.length > 0 && (
+        <Section icon={ListChecks} title="Prérequis">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {prereq.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
+          </div>
+        </Section>
+      )}
+
+      {(level.length > 0 || hasAtmosphere) && (
+        <Section icon={Gauge} title="Niveau et ambiance">
+          {level.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {level.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
+            </div>
+          )}
+          {hasAtmosphere && (
+            <div className={cn(level.length > 0 && 'mt-4')}>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Ambiance</p>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span>Convivial</span>
+                <div className="flex flex-1 gap-1" role="img" aria-label={`Ambiance ${r.atmosphere} sur 5, de conviviale à compétitive`}>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className={cn('h-2 flex-1 rounded-pill', i === r.atmosphere ? 'bg-primary' : 'bg-tint-100')} />
+                  ))}
+                </div>
+                <span>Compétitif</span>
+              </div>
+            </div>
+          )}
+        </Section>
+      )}
+
+      {answers.length > 0 && (
+        <Section icon={Sparkles} title="Infos spécifiques">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {answers.map((a) => <InfoTile key={a.key} label={a.label}>{a.value}</InfoTile>)}
+          </div>
+        </Section>
+      )}
+    </>
+  );
 }
 
 export default function ClubDetail() {
@@ -245,6 +403,19 @@ export default function ClubDetail() {
                 </div>
                 {r?.acronym && <p className="text-sm text-muted-foreground mb-3">{r.acronym}</p>}
 
+                {r?.claimed_by_club && (
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-pill bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                      <BadgeCheck className="w-4 h-4" aria-hidden /> Fiche vérifiée par le club
+                    </span>
+                    {r.club_verified_at && (
+                      <span className="text-xs text-slate-500">
+                        Mis à jour le {new Date(r.club_verified_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 {has(club.subDisciplines) && <div className="mb-3"><Pills items={club.subDisciplines} /></div>}
 
                 {cityLine && (
@@ -401,6 +572,9 @@ export default function ClubDetail() {
               <Pills items={r!.amenities!} />
             </Section>
           )}
+
+          {/* Infos validées par le club */}
+          {r && <ValidatedSections row={r} clubId={cleanId!} />}
 
           {/* 9. Description, Prix, Avis */}
           {club.description && (
