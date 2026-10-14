@@ -162,7 +162,7 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
       key: `sport:${k}`, label: `Sport · ${answers.labels[k] ?? k}`, cur: answers.cur[k], next: v,
     })),
   ].filter((r) => isFilled(r.cur) || isFilled(r.next));
-  const changed = rows.filter((r) => norm(r.cur) !== norm(r.next) && !(typeof r.cur === 'string' && fmt(r.cur) === fmt(r.next)));
+  const changed = rows.filter((r) => isFilled(r.next) && norm(r.cur) !== norm(r.next) && !(typeof r.cur === 'string' && fmt(r.cur) === fmt(r.next)));
   const same = rows.filter((r) => !changed.includes(r));
 
   const approve = async () => {
@@ -189,7 +189,7 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
   const Row = ({ r, hl }: { r: (typeof rows)[number]; hl: boolean }) => (
     <div className={cn('grid gap-2 px-4 py-3 text-small sm:grid-cols-[180px_1fr_1fr]', hl && 'bg-tint-100')}>
       <p className="font-semibold text-ink">{r.label}</p>
-      <p className="break-words text-slate-600">{fmt(r.cur)}</p>
+      <p className="break-all text-slate-600">{fmt(r.cur)}</p>
       <p className={cn('break-words', hl ? 'font-semibold text-blue-500' : 'text-slate-600')}>{fmt(r.next)}</p>
     </div>
   );
