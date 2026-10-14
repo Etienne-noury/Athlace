@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -80,6 +80,21 @@ function InfoTile({ label, children }: { label: string; children: React.ReactNod
       <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">{label}</p>
       <div className="text-sm text-foreground">{children}</div>
     </div>
+  );
+}
+
+/** Tenue du club : photo fournie par le club, masquée si elle ne se charge pas. */
+function KitImage({ src, clubName }: { src: string; clubName: string }) {
+  const [broken, setBroken] = useState(false);
+  if (broken) return null;
+  return (
+    <img
+      src={src}
+      alt={`Tenue du club ${clubName}`}
+      loading="lazy"
+      onError={() => setBroken(true)}
+      className="max-h-40 w-auto object-contain rounded-xl bg-tint-100 p-3"
+    />
   );
 }
 
@@ -473,11 +488,19 @@ export default function ClubDetail() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6">
           {/* 3. L'essentiel */}
-          {essentials.length > 0 && (
+          {(essentials.length > 0 || !!r?.kit_image_url) && (
             <Section icon={Users} title="L'essentiel">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {essentials.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
-              </div>
+              {essentials.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {essentials.map((e) => <InfoTile key={e.label} label={e.label}>{e.value}</InfoTile>)}
+                </div>
+              )}
+              {r?.kit_image_url && (
+                <div className={cn(essentials.length > 0 && 'mt-4')}>
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Tenue du club</p>
+                  <KitImage src={r.kit_image_url} clubName={club.name} />
+                </div>
+              )}
             </Section>
           )}
 
