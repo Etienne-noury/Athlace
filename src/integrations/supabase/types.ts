@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      club_field_status: {
+        Row: {
+          club_id: string
+          club_value: string | null
+          conflict: boolean
+          federation_value: string | null
+          field: string
+          id: string
+          locked: boolean
+          source: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          club_id: string
+          club_value?: string | null
+          conflict?: boolean
+          federation_value?: string | null
+          field: string
+          id?: string
+          locked?: boolean
+          source: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          club_id?: string
+          club_value?: string | null
+          conflict?: boolean
+          federation_value?: string | null
+          field?: string
+          id?: string
+          locked?: boolean
+          source?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_field_status_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_field_status_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_prices: {
         Row: {
           amount: number
