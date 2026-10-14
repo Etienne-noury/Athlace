@@ -1284,6 +1284,10 @@ export type Database = {
       }
     }
     Functions: {
+      accept_federation_value: {
+        Args: { status_id: string }
+        Returns: undefined
+      }
       approve_submission: { Args: { submission_id: string }; Returns: string }
       available_disciplines: {
         Args: never

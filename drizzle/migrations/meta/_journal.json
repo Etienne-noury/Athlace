@@ -176,6 +176,13 @@
       "when": 1792009505883,
       "tag": "0024_club_submission_approval",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1792009576992,
+      "tag": "0025_accept_federation_value",
+      "breakpoints": true
     }
   ]
 }
