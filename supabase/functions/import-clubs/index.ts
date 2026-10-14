@@ -327,8 +327,13 @@ Deno.serve(async (req) => {
           statusByClub.set(s.club_id, list);
         }
       }
+      // Same format as public.club_value_as_text(): lists sorted (byte order) then JSON.
       const asText = (v: unknown): string | null =>
-        v === null || v === undefined ? null : Array.isArray(v) ? JSON.stringify(v) : String(v);
+        v === null || v === undefined
+          ? null
+          : Array.isArray(v)
+            ? JSON.stringify(v.map(String).sort())
+            : String(v);
       const statusUpdates: Array<{ club_id: string; field: string; source: string; federation_value: string | null; conflict: boolean }> = [];
       if (statusByClub.size > 0) {
         const lockedFields = new Set<string>();
