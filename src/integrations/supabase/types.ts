@@ -176,6 +176,45 @@ export type Database = {
           },
         ]
       }
+      club_sport_answers: {
+        Row: {
+          club_id: string
+          id: string
+          question_key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          club_id: string
+          id?: string
+          question_key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          club_id?: string
+          id?: string
+          question_key?: string
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_sport_answers_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_sport_answers_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_submissions: {
         Row: {
           admin_note: string | null
@@ -334,6 +373,7 @@ export type Database = {
       }
       clubs: {
         Row: {
+          accepted_aids: string[] | null
           access_conditions: string[] | null
           accessibility: string[] | null
           acronym: string | null
@@ -342,9 +382,13 @@ export type Database = {
           affiliation_number: string | null
           age_categories: string[] | null
           amenities: string[] | null
+          annual_events: string | null
+          atmosphere: number | null
           audiences: string[] | null
+          beginners_accepted: boolean | null
           city: string | null
           claimed_by_club: boolean
+          club_verified_at: string | null
           colors: string | null
           committee: string | null
           competition_categories: string[] | null
@@ -366,6 +410,7 @@ export type Database = {
           holes_total: number | null
           id: string
           instagram_url: string | null
+          installments: boolean | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -380,10 +425,13 @@ export type Database = {
           linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
+          max_age: number | null
+          medical_required: boolean | null
           membership_fee: number | null
           min_age: number | null
           name: string
           opening_hours: string | null
+          other_conditions: string | null
           outing_durations: string[] | null
           outing_places: string[] | null
           phone: string | null
@@ -391,12 +439,20 @@ export type Database = {
           position_checked_at: string | null
           postal_code: string | null
           practice_info: string | null
+          practice_mode: string | null
           practice_types: string[] | null
           price_info: string | null
+          qualified_coaches: number | null
           region: string | null
+          registration_end: string | null
+          registration_start: string | null
           registration_url: string | null
+          required_documents: string | null
+          required_level: string | null
           rna_number: string | null
           scraped_at: string | null
+          season_start: string | null
+          seeks_volunteers: boolean | null
           siret: string | null
           source_url: string | null
           structure_type: string | null
@@ -404,13 +460,16 @@ export type Database = {
           tiktok_url: string | null
           trainings: string[] | null
           transports: string[] | null
+          trial_sessions: number | null
           twitter_url: string | null
           updated_at: string
           video_url: string | null
+          waitlist: boolean | null
           website: string | null
           youtube_url: string | null
         }
         Insert: {
+          accepted_aids?: string[] | null
           access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
@@ -419,9 +478,13 @@ export type Database = {
           affiliation_number?: string | null
           age_categories?: string[] | null
           amenities?: string[] | null
+          annual_events?: string | null
+          atmosphere?: number | null
           audiences?: string[] | null
+          beginners_accepted?: boolean | null
           city?: string | null
           claimed_by_club?: boolean
+          club_verified_at?: string | null
           colors?: string | null
           committee?: string | null
           competition_categories?: string[] | null
@@ -443,6 +506,7 @@ export type Database = {
           holes_total?: number | null
           id?: string
           instagram_url?: string | null
+          installments?: boolean | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -457,10 +521,13 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          max_age?: number | null
+          medical_required?: boolean | null
           membership_fee?: number | null
           min_age?: number | null
           name: string
           opening_hours?: string | null
+          other_conditions?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -468,12 +535,20 @@ export type Database = {
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
+          practice_mode?: string | null
           practice_types?: string[] | null
           price_info?: string | null
+          qualified_coaches?: number | null
           region?: string | null
+          registration_end?: string | null
+          registration_start?: string | null
           registration_url?: string | null
+          required_documents?: string | null
+          required_level?: string | null
           rna_number?: string | null
           scraped_at?: string | null
+          season_start?: string | null
+          seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
           structure_type?: string | null
@@ -481,13 +556,16 @@ export type Database = {
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
+          trial_sessions?: number | null
           twitter_url?: string | null
           updated_at?: string
           video_url?: string | null
+          waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
         }
         Update: {
+          accepted_aids?: string[] | null
           access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
@@ -496,9 +574,13 @@ export type Database = {
           affiliation_number?: string | null
           age_categories?: string[] | null
           amenities?: string[] | null
+          annual_events?: string | null
+          atmosphere?: number | null
           audiences?: string[] | null
+          beginners_accepted?: boolean | null
           city?: string | null
           claimed_by_club?: boolean
+          club_verified_at?: string | null
           colors?: string | null
           committee?: string | null
           competition_categories?: string[] | null
@@ -520,6 +602,7 @@ export type Database = {
           holes_total?: number | null
           id?: string
           instagram_url?: string | null
+          installments?: boolean | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -534,10 +617,13 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          max_age?: number | null
+          medical_required?: boolean | null
           membership_fee?: number | null
           min_age?: number | null
           name?: string
           opening_hours?: string | null
+          other_conditions?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -545,12 +631,20 @@ export type Database = {
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
+          practice_mode?: string | null
           practice_types?: string[] | null
           price_info?: string | null
+          qualified_coaches?: number | null
           region?: string | null
+          registration_end?: string | null
+          registration_start?: string | null
           registration_url?: string | null
+          required_documents?: string | null
+          required_level?: string | null
           rna_number?: string | null
           scraped_at?: string | null
+          season_start?: string | null
+          seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
           structure_type?: string | null
@@ -558,9 +652,11 @@ export type Database = {
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
+          trial_sessions?: number | null
           twitter_url?: string | null
           updated_at?: string
           video_url?: string | null
+          waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
         }
@@ -903,6 +999,7 @@ export type Database = {
       }
       clubs_public: {
         Row: {
+          accepted_aids: string[] | null
           access_conditions: string[] | null
           accessibility: string[] | null
           acronym: string | null
@@ -911,9 +1008,13 @@ export type Database = {
           affiliation_number: string | null
           age_categories: string[] | null
           amenities: string[] | null
+          annual_events: string | null
+          atmosphere: number | null
           audiences: string[] | null
+          beginners_accepted: boolean | null
           city: string | null
           claimed_by_club: boolean | null
+          club_verified_at: string | null
           colors: string | null
           committee: string | null
           competition_categories: string[] | null
@@ -934,6 +1035,7 @@ export type Database = {
           holes_total: number | null
           id: string | null
           instagram_url: string | null
+          installments: boolean | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -948,22 +1050,33 @@ export type Database = {
           linkedin_url: string | null
           logo_url: string | null
           longitude: number | null
+          max_age: number | null
+          medical_required: boolean | null
           membership_fee: number | null
           min_age: number | null
           name: string | null
           opening_hours: string | null
+          other_conditions: string | null
           outing_durations: string[] | null
           outing_places: string[] | null
           photo_urls: string[] | null
           position_checked_at: string | null
           postal_code: string | null
           practice_info: string | null
+          practice_mode: string | null
           practice_types: string[] | null
           price_info: string | null
+          qualified_coaches: number | null
           region: string | null
+          registration_end: string | null
+          registration_start: string | null
           registration_url: string | null
+          required_documents: string | null
+          required_level: string | null
           rna_number: string | null
           scraped_at: string | null
+          season_start: string | null
+          seeks_volunteers: boolean | null
           siret: string | null
           source_url: string | null
           structure_type: string | null
@@ -971,13 +1084,16 @@ export type Database = {
           tiktok_url: string | null
           trainings: string[] | null
           transports: string[] | null
+          trial_sessions: number | null
           twitter_url: string | null
           updated_at: string | null
           video_url: string | null
+          waitlist: boolean | null
           website: string | null
           youtube_url: string | null
         }
         Insert: {
+          accepted_aids?: string[] | null
           access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
@@ -986,9 +1102,13 @@ export type Database = {
           affiliation_number?: string | null
           age_categories?: string[] | null
           amenities?: string[] | null
+          annual_events?: string | null
+          atmosphere?: number | null
           audiences?: string[] | null
+          beginners_accepted?: boolean | null
           city?: string | null
           claimed_by_club?: boolean | null
+          club_verified_at?: string | null
           colors?: string | null
           committee?: string | null
           competition_categories?: string[] | null
@@ -1009,6 +1129,7 @@ export type Database = {
           holes_total?: number | null
           id?: string | null
           instagram_url?: string | null
+          installments?: boolean | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1023,22 +1144,33 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          max_age?: number | null
+          medical_required?: boolean | null
           membership_fee?: number | null
           min_age?: number | null
           name?: string | null
           opening_hours?: string | null
+          other_conditions?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
+          practice_mode?: string | null
           practice_types?: string[] | null
           price_info?: string | null
+          qualified_coaches?: number | null
           region?: string | null
+          registration_end?: string | null
+          registration_start?: string | null
           registration_url?: string | null
+          required_documents?: string | null
+          required_level?: string | null
           rna_number?: string | null
           scraped_at?: string | null
+          season_start?: string | null
+          seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
           structure_type?: string | null
@@ -1046,13 +1178,16 @@ export type Database = {
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
+          trial_sessions?: number | null
           twitter_url?: string | null
           updated_at?: string | null
           video_url?: string | null
+          waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
         }
         Update: {
+          accepted_aids?: string[] | null
           access_conditions?: string[] | null
           accessibility?: string[] | null
           acronym?: string | null
@@ -1061,9 +1196,13 @@ export type Database = {
           affiliation_number?: string | null
           age_categories?: string[] | null
           amenities?: string[] | null
+          annual_events?: string | null
+          atmosphere?: number | null
           audiences?: string[] | null
+          beginners_accepted?: boolean | null
           city?: string | null
           claimed_by_club?: boolean | null
+          club_verified_at?: string | null
           colors?: string | null
           committee?: string | null
           competition_categories?: string[] | null
@@ -1084,6 +1223,7 @@ export type Database = {
           holes_total?: number | null
           id?: string | null
           instagram_url?: string | null
+          installments?: boolean | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1098,22 +1238,33 @@ export type Database = {
           linkedin_url?: string | null
           logo_url?: string | null
           longitude?: number | null
+          max_age?: number | null
+          medical_required?: boolean | null
           membership_fee?: number | null
           min_age?: number | null
           name?: string | null
           opening_hours?: string | null
+          other_conditions?: string | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
           position_checked_at?: string | null
           postal_code?: string | null
           practice_info?: string | null
+          practice_mode?: string | null
           practice_types?: string[] | null
           price_info?: string | null
+          qualified_coaches?: number | null
           region?: string | null
+          registration_end?: string | null
+          registration_start?: string | null
           registration_url?: string | null
+          required_documents?: string | null
+          required_level?: string | null
           rna_number?: string | null
           scraped_at?: string | null
+          season_start?: string | null
+          seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
           structure_type?: string | null
@@ -1121,9 +1272,11 @@ export type Database = {
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
+          trial_sessions?: number | null
           twitter_url?: string | null
           updated_at?: string | null
           video_url?: string | null
+          waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
         }
@@ -1131,6 +1284,7 @@ export type Database = {
       }
     }
     Functions: {
+      approve_submission: { Args: { submission_id: string }; Returns: string }
       available_disciplines: {
         Args: never
         Returns: {
@@ -1192,7 +1346,15 @@ export type Database = {
           lng: number
         }[]
       }
+      reject_submission: {
+        Args: { note: string; submission_id: string }
+        Returns: undefined
+      }
       site_stats: { Args: never; Returns: Json }
+      submission_payload_to_club: {
+        Args: { p: Json; p_accessibility: string[]; p_discipline: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

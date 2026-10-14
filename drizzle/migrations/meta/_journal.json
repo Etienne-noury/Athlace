@@ -169,6 +169,13 @@
       "when": 1792009034531,
       "tag": "0023_club_media_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1792009505883,
+      "tag": "0024_club_submission_approval",
+      "breakpoints": true
     }
   ]
 }
