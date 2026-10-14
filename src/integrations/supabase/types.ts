@@ -776,6 +776,42 @@ export type Database = {
         }
         Relationships: []
       }
+      sport_questions: {
+        Row: {
+          active: boolean
+          federation_code: string | null
+          help: string | null
+          id: string
+          key: string
+          label: string
+          options: string[] | null
+          sort: number
+          type: string
+        }
+        Insert: {
+          active?: boolean
+          federation_code?: string | null
+          help?: string | null
+          id?: string
+          key: string
+          label: string
+          options?: string[] | null
+          sort?: number
+          type?: string
+        }
+        Update: {
+          active?: boolean
+          federation_code?: string | null
+          help?: string | null
+          id?: string
+          key?: string
+          label?: string
+          options?: string[] | null
+          sort?: number
+          type?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
