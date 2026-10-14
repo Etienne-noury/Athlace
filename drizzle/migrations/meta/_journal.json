@@ -183,6 +183,13 @@
       "when": 1792009576992,
       "tag": "0025_accept_federation_value",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1792011486819,
+      "tag": "0026_add_clubs_correspondence_kit_columns",
+      "breakpoints": true
     }
   ]
 }
