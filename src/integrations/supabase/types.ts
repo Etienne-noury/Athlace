@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      club_prices: {
+        Row: {
+          amount: number
+          club_id: string
+          created_at: string
+          id: string
+          includes_license: boolean
+          label: string
+          notes: string | null
+          period: string
+        }
+        Insert: {
+          amount: number
+          club_id: string
+          created_at?: string
+          id?: string
+          includes_license?: boolean
+          label: string
+          notes?: string | null
+          period?: string
+        }
+        Update: {
+          amount?: number
+          club_id?: string
+          created_at?: string
+          id?: string
+          includes_license?: boolean
+          label?: string
+          notes?: string | null
+          period?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_prices_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_prices_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_schedules: {
         Row: {
           category: string | null
@@ -67,6 +115,69 @@ export type Database = {
           },
           {
             foreignKeyName: "club_schedules_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_submissions: {
+        Row: {
+          admin_note: string | null
+          affiliation_match: boolean
+          affiliation_number: string | null
+          club_id: string | null
+          created_at: string
+          current_step: number
+          id: string
+          payload: Json
+          role: string | null
+          status: string
+          submitted_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          affiliation_match?: boolean
+          affiliation_number?: string | null
+          club_id?: string | null
+          created_at?: string
+          current_step?: number
+          id?: string
+          payload?: Json
+          role?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          affiliation_match?: boolean
+          affiliation_number?: string | null
+          club_id?: string | null
+          created_at?: string
+          current_step?: number
+          id?: string
+          payload?: Json
+          role?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_submissions_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_submissions_club_id_fkey"
             columns: ["club_id"]
             isOneToOne: false
             referencedRelation: "clubs_public"

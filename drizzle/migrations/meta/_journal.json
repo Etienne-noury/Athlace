@@ -134,6 +134,13 @@
       "when": 1791839037197,
       "tag": "0018_clubs_near",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792008467175,
+      "tag": "0019_club_submissions_and_prices",
+      "breakpoints": true
     }
   ]
 }
