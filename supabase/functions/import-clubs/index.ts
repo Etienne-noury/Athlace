@@ -368,6 +368,12 @@ Deno.serve(async (req) => {
       if (error) errors.push(error.message);
       else {
         upserted = count ?? cleaned.length;
+        for (let i = 0; i < statusUpdates.length; i += 500) {
+          const { error: fErr } = await supabase
+            .from("club_field_status")
+            .upsert(statusUpdates.slice(i, i + 500), { onConflict: "club_id,field" });
+          if (fErr) errors.push(`club_field_status: ${fErr.message}`);
+        }
         if (children.size > 0) {
           const idByKey = new Map<string, string>();
           for (const u of upRows ?? []) idByKey.set(`${u.federation_code}::${u.external_id}`, u.id);
