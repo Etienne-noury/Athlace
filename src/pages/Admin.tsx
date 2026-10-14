@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import { WaitlistAdmin } from "@/components/admin/WaitlistAdmin";
 import { SportQuestionsAdmin } from "@/components/admin/SportQuestionsAdmin";
+import { ClubSubmissionsAdmin } from "@/components/admin/ClubSubmissionsAdmin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { resolveWaldec, WALDEC_NON_CLUB_CODES } from "@/lib/waldec-map";
 
@@ -513,6 +514,7 @@ export default function Admin() {
         <TabsList>
           <TabsTrigger value="data">Données</TabsTrigger>
           <TabsTrigger value="questions">Questions par sport</TabsTrigger>
+          <TabsTrigger value="fiches">Fiches clubs</TabsTrigger>
         </TabsList>
         <TabsContent value="data" className="space-y-10">
       <section className="space-y-4">
@@ -746,6 +748,9 @@ export default function Admin() {
           </AccordionItem>
         </Accordion>
       </section>
+        </TabsContent>
+        <TabsContent value="fiches">
+          <ClubSubmissionsAdmin />
         </TabsContent>
         <TabsContent value="questions">
           <SportQuestionsAdmin />
