@@ -393,6 +393,7 @@ export type Database = {
           committee: string | null
           competition_categories: string[] | null
           competitions: string[] | null
+          correspondence_address: string | null
           courses: string[] | null
           created_at: string
           creation_date: string | null
@@ -411,6 +412,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           installments: boolean | null
+          kit_image_url: string | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -489,6 +491,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          correspondence_address?: string | null
           courses?: string[] | null
           created_at?: string
           creation_date?: string | null
@@ -507,6 +510,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           installments?: boolean | null
+          kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -585,6 +589,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          correspondence_address?: string | null
           courses?: string[] | null
           created_at?: string
           creation_date?: string | null
@@ -603,6 +608,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           installments?: boolean | null
+          kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1019,6 +1025,7 @@ export type Database = {
           committee: string | null
           competition_categories: string[] | null
           competitions: string[] | null
+          correspondence_address: string | null
           courses: string[] | null
           created_at: string | null
           creation_date: string | null
@@ -1036,6 +1043,7 @@ export type Database = {
           id: string | null
           instagram_url: string | null
           installments: boolean | null
+          kit_image_url: string | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -1113,6 +1121,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          correspondence_address?: string | null
           courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
@@ -1130,6 +1139,7 @@ export type Database = {
           id?: string | null
           instagram_url?: string | null
           installments?: boolean | null
+          kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1207,6 +1217,7 @@ export type Database = {
           committee?: string | null
           competition_categories?: string[] | null
           competitions?: string[] | null
+          correspondence_address?: string | null
           courses?: string[] | null
           created_at?: string | null
           creation_date?: string | null
@@ -1224,6 +1235,7 @@ export type Database = {
           id?: string | null
           instagram_url?: string | null
           installments?: boolean | null
+          kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
