@@ -20,3 +20,6 @@
  .hero-compact h1 { font-size:1.75rem; line-height:2.1rem; margin-bottom:.75rem; }
  .hero-compact > div > p { font-size:1rem; line-height:1.5rem; margin-bottom:1.25rem; }
 }
+
+/* Keep Leaflet panes/controls in their own stacking context, below the sticky header */
+.leaflet-container { isolation: isolate; z-index: 0; }

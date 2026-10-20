@@ -92,6 +92,10 @@ export function DisciplineFilter({
                     className="h-4 w-4 opacity-60 hover:opacity-100"
                     role="button"
                     aria-label="Effacer le sport"
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
                     onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
