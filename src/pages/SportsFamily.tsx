@@ -29,7 +29,7 @@ export default function SportsFamily() {
       <Layout>
         <section className="py-16 lg:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="font-display text-3xl font-bold">Catégorie introuvable</h1>
+            <h1 className="font-sans text-3xl font-black"Catégorie introuvable</h1>
             <p className="text-muted-foreground mt-4">Cette catégorie de sports n'existe pas.</p>
             <Link to="/sports/" className="text-primary hover:underline mt-4 inline-block">
               Retour aux sports
@@ -51,7 +51,7 @@ export default function SportsFamily() {
             <span>/</span>
             <span className="text-foreground">{categorie.name}</span>
           </div>
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-3">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-3"
             {categorie.icon} {categorie.name}
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -70,7 +70,7 @@ export default function SportsFamily() {
               <Card key={sport.name} className={cn('hover:border-border transition-colors', !ok && 'opacity-60')}>
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3">
-                    <h2 className="font-display font-semibold text-lg">
+                    <h2 className="font-sans font-black text-lg"
                       {sport.icon} {sport.name}
                     </h2>
                     <Badge variant="secondary">

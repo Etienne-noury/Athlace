@@ -5,7 +5,7 @@ export default function About() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground">Qui sommes-nous ?</h1>
+          <h1 className="font-sans text-3xl font-black text-foreground"Qui sommes-nous ?</h1>
         </div>
       </section>
       <section className="container mx-auto px-4 py-12 max-w-3xl">

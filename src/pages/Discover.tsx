@@ -29,7 +29,7 @@ export default function Discover() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
             Découvrir le sport
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -45,11 +45,11 @@ export default function Discover() {
               <Card className="group hover:border-border transition-colors h-full">
                 <CardContent className="p-6">
                   <guide.icon className="w-10 h-10 text-primary mb-4" />
-                  <h2 className="font-display text-xl font-semibold group-hover:text-primary transition-colors">
+                  <h2 className="font-sans text-xl font-black group-hover:text-primary transition-colors"
                     {guide.title}
                   </h2>
                   <p className="text-muted-foreground mt-2 text-sm">{guide.description}</p>
-                  <span className="inline-flex items-center mt-4 text-sm font-medium text-primary">
+                  <span className="inline-flex items-center mt-4 text-sm font-bold text-primary"
                     Lire le guide <ArrowRight className="w-4 h-4 ml-1" />
                   </span>
                 </CardContent>

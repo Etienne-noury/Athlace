@@ -28,12 +28,12 @@ export function ClubCardBody({ club }: { club: EnrichedClub }) {
   return (
     <>
       <div className="flex items-center gap-2 mb-1 flex-wrap">
-        <p className="text-sm text-primary font-medium">{club.disciplineName}</p>
+        <p className="text-sm text-primary font-bold"{club.disciplineName}</p>
         {club.federationCode && (
           <Badge variant="outline" className="text-micro px-1.5 py-0">{club.federationCode}</Badge>
         )}
       </div>
-      <h3 className="font-display font-semibold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+      <h3 className="font-sans font-bold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors"
         {club.name}
       </h3>
       {place && (
@@ -45,7 +45,7 @@ export function ClubCardBody({ club }: { club: EnrichedClub }) {
       {club.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-3">
           {club.tags.map((t) => (
-            <Badge key={t} variant="secondary" className="text-xs font-normal">{t}</Badge>
+            <Badge key={t} variant="secondary" className="text-xs font-light"{t}</Badge>
           ))}
         </div>
       )}

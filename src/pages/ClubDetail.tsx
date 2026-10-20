@@ -45,7 +45,7 @@ function Section({ icon: Icon, title, children }: { icon: React.ElementType; tit
     <section className="bg-card rounded-2xl border border-border p-6">
       <div className="flex items-center gap-3 mb-4">
         <Icon className="w-5 h-5 text-primary" aria-hidden />
-        <h2 className="font-display text-xl font-semibold text-foreground">{title}</h2>
+        <h2 className="font-sans text-xl font-black text-foreground"{title}</h2>
       </div>
       {children}
     </section>
@@ -57,7 +57,7 @@ function ComingSoonSection({ icon: Icon, title }: { icon: React.ElementType; tit
     <div className="bg-card rounded-2xl border border-border p-6 opacity-60">
       <div className="flex items-center gap-3 mb-3">
         <Icon className="w-5 h-5 text-muted-foreground" aria-hidden />
-        <h2 className="font-display text-lg font-semibold text-muted-foreground">{title}</h2>
+        <h2 className="font-sans text-lg font-black text-muted-foreground"{title}</h2>
       </div>
       <p className="text-sm text-muted-foreground">Disponible prochainement</p>
     </div>
@@ -186,9 +186,9 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
                       {p.label}
                       {p.includes_license && <span className="ml-2 text-xs text-muted-foreground">licence incluse</span>}
                     </span>
-                    <span className="font-display font-bold text-blue-500">
+                    <span className="font-sans font-bold text-blue-500">
                       {Number(p.amount).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} €
-                      <span className="ml-1 text-xs font-normal text-muted-foreground">/ {p.period}</span>
+                      <span className="ml-1 text-xs font-light text-muted-foreground"/ {p.period}</span>
                     </span>
                   </li>
                 ))}
@@ -335,7 +335,7 @@ export default function ClubDetail() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-2xl font-bold mb-4">Club non trouvé</h1>
+          <h1 className="font-sans text-2xl font-black mb-4"Club non trouvé</h1>
           <Link to="/clubs/"><Button>Retour à la recherche</Button></Link>
         </div>
       </Layout>
@@ -413,14 +413,14 @@ export default function ClubDetail() {
                 </div>
 
                 <div className="flex items-start justify-between gap-4 mb-1">
-                  <h1 className="font-display text-2xl lg:text-3xl font-bold text-foreground">{club.name}</h1>
+                  <h1 className="font-sans text-2xl lg:text-3xl font-black text-foreground"{club.name}</h1>
                   <FavoriteButton clubId={club.id} withLabel className="flex-shrink-0" />
                 </div>
                 {r?.acronym && <p className="text-sm text-muted-foreground mb-3">{r.acronym}</p>}
 
                 {r?.claimed_by_club && (
                   <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-pill bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                    <span className="inline-flex items-center gap-1.5 rounded-pill bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground"
                       <BadgeCheck className="w-4 h-4" aria-hidden /> Fiche vérifiée par le club
                     </span>
                     {r.club_verified_at && (
@@ -510,14 +510,14 @@ export default function ClubDetail() {
               <div className="space-y-5">
                 {scheduleByDay.map(({ day, list }) => (
                   <div key={day}>
-                    <h3 className="font-display font-semibold text-foreground capitalize mb-2">{day}</h3>
+                    <h3 className="font-sans font-bold text-foreground capitalize mb-2"{day}</h3>
                     <ul className="space-y-2">
                       {list.map((s) => {
                         const av = availability(s.notes);
                         const meta = [s.category, s.discipline, s.venue_name].filter(Boolean).join(' · ');
                         return (
                           <li key={s.id} className="rounded-xl bg-muted/50 p-3 flex flex-wrap items-start gap-x-4 gap-y-1">
-                            <span className="font-medium text-foreground tabular-nums">
+                            <span className="font-bold text-foreground tabular-nums"
                               {hm(s.start_time)}{s.end_time && `–${hm(s.end_time)}`}
                             </span>
                             <div className="flex-1 min-w-0">
@@ -545,7 +545,7 @@ export default function ClubDetail() {
                   return (
                     <li key={v.id} className="rounded-xl bg-muted/50 p-3">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium text-foreground">{v.name || 'Lieu de pratique'}</p>
+                        <p className="font-bold text-foreground"{v.name || 'Lieu de pratique'}</p>
                         {v.kind && <span className="text-xs px-2 py-0.5 rounded-pill bg-surface-alt text-blue-500">{v.kind}</span>}
                         {v.is_main && <Badge variant="secondary">Principal</Badge>}
                       </div>
@@ -619,7 +619,7 @@ export default function ClubDetail() {
             <footer className="pt-2 space-y-1 text-center">
               {r?.source_url && (
                 <a href={r.source_url} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                  className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
                   <ExternalLink className="w-4 h-4" /> Voir la fiche sur le site de la fédération
                 </a>
               )}

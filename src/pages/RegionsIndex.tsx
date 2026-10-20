@@ -7,7 +7,7 @@ export default function RegionsIndex() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
             Index des régions
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -25,7 +25,7 @@ export default function RegionsIndex() {
                 to={`/clubs/${region.slug}/`}
                 className="group p-6 bg-card rounded-xl border border-border hover:border-border transition-colors"
               >
-                <h2 className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
+                <h2 className="font-sans font-black text-lg group-hover:text-primary transition-colors"
                   {region.name}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">

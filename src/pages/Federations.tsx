@@ -30,7 +30,7 @@ export default function Federations() {
     <Layout>
       <section className="bg-blue-500 text-cream-100 py-16 lg:py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-4xl lg:text-5xl font-bold mb-4">
+          <h1 className="font-sans text-4xl lg:text-5xl font-black mb-4"
             Annuaire des fédérations
           </h1>
           <p className="text-lg lg:text-xl text-surface-alt max-w-2xl mx-auto">
@@ -48,13 +48,13 @@ export default function Federations() {
           <div className="space-y-12">
             {groups.map((cat) => (
               <div key={cat.id}>
-                <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+                <h2 className="font-sans text-2xl font-black text-foreground mb-6"
                   {cat.icon} {cat.name}
                 </h2>
                 <div className="space-y-8">
                   {cat.sports.map((sport) => (
                     <div key={sport.sportName}>
-                      <h3 className="font-display font-semibold text-lg text-foreground mb-4">
+                      <h3 className="font-sans font-black text-lg text-foreground mb-4"
                         {sport.sportIcon} {sport.sportName}
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -67,7 +67,7 @@ export default function Federations() {
                   <div className="flex items-start gap-4 mb-4">
                     <div className="text-4xl">{fed.icon}</div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-display font-bold text-lg text-foreground">{fed.code}</div>
+                      <div className="font-sans font-bold text-lg text-foreground">{fed.code}</div>
                       <div className="text-sm text-muted-foreground">{fed.sport}</div>
                     </div>
                   </div>
@@ -85,16 +85,16 @@ export default function Federations() {
                     href={fed.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-medium hover:bg-blue-700 transition-colors"
-                  >
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-bold hover:bg-blue-700 transition-colors"
+                  
                     Accéder à l'annuaire
                     <ExternalLink className="w-4 h-4" />
                   </a>
                   {fed.sportSlug && sportOk && (
                     <Link
                       to={`/sports/${fed.sportSlug}/`}
-                      className="mt-2 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-surface-alt text-blue-500 font-medium hover:bg-tint-100 transition-colors"
-                    >
+                      className="mt-2 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-surface-alt text-blue-500 font-bold hover:bg-tint-100 transition-colors"
+                    
                       Voir le sport {fed.sport}
                     </Link>
                   )}
@@ -111,7 +111,7 @@ export default function Federations() {
         )}
 
         <div className="mt-12 p-6 rounded-xl bg-muted border border-border">
-          <h2 className="font-display font-semibold text-lg mb-2">À propos de ces sources</h2>
+          <h2 className="font-sans font-black text-lg mb-2"À propos de ces sources</h2>
           <p className="text-sm text-muted-foreground">
             Athlace s'appuie principalement sur les données ouvertes de <strong>data.sports.gouv.fr</strong> (Ministère des Sports).
             Cet annuaire complémentaire pointe vers les sources officielles de chaque fédération pour des informations détaillées

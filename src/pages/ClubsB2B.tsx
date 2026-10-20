@@ -62,7 +62,7 @@ function ClubFinder() {
           <Card key={c.id}>
             <CardContent className="p-4 flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <p className="font-semibold text-foreground truncate">{c.name}</p>
+                <p className="font-bold text-foreground truncate"{c.name}</p>
                 <p className="text-sm text-muted-foreground flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5" aria-hidden />
                   {[c.postal_code, c.city].filter(Boolean).join(' ')}
@@ -139,7 +139,7 @@ function WaitlistForm() {
     return (
       <div className="text-center py-6" role="status">
         <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" aria-hidden />
-        <p className="font-display text-xl font-semibold">Merci, c'est noté !</p>
+        <p className="font-sans text-xl font-bold"Merci, c'est noté !</p>
         <p className="text-muted-foreground mt-1">Nous vous préviendrons dès le lancement d'Athlace Club.</p>
       </div>
     );
@@ -171,7 +171,7 @@ export default function ClubsB2B() {
     <Layout>
       <section className="bg-muted border-b border-border py-10 lg:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-3xl lg:text-5xl font-bold text-foreground mb-3">Athlace pour les clubs</h1>
+          <h1 className="font-sans text-3xl lg:text-5xl font-black text-foreground mb-3"Athlace pour les clubs</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.
           </p>
@@ -179,19 +179,19 @@ export default function ClubsB2B() {
       </section>
 
       <section className="container mx-auto px-4 py-12">
-        <h2 className="font-display text-2xl lg:text-3xl font-bold text-center mb-6">Votre fiche existe déjà</h2>
+        <h2 className="font-sans text-2xl lg:text-3xl font-black text-center mb-6"Votre fiche existe déjà</h2>
         <ClubFinder />
       </section>
 
       <section className="bg-muted py-12">
         <div className="container mx-auto px-4">
-          <h2 className="font-display text-2xl lg:text-3xl font-bold text-center mb-8">Les offres</h2>
+          <h2 className="font-sans text-2xl lg:text-3xl font-black text-center mb-8"Les offres</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {offers.map((o) => (
               <Card key={o.name} className="flex flex-col">
                 <CardContent className="p-6 flex flex-col flex-1">
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <h3 className="font-display text-xl font-semibold">{o.name}</h3>
+                    <h3 className="font-sans text-xl font-bold"{o.name}</h3>
                     {o.available ? <Badge>Disponible</Badge> : <SoonBadge />}
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">{o.available ? 'Gratuit' : 'Tarif à venir'}</p>
@@ -216,7 +216,7 @@ export default function ClubsB2B() {
 
       <section className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-6 lg:p-8">
-          <h2 className="font-display text-2xl font-semibold text-center mb-6">Être prévenu du lancement d'Athlace Club</h2>
+          <h2 className="font-sans text-2xl font-black text-center mb-6"Être prévenu du lancement d'Athlace Club</h2>
           <WaitlistForm />
         </div>
       </section>

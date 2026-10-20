@@ -21,7 +21,7 @@ export default function SportsIndex() {
       />
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
             Tous les sports
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -37,7 +37,7 @@ export default function SportsIndex() {
               key={categorie.id}
               className="p-6 bg-card rounded-2xl border border-border hover:border-border transition-colors"
             >
-              <h2 className="font-display text-2xl font-semibold mb-4">
+              <h2 className="font-sans text-2xl font-black mb-4"
                 {categorie.icon} {categorie.name}
               </h2>
               <div className="flex flex-wrap gap-2 mb-4">
@@ -71,8 +71,8 @@ export default function SportsIndex() {
               {avail.isCategoryAvailable(categorie.id) ? (
                 <Link
                   to={`/sports/famille/${categorie.id}/`}
-                  className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                >
+                  className="inline-flex items-center text-sm font-bold text-primary hover:underline"
+                
                   Voir la catégorie {categorie.name} <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               ) : (

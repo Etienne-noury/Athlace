@@ -10,14 +10,14 @@ export default function Contact() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground">Contactez-nous</h1>
+          <h1 className="font-sans text-3xl font-black text-foreground"Contactez-nous</h1>
           <p className="text-muted-foreground mt-2">Une question, une suggestion ou un problème ? Écrivez-nous.</p>
         </div>
       </section>
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
-            <h2 className="font-display text-2xl font-semibold mb-6">Envoyer un message</h2>
+            <h2 className="font-sans text-2xl font-black mb-6"Envoyer un message</h2>
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -45,7 +45,7 @@ export default function Contact() {
             </form>
           </div>
           <div className="bg-card border border-border rounded-2xl p-8">
-            <h2 className="font-display text-2xl font-semibold mb-6">Nos coordonnées</h2>
+            <h2 className="font-sans text-2xl font-black mb-6"Nos coordonnées</h2>
 
             <a
               href="mailto:contact@athlace.fr"
@@ -56,7 +56,7 @@ export default function Contact() {
               </span>
               <span className="min-w-0">
                 <span className="block text-sm text-muted-foreground">Écrivez-nous directement</span>
-                <span className="block font-display text-lg font-semibold text-foreground break-all">
+                <span className="block font-sans text-lg font-bold text-foreground break-all"
                   contact@athlace.fr
                 </span>
                 <span className="block text-xs text-muted-foreground mt-1">Réponse sous 48h ouvrées</span>

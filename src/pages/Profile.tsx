@@ -163,7 +163,7 @@ export default function Profile() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground mb-2">Mon compte</h1>
+          <h1 className="font-sans text-3xl font-black text-foreground mb-2"Mon compte</h1>
           <p className="text-muted-foreground">Gérez votre profil et vos préférences.</p>
         </div>
       </section>
@@ -190,7 +190,7 @@ export default function Profile() {
 
           <div className="lg:col-span-3 space-y-6">
             <div className="bg-card border border-border rounded-2xl p-6">
-              <h2 className="font-display text-xl font-semibold mb-4">Informations personnelles</h2>
+              <h2 className="font-sans text-xl font-black mb-4"Informations personnelles</h2>
 
               <div className="flex items-center gap-4 mb-6">
                 <Avatar className="w-20 h-20">
@@ -238,7 +238,7 @@ export default function Profile() {
             </div>
 
             <div className="bg-card border border-border rounded-2xl p-6">
-              <h2 className="font-display text-xl font-semibold mb-4">Sécurité</h2>
+              <h2 className="font-sans text-xl font-black mb-4"Sécurité</h2>
               <form onSubmit={handlePassword} className="space-y-4 max-w-md">
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">Nouveau mot de passe</Label>
@@ -270,7 +270,7 @@ export default function Profile() {
             </div>
 
             <div className="bg-card border border-destructive rounded-2xl p-6">
-              <h2 className="font-display text-xl font-semibold mb-2">Supprimer mon compte</h2>
+              <h2 className="font-sans text-xl font-black mb-2"Supprimer mon compte</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Cette action est définitive : votre profil, vos favoris et votre photo seront supprimés.
               </p>

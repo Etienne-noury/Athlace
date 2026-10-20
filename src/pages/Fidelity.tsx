@@ -6,7 +6,7 @@ export default function Fidelity() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground">Programme fidélité</h1>
+          <h1 className="font-sans text-3xl font-black text-foreground"Programme fidélité</h1>
           <p className="text-muted-foreground mt-2">Gagnez des avantages en explorant les clubs.</p>
         </div>
       </section>

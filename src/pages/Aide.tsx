@@ -104,7 +104,7 @@ export default function Aide() {
       {/* Hero */}
       <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-3xl lg:text-5xl font-bold mb-4">
+          <h1 className="font-sans text-3xl lg:text-5xl font-black mb-4"
             Centre d'aide
           </h1>
           <p className="text-surface-alt text-lg max-w-2xl mx-auto mb-8">
@@ -128,7 +128,7 @@ export default function Aide() {
         <div className="grid lg:grid-cols-3 gap-12">
           {/* FAQ */}
           <div className="lg:col-span-2">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-8">
+            <h2 className="font-sans text-2xl font-black text-foreground mb-8"
               Questions fréquentes
             </h2>
 
@@ -140,7 +140,7 @@ export default function Aide() {
               <div className="space-y-8">
                 {filteredFaqs.map((category) => (
                   <div key={category.category}>
-                    <h3 className="font-semibold text-lg text-foreground mb-4">
+                    <h3 className="font-black text-lg text-foreground mb-4"
                       {category.category}
                     </h3>
                     <Accordion type="single" collapsible className="space-y-2">
@@ -167,7 +167,7 @@ export default function Aide() {
 
           {/* Contact */}
           <div>
-            <h2 className="font-display text-2xl font-bold text-foreground mb-8">
+            <h2 className="font-sans text-2xl font-black text-foreground mb-8"
               Nous contacter
             </h2>
 
@@ -176,7 +176,7 @@ export default function Aide() {
                 <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">Email</h3>
+                <h3 className="font-bold text-foreground mb-2"Email</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   Réponse sous 24-48h
                 </p>
@@ -189,7 +189,7 @@ export default function Aide() {
                 <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <Phone className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">Téléphone</h3>
+                <h3 className="font-bold text-foreground mb-2"Téléphone</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   Lun-Ven 9h-18h
                 </p>
@@ -202,7 +202,7 @@ export default function Aide() {
                 <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
                   <MessageCircle className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">Chat en ligne</h3>
+                <h3 className="font-bold text-foreground mb-2"Chat en ligne</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   Assistance instantanée
                 </p>

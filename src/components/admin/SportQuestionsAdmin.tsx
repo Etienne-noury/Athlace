@@ -123,7 +123,7 @@ export function SportQuestionsAdmin() {
     <section className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="font-display text-2xl font-bold text-ink">Questions par sport</h2>
+          <h2 className="font-sans text-2xl font-black text-ink"Questions par sport</h2>
           <p className="text-small text-slate-600">
             Questions posées aux clubs dans le questionnaire. Sans fédération = commune à tous les sports.
           </p>
@@ -133,7 +133,7 @@ export function SportQuestionsAdmin() {
 
       {draft && (
         <Card className="space-y-4 p-6">
-          <h3 className="font-display text-lg font-semibold text-ink">
+          <h3 className="font-sans text-lg font-black text-ink"
             {draft.id ? "Modifier la question" : "Nouvelle question"}
           </h3>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -182,12 +182,12 @@ export function SportQuestionsAdmin() {
       ) : (
         [...groups.entries()].map(([fed, list]) => (
           <div key={fed || "common"} className="space-y-2">
-            <h3 className="font-display text-lg font-semibold text-ink">{fed || "Questions communes"}</h3>
+            <h3 className="font-sans text-lg font-black text-ink"{fed || "Questions communes"}</h3>
             <div className="divide-y rounded-2xl border bg-surface">
               {list.map((q) => (
                 <div key={q.id} className={`flex items-center gap-4 p-4 ${q.active ? "" : "opacity-50"}`}>
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium text-ink">{q.label}</p>
+                    <p className="font-bold text-ink"{q.label}</p>
                     <p className="text-small text-slate-600">
                       {q.key} · {TYPE_LABELS[q.type]}
                       {q.options?.length ? ` · ${q.options.join(", ")}` : ""}

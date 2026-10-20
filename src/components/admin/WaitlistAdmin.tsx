@@ -17,7 +17,7 @@ export function WaitlistAdmin() {
 
   return (
     <section className="space-y-4">
-      <h2 className="font-display text-2xl font-bold text-ink">
+      <h2 className="font-sans text-2xl font-black text-ink"
         Liste d'attente Athlace Club {data ? `(${data.length})` : ''}
       </h2>
       <Card className="overflow-x-auto p-4">

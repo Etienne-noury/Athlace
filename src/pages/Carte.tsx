@@ -43,7 +43,7 @@ export default function Carte() {
       {/* Header */}
       <section className="page-hero-compact bg-blue-500 text-cream-100 py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-2xl lg:text-4xl font-bold mb-2">
+          <h1 className="font-sans text-2xl lg:text-4xl font-black mb-2"
             Carte des clubs sportifs
           </h1>
           <p className="text-surface-alt text-lg">
@@ -83,7 +83,7 @@ export default function Carte() {
           >
             <div className="hidden xl:flex items-center gap-2 text-muted-foreground xl:col-span-1 xl:self-center">
               <Filter className="w-4 h-4" />
-              <span className="text-sm font-medium">Filtres :</span>
+              <span className="text-sm font-bold"Filtres :</span>
             </div>
 
 
@@ -100,7 +100,7 @@ export default function Carte() {
             />
 
             <div>
-              <label htmlFor="map-location" className="text-sm font-medium text-foreground mb-2 block">
+              <label htmlFor="map-location" className="text-sm font-bold text-foreground mb-2 block"
                 Ville ou code postal
               </label>
               <div className="relative">
@@ -116,7 +116,7 @@ export default function Carte() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-foreground mb-2 block">Région</label>
+              <label className="text-sm font-bold text-foreground mb-2 block"Région</label>
               <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Région" />

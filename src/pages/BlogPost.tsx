@@ -32,7 +32,7 @@ export default function BlogPost() {
           <Button variant="ghost" className="mb-4 -ml-3" asChild>
             <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour au blog</Link>
           </Button>
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground"
             {post?.title || 'Article'}
           </h1>
           {post && <p className="text-muted-foreground mt-2">{post.date}</p>}

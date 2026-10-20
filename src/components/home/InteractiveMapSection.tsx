@@ -16,11 +16,11 @@ export function InteractiveMapSection() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-tint-100 text-primary text-sm font-medium mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-tint-100 text-primary text-sm font-bold mb-3"
               <Navigation className="w-4 h-4" />
               Carte interactive
             </div>
-            <h2 className="font-display text-2xl lg:text-3xl font-bold text-foreground">
+            <h2 className="font-sans text-2xl lg:text-3xl font-black text-foreground"
               Trouvez les clubs <span className="text-primary">près de chez vous</span>
             </h2>
           </div>
@@ -28,7 +28,7 @@ export function InteractiveMapSection() {
           <div className="flex flex-wrap items-end gap-3">
             <div className="hidden sm:flex items-center gap-2 text-muted-foreground pb-2">
               <Filter className="w-4 h-4" />
-              <span className="text-sm font-medium">Filtres :</span>
+              <span className="text-sm font-bold"Filtres :</span>
             </div>
 
             <DisciplineFilter

@@ -51,7 +51,7 @@ function StepCard({ step, percent }: { step: number; percent: number }) {
   return (
     <div className="rounded-2xl border bg-surface p-5 space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-display text-title font-bold text-ink">
+        <p className="font-sans text-title font-bold text-ink">
           Étape {step} / {STEPS.length} · {STEPS[step - 1]}
         </p>
         <p className="text-small text-slate-600">
@@ -70,7 +70,7 @@ function StepCard({ step, percent }: { step: number; percent: number }) {
 
 function FedBadge() {
   return (
-    <span className="ml-2 inline-flex items-center rounded-pill bg-tint-100 px-2 py-0.5 text-[11px] font-medium text-blue-500">
+    <span className="ml-2 inline-flex items-center rounded-pill bg-tint-100 px-2 py-0.5 text-[11px] font-bold text-blue-500"
       Donnée fédération
     </span>
   );
@@ -79,7 +79,7 @@ function FedBadge() {
 function Field({ label, fed, children, hint, htmlFor }: { label: string; fed?: boolean; children: ReactNode; hint?: string; htmlFor?: string }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={htmlFor} className="text-small font-semibold text-ink">
+      <Label htmlFor={htmlFor} className="text-small font-bold text-ink"
         {label}
         {fed && <FedBadge />}
       </Label>
@@ -92,7 +92,7 @@ function Field({ label, fed, children, hint, htmlFor }: { label: string; fed?: b
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="space-y-4 rounded-2xl border bg-background p-5">
-      <h3 className="font-display text-subtitle font-bold text-ink">{title}</h3>
+      <h3 className="font-sans text-subtitle font-bold text-ink">{title}</h3>
       {children}
     </div>
   );
@@ -336,7 +336,7 @@ export default function MyClub() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="mb-4 font-display text-2xl font-bold text-ink">Mon club</h1>
+          <h1 className="mb-4 font-sans text-2xl font-black text-ink"Mon club</h1>
           <p className="mb-6 text-slate-600">Connectez-vous pour réclamer ou gérer la fiche de votre club.</p>
           <Button asChild><Link to="/compte/connexion/">Se connecter</Link></Button>
         </div>
@@ -349,7 +349,7 @@ export default function MyClub() {
       <Layout>
         <div className="container mx-auto max-w-xl space-y-6 px-4 py-20 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-blue-500" />
-          <h1 className="font-display text-heading-2 font-bold text-ink">Merci !</h1>
+          <h1 className="font-sans text-heading-2 font-black text-ink"Merci !</h1>
           <p className="text-body-lg text-slate-600">Votre fiche sera mise à jour après vérification par l'équipe Athlace.</p>
           <Button variant="outline" onClick={() => setDone(false)}>Modifier mes réponses</Button>
         </div>
@@ -361,7 +361,7 @@ export default function MyClub() {
     <Layout>
       <section className="border-b border-border bg-muted py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-ink">Mon club</h1>
+          <h1 className="font-sans text-3xl font-black text-ink"Mon club</h1>
           <p className="mt-2 text-slate-600">
             Complétez la fiche de votre club. Vos réponses sont vérifiées par l'équipe Athlace avant publication.
           </p>
@@ -448,7 +448,7 @@ function Step1({
         {club ? (
           <div className="flex items-center justify-between gap-3 rounded-xl bg-tint-100 p-4">
             <div>
-              <p className="font-semibold text-ink">{club.name}</p>
+              <p className="font-bold text-ink"{club.name}</p>
               <p className="text-small text-slate-600">{[club.discipline, club.city].filter(Boolean).join(' · ')}</p>
             </div>
             <Button variant="outline" size="sm" onClick={() => { setClub(null); setP((o) => ({ ...o, club_id: null })); }}>
@@ -484,7 +484,7 @@ function Step1({
                 {hits.map((h) => (
                   <li key={h.id}>
                     <button type="button" onClick={() => pickClub(h.id)} className="w-full px-4 py-3 text-left hover:bg-tint-100">
-                      <span className="font-medium text-ink">{h.name}</span>
+                      <span className="font-bold text-ink"{h.name}</span>
                       <span className="block text-small text-slate-600">{[h.discipline, h.city].filter(Boolean).join(' · ')}</span>
                     </button>
                   </li>
@@ -515,7 +515,7 @@ function Step1({
         </Field>
         {subId && affMatch !== null && (
           affMatch ? (
-            <p className="inline-flex items-center gap-1.5 rounded-pill bg-secondary px-3 py-1 text-small font-semibold text-secondary-foreground">
+            <p className="inline-flex items-center gap-1.5 rounded-pill bg-secondary px-3 py-1 text-small font-bold text-secondary-foreground"
               <CheckCircle2 className="h-4 w-4" /> Affiliation vérifiée
             </p>
           ) : (
@@ -543,7 +543,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
       <Field label="Logo" fed={fed('logo')}>
         <div className="flex items-center gap-4">
           {p.logo && <MediaImg src={p.logo} alt="Logo du club" className="h-16 w-16 rounded-xl border object-contain" />}
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-surface-alt px-4 py-2 text-small font-semibold text-blue-500">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-surface-alt px-4 py-2 text-small font-bold text-blue-500"
             <Upload className="h-4 w-4" /> {p.logo ? 'Remplacer' : 'Ajouter un logo'}
             <input type="file" accept="image/*" className="sr-only" disabled={uploading}
               onChange={async (e) => {
@@ -899,31 +899,31 @@ function Step8({
 
       <Block title="Récapitulatif">
         <dl className="grid gap-x-6 gap-y-3 text-small sm:grid-cols-[auto_1fr]">
-          <dt className="font-semibold text-ink">Club</dt>
+          <dt className="font-bold text-ink"Club</dt>
           <dd className="text-slate-600">{clubName ?? '-'}</dd>
           {RECAP.filter(([k]) => isFilled(p[k])).map(([k, l]) => (
             <div key={k} className="contents">
-              <dt className="font-semibold text-ink">{l}</dt>
+              <dt className="font-bold text-ink"{l}</dt>
               <dd className="break-words text-slate-600">{fmt(p[k])}</dd>
             </div>
           ))}
-          {isFilled(p.logo) && (<><dt className="font-semibold text-ink">Logo</dt><dd className="text-slate-600">Fourni</dd></>)}
-          {isFilled(p.photos) && (<><dt className="font-semibold text-ink">Photos</dt><dd className="text-slate-600">{p.photos!.length}</dd></>)}
+          {isFilled(p.logo) && (<><dt className="font-bold text-ink"Logo</dt><dd className="text-slate-600">Fourni</dd></>)}
+          {isFilled(p.photos) && (<><dt className="font-bold text-ink"Photos</dt><dd className="text-slate-600">{p.photos!.length}</dd></>)}
           {isFilled(p.venues) && (
-            <><dt className="font-semibold text-ink">Lieux</dt>
+            <><dt className="font-bold text-ink"Lieux</dt>
               <dd className="text-slate-600">{p.venues!.map((v) => [v.name, v.address].filter(Boolean).join(' - ') + (v.is_main ? ' (principal)' : '')).join(' ; ')}</dd></>
           )}
           {isFilled(p.schedules) && (
-            <><dt className="font-semibold text-ink">Créneaux</dt>
+            <><dt className="font-bold text-ink"Créneaux</dt>
               <dd className="text-slate-600">{p.schedules!.map((s) => `${s.day} ${s.start_time}-${s.end_time}${s.category ? ` ${s.category}` : ''}${s.venue ? ` @ ${s.venue}` : ''}`).join(' ; ')}</dd></>
           )}
           {isFilled(p.prices) && (
-            <><dt className="font-semibold text-ink">Tarifs</dt>
+            <><dt className="font-bold text-ink"Tarifs</dt>
               <dd className="text-slate-600">{p.prices!.map((x) => `${x.label} : ${x.amount} € / ${x.period}${x.includes_license ? ' (licence incluse)' : ''}`).join(' ; ')}</dd></>
           )}
           {questions.filter((q) => isFilled(p.sport_answers?.[q.key])).map((q) => (
             <div key={q.id} className="contents">
-              <dt className="font-semibold text-ink">{q.label}</dt>
+              <dt className="font-bold text-ink"{q.label}</dt>
               <dd className="text-slate-600">{fmt(p.sport_answers![q.key])}</dd>
             </div>
           ))}

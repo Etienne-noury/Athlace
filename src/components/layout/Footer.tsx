@@ -83,7 +83,7 @@ export function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).slice(0, 3).map(([title, links]) => (
             <div key={title}>
-              <h4 className="font-display font-semibold text-lg mb-4">{title}</h4>
+              <h4 className="font-sans font-bold text-lg mb-4"{title}</h4>
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.href}>
@@ -105,7 +105,7 @@ export function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {Object.entries(footerLinks).slice(3).map(([title, links]) => (
               <div key={title}>
-                <h4 className="font-display font-semibold text-base mb-3">{title}</h4>
+                <h4 className="font-sans font-bold text-base mb-3"{title}</h4>
                 <ul className="space-y-2">
                   {links.map((link) => (
                     <li key={link.href}>
@@ -140,8 +140,8 @@ export function Footer() {
             <div className="flex flex-wrap gap-6">
               <a
                 href="mailto:contact@athlace.fr"
-                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-semibold text-cream-100 hover:bg-glass transition-colors"
-              >
+                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-bold text-cream-100 hover:bg-glass transition-colors"
+              
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
               </a>
