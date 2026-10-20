@@ -89,7 +89,7 @@ export function DisciplineFilter({
               <span className="flex items-center gap-1 shrink-0">
                 {selectedSport && (
                   <X
-                    className="h-4 w-4 opacity-60 hover:opacity-100"
+                    className="h-4 w-4 opacity-60 hover:opacity-100 !pointer-events-auto cursor-pointer"
                     role="button"
                     aria-label="Effacer le sport"
                     onPointerDown={(event) => {
