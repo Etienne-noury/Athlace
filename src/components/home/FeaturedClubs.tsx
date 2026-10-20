@@ -61,6 +61,9 @@ export function FeaturedClubs() {
               <Skeleton key={i} className="aspect-[4/5] rounded-2xl" />
             ))}
         </div>
+        {!isLoading && featuredClubs.length === 0 && (
+          <p className="text-center text-muted-foreground py-8">Aucun club à afficher pour l'instant</p>
+        )}
       </div>
     </section>
   );

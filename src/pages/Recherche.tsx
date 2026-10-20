@@ -132,8 +132,8 @@ export default function Recherche() {
             Rechercher un club
           </h1>
           <p className="text-muted-foreground text-lg">
-            {totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}
-            {nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
+            {isLoading ? 'Recherche en cours…' : <>{totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}</>}
+            {!isLoading && nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
           </p>
 
         </div>
@@ -375,6 +375,7 @@ export default function Recherche() {
               <p className="text-xs text-muted-foreground text-center mt-4">Mise à jour…</p>
             )}
 
+            {!isLoading && totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-8">
               <Button
                 variant="outline"
@@ -394,6 +395,7 @@ export default function Recherche() {
                 Suivant →
               </Button>
             </div>
+            )}
 
 
           </div>
