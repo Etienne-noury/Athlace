@@ -53,8 +53,16 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-bleu-athlace text-creme mt-auto">
-      <div className="container mx-auto px-4 py-12 lg:py-16">
+    <footer className="relative overflow-hidden bg-bleu-athlace text-creme mt-auto">
+      {/* Filigrane décoratif - grand A, bas droite */}
+      <img
+        src="/brand/motif-A-filigrane.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 right-0 h-[120%] w-auto opacity-[0.28] select-none"
+      />
+      <div className="relative container mx-auto px-4 py-12 lg:py-16">
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="space-y-4">
