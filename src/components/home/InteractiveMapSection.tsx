@@ -16,7 +16,7 @@ export function InteractiveMapSection() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-tint-100 text-primary text-sm font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-creme text-primary text-sm font-bold mb-3">
               <Navigation className="w-4 h-4" />
               Carte interactive
             </div>

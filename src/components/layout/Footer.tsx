@@ -53,7 +53,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-blue-500 text-cream-100 mt-auto">
+    <footer className="bg-bleu-athlace text-creme mt-auto">
       <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
@@ -61,7 +61,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <img src="/logos/logotype-creme-lime.png" alt="Athlace" className="h-12 w-auto min-w-[96px] object-contain" />
             </div>
-            <p className="text-surface-alt text-sm leading-relaxed">
+            <p className="text-creme text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.
             </p>
             <div className="flex gap-3">
@@ -89,7 +89,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
+                      className="text-creme hover:text-creme transition-colors text-sm"
                     >
                       {link.label}
                     </Link>
@@ -114,14 +114,14 @@ export function Footer() {
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
+                          className="text-creme hover:text-creme transition-colors text-sm"
                         >
                           {link.label}
                         </a>
                       ) : (
                         <Link
                           to={link.href}
-                          className="text-surface-alt hover:text-cream-100 transition-colors text-sm"
+                          className="text-creme hover:text-creme transition-colors text-sm"
                         >
                           {link.label}
                         </Link>
@@ -136,16 +136,16 @@ export function Footer() {
 
         {/* Contact */}
         <div className="mt-12 pt-8 border-t border-glass-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-creme">
             <div className="flex flex-wrap gap-6">
               <a
                 href="mailto:contact@athlace.fr"
-                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-bold text-cream-100 hover:bg-glass transition-colors"
+                className="flex items-center gap-2 rounded-pill bg-glass px-4 py-2 font-bold text-creme hover:bg-glass transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
               </a>
-              <a href="tel:0800123456" className="flex items-center gap-2 hover:text-cream-100 transition-colors">
+              <a href="tel:0800123456" className="flex items-center gap-2 hover:text-creme transition-colors">
                 <Phone className="w-4 h-4" />
                 0 800 123 456
               </a>
@@ -158,11 +158,11 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-surface-alt">
+        <div className="mt-8 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-creme">
           <p>© 2026 Athlace. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-6">
             {footerLinks['Informations légales'].map((link) => (
-              <Link key={link.href} to={link.href} className="hover:text-cream-100 transition-colors">
+              <Link key={link.href} to={link.href} className="hover:text-creme transition-colors">
                 {link.label}
               </Link>
             ))}

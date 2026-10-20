@@ -240,7 +240,7 @@ export function FranceMap({
       {/* Overlay info */}
       <div className="absolute bottom-4 left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-pill bg-tint-100 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-pill bg-creme flex items-center justify-center">
             <MapPin className="w-5 h-5 text-primary" />
           </div>
           <div>

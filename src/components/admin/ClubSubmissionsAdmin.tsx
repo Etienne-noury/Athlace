@@ -79,26 +79,26 @@ function SubmissionsList() {
   });
 
   if (isLoading) return <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />;
-  if (!data?.length) return <p className="text-small text-slate-600">Aucune fiche en attente.</p>;
+  if (!data?.length) return <p className="text-small text-nuit/70">Aucune fiche en attente.</p>;
 
   return (
     <div className="space-y-3">
       {data.map((s) => (
-        <div key={s.id} className="rounded-2xl border bg-surface">
+        <div key={s.id} className="rounded-2xl border bg-blanc">
           <button type="button" onClick={() => setOpenId(openId === s.id ? null : s.id)}
             className="flex w-full flex-wrap items-center gap-3 p-4 text-left" aria-expanded={openId === s.id}>
             <div className="min-w-0 flex-1">
-              <p className="font-bold text-ink">
+              <p className="font-bold text-nuit">
                 {s.clubName}
-                {s.isNew && <span className="ml-2 rounded-pill bg-tint-100 px-2 py-0.5 text-micro text-blue-500">Nouveau club</span>}
+                {s.isNew && <span className="ml-2 rounded-pill bg-creme px-2 py-0.5 text-micro text-bleu-athlace">Nouveau club</span>}
               </p>
-              <p className="text-small text-slate-600">
+              <p className="text-small text-nuit/70">
                 <span className="capitalize">{s.role ?? '-'}</span> · envoyée le{' '}
                 {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
               </p>
             </div>
             <AffBadge ok={s.affiliation_match} />
-            <ChevronDown className={cn('h-4 w-4 text-slate-500 transition-transform', openId === s.id && 'rotate-180')} />
+            <ChevronDown className={cn('h-4 w-4 text-nuit/70 transition-transform', openId === s.id && 'rotate-180')} />
           </button>
           {openId === s.id && (
             <SubmissionDetail sub={s} onDone={() => { setOpenId(null); qc.invalidateQueries({ queryKey: ['admin-submissions'] }); }} />
@@ -187,10 +187,10 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
   };
 
   const Row = ({ r, hl }: { r: (typeof rows)[number]; hl: boolean }) => (
-    <div className={cn('grid gap-2 px-4 py-3 text-small sm:grid-cols-[180px_1fr_1fr]', hl && 'bg-tint-100')}>
-      <p className="font-bold text-ink">{r.label}</p>
-      <p className="break-all text-slate-600">{fmt(r.cur)}</p>
-      <p className={cn('break-words', hl ? 'font-bold text-blue-500' : 'text-slate-600')}>{fmt(r.next)}</p>
+    <div className={cn('grid gap-2 px-4 py-3 text-small sm:grid-cols-[180px_1fr_1fr]', hl && 'bg-creme')}>
+      <p className="font-bold text-nuit">{r.label}</p>
+      <p className="break-all text-nuit/70">{fmt(r.cur)}</p>
+      <p className={cn('break-words', hl ? 'font-bold text-bleu-athlace' : 'text-nuit/70')}>{fmt(r.next)}</p>
     </div>
   );
 
@@ -198,15 +198,15 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
     <div className="space-y-4 border-t p-4">
       {isLoading ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : (
         <div className="overflow-hidden rounded-xl border bg-background">
-          <div className="hidden grid-cols-[180px_1fr_1fr] gap-2 border-b px-4 py-2 text-micro font-bold uppercase text-slate-500 sm:grid">
+          <div className="hidden grid-cols-[180px_1fr_1fr] gap-2 border-b px-4 py-2 text-micro font-bold uppercase text-nuit/70 sm:grid">
             <span>Champ</span><span>Donnée actuelle (fédération)</span><span>Proposé par le club</span>
           </div>
-          {changed.length === 0 && <p className="px-4 py-3 text-small text-slate-600">Aucune modification proposée.</p>}
+          {changed.length === 0 && <p className="px-4 py-3 text-small text-nuit/70">Aucune modification proposée.</p>}
           <div className="divide-y">{changed.map((r) => <Row key={r.key} r={r} hl />)}</div>
           {same.length > 0 && (
             <>
               <button type="button" onClick={() => setShowSame(!showSame)} aria-expanded={showSame}
-                className="flex w-full items-center gap-2 border-t px-4 py-2 text-small text-blue-500">
+                className="flex w-full items-center gap-2 border-t px-4 py-2 text-small text-bleu-athlace">
                 <ChevronDown className={cn('h-4 w-4 transition-transform', showSame && 'rotate-180')} />
                 {same.length} champ{same.length > 1 ? 's' : ''} identique{same.length > 1 ? 's' : ''}
               </button>
@@ -277,21 +277,21 @@ function ConflictsList() {
   };
 
   if (isLoading) return <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />;
-  if (!data?.length) return <p className="text-small text-slate-600">Aucun conflit.</p>;
+  if (!data?.length) return <p className="text-small text-nuit/70">Aucun conflit.</p>;
 
   return (
-    <div className="divide-y rounded-2xl border bg-surface">
+    <div className="divide-y rounded-2xl border bg-blanc">
       {data.map((c) => (
         <div key={c.id} className="space-y-3 p-4">
-          <p className="font-bold text-ink">{c.clubName} <span className="font-light text-slate-500">· {c.field}</span></p>
+          <p className="font-bold text-nuit">{c.clubName} <span className="font-light text-nuit/70">· {c.field}</span></p>
           <div className="grid gap-2 text-small sm:grid-cols-2">
             <div className="rounded-xl bg-background p-3">
-              <p className="text-micro font-bold uppercase text-slate-500">Valeur du club</p>
-              <p className="break-words text-ink">{c.club_value ?? '-'}</p>
+              <p className="text-micro font-bold uppercase text-nuit/70">Valeur du club</p>
+              <p className="break-words text-nuit">{c.club_value ?? '-'}</p>
             </div>
-            <div className="rounded-xl bg-tint-100 p-3">
-              <p className="text-micro font-bold uppercase text-slate-500">Nouvelle valeur fédération</p>
-              <p className="break-words font-bold text-blue-500">{c.federation_value ?? '-'}</p>
+            <div className="rounded-xl bg-creme p-3">
+              <p className="text-micro font-bold uppercase text-nuit/70">Nouvelle valeur fédération</p>
+              <p className="break-words font-bold text-bleu-athlace">{c.federation_value ?? '-'}</p>
             </div>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
@@ -309,14 +309,14 @@ export function ClubSubmissionsAdmin() {
   return (
     <section className="space-y-6">
       <div className="space-y-1">
-        <h2 className="font-sans text-2xl font-black text-ink">Fiches clubs</h2>
-        <p className="text-small text-slate-600">Fiches envoyées par les clubs et conflits avec les nouvelles données des fédérations.</p>
+        <h2 className="font-sans text-2xl font-black text-nuit">Fiches clubs</h2>
+        <p className="text-small text-nuit/70">Fiches envoyées par les clubs et conflits avec les nouvelles données des fédérations.</p>
       </div>
       <div className="flex gap-2" role="tablist">
         {([['submissions', 'Fiches envoyées'], ['conflicts', 'Conflits']] as const).map(([v, l]) => (
           <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => setView(v)}
             className={cn('rounded-pill px-4 py-1.5 text-small font-bold',
-              view === v ? 'bg-primary text-primary-foreground' : 'bg-surface-alt text-blue-500')}>
+              view === v ? 'bg-primary text-primary-foreground' : 'bg-creme text-bleu-athlace')}>
             {l}
           </button>
         ))}

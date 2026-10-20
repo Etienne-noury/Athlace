@@ -34,7 +34,7 @@ export default function ForgotPassword() {
 
           {sent ? (
             <div className="space-y-4">
-              <div className="p-4 bg-tint-100 text-primary rounded-lg text-sm text-center">
+              <div className="p-4 bg-creme text-primary rounded-lg text-sm text-center">
                 Si un compte existe pour {email}, un email de réinitialisation vient d'être envoyé.
               </div>
               <Button variant="outline" className="w-full" asChild>

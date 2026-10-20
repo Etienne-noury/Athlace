@@ -13,19 +13,6 @@
     --nuit: 222 47% 11%;           /* #0F172A */
     --blanc: 0 0% 100%;            /* #FFFFFF */
 
-    /* Alias temporaires des anciens noms (à supprimer après refactor) */
-    --blue-500: var(--bleu-athlace);
-    --blue-700: var(--bleu-athlace);
-    --lime-500: var(--lime);
-    --cream-100: var(--creme);
-    --ink: var(--nuit);
-    --slate-600: var(--nuit);
-    --slate-500: var(--nuit);
-    --olive-900: var(--nuit);
-    --tint-100: var(--creme);
-    --surface-alt: var(--creme);
-    --surface: var(--blanc);
-
     /* shadcn/ui */
     --background: var(--creme);
     --foreground: var(--nuit);
