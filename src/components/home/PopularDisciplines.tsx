@@ -63,7 +63,7 @@ export function PopularDisciplines() {
                 </div>
 
                 {/* Arrow */}
-                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-pill bg-tint-100 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-pill bg-creme flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                   <ArrowRight className="w-4 h-4 text-primary" />
                 </div>
               </div>

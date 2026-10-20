@@ -49,28 +49,28 @@ type ClubRow = Record<string, unknown> & { id: string; name: string; city: strin
 
 function StepCard({ step, percent }: { step: number; percent: number }) {
   return (
-    <div className="rounded-2xl border bg-surface p-5 space-y-4">
+    <div className="rounded-2xl border bg-blanc p-5 space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-sans text-title font-bold text-ink">
+        <p className="font-sans text-title font-bold text-nuit">
           Étape {step} / {STEPS.length} · {STEPS[step - 1]}
         </p>
-        <p className="text-small text-slate-600">
-          Fiche complète à <span className="font-bold text-blue-500">{percent} %</span>
+        <p className="text-small text-nuit/70">
+          Fiche complète à <span className="font-bold text-bleu-athlace">{percent} %</span>
         </p>
       </div>
       <div className="flex gap-1" aria-hidden>
         {STEPS.map((_, i) => (
-          <div key={i} className={cn('h-1.5 flex-1 rounded-pill', i < step ? 'bg-primary' : 'bg-tint-100')} />
+          <div key={i} className={cn('h-1.5 flex-1 rounded-pill', i < step ? 'bg-primary' : 'bg-creme')} />
         ))}
       </div>
-      <Progress value={percent} aria-label={`Fiche complète à ${percent} %`} className="h-2 bg-tint-100" />
+      <Progress value={percent} aria-label={`Fiche complète à ${percent} %`} className="h-2 bg-creme" />
     </div>
   );
 }
 
 function FedBadge() {
   return (
-    <span className="ml-2 inline-flex items-center rounded-pill bg-tint-100 px-2 py-0.5 text-[11px] font-bold text-blue-500">
+    <span className="ml-2 inline-flex items-center rounded-pill bg-creme px-2 py-0.5 text-[11px] font-bold text-bleu-athlace">
       Donnée fédération
     </span>
   );
@@ -79,12 +79,12 @@ function FedBadge() {
 function Field({ label, fed, children, hint, htmlFor }: { label: string; fed?: boolean; children: ReactNode; hint?: string; htmlFor?: string }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={htmlFor} className="text-small font-bold text-ink">
+      <Label htmlFor={htmlFor} className="text-small font-bold text-nuit">
         {label}
         {fed && <FedBadge />}
       </Label>
       {children}
-      {hint && <p className="text-caption text-slate-500">{hint}</p>}
+      {hint && <p className="text-caption text-nuit/70">{hint}</p>}
     </div>
   );
 }
@@ -92,7 +92,7 @@ function Field({ label, fed, children, hint, htmlFor }: { label: string; fed?: b
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="space-y-4 rounded-2xl border bg-background p-5">
-      <h3 className="font-sans text-subtitle font-bold text-ink">{title}</h3>
+      <h3 className="font-sans text-subtitle font-bold text-nuit">{title}</h3>
       {children}
     </div>
   );
@@ -110,7 +110,7 @@ function Chips({ options, value, onChange }: { options: string[]; value: string[
             onClick={() => onChange(on ? cur.filter((x) => x !== o) : [...cur, o])}
             className={cn(
               'rounded-pill border px-3 py-1.5 text-small transition-colors',
-              on ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-slate-600 hover:border-primary',
+              on ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-nuit/70 hover:border-primary',
             )}
           >
             {o}
@@ -130,7 +130,7 @@ function YesNo({ value, onChange }: { value: boolean | null | undefined; onChang
           onClick={() => onChange(value === o.v ? null : o.v)}
           className={cn(
             'rounded-pill border px-4 py-1.5 text-small transition-colors',
-            value === o.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-slate-600 hover:border-primary',
+            value === o.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-nuit/70 hover:border-primary',
           )}
         >
           {o.l}
@@ -149,7 +149,7 @@ function MediaImg({ src, alt, className }: { src: string; alt: string; className
     if (src.startsWith('http')) { setUrl(src); return; }
     supabase.storage.from(MEDIA_BUCKET).createSignedUrl(src, 3600).then(({ data }) => setUrl(data?.signedUrl ?? null));
   }, [src]);
-  return url ? <img src={url} alt={alt} className={className} /> : <div className={cn('bg-tint-100', className)} />;
+  return url ? <img src={url} alt={alt} className={className} /> : <div className={cn('bg-creme', className)} />;
 }
 
 /* ---------- Données ---------- */
@@ -336,8 +336,8 @@ export default function MyClub() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="mb-4 font-sans text-2xl font-black text-ink">Mon club</h1>
-          <p className="mb-6 text-slate-600">Connectez-vous pour réclamer ou gérer la fiche de votre club.</p>
+          <h1 className="mb-4 font-sans text-2xl font-black text-nuit">Mon club</h1>
+          <p className="mb-6 text-nuit/70">Connectez-vous pour réclamer ou gérer la fiche de votre club.</p>
           <Button asChild><Link to="/compte/connexion/">Se connecter</Link></Button>
         </div>
       </Layout>
@@ -348,9 +348,9 @@ export default function MyClub() {
     return (
       <Layout>
         <div className="container mx-auto max-w-xl space-y-6 px-4 py-20 text-center">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-blue-500" />
-          <h1 className="font-sans text-heading-2 font-black text-ink">Merci !</h1>
-          <p className="text-body-lg text-slate-600">Votre fiche sera mise à jour après vérification par l'équipe Athlace.</p>
+          <CheckCircle2 className="mx-auto h-12 w-12 text-bleu-athlace" />
+          <h1 className="font-sans text-heading-2 font-black text-nuit">Merci !</h1>
+          <p className="text-body-lg text-nuit/70">Votre fiche sera mise à jour après vérification par l'équipe Athlace.</p>
           <Button variant="outline" onClick={() => setDone(false)}>Modifier mes réponses</Button>
         </div>
       </Layout>
@@ -361,12 +361,12 @@ export default function MyClub() {
     <Layout>
       <section className="border-b border-border bg-muted py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl font-black text-ink">Mon club</h1>
-          <p className="mt-2 text-slate-600">
+          <h1 className="font-sans text-3xl font-black text-nuit">Mon club</h1>
+          <p className="mt-2 text-nuit/70">
             Complétez la fiche de votre club. Vos réponses sont vérifiées par l'équipe Athlace avant publication.
           </p>
           {status === 'submitted' && (
-            <p className="mt-3 inline-flex rounded-pill bg-tint-100 px-3 py-1 text-small text-blue-500">
+            <p className="mt-3 inline-flex rounded-pill bg-creme px-3 py-1 text-small text-bleu-athlace">
               Fiche envoyée, en attente de vérification - vous pouvez encore la modifier.
             </p>
           )}
@@ -393,7 +393,7 @@ export default function MyClub() {
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-6">
           <Button variant="outline" onClick={() => goTo(step - 1)} disabled={step === 1 || saving}>Précédent</Button>
-          <Button variant="ghost" onClick={saveLater} disabled={saving} className="rounded-pill bg-surface-alt text-blue-500">
+          <Button variant="ghost" onClick={saveLater} disabled={saving} className="rounded-pill bg-creme text-bleu-athlace">
             Enregistrer et finir plus tard
           </Button>
           {step < STEPS.length ? (
@@ -446,10 +446,10 @@ function Step1({
     <>
       <Block title="Votre club *">
         {club ? (
-          <div className="flex items-center justify-between gap-3 rounded-xl bg-tint-100 p-4">
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-creme p-4">
             <div>
-              <p className="font-bold text-ink">{club.name}</p>
-              <p className="text-small text-slate-600">{[club.discipline, club.city].filter(Boolean).join(' · ')}</p>
+              <p className="font-bold text-nuit">{club.name}</p>
+              <p className="text-small text-nuit/70">{[club.discipline, club.city].filter(Boolean).join(' · ')}</p>
             </div>
             <Button variant="outline" size="sm" onClick={() => { setClub(null); setP((o) => ({ ...o, club_id: null })); }}>
               Changer
@@ -476,16 +476,16 @@ function Step1({
         ) : (
           <div className="space-y-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-nuit/70" />
               <Input className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nom du club ou ville" aria-label="Rechercher votre club" />
             </div>
             {hits.length > 0 && (
               <ul className="divide-y rounded-xl border">
                 {hits.map((h) => (
                   <li key={h.id}>
-                    <button type="button" onClick={() => pickClub(h.id)} className="w-full px-4 py-3 text-left hover:bg-tint-100">
-                      <span className="font-bold text-ink">{h.name}</span>
-                      <span className="block text-small text-slate-600">{[h.discipline, h.city].filter(Boolean).join(' · ')}</span>
+                    <button type="button" onClick={() => pickClub(h.id)} className="w-full px-4 py-3 text-left hover:bg-creme">
+                      <span className="font-bold text-nuit">{h.name}</span>
+                      <span className="block text-small text-nuit/70">{[h.discipline, h.city].filter(Boolean).join(' · ')}</span>
                     </button>
                   </li>
                 ))}
@@ -504,7 +504,7 @@ function Step1({
             {ROLES.map((r) => (
               <button key={r} type="button" aria-pressed={p.role === r} onClick={() => set('role', r)}
                 className={cn('rounded-pill border px-3 py-1.5 text-small capitalize',
-                  p.role === r ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-slate-600 hover:border-primary')}>
+                  p.role === r ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-nuit/70 hover:border-primary')}>
                 {r}
               </button>
             ))}
@@ -519,7 +519,7 @@ function Step1({
               <CheckCircle2 className="h-4 w-4" /> Affiliation vérifiée
             </p>
           ) : (
-            <p className="text-small text-slate-600">Vérification manuelle par l'équipe Athlace.</p>
+            <p className="text-small text-nuit/70">Vérification manuelle par l'équipe Athlace.</p>
           )
         )}
       </Block>
@@ -543,7 +543,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
       <Field label="Logo" fed={fed('logo')}>
         <div className="flex items-center gap-4">
           {p.logo && <MediaImg src={p.logo} alt="Logo du club" className="h-16 w-16 rounded-xl border object-contain" />}
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-surface-alt px-4 py-2 text-small font-bold text-blue-500">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-creme px-4 py-2 text-small font-bold text-bleu-athlace">
             <Upload className="h-4 w-4" /> {p.logo ? 'Remplacer' : 'Ajouter un logo'}
             <input type="file" accept="image/*" className="sr-only" disabled={uploading}
               onChange={async (e) => {
@@ -559,7 +559,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
           <Input type="color" className="h-10 w-20 p-1" value={p.color_1 ?? '#415CAF'} onChange={(e) => set('color_1', e.target.value)} />
         </Field>
         <Field label="Couleur secondaire" fed={fed('color_2')}>
-          <Input type="color" className="h-10 w-20 p-1" value={p.color_2 ?? '#D5DC3C'} onChange={(e) => set('color_2', e.target.value)} />
+          <Input type="color" className="h-10 w-20 p-1" value={p.color_2 ?? '#D5DE5B'} onChange={(e) => set('color_2', e.target.value)} />
         </Field>
       </div>
       <Field label={`Photos (${photos.length}/6)`} fed={fed('photos')}>
@@ -568,13 +568,13 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
             <div key={ph} className="relative">
               <MediaImg src={ph} alt={`Photo ${i + 1}`} className="aspect-square w-full rounded-lg object-cover" />
               <button type="button" aria-label="Retirer la photo" onClick={() => set('photos', photos.filter((x) => x !== ph))}
-                className="absolute right-1 top-1 rounded-pill bg-background p-1 text-ink shadow">
+                className="absolute right-1 top-1 rounded-pill bg-background p-1 text-nuit shadow">
                 <X className="h-3 w-3" />
               </button>
             </div>
           ))}
           {photos.length < 6 && (
-            <label className="flex aspect-square cursor-pointer items-center justify-center rounded-lg border border-dashed text-slate-500 hover:border-primary">
+            <label className="flex aspect-square cursor-pointer items-center justify-center rounded-lg border border-dashed text-nuit/70 hover:border-primary">
               {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
               <input type="file" accept="image/*" multiple className="sr-only" disabled={uploading}
                 onChange={async (e) => {
@@ -613,7 +613,7 @@ function Step3({ p, set, fed, subOptions }: StepProps & { subOptions: string[] }
               {subOptions.map((o) => {
                 const on = (p.sub_disciplines ?? []).includes(o);
                 return (
-                  <label key={o} className="flex items-center gap-2 text-small text-ink">
+                  <label key={o} className="flex items-center gap-2 text-small text-nuit">
                     <Checkbox checked={on} onCheckedChange={(c) =>
                       set('sub_disciplines', c ? [...(p.sub_disciplines ?? []), o] : (p.sub_disciplines ?? []).filter((x) => x !== o))} />
                     {o}
@@ -621,7 +621,7 @@ function Step3({ p, set, fed, subOptions }: StepProps & { subOptions: string[] }
                 );
               })}
             </div>
-          ) : <p className="text-small text-slate-500">Aucune sous-discipline connue pour ce sport.</p>}
+          ) : <p className="text-small text-nuit/70">Aucune sous-discipline connue pour ce sport.</p>}
         </Field>
         <Field label="Autre sous-discipline">
           <Input value={p.sub_other ?? ''} onChange={(e) => set('sub_other', e.target.value)} />
@@ -641,7 +641,7 @@ function Step3({ p, set, fed, subOptions }: StepProps & { subOptions: string[] }
               <button key={l.v} type="button" aria-pressed={p.practice_level === l.v}
                 onClick={() => set('practice_level', p.practice_level === l.v ? undefined : l.v)}
                 className={cn('rounded-pill border px-3 py-1.5 text-small',
-                  p.practice_level === l.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-slate-600 hover:border-primary')}>
+                  p.practice_level === l.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background text-nuit/70 hover:border-primary')}>
                 {l.l}
               </button>
             ))}
@@ -690,7 +690,7 @@ function Step4({ p, set, fed }: StepProps) {
           <div key={i} className="grid gap-3 rounded-xl border p-4 sm:grid-cols-[1fr_2fr_auto_auto] sm:items-end">
             <Field label="Nom"><Input value={v.name} onChange={(e) => upV(i, { name: e.target.value })} /></Field>
             <Field label="Adresse"><Input value={v.address} onChange={(e) => upV(i, { address: e.target.value })} /></Field>
-            <label className="flex items-center gap-2 pb-2 text-small text-ink">
+            <label className="flex items-center gap-2 pb-2 text-small text-nuit">
               <Checkbox checked={v.is_main} onCheckedChange={(c) => upV(i, { is_main: !!c })} /> Lieu principal
             </label>
             <Button variant="ghost" size="icon" aria-label="Supprimer le lieu" onClick={() => set('venues', venues.filter((_, j) => j !== i))}>
@@ -754,7 +754,7 @@ function Step5({ p, set, fed }: StepProps) {
                 {PERIODS.map((pp) => <option key={pp} value={pp}>{pp}</option>)}
               </select>
             </Field>
-            <label className="flex items-center gap-2 pb-2 text-small text-ink">
+            <label className="flex items-center gap-2 pb-2 text-small text-nuit">
               <Checkbox checked={x.includes_license} onCheckedChange={(c) => up(i, { includes_license: !!c })} /> Licence incluse
             </label>
             <Button variant="ghost" size="icon" aria-label="Supprimer le tarif" onClick={() => set('prices', prices.filter((_, j) => j !== i))}>
@@ -803,13 +803,13 @@ function Step6({ p, set, fed }: StepProps) {
         <Input value={p.labels ?? ''} onChange={(e) => set('labels', e.target.value)} />
       </Field>
       <Field label="Ambiance">
-        <div className="flex items-center gap-4 text-small text-slate-600">
+        <div className="flex items-center gap-4 text-small text-nuit/70">
           <span>Conviviale</span>
           <Slider className="flex-1" min={0} max={100} step={5} value={[p.ambiance ?? 50]}
             onValueChange={([v]) => set('ambiance', v)} aria-label="Ambiance, de conviviale à compétitive" />
           <span>Compétitive</span>
         </div>
-        {p.ambiance == null && <p className="text-caption text-slate-500">Déplacez le curseur pour répondre.</p>}
+        {p.ambiance == null && <p className="text-caption text-nuit/70">Déplacez le curseur pour répondre.</p>}
       </Field>
       <Field label="Équipements" fed={fed('amenities')}>
         <Chips options={[...new Set([...AMENITIES, ...(p.amenities ?? [])])]} value={p.amenities} onChange={(v) => set('amenities', v)} />
@@ -827,7 +827,7 @@ function Step7({ p, set, questions }: Omit<StepProps, 'fed'> & { questions: Spor
   const answers = p.sport_answers ?? {};
   const setA = (k: string, v: unknown) => set('sport_answers', { ...answers, [k]: v });
   if (questions.length === 0) {
-    return <Block title="Spécifique au sport"><p className="text-small text-slate-600">Aucune question spécifique pour ce sport.</p></Block>;
+    return <Block title="Spécifique au sport"><p className="text-small text-nuit/70">Aucune question spécifique pour ce sport.</p></Block>;
   }
   return (
     <Block title="Spécifique au sport">
@@ -899,38 +899,38 @@ function Step8({
 
       <Block title="Récapitulatif">
         <dl className="grid gap-x-6 gap-y-3 text-small sm:grid-cols-[auto_1fr]">
-          <dt className="font-bold text-ink">Club</dt>
-          <dd className="text-slate-600">{clubName ?? '-'}</dd>
+          <dt className="font-bold text-nuit">Club</dt>
+          <dd className="text-nuit/70">{clubName ?? '-'}</dd>
           {RECAP.filter(([k]) => isFilled(p[k])).map(([k, l]) => (
             <div key={k} className="contents">
-              <dt className="font-bold text-ink">{l}</dt>
-              <dd className="break-words text-slate-600">{fmt(p[k])}</dd>
+              <dt className="font-bold text-nuit">{l}</dt>
+              <dd className="break-words text-nuit/70">{fmt(p[k])}</dd>
             </div>
           ))}
-          {isFilled(p.logo) && (<><dt className="font-bold text-ink">Logo</dt><dd className="text-slate-600">Fourni</dd></>)}
-          {isFilled(p.photos) && (<><dt className="font-bold text-ink">Photos</dt><dd className="text-slate-600">{p.photos!.length}</dd></>)}
+          {isFilled(p.logo) && (<><dt className="font-bold text-nuit">Logo</dt><dd className="text-nuit/70">Fourni</dd></>)}
+          {isFilled(p.photos) && (<><dt className="font-bold text-nuit">Photos</dt><dd className="text-nuit/70">{p.photos!.length}</dd></>)}
           {isFilled(p.venues) && (
-            <><dt className="font-bold text-ink">Lieux</dt>
-              <dd className="text-slate-600">{p.venues!.map((v) => [v.name, v.address].filter(Boolean).join(' - ') + (v.is_main ? ' (principal)' : '')).join(' ; ')}</dd></>
+            <><dt className="font-bold text-nuit">Lieux</dt>
+              <dd className="text-nuit/70">{p.venues!.map((v) => [v.name, v.address].filter(Boolean).join(' - ') + (v.is_main ? ' (principal)' : '')).join(' ; ')}</dd></>
           )}
           {isFilled(p.schedules) && (
-            <><dt className="font-bold text-ink">Créneaux</dt>
-              <dd className="text-slate-600">{p.schedules!.map((s) => `${s.day} ${s.start_time}-${s.end_time}${s.category ? ` ${s.category}` : ''}${s.venue ? ` @ ${s.venue}` : ''}`).join(' ; ')}</dd></>
+            <><dt className="font-bold text-nuit">Créneaux</dt>
+              <dd className="text-nuit/70">{p.schedules!.map((s) => `${s.day} ${s.start_time}-${s.end_time}${s.category ? ` ${s.category}` : ''}${s.venue ? ` @ ${s.venue}` : ''}`).join(' ; ')}</dd></>
           )}
           {isFilled(p.prices) && (
-            <><dt className="font-bold text-ink">Tarifs</dt>
-              <dd className="text-slate-600">{p.prices!.map((x) => `${x.label} : ${x.amount} € / ${x.period}${x.includes_license ? ' (licence incluse)' : ''}`).join(' ; ')}</dd></>
+            <><dt className="font-bold text-nuit">Tarifs</dt>
+              <dd className="text-nuit/70">{p.prices!.map((x) => `${x.label} : ${x.amount} € / ${x.period}${x.includes_license ? ' (licence incluse)' : ''}`).join(' ; ')}</dd></>
           )}
           {questions.filter((q) => isFilled(p.sport_answers?.[q.key])).map((q) => (
             <div key={q.id} className="contents">
-              <dt className="font-bold text-ink">{q.label}</dt>
-              <dd className="text-slate-600">{fmt(p.sport_answers![q.key])}</dd>
+              <dt className="font-bold text-nuit">{q.label}</dt>
+              <dd className="text-nuit/70">{fmt(p.sport_answers![q.key])}</dd>
             </div>
           ))}
         </dl>
       </Block>
 
-      <label className="flex items-start gap-3 rounded-2xl border bg-tint-100 p-4 text-small text-ink">
+      <label className="flex items-start gap-3 rounded-2xl border bg-creme p-4 text-small text-nuit">
         <Checkbox checked={certify} onCheckedChange={(c) => setCertify(!!c)} className="mt-0.5" />
         <span>Je certifie représenter ce club. *</span>
       </label>

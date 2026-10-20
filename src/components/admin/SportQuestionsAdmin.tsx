@@ -123,8 +123,8 @@ export function SportQuestionsAdmin() {
     <section className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-2xl font-black text-ink">Questions par sport</h2>
-          <p className="text-small text-slate-600">
+          <h2 className="font-sans text-2xl font-black text-nuit">Questions par sport</h2>
+          <p className="text-small text-nuit/70">
             Questions posées aux clubs dans le questionnaire. Sans fédération = commune à tous les sports.
           </p>
         </div>
@@ -133,7 +133,7 @@ export function SportQuestionsAdmin() {
 
       {draft && (
         <Card className="space-y-4 p-6">
-          <h3 className="font-sans text-lg font-black text-ink">
+          <h3 className="font-sans text-lg font-black text-nuit">
             {draft.id ? "Modifier la question" : "Nouvelle question"}
           </h3>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -178,17 +178,17 @@ export function SportQuestionsAdmin() {
       )}
 
       {isLoading ? (
-        <p className="text-small text-slate-600">Chargement…</p>
+        <p className="text-small text-nuit/70">Chargement…</p>
       ) : (
         [...groups.entries()].map(([fed, list]) => (
           <div key={fed || "common"} className="space-y-2">
-            <h3 className="font-sans text-lg font-black text-ink">{fed || "Questions communes"}</h3>
-            <div className="divide-y rounded-2xl border bg-surface">
+            <h3 className="font-sans text-lg font-black text-nuit">{fed || "Questions communes"}</h3>
+            <div className="divide-y rounded-2xl border bg-blanc">
               {list.map((q) => (
                 <div key={q.id} className={`flex items-center gap-4 p-4 ${q.active ? "" : "opacity-50"}`}>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-ink">{q.label}</p>
-                    <p className="text-small text-slate-600">
+                    <p className="font-bold text-nuit">{q.label}</p>
+                    <p className="text-small text-nuit/70">
                       {q.key} · {TYPE_LABELS[q.type]}
                       {q.options?.length ? ` · ${q.options.join(", ")}` : ""}
                     </p>

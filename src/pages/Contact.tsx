@@ -49,9 +49,9 @@ export default function Contact() {
 
             <a
               href="mailto:contact@athlace.fr"
-              className="flex items-center gap-4 rounded-xl bg-tint-100 border border-border p-5 mb-6 hover:bg-tint-100 transition-colors"
+              className="flex items-center gap-4 rounded-xl bg-creme border border-border p-5 mb-6 hover:bg-creme transition-colors"
             >
-              <span className="w-12 h-12 rounded-pill bg-tint-100 flex items-center justify-center shrink-0">
+              <span className="w-12 h-12 rounded-pill bg-creme flex items-center justify-center shrink-0">
                 <Mail className="w-6 h-6 text-primary" />
               </span>
               <span className="min-w-0">

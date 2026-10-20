@@ -147,7 +147,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-surface backdrop-blur border-b border-border">
+    <header className="sticky top-0 z-50 bg-blanc backdrop-blur border-b border-border">
       <div className="container mx-auto px-4">
         <div className="app-header-bar flex items-center justify-between h-16 lg:h-20 gap-3">
           {/* Logo + Search shortcut */}
@@ -181,7 +181,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-lg font-bold transition-all duration-200 flex items-center gap-1.5",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground hover:bg-blue-700"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
@@ -373,7 +373,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-3 rounded-lg font-bold transition-all flex items-center gap-2",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground hover:bg-blue-700"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >

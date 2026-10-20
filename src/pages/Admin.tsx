@@ -486,26 +486,26 @@ export default function Admin() {
   return (
     <div className="container mx-auto max-w-2xl py-10 space-y-10">
       <header className="space-y-6">
-        <h1 className="font-sans text-3xl font-black text-ink">Administration Athlace</h1>
+        <h1 className="font-sans text-3xl font-black text-nuit">Administration Athlace</h1>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-sans text-3xl font-bold text-blue-500">
+          <div className="rounded-2xl bg-creme p-4">
+            <p className="font-sans text-3xl font-bold text-bleu-athlace">
               {stats ? stats.total.toLocaleString("fr-FR") : "-"}
             </p>
-            <p className="text-small text-slate-600">Clubs référencés</p>
+            <p className="text-small text-nuit/70">Clubs référencés</p>
           </div>
-          <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-sans text-3xl font-bold text-blue-500">
+          <div className="rounded-2xl bg-creme p-4">
+            <p className="font-sans text-3xl font-bold text-bleu-athlace">
               {stats ? stats.withoutCoords.toLocaleString("fr-FR") : "-"}
             </p>
-            <p className="text-small text-slate-600">Sans coordonnées GPS</p>
+            <p className="text-small text-nuit/70">Sans coordonnées GPS</p>
           </div>
-          <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-sans text-3xl font-bold text-blue-500">
+          <div className="rounded-2xl bg-creme p-4">
+            <p className="font-sans text-3xl font-bold text-bleu-athlace">
               {stats ? stats.federations.toLocaleString("fr-FR") : "-"}
             </p>
-            <p className="text-small text-slate-600">Fédérations représentées</p>
+            <p className="text-small text-nuit/70">Fédérations représentées</p>
           </div>
         </div>
       </header>
@@ -519,16 +519,16 @@ export default function Admin() {
         <TabsContent value="data" className="space-y-10">
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-2xl font-black text-ink">Clubs fédéraux</h2>
-          <p className="text-body text-slate-600">
+          <h2 className="font-sans text-2xl font-black text-nuit">Clubs fédéraux</h2>
+          <p className="text-body text-nuit/70">
             Importez les clubs depuis les CSV fédéraux, puis géocodez ceux qui n'ont pas de
             coordonnées. Ces clubs sont ceux affichés sur le site.
           </p>
         </div>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-sans text-lg font-black text-ink">Importer un CSV de clubs</h3>
-          <p className="text-small text-slate-500">
+          <h3 className="font-sans text-lg font-black text-nuit">Importer un CSV de clubs</h3>
+          <p className="text-small text-nuit/70">
             Fichier(s) CSV séparé(s) par des virgules, avec en-têtes identiques aux colonnes de la
             table clubs.
           </p>
@@ -540,7 +540,7 @@ export default function Admin() {
             onChange={(e) => setClFiles(Array.from(e.target.files || []))}
           />
           {clFiles.length > 0 && (
-            <p className="text-small text-slate-500">{clFiles.length} fichier(s) sélectionné(s)</p>
+            <p className="text-small text-nuit/70">{clFiles.length} fichier(s) sélectionné(s)</p>
           )}
           <Button onClick={runClubsImport} disabled={clRunning || !clFiles.length}>
             {clRunning ? "Import en cours…" : "Lancer l'import clubs"}
@@ -548,7 +548,7 @@ export default function Admin() {
           {(clRunning || clProgress > 0) && (
             <div className="space-y-2">
               <Progress value={clProgress} />
-              <p className="text-small text-slate-500">{clStatus}</p>
+              <p className="text-small text-nuit/70">{clStatus}</p>
             </div>
           )}
           {clResult && (
@@ -569,10 +569,10 @@ export default function Admin() {
         </Card>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-sans text-lg font-black text-ink">
+          <h3 className="font-sans text-lg font-black text-nuit">
             Vérifier les positions des clubs
           </h3>
-          <p className="text-small text-slate-500">
+          <p className="text-small text-nuit/70">
             Compare la position de chaque club au centre de sa commune (seuil 30 km, 120 km en
             Guyane). Les positions trop éloignées sont remises à zéro pour être re-géocodées.
           </p>
@@ -591,10 +591,10 @@ export default function Admin() {
 
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-sans text-lg font-black text-ink">
+          <h3 className="font-sans text-lg font-black text-nuit">
             Géocoder les clubs sans coordonnées
           </h3>
-          <p className="text-small text-slate-500">
+          <p className="text-small text-nuit/70">
             Géocode jusqu'à 50 clubs de la table clubs sans coordonnées via l'API
             adresse.data.gouv.fr (adresse complète, puis centre de la commune en secours).
           </p>
@@ -607,18 +607,18 @@ export default function Admin() {
 
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-2xl font-black text-ink">Équipements sportifs</h2>
-          <p className="text-body text-slate-600">
+          <h2 className="font-sans text-2xl font-black text-nuit">Équipements sportifs</h2>
+          <p className="text-body text-nuit/70">
             Importez le référentiel des équipements sportifs (DATA ES), utilisé pour enrichir les
             clubs et afficher les installations.
           </p>
         </div>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-sans text-lg font-black text-ink">
+          <h3 className="font-sans text-lg font-black text-nuit">
             Importer les équipements DATA ES
           </h3>
-          <p className="text-small text-slate-500">
+          <p className="text-small text-nuit/70">
             Fichier CSV/TSV séparé par tabulations, avec en-têtes DATA ES.
           </p>
           <Input
@@ -629,7 +629,7 @@ export default function Admin() {
             onChange={(e) => setEsFiles(Array.from(e.target.files || []))}
           />
           {esFiles.length > 0 && (
-            <p className="text-small text-slate-500">{esFiles.length} fichier(s) sélectionné(s)</p>
+            <p className="text-small text-nuit/70">{esFiles.length} fichier(s) sélectionné(s)</p>
           )}
           <Button onClick={runEquipementsImport} disabled={esRunning || !esFiles.length}>
             {esRunning ? "Import en cours…" : "Lancer l'import équipements"}
@@ -637,7 +637,7 @@ export default function Admin() {
           {(esRunning || esProgress > 0) && (
             <div className="space-y-2">
               <Progress value={esProgress} />
-              <p className="text-small text-slate-500">{esStatus}</p>
+              <p className="text-small text-nuit/70">{esStatus}</p>
             </div>
           )}
           {esResult && (
@@ -656,10 +656,10 @@ export default function Admin() {
 
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-sans text-2xl font-black text-ink">
+          <h2 className="font-sans text-2xl font-black text-nuit">
             Archives RNA (non affichées sur le site)
           </h2>
-          <p className="text-body text-slate-600">
+          <p className="text-body text-nuit/70">
             Outils d'enrichissement de l'ancienne base RNA (clubs_enriched). Cette base n'est plus
             affichée sur le site.
           </p>
@@ -667,12 +667,12 @@ export default function Admin() {
 
         <Accordion type="single" collapsible className="space-y-4">
           <AccordionItem value="rna-import" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-blanc px-6 py-4 text-left font-sans text-lg font-bold text-nuit hover:no-underline">
               Importer le RNA (archives)
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <div className="space-y-4">
-                <p className="text-small text-slate-500">
+                <p className="text-small text-nuit/70">
                   Fichier(s) CSV du Répertoire national des associations (séparateur
                   point-virgule). Seules les associations sportives actives sont importées.
                 </p>
@@ -684,7 +684,7 @@ export default function Admin() {
                   onChange={(e) => setFiles(Array.from(e.target.files || []))}
                 />
                 {files.length > 0 && (
-                  <p className="text-small text-slate-500">
+                  <p className="text-small text-nuit/70">
                     {files.length} fichier(s) sélectionné(s)
                   </p>
                 )}
@@ -694,7 +694,7 @@ export default function Admin() {
                 {(running || progress > 0) && (
                   <div className="space-y-2">
                     <Progress value={progress} />
-                    <p className="text-small text-slate-500">{status}</p>
+                    <p className="text-small text-nuit/70">{status}</p>
                   </div>
                 )}
                 {result && (
@@ -712,12 +712,12 @@ export default function Admin() {
           </AccordionItem>
 
           <AccordionItem value="rna-enrich" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-blanc px-6 py-4 text-left font-sans text-lg font-bold text-nuit hover:no-underline">
               Enrichir les clubs RNA depuis DATA ES
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <div className="space-y-4">
-                <p className="text-small text-slate-500">
+                <p className="text-small text-nuit/70">
                   Complète les clubs RNA avec les coordonnées GPS, la discipline et les équipements
                   disponibles issus des équipements sportifs.
                 </p>
@@ -730,12 +730,12 @@ export default function Admin() {
           </AccordionItem>
 
           <AccordionItem value="rna-federations" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-blanc px-6 py-4 text-left font-sans text-lg font-bold text-nuit hover:no-underline">
               Suggérer les fédérations
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <div className="space-y-4">
-                <p className="text-small text-slate-500">
+                <p className="text-small text-nuit/70">
                   Analyse la description des clubs sans discipline et leur associe la fédération
                   correspondante.
                 </p>

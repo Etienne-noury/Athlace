@@ -61,7 +61,7 @@ export default function ResetPassword() {
               </Button>
             </div>
           ) : done ? (
-            <div className="p-4 bg-tint-100 text-primary rounded-lg text-sm text-center mt-4">
+            <div className="p-4 bg-creme text-primary rounded-lg text-sm text-center mt-4">
               Mot de passe mis à jour. Redirection…
             </div>
           ) : (

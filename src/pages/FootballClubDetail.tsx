@@ -60,9 +60,9 @@ export default function FootballClubDetail() {
 
   return (
     <Layout>
-      <section className="bg-blue-500 text-cream-100 py-8">
+      <section className="bg-bleu-athlace text-creme py-8">
         <div className="container mx-auto px-4">
-          <Link to="/football" className="inline-flex items-center gap-2 text-surface-alt hover:text-cream-100 mb-4">
+          <Link to="/football" className="inline-flex items-center gap-2 text-creme hover:text-creme mb-4">
             <ChevronLeft className="w-5 h-5" /> Retour à l'annuaire
           </Link>
           <div className="flex flex-wrap items-start gap-3 mb-2">
@@ -71,7 +71,7 @@ export default function FootballClubDetail() {
               <Badge variant="secondary" className="self-center">{club.niveau_ligue}</Badge>
             )}
           </div>
-          <div className="flex items-center gap-2 text-surface-alt">
+          <div className="flex items-center gap-2 text-creme">
             <MapPin className="w-4 h-4" />
             <span>{club.adresse}, {club.code_postal} {club.ville}</span>
           </div>
@@ -110,7 +110,7 @@ export default function FootballClubDetail() {
               <div className="bg-card rounded-2xl border border-border p-6">
                 <h2 className="font-sans text-lg font-black mb-3">Avis Google</h2>
                 <div className="flex items-center gap-2">
-                  <Star className="w-6 h-6 fill-lime-500 text-lime-500" />
+                  <Star className="w-6 h-6 fill-bleu-athlace text-bleu-athlace" />
                   <span className="text-3xl font-bold">{rating.toFixed(1)}</span>
                   {nbAvis != null && (
                     <span className="text-muted-foreground">/ 5 · {nbAvis} avis</span>

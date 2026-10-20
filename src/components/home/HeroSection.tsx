@@ -52,7 +52,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-blue-500" />
+      <div className="absolute inset-0 bg-bleu-athlace" />
       
       {/* Decorative elements */}
 
@@ -60,27 +60,27 @@ export function HeroSection() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
-            <span className="text-sm font-bold text-cream-100">
+            <span className="text-sm font-bold text-creme">
               🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(stats.federations_covered)} fédérations agréées` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="font-sans text-heading-1 md:text-display font-black text-cream-100 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <h1 className="font-sans text-heading-1 md:text-display font-black text-creme mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             Trouvez{' '}
-            <span className="text-lime-500">
+            <span className="text-lime">
               LE
             </span>{' '}
             club sportif qui vous correspond
           </h1>
 
-          <p className="text-lg md:text-xl text-surface-alt mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
+          <p className="text-lg md:text-xl text-creme mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
             Tous les clubs des fédérations sportives agréées, réunis au même endroit. Découvrez, comparez et bientôt inscrivez-vous en ligne.
           </p>
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
-            <div className="bg-surface rounded-2xl p-3 shadow-sm">
+            <div className="bg-blanc rounded-2xl p-3 shadow-sm">
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
                 <SearchAutocomplete
@@ -132,7 +132,7 @@ export function HeroSection() {
           {/* Map CTA Button */}
           <div className="mt-6 animate-fade-up" style={{ animationDelay: '0.35s' }}>
             <Link to="/carte">
-              <Button variant="outline" size="lg" className="gap-2 bg-glass border-glass-border text-cream-100 hover:bg-glass hover:text-cream-100">
+              <Button variant="outline" size="lg" className="gap-2 bg-glass border-glass-border text-creme hover:bg-glass hover:text-creme">
                 <Map className="w-5 h-5" />
                 Voir tous les clubs sur la carte
               </Button>
@@ -141,7 +141,7 @@ export function HeroSection() {
 
           {/* Quick Links */}
           <div className="mt-6 flex flex-wrap justify-center gap-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            <span className="text-surface-alt text-sm">Populaires :</span>
+            <span className="text-creme text-sm">Populaires :</span>
             {popularSports.map((d) => {
               const ok = avail.isSportAvailable(d.id);
               return (
@@ -151,7 +151,7 @@ export function HeroSection() {
                   disabled={!ok}
                   onClick={() => ok && navigate(`/clubs/?discipline=${d.id}`)}
                   className={cn(
-                    'px-3 py-1.5 rounded-pill bg-glass text-cream-100 text-sm hover:bg-glass transition-colors',
+                    'px-3 py-1.5 rounded-pill bg-glass text-creme text-sm hover:bg-glass transition-colors',
                     !ok && 'opacity-50 cursor-not-allowed',
                   )}
                 >
@@ -170,7 +170,7 @@ export function HeroSection() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown className="w-6 h-6 text-surface-alt" />
+          <ChevronDown className="w-6 h-6 text-creme" />
         </div>
       </div>
     </section>

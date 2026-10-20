@@ -146,7 +146,7 @@ export default function Recherche() {
           if (!fed) return null;
           const url = fed.buildSearchUrl({ city: searchQuery, postalCode: searchQuery });
           return (
-            <div className="mb-6 rounded-2xl border border-border bg-tint-100 p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="mb-6 rounded-2xl border border-border bg-creme p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <div className="text-3xl" aria-hidden>{fed.icon}</div>
               <div className="flex-1">
                 <p className="font-sans font-bold text-foreground">
@@ -363,7 +363,7 @@ export default function Recherche() {
                       <div className="p-5 flex-1">
                         <div className="mb-4"><ClubCardBody club={club} /></div>
                         <div className="flex items-center justify-end pt-4 border-t border-border">
-                          <div className="w-10 h-10 rounded-pill bg-tint-100 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-pill bg-creme flex items-center justify-center">
                             <ArrowRight className="w-5 h-5 text-primary" />
                           </div>
                         </div>

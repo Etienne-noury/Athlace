@@ -37,7 +37,7 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {STEPS.map((step, i) => (
             <div key={i} className="bg-card border border-border rounded-2xl p-6">
-              <div className="w-12 h-12 rounded-xl bg-tint-100 flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-creme flex items-center justify-center mb-4">
                 <step.icon className="w-6 h-6 text-primary" />
               </div>
               <div className="text-sm font-bold text-primary mb-2">Étape {i + 1}</div>

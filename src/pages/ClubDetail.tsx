@@ -68,7 +68,7 @@ function Pills({ items }: { items: string[] }) {
   return (
     <div className="flex flex-wrap gap-2">
       {items.filter(Boolean).map((x) => (
-        <span key={x} className="text-xs px-3 py-1 rounded-pill bg-surface-alt text-blue-500">{x}</span>
+        <span key={x} className="text-xs px-3 py-1 rounded-pill bg-creme text-bleu-athlace">{x}</span>
       ))}
     </div>
   );
@@ -93,7 +93,7 @@ function KitImage({ src, clubName }: { src: string; clubName: string }) {
       alt={`Tenue du club ${clubName}`}
       loading="lazy"
       onError={() => setBroken(true)}
-      className="max-h-40 w-auto object-contain rounded-xl bg-tint-100 p-3"
+      className="max-h-40 w-auto object-contain rounded-xl bg-creme p-3"
     />
   );
 }
@@ -186,7 +186,7 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
                       {p.label}
                       {p.includes_license && <span className="ml-2 text-xs text-muted-foreground">licence incluse</span>}
                     </span>
-                    <span className="font-sans font-bold text-blue-500">
+                    <span className="font-sans font-bold text-bleu-athlace">
                       {Number(p.amount).toLocaleString('fr-FR', { maximumFractionDigits: 2 })} €
                       <span className="ml-1 text-xs font-light text-muted-foreground">/ {p.period}</span>
                     </span>
@@ -242,7 +242,7 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
                 <span>Convivial</span>
                 <div className="flex flex-1 gap-1" role="img" aria-label={`Ambiance ${r.atmosphere} sur 5, de conviviale à compétitive`}>
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className={cn('h-2 flex-1 rounded-pill', i === r.atmosphere ? 'bg-primary' : 'bg-tint-100')} />
+                    <div key={i} className={cn('h-2 flex-1 rounded-pill', i === r.atmosphere ? 'bg-primary' : 'bg-creme')} />
                   ))}
                 </div>
                 <span>Compétitif</span>
@@ -388,15 +388,15 @@ export default function ClubDetail() {
     <Layout>
       {/* 1. En-tête */}
       <section className="relative">
-        <div className="absolute inset-0 h-64 lg:h-80 bg-blue-500" />
+        <div className="absolute inset-0 h-64 lg:h-80 bg-bleu-athlace" />
         <div className="relative container mx-auto px-4 pt-8">
-          <Link to="/clubs/" className="inline-flex items-center gap-2 text-cream-100 hover:text-cream-100 mb-6">
+          <Link to="/clubs/" className="inline-flex items-center gap-2 text-creme hover:text-creme mb-6">
             <ChevronLeft className="w-5 h-5" /> Retour aux résultats
           </Link>
 
           <div className="bg-card rounded-2xl shadow-xl border border-border p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row gap-6">
-              <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl bg-tint-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl bg-creme flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {r?.logo_url ? (
                   <img src={r.logo_url} alt={`Logo de ${club.name}`} className="w-full h-full object-contain" />
                 ) : (
@@ -424,7 +424,7 @@ export default function ClubDetail() {
                       <BadgeCheck className="w-4 h-4" aria-hidden /> Fiche vérifiée par le club
                     </span>
                     {r.club_verified_at && (
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-nuit/70">
                         Mis à jour le {new Date(r.club_verified_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                       </span>
                     )}
@@ -473,7 +473,7 @@ export default function ClubDetail() {
                   <div className="flex flex-wrap gap-2">
                     {socials.map(({ url, icon: Icon, label }) => (
                       <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={label}
-                        className="w-10 h-10 rounded-pill bg-surface-alt text-blue-500 flex items-center justify-center hover:opacity-80">
+                        className="w-10 h-10 rounded-pill bg-creme text-bleu-athlace flex items-center justify-center hover:opacity-80">
                         <Icon className="w-4 h-4" />
                       </a>
                     ))}
@@ -525,7 +525,7 @@ export default function ClubDetail() {
                               {meta && <p className="text-xs text-muted-foreground">{meta}</p>}
                             </div>
                             {av === 'full' && <Badge variant="destructive">Complet</Badge>}
-                            {av === 'open' && <Badge className="bg-secondary text-ink border-0">Places disponibles</Badge>}
+                            {av === 'open' && <Badge className="bg-secondary text-nuit border-0">Places disponibles</Badge>}
                           </li>
                         );
                       })}
@@ -546,7 +546,7 @@ export default function ClubDetail() {
                     <li key={v.id} className="rounded-xl bg-muted/50 p-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-bold text-foreground">{v.name || 'Lieu de pratique'}</p>
-                        {v.kind && <span className="text-xs px-2 py-0.5 rounded-pill bg-surface-alt text-blue-500">{v.kind}</span>}
+                        {v.kind && <span className="text-xs px-2 py-0.5 rounded-pill bg-creme text-bleu-athlace">{v.kind}</span>}
                         {v.is_main && <Badge variant="secondary">Principal</Badge>}
                       </div>
                       {addr && <p className="text-sm text-muted-foreground">{addr}</p>}

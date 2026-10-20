@@ -9,7 +9,7 @@ export function ClubCardVisual({ club, className, children }: { club: EnrichedCl
   const [broken, setBroken] = useState(false);
   const logo = club.logoUrl && !broken ? club.logoUrl : null;
   return (
-    <div className={cn('relative', logo ? 'bg-card' : 'bg-tint-100', className)}>
+    <div className={cn('relative', logo ? 'bg-card' : 'bg-creme', className)}>
       <div className="absolute inset-0 flex items-center justify-center p-4">
         {logo ? (
           <img src={logo} onError={() => setBroken(true)} alt={`Logo de ${club.name}`} loading="lazy" className="max-w-full max-h-full object-contain" />

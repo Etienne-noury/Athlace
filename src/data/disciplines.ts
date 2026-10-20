@@ -70,7 +70,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "raquette",
     name: "Sports de raquette",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🎾",
     sports: [
       {"name":"Tennis","icon":"🎾","popularity":9,"feds":["FFT"],"match":["Tennis"],"subs":[]},
@@ -82,7 +82,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "aquatique",
     name: "Sports aquatiques",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🏊",
     sports: [
       {"name":"Natation","icon":"🏊","popularity":9,"feds":["FFN"],"match":["Natation"],"subs":[]},
@@ -100,7 +100,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "combat",
     name: "Combat et arts martiaux",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🥋",
     sports: [
       {"name":"Judo-jujitsu","icon":"🥋","popularity":8,"feds":["FFJDA"],"match":["Judo-jujitsu"],"subs":["Judo","Taïso","Jujitsu","Kendo","Self-défense","Kata","Iaido","Ne-Waza","Kyudo","Sport chanbara","Jodo","Jiu-jitsu brésilien","Naginata"],"handi":["Para judo"]},
@@ -119,7 +119,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "athletisme",
     name: "Athlétisme et enchaînés",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🏃",
     sports: [
       {"name":"Athlétisme","icon":"🏃","popularity":9,"feds":["FFA"],"match":["Athlétisme"],"subs":[]},
@@ -131,7 +131,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "nature",
     name: "Nature et montagne",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🏔️",
     sports: [
       {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Cyclotourisme","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"]},
@@ -149,7 +149,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "glisse",
     name: "Glisse et hiver",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🎿",
     sports: [
       {"name":"Ski","icon":"⛷️","popularity":7,"feds":["FFS-SKI"],"match":["Ski"],"subs":["Ski Alpin","Snowboard","Ski de Fond","Ski de Randonnée","Biathlon","Rollerski","Ski Freestyle","Telemark","Randonnée Nordique","Ski sur Herbe","Saut à Ski","Combiné Nordique","Ski de Vitesse","Biathlon running","Hors piste – freeride","Ski Forme","Ski Santé"]},
@@ -161,7 +161,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "forme",
     name: "Forme, danse et force",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "💃",
     sports: [
       {"name":"Gymnastique","icon":"🤸","popularity":7,"feds":["FFGYM"],"match":["Gymnastique"],"subs":[]},
@@ -174,7 +174,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "mecanique",
     name: "Sports mécaniques",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🏎️",
     sports: [
       {"name":"Sport automobile","icon":"🏎️","popularity":5,"feds":["FFSA"],"match":["Sport automobile"],"subs":[]},
@@ -186,7 +186,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "aerien",
     name: "Sports aériens",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🪂",
     sports: [
       {"name":"Parachutisme","icon":"🪂","popularity":3,"feds":["FFP-PARA"],"match":["Parachutisme"],"subs":["Parachutisme","Ascensionnel","Parapente","Soufflerie"],"offers":["Tandem","PAC","Traditionnelle"]},
@@ -201,7 +201,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "precision",
     name: "Précision et jeux",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🎯",
     sports: [
       {"name":"Tir sportif","icon":"🎯","popularity":5,"feds":["FFTIR"],"match":["Tir","Tir sportif"],"subs":[]},
@@ -218,7 +218,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "traditions",
     name: "Traditions régionales",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "🎪",
     sports: [
       {"name":"Pelote basque","icon":"🪀","popularity":3,"feds":["FFPB"],"match":["Pelote basque"],"subs":[]},
@@ -233,7 +233,7 @@ export const ARBORESCENCE: CategoryNode[] = [
   {
     id: "handicap",
     name: "Sport et handicap",
-    color: "bg-blue-500",
+    color: "bg-primary",
     icon: "♿",
     sports: [
       {"name":"Handisport","icon":"♿","popularity":5,"feds":["FFH-HDSP"],"match":["Handisport"],"subs":[]},

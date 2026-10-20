@@ -58,7 +58,7 @@ export default function SportsIndex() {
                     <Link
                       key={sport.name}
                       to={`/sports/${id}/`}
-                      className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-tint-100 hover:text-primary transition-colors"
+                      className="px-3 py-1 bg-muted rounded-pill text-sm hover:bg-creme hover:text-primary transition-colors"
                     >
                       {sport.name}
                       {avail.isReady && (
