@@ -7,7 +7,7 @@ export default function Recruitment() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl font-bold text-foreground">Recrutement</h1>
+          <h1 className="font-sans text-3xl font-black text-foreground">Recrutement</h1>
           <p className="text-muted-foreground mt-2">Rejoignez l'aventure Athlace.</p>
         </div>
       </section>
@@ -17,11 +17,11 @@ export default function Recruitment() {
         </p>
         <div className="space-y-4">
           <div className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-xl font-semibold">Développeur full-stack</h2>
+            <h2 className="font-sans text-xl font-black">Développeur full-stack</h2>
             <p className="text-sm text-muted-foreground mt-1">Paris · CDI · Développement</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-xl font-semibold">Chargé de partenariats clubs</h2>
+            <h2 className="font-sans text-xl font-black">Chargé de partenariats clubs</h2>
             <p className="text-sm text-muted-foreground mt-1">Paris / Lyon · CDI · Commercial</p>
           </div>
         </div>

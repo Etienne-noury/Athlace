@@ -486,23 +486,23 @@ export default function Admin() {
   return (
     <div className="container mx-auto max-w-2xl py-10 space-y-10">
       <header className="space-y-6">
-        <h1 className="font-display text-3xl font-extrabold text-ink">Administration Athlace</h1>
+        <h1 className="font-sans text-3xl font-black text-ink">Administration Athlace</h1>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-display text-3xl font-extrabold text-blue-500">
+            <p className="font-sans text-3xl font-bold text-blue-500">
               {stats ? stats.total.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Clubs référencés</p>
           </div>
           <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-display text-3xl font-extrabold text-blue-500">
+            <p className="font-sans text-3xl font-bold text-blue-500">
               {stats ? stats.withoutCoords.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Sans coordonnées GPS</p>
           </div>
           <div className="rounded-2xl bg-tint-100 p-4">
-            <p className="font-display text-3xl font-extrabold text-blue-500">
+            <p className="font-sans text-3xl font-bold text-blue-500">
               {stats ? stats.federations.toLocaleString("fr-FR") : "-"}
             </p>
             <p className="text-small text-slate-600">Fédérations représentées</p>
@@ -519,7 +519,7 @@ export default function Admin() {
         <TabsContent value="data" className="space-y-10">
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-display text-2xl font-bold text-ink">Clubs fédéraux</h2>
+          <h2 className="font-sans text-2xl font-black text-ink">Clubs fédéraux</h2>
           <p className="text-body text-slate-600">
             Importez les clubs depuis les CSV fédéraux, puis géocodez ceux qui n'ont pas de
             coordonnées. Ces clubs sont ceux affichés sur le site.
@@ -527,7 +527,7 @@ export default function Admin() {
         </div>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-display text-lg font-semibold text-ink">Importer un CSV de clubs</h3>
+          <h3 className="font-sans text-lg font-black text-ink">Importer un CSV de clubs</h3>
           <p className="text-small text-slate-500">
             Fichier(s) CSV séparé(s) par des virgules, avec en-têtes identiques aux colonnes de la
             table clubs.
@@ -569,7 +569,7 @@ export default function Admin() {
         </Card>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-display text-lg font-semibold text-ink">
+          <h3 className="font-sans text-lg font-black text-ink">
             Vérifier les positions des clubs
           </h3>
           <p className="text-small text-slate-500">
@@ -591,7 +591,7 @@ export default function Admin() {
 
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-display text-lg font-semibold text-ink">
+          <h3 className="font-sans text-lg font-black text-ink">
             Géocoder les clubs sans coordonnées
           </h3>
           <p className="text-small text-slate-500">
@@ -607,7 +607,7 @@ export default function Admin() {
 
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-display text-2xl font-bold text-ink">Équipements sportifs</h2>
+          <h2 className="font-sans text-2xl font-black text-ink">Équipements sportifs</h2>
           <p className="text-body text-slate-600">
             Importez le référentiel des équipements sportifs (DATA ES), utilisé pour enrichir les
             clubs et afficher les installations.
@@ -615,7 +615,7 @@ export default function Admin() {
         </div>
 
         <Card className="space-y-4 rounded-2xl p-6">
-          <h3 className="font-display text-lg font-semibold text-ink">
+          <h3 className="font-sans text-lg font-black text-ink">
             Importer les équipements DATA ES
           </h3>
           <p className="text-small text-slate-500">
@@ -656,7 +656,7 @@ export default function Admin() {
 
       <section className="space-y-4">
         <div className="space-y-1">
-          <h2 className="font-display text-2xl font-bold text-ink">
+          <h2 className="font-sans text-2xl font-black text-ink">
             Archives RNA (non affichées sur le site)
           </h2>
           <p className="text-body text-slate-600">
@@ -667,7 +667,7 @@ export default function Admin() {
 
         <Accordion type="single" collapsible className="space-y-4">
           <AccordionItem value="rna-import" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
               Importer le RNA (archives)
             </AccordionTrigger>
             <AccordionContent className="pt-4">
@@ -712,7 +712,7 @@ export default function Admin() {
           </AccordionItem>
 
           <AccordionItem value="rna-enrich" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
               Enrichir les clubs RNA depuis DATA ES
             </AccordionTrigger>
             <AccordionContent className="pt-4">
@@ -730,7 +730,7 @@ export default function Admin() {
           </AccordionItem>
 
           <AccordionItem value="rna-federations" className="border-none">
-            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-display text-lg font-semibold text-ink hover:no-underline">
+            <AccordionTrigger className="rounded-2xl border bg-surface px-6 py-4 text-left font-sans text-lg font-bold text-ink hover:no-underline">
               Suggérer les fédérations
             </AccordionTrigger>
             <AccordionContent className="pt-4">

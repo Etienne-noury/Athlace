@@ -109,13 +109,13 @@ export function SearchAutocomplete({ value, onChange, onPickSport, placeholder, 
               {s.kind === 'sport' ? (
                 <>
                   <span aria-hidden className="text-lg">{s.icon}</span>
-                  <span className="font-medium text-foreground">{s.label}</span>
+                  <span className="font-bold text-foreground">{s.label}</span>
                   <span className="ml-auto text-xs text-muted-foreground">Sport</span>
                 </>
               ) : (
                 <>
                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium text-foreground">{s.city.name}</span>
+                  <span className="font-bold text-foreground">{s.city.name}</span>
                   <span className="text-xs text-muted-foreground">{s.city.postcode}</span>
                   <span className="ml-auto text-xs text-muted-foreground truncate">{s.city.context.split(',').slice(1).join(',').trim()}</span>
                 </>

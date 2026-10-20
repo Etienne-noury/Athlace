@@ -35,7 +35,7 @@ export function ClubMiniMap({ lat, lng, address, className = '' }: Props) {
           href={googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
         >
           <ExternalLink className="w-4 h-4" /> Ouvrir dans Google Maps
         </a>

@@ -71,7 +71,7 @@ export function DisciplineFilter({
     >
       <div className="min-w-0">
         {showLabels && (
-          <label className="text-sm font-medium text-foreground mb-2 block">Sport</label>
+          <label className="text-sm font-bold text-foreground mb-2 block">Sport</label>
         )}
         <Popover open={sportOpen} onOpenChange={setSportOpen}>
           <PopoverTrigger asChild>
@@ -81,7 +81,7 @@ export function DisciplineFilter({
               role="combobox"
               aria-expanded={sportOpen}
               aria-label="Choisir un sport"
-              className={cn('justify-between font-normal bg-background', triggerClassName)}
+              className={cn('justify-between font-light bg-background', triggerClassName)}
             >
               <span className="truncate">
                 {selectedSport ? `${selectedSport.icon} ${selectedSport.name}` : 'Tous les sports'}
@@ -160,7 +160,7 @@ export function DisciplineFilter({
       {showSub && subs.length > 0 && (
         <div className="min-w-0">
           {showLabels && (
-            <label className="text-sm font-medium text-foreground mb-2 block">
+            <label className="text-sm font-bold text-foreground mb-2 block">
               Sous-discipline
             </label>
           )}
@@ -172,7 +172,7 @@ export function DisciplineFilter({
                 role="combobox"
                 aria-expanded={subOpen}
                 aria-label="Choisir une sous-discipline"
-                className={cn('justify-between font-normal bg-background', triggerClassName)}
+                className={cn('justify-between font-light bg-background', triggerClassName)}
               >
                 <span className="truncate">
                   {selectedSub ? selectedSub.name : 'Toutes les sous-disciplines'}
