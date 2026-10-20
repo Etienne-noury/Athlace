@@ -104,6 +104,7 @@ export default function Aide() {
       {/* Hero */}
       <section className="bg-bleu-athlace text-creme py-12 lg:py-16">
         <div className="container mx-auto px-4 text-center">
+          <img src="/brand/picto-info-blanc.svg" alt="" className="h-16 w-auto mx-auto mb-6" />
           <h1 className="font-sans text-3xl lg:text-5xl font-black mb-4">
             Centre d'aide
           </h1>

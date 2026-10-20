@@ -29,6 +29,7 @@ export default function AideFAQ() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
+          <img src="/brand/picto-info-bleu.svg" alt="" className="h-16 w-auto mb-4" />
           <h1 className="font-sans text-3xl font-black text-foreground">Foire aux questions</h1>
           <p className="text-muted-foreground mt-2">Trouvez rapidement des réponses à vos questions.</p>
         </div>
