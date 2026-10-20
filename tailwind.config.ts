@@ -26,15 +26,6 @@ export default {
         accent: { DEFAULT: v("accent"), foreground: v("accent-foreground") },
         popover: { DEFAULT: v("popover"), foreground: v("popover-foreground") },
         card: { DEFAULT: v("card"), foreground: v("card-foreground") },
-        // Alias temporaires des anciens noms (à supprimer après refactor)
-        blue: { 500: v("blue-500"), 700: v("blue-700") },
-        "lime-500": v("lime-500"),
-        cream: { 100: v("cream-100") },
-        ink: v("ink"),
-        slate: { 500: v("slate-500"), 600: v("slate-600") },
-        olive: { 900: v("olive-900") },
-        tint: { 100: v("tint-100") },
-        surface: { DEFAULT: v("surface"), alt: v("surface-alt") },
         glass: { DEFAULT: "var(--glass)", border: "var(--glass-border)" },
       },
       fontFamily: {
