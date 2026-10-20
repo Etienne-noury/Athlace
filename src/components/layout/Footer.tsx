@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Linkedin, Mail } from 'lucide-react';
 
-const footerLinks = {
+const legalLinks = [
+  { label: 'Mentions légales', href: '/mentions-legales/' },
+  { label: 'CGU / CGV', href: '/cgu-cgv/' },
+  { label: 'Confidentialité / RGPD', href: '/confidentialite/' },
+  { label: 'Cookies', href: '/cookies/' },
+  { label: 'Accessibilité', href: '/accessibilite/' },
+];
+
+const footerLinks: Record<string, { label: string; href: string; external?: boolean }[]> = {
   'Notre entreprise': [
     { label: 'Qui sommes-nous ?', href: '/entreprise/qui-sommes-nous/' },
     { label: 'Notre mission', href: '/entreprise/mission/' },
@@ -29,18 +37,6 @@ const footerLinks = {
   'Application': [
     { label: 'Télécharger', href: '/application/' },
   ],
-  'Suivez-nous': [
-    { label: 'Instagram', href: 'https://instagram.com', external: true },
-    { label: 'TikTok', href: 'https://tiktok.com', external: true },
-    { label: 'LinkedIn', href: 'https://linkedin.com', external: true },
-  ],
-  'Informations légales': [
-    { label: 'Mentions légales', href: '/mentions-legales/' },
-    { label: 'CGU / CGV', href: '/cgu-cgv/' },
-    { label: 'Confidentialité / RGPD', href: '/confidentialite/' },
-    { label: 'Cookies', href: '/cookies/' },
-    { label: 'Accessibilité', href: '/accessibilite/' },
-  ],
 };
 
 const socialLinks = [
@@ -63,11 +59,11 @@ export function Footer() {
       />
       <div className="relative container mx-auto px-4 py-12 lg:py-16">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="col-span-2 md:col-span-1 space-y-4">
             <div className="flex items-center gap-2">
-              <img src="/logos/logotype-creme-lime.png" alt="Athlace" className="h-12 w-auto min-w-[96px] object-contain" />
+              <img src="/logos/logotype-creme-lime.png" alt="Athlace" className="h-12 w-auto object-contain" />
             </div>
             <p className="text-creme text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.
@@ -153,14 +149,6 @@ export function Footer() {
                 <Mail className="w-4 h-4" />
                 contact@athlace.fr
               </a>
-              <a href="tel:0800123456" className="flex items-center gap-2 hover:text-creme transition-colors">
-                <Phone className="w-4 h-4" />
-                0 800 123 456
-              </a>
-              <span className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Lundi - Vendredi : 9h - 18h
-              </span>
             </div>
           </div>
         </div>
@@ -169,7 +157,7 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-creme">
           <p>© 2026 Athlace. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-6">
-            {footerLinks['Informations légales'].map((link) => (
+            {legalLinks.map((link) => (
               <Link key={link.href} to={link.href} className="hover:text-creme transition-colors">
                 {link.label}
               </Link>

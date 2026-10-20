@@ -59,7 +59,7 @@ export function HeroSection() {
         src="/brand/motif-A-filigrane.png"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[120%] w-auto opacity-[0.28] select-none"
+        className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-[110%] w-auto max-w-none opacity-[0.28] select-none"
       />
 
       <div className="hero-compact relative container mx-auto px-4 py-16 lg:py-24">
@@ -115,7 +115,7 @@ export function HeroSection() {
 
                 {/* Region Select */}
                 <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                  <SelectTrigger className="h-14 w-full lg:w-48 border-0 bg-muted">
+                  <SelectTrigger className="h-14 w-full lg:w-48 border-0 bg-muted text-left [&>span]:flex-1 [&>span]:text-left">
                     <MapPin className="h-4 w-4 mr-2" />
                     <SelectValue placeholder="Région" />
                   </SelectTrigger>
@@ -147,7 +147,7 @@ export function HeroSection() {
           </div>
 
           {/* Quick Links */}
-          <div className="mt-6 flex flex-wrap justify-center gap-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <span className="text-creme text-sm">Populaires :</span>
             {popularSports.map((d) => {
               const ok = avail.isSportAvailable(d.id);
@@ -176,7 +176,7 @@ export function HeroSection() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden lg:block">
           <ChevronDown className="w-6 h-6 text-creme" />
         </div>
       </div>
