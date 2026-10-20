@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Outfit:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,41 +6,48 @@
 
 @layer base {
   :root {
-    /* Marque */
-    --blue-500: 225 46% 47%;
-    --blue-700: 224 68% 33%;
-    --lime-500: 62 70% 55%;
-    --cream-100: 45 32% 93%;
-    --ink: 222 47% 11%;
-    --slate-600: 215 19% 35%;
-    --slate-500: 215 16% 47%;
-    --olive-900: 80 2% 24%;
-    --tint-100: 226 100% 97%;
-    --surface-alt: 210 40% 98%;
-    --surface: 0 0% 100%;
+    /* Charte Athlace (Brand Style Guide) : 4 couleurs + blanc */
+    --bleu-athlace: 225 46% 47%;   /* #415CAF */
+    --lime: 64 66% 61%;            /* #D5DE5B */
+    --creme: 45 32% 93%;           /* #F2EFE6 */
+    --nuit: 222 47% 11%;           /* #0F172A */
+    --blanc: 0 0% 100%;            /* #FFFFFF */
+
+    /* Alias temporaires des anciens noms (à supprimer après refactor) */
+    --blue-500: var(--bleu-athlace);
+    --blue-700: var(--bleu-athlace);
+    --lime-500: var(--lime);
+    --cream-100: var(--creme);
+    --ink: var(--nuit);
+    --slate-600: var(--nuit);
+    --slate-500: var(--nuit);
+    --olive-900: var(--nuit);
+    --tint-100: var(--creme);
+    --surface-alt: var(--creme);
+    --surface: var(--blanc);
 
     /* shadcn/ui */
-    --background: var(--surface);
-    --foreground: var(--ink);
-    --card: var(--surface);
-    --card-foreground: var(--ink);
-    --popover: var(--surface);
-    --popover-foreground: var(--ink);
-    --primary: var(--blue-500);
-    --primary-foreground: var(--surface);
-    --secondary: var(--lime-500);
-    --secondary-foreground: var(--ink);
-    --muted: var(--surface-alt);
-    --muted-foreground: var(--slate-500);
-    --accent: var(--tint-100);
-    --accent-foreground: var(--blue-500);
+    --background: var(--creme);
+    --foreground: var(--nuit);
+    --card: var(--blanc);
+    --card-foreground: var(--nuit);
+    --popover: var(--blanc);
+    --popover-foreground: var(--nuit);
+    --primary: var(--bleu-athlace);
+    --primary-foreground: var(--creme);
+    --secondary: var(--lime);
+    --secondary-foreground: var(--nuit);
+    --muted: var(--creme);
+    --muted-foreground: var(--nuit);
+    --accent: var(--creme);
+    --accent-foreground: var(--bleu-athlace);
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: var(--blue-500);
+    --border: 45 9% 83%;           /* nuit 12 % sur crème */
+    --input: 45 9% 83%;
+    --ring: var(--bleu-athlace);
 
-    /* Rayons */
+    /* Rayons (issus des maquettes, hors charte) */
     --radius: 16px;
     --radius-sm: 6px;
     --radius-md: 12px;
@@ -50,18 +57,17 @@
     --radius-3xl: 30px;
     --radius-pill: 100px;
 
-    /* Hero / verre */
-    --overlay: rgb(27 58 140 / 0.6);
-    --glass: rgb(255 255 255 / 0.2);
-    --glass-border: rgb(255 255 255 / 0.3);
+    /* Verre sur photo (estimé, hors charte) */
+    --glass: hsl(var(--nuit) / 0.45);
+    --glass-border: hsl(var(--creme) / 0.3);
     --glass-blur: 12px;
   }
 
   * { @apply border-border; }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans font-light;
     font-size: 15px;
     line-height: 24px;
   }
-  h1, h2, h3, h4 { @apply font-display; }
+  h1, h2, h3, h4 { @apply font-sans font-black; }
 }
