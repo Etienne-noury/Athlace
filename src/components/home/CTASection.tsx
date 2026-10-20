@@ -14,9 +14,7 @@ export function CTASection() {
              <div className="absolute bottom-0 left-0 w-32 h-32 bg-glass rounded-pill translate-y-1/2 -translate-x-1/2" />
             
             <div className="relative">
-               <div className="w-14 h-14 rounded-2xl bg-glass flex items-center justify-center mb-6">
-                 <UserPlus className="w-7 h-7 text-creme" />
-              </div>
+               <img src="/brand/picto-info-blanc.svg" alt="" className="h-16 w-auto mb-6" />
               
                <h3 className="font-sans text-2xl lg:text-3xl font-black text-creme mb-4">
                 Vous êtes sportif ?

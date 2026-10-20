@@ -326,9 +326,7 @@ export default function Recherche() {
               </div>
             ) : filteredClubs.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-20 h-20 rounded-pill bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Search className="w-10 h-10 text-muted-foreground" />
-                </div>
+                <img src="/brand/picto-info-bleu.svg" alt="" className="h-16 w-auto mx-auto mb-4" />
                 <h3 className="font-sans text-xl font-black text-foreground mb-2">
                   Aucun club trouvé
                 </h3>

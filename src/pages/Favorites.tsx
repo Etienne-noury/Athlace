@@ -71,7 +71,7 @@ export default function Favorites() {
           </div>
         ) : favorites.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-border rounded-2xl bg-muted">
-            <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <img src="/brand/picto-info-bleu.svg" alt="" className="h-16 w-auto mx-auto mb-4" />
             <p className="text-muted-foreground">Vous n'avez pas encore de club favori.</p>
             <Button className="mt-4" asChild>
               <Link to="/clubs/">Découvrir des clubs</Link>

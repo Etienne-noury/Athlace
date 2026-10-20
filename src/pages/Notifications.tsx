@@ -12,7 +12,7 @@ export default function Notifications() {
       </section>
       <section className="container mx-auto px-4 py-12">
         <div className="text-center py-16 border border-dashed border-border rounded-2xl bg-muted">
-          <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <img src="/brand/picto-info-bleu.svg" alt="" className="h-16 w-auto mx-auto mb-4" />
           <p className="text-muted-foreground">Aucune notification pour le moment.</p>
         </div>
       </section>
