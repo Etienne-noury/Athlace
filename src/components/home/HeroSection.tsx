@@ -53,10 +53,17 @@ export function HeroSection() {
     <section className="relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-bleu-athlace" />
-      
-      {/* Decorative elements */}
+
+      {/* Filigrane décoratif - grand A, bas droite */}
+      <img
+        src="/brand/motif-A-filigrane.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 right-0 h-[120%] w-auto opacity-[0.28] select-none"
+      />
 
       <div className="hero-compact relative container mx-auto px-4 py-16 lg:py-24">
+
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
