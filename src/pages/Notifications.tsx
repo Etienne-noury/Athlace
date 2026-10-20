@@ -1,5 +1,4 @@
 import { Layout } from '@/components/layout/Layout';
-import { Bell } from 'lucide-react';
 
 export default function Notifications() {
   return (

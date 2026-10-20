@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, UserPlus, Building2 } from 'lucide-react';
+import { ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function CTASection() {
