@@ -67,7 +67,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img src="/logos/logotype-creme-lime.png" alt="Athlace" className="h-12 w-auto min-w-[96px] object-contain" />
+              <img src="/logos/logotype-creme-lime.png" alt="Athlace" className="h-12 w-auto object-contain" />
             </div>
             <p className="text-creme text-sm leading-relaxed">
               Le répertoire national des clubs sportifs en France. Trouvez, comparez et inscrivez-vous aux clubs près de chez vous.

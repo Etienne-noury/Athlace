@@ -153,7 +153,7 @@ export function Header() {
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <img src="/logos/logotype-bleu-lime.png" alt="Athlace" className="h-12 w-auto min-w-[96px] shrink-0 object-contain" />
+              <img src="/logos/logotype-bleu-lime.png" alt="Athlace" className="h-12 w-auto shrink-0 object-contain" />
             </Link>
 
           </div>
@@ -179,7 +179,7 @@ export function Header() {
                 <Link
                   to={item.href}
                   className={cn(
-                    "px-4 py-2 rounded-lg font-bold transition-all duration-200 flex items-center gap-1.5",
+                    "px-3 py-2 rounded-lg font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -278,7 +278,7 @@ export function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex flex-1 min-w-0 items-center justify-end gap-1">
+          <div className="flex shrink-0 items-center justify-end gap-1">
 
             <Link to="/clubs/" className="sm:hidden">
               <Button variant="ghost" size="icon" aria-label="Rechercher un club">

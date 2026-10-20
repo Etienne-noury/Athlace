@@ -69,7 +69,7 @@ export function DisciplineFilter({
         className,
       )}
     >
-      <div className="min-w-0">
+      <div className={cn('min-w-0', layout === 'inline' && 'w-full lg:w-auto')}>
         {showLabels && (
           <label className="text-sm font-bold text-foreground mb-2 block">Sport</label>
         )}
@@ -81,7 +81,7 @@ export function DisciplineFilter({
               role="combobox"
               aria-expanded={sportOpen}
               aria-label="Choisir un sport"
-              className={cn('justify-between font-light bg-background', triggerClassName)}
+              className={cn('w-full justify-between font-light bg-background', triggerClassName)}
             >
               <span className="truncate">
                 {selectedSport ? `${selectedSport.icon} ${selectedSport.name}` : 'Tous les sports'}
@@ -176,7 +176,7 @@ export function DisciplineFilter({
                 role="combobox"
                 aria-expanded={subOpen}
                 aria-label="Choisir une sous-discipline"
-                className={cn('justify-between font-light bg-background', triggerClassName)}
+                className={cn('w-full justify-between font-light bg-background', triggerClassName)}
               >
                 <span className="truncate">
                   {selectedSub ? selectedSub.name : 'Toutes les sous-disciplines'}
