@@ -149,7 +149,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-blanc backdrop-blur border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="app-header-bar flex items-center justify-between h-16 lg:h-20 gap-3">
+        <div className="app-header-bar flex items-center justify-between h-16 lg:h-20 gap-3 xl:grid xl:grid-cols-[1fr_auto_1fr]">
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
@@ -278,14 +278,14 @@ export function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex shrink-0 items-center justify-end gap-1">
+          <div className="flex shrink-0 items-center justify-end gap-1 xl:justify-self-end">
 
             <Link to="/clubs/" className="sm:hidden">
               <Button variant="ghost" size="icon" aria-label="Rechercher un club">
                 <Search className="h-5 w-5 text-muted-foreground" />
               </Button>
             </Link>
-            <Link to="/compte/mes-clubs/" className="hidden sm:flex">
+            <Link to="/compte/mes-clubs/" className="hidden sm:flex xl:hidden" aria-label="Mes clubs favoris">
 
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
