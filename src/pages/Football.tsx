@@ -39,7 +39,7 @@ export default function Football() {
     <Layout>
       <section className="bg-blue-500 text-cream-100 py-12 lg:py-16">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl lg:text-4xl font-bold mb-3">
+          <h1 className="font-sans text-3xl lg:text-4xl font-black mb-3">
             Annuaire des clubs de football en France
           </h1>
           <p className="text-surface-alt mb-6 max-w-2xl">
@@ -81,7 +81,7 @@ export default function Football() {
           <div className="flex items-start gap-3 bg-destructive text-destructive rounded-xl p-4 max-w-2xl mx-auto">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium">Service data.sports.gouv.fr indisponible</p>
+              <p className="font-bold">Service data.sports.gouv.fr indisponible</p>
               <p className="text-sm opacity-80">{(error as Error)?.message}</p>
             </div>
           </div>

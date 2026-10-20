@@ -15,7 +15,7 @@ export function PopularDisciplines() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
           <div>
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
+            <h2 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">
               Disciplines populaires
             </h2>
             <p className="text-muted-foreground text-lg">
@@ -49,14 +49,14 @@ export function PopularDisciplines() {
                   <span className="text-4xl lg:text-5xl mb-4 block">
                     {discipline.icon}
                   </span>
-                  <h3 className="font-display font-semibold text-lg text-foreground mb-1">
+                  <h3 className="font-sans font-bold text-lg text-foreground mb-1">
                     {discipline.name}
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     {categories[discipline.category]?.name || 'Sport'}
                   </p>
                   {avail.isReady && (
-                    <p className="text-xs font-medium text-muted-foreground mt-1">
+                    <p className="text-xs font-bold text-muted-foreground mt-1">
                       {ok ? `${formatClubCount(avail.sportCount(discipline.id))} clubs` : 'Bientôt'}
                     </p>
                   )}

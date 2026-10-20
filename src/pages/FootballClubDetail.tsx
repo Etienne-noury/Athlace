@@ -41,7 +41,7 @@ export default function FootballClubDetail() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-2xl font-bold mb-4">Club non trouvé</h1>
+          <h1 className="font-sans text-2xl font-black mb-4">Club non trouvé</h1>
           <Link to="/football"><Button>Retour à l'annuaire</Button></Link>
         </div>
       </Layout>
@@ -66,7 +66,7 @@ export default function FootballClubDetail() {
             <ChevronLeft className="w-5 h-5" /> Retour à l'annuaire
           </Link>
           <div className="flex flex-wrap items-start gap-3 mb-2">
-            <h1 className="font-display text-2xl lg:text-3xl font-bold">{club.nom}</h1>
+            <h1 className="font-sans text-2xl lg:text-3xl font-black">{club.nom}</h1>
             {club.niveau_ligue && (
               <Badge variant="secondary" className="self-center">{club.niveau_ligue}</Badge>
             )}
@@ -82,7 +82,7 @@ export default function FootballClubDetail() {
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-card rounded-2xl border border-border p-6">
-              <h2 className="font-display text-xl font-semibold mb-4">Localisation</h2>
+              <h2 className="font-sans text-xl font-black mb-4">Localisation</h2>
               <ClubMiniMap
                 lat={club.lat}
                 lng={club.lng}
@@ -92,7 +92,7 @@ export default function FootballClubDetail() {
 
             {horairesArr && horairesArr.length > 0 && (
               <div className="bg-card rounded-2xl border border-border p-6">
-                <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+                <h2 className="font-sans text-xl font-black mb-4 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary" /> Horaires
                 </h2>
                 <ul className="space-y-2 text-foreground">
@@ -108,7 +108,7 @@ export default function FootballClubDetail() {
           <aside className="space-y-6">
             {rating != null && (
               <div className="bg-card rounded-2xl border border-border p-6">
-                <h2 className="font-display text-lg font-semibold mb-3">Avis Google</h2>
+                <h2 className="font-sans text-lg font-black mb-3">Avis Google</h2>
                 <div className="flex items-center gap-2">
                   <Star className="w-6 h-6 fill-lime-500 text-lime-500" />
                   <span className="text-3xl font-bold">{rating.toFixed(1)}</span>
@@ -121,7 +121,7 @@ export default function FootballClubDetail() {
 
             {(club.prix_adulte != null || club.prix_enfant != null) && (
               <div className="bg-card rounded-2xl border border-border p-6">
-                <h2 className="font-display text-lg font-semibold mb-3 flex items-center gap-2">
+                <h2 className="font-sans text-lg font-black mb-3 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-primary" /> Tarifs licence
                 </h2>
                 <div className="space-y-2">
@@ -142,7 +142,7 @@ export default function FootballClubDetail() {
             )}
 
             <div className="bg-card rounded-2xl border border-border p-6">
-              <h2 className="font-display text-lg font-semibold mb-3">Contact</h2>
+              <h2 className="font-sans text-lg font-black mb-3">Contact</h2>
               <div className="space-y-3">
                 {telephone && (
                   <a href={`tel:${telephone}`} className="flex items-center gap-2 text-foreground hover:text-primary">

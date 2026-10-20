@@ -18,7 +18,7 @@ export function CTASection() {
                  <UserPlus className="w-7 h-7 text-cream-100" />
               </div>
               
-               <h3 className="font-display text-2xl lg:text-3xl font-bold text-cream-100 mb-4">
+               <h3 className="font-sans text-2xl lg:text-3xl font-black text-cream-100 mb-4">
                 Vous êtes sportif ?
               </h3>
               
@@ -46,7 +46,7 @@ export function CTASection() {
                  <Building2 className="w-7 h-7 text-blue-500" />
               </div>
               
-              <h3 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-4">
+              <h3 className="font-sans text-2xl lg:text-3xl font-black text-foreground mb-4">
                 Vous gérez un club ?
               </h3>
               
