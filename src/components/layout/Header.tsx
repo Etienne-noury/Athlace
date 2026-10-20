@@ -153,8 +153,7 @@ export function Header() {
           {/* Logo + Search shortcut */}
           <div className="flex flex-1 min-w-0 items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <img src="/logos/symbol.png" alt="" className="h-10 w-auto shrink-0 object-contain transition-transform group-hover:scale-105" />
-              <img src="/logos/wordmark-blue.png" alt="Athlace" className="h-6 w-auto max-w-[min(36vw,160px)] object-contain" />
+              <img src="/logos/logotype-bleu-lime.png" alt="Athlace" className="h-12 w-auto min-w-[96px] shrink-0 object-contain" />
             </Link>
 
           </div>
