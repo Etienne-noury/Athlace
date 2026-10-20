@@ -31,7 +31,7 @@ export default function Login() {
     <Layout>
       <section className="container mx-auto px-4 py-12 lg:py-20">
         <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-8 shadow-sm">
-          <h1 className="font-sans text-2xl font-black text-center mb-2"Connexion</h1>
+          <h1 className="font-display text-2xl font-bold text-center mb-2">Connexion</h1>
           <p className="text-muted-foreground text-center mb-6">
             Accédez à votre espace Athlace pour gérer vos clubs favoris.
           </p>

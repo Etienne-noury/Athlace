@@ -60,13 +60,13 @@ export function HeroSection() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
-            <span className="text-sm font-bold text-cream-100"
+            <span className="text-sm font-medium text-cream-100">
               🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(stats.federations_covered)} fédérations agréées` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="font-sans text-heading-1 md:text-display font-black text-cream-100 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}
+          <h1 className="font-display text-heading-1 md:text-display font-bold text-cream-100 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             Trouvez{' '}
             <span className="text-lime-500">
               LE
@@ -122,7 +122,7 @@ export function HeroSection() {
                 </Select>
 
                 {/* Search Button */}
-                <Button type="submit" size="lg" className="h-14 px-8 text-lg font-bold"
+                <Button type="submit" size="lg" className="h-14 px-8 text-lg font-semibold">
                   Rechercher
                 </Button>
               </div>

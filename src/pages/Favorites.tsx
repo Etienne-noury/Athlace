@@ -63,7 +63,7 @@ export default function Favorites() {
   return (
     <Layout>
       <section className="container mx-auto px-4 py-12">
-        <h1 className="font-sans text-3xl font-black mb-6"Mes clubs favoris</h1>
+        <h1 className="font-display text-3xl font-bold mb-6">Mes clubs favoris</h1>
 
         {isLoading ? (
           <div className="py-20 flex justify-center">
@@ -85,7 +85,7 @@ export default function Favorites() {
                 className="p-5 bg-card border border-border rounded-xl hover:border-border transition-colors flex items-start justify-between gap-4"
               >
                 <Link to={`/club/${club.clubId}`} className="flex-1">
-                  <h2 className="font-sans font-black"{club.name}</h2>
+                  <h2 className="font-display font-semibold">{club.name}</h2>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                     <MapPin className="w-4 h-4" />
                     {club.city || 'France'}

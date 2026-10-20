@@ -7,14 +7,14 @@ export default function Application() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl font-black text-foreground"Application mobile</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Application mobile</h1>
           <p className="text-muted-foreground mt-2">Trouvez un club depuis votre smartphone.</p>
         </div>
       </section>
       <section className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto text-center bg-card border border-border rounded-2xl p-8">
           <Smartphone className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h2 className="font-sans text-2xl font-black mb-2"Bientôt disponible</h2>
+          <h2 className="font-display text-2xl font-semibold mb-2">Bientôt disponible</h2>
           <p className="text-muted-foreground mb-6">
             L'application Athlace pour iOS et Android est en cours de développement. Inscrivez-vous pour être informé du lancement.
           </p>

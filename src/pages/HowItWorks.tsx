@@ -29,7 +29,7 @@ export default function HowItWorks() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl font-black text-foreground"Comment ça marche ?</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Comment ça marche ?</h1>
           <p className="text-muted-foreground mt-2">Quatre étapes simples pour trouver votre club idéal.</p>
         </div>
       </section>
@@ -41,7 +41,7 @@ export default function HowItWorks() {
                 <step.icon className="w-6 h-6 text-primary" />
               </div>
               <div className="text-sm font-bold text-primary mb-2">Étape {i + 1}</div>
-              <h2 className="font-sans text-xl font-black mb-2"{step.title}</h2>
+              <h2 className="font-display text-xl font-semibold mb-2">{step.title}</h2>
               <p className="text-muted-foreground text-sm">{step.description}</p>
             </div>
           ))}

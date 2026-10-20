@@ -143,7 +143,7 @@ export default function GeoHub() {
             {sport && <span>/</span>}
             {sport && <span className="text-foreground">{getDisciplineDisplayName(sport)}</span>}
           </div>
-          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             {title}
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -178,7 +178,7 @@ export default function GeoHub() {
                 <Card key={club.id} className="group hover:border-border transition-colors">
                   <CardContent className="p-5">
                     <Link to={`/club/${club.id}`} className="block">
-                      <h3 className="font-sans font-bold text-lg group-hover:text-primary transition-colors"
+                      <h3 className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
                         {club.name}
                       </h3>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -237,7 +237,7 @@ export default function GeoHub() {
 
               <Card>
                 <CardContent className="p-5">
-                  <h3 className="font-sans font-black mb-3"
+                  <h3 className="font-display font-semibold mb-3">
                     {departmentData ? 'Quartiers / villes proches' : 'Départements'}
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -261,7 +261,7 @@ export default function GeoHub() {
             {sports.length > 0 && (
               <Card>
                 <CardContent className="p-5">
-                  <h3 className="font-sans font-black mb-3"Sports</h3>
+                  <h3 className="font-display font-semibold mb-3">Sports</h3>
                   <div className="flex flex-wrap gap-2">
                     {sports.map((s) => (
                       <Button

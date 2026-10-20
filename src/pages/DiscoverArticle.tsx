@@ -56,7 +56,7 @@ export default function DiscoverArticle() {
             <Button variant="ghost" className="mb-4 -ml-3" asChild>
               <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
             </Button>
-            <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
+            <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
               Guide des licences fédérales
             </h1>
             <p className="text-muted-foreground text-lg">
@@ -85,7 +85,7 @@ export default function DiscoverArticle() {
                   >
                     <AccordionTrigger className="hover:no-underline">
                       <span className="flex items-center gap-3 text-left">
-                        <span className="font-sans font-bold text-lg"
+                        <span className="font-display font-semibold text-lg">
                           {categorie.icon} {categorie.name}
                         </span>
                         <Badge variant="secondary">{count}</Badge>
@@ -95,7 +95,7 @@ export default function DiscoverArticle() {
                       <div className="space-y-6 pb-2">
                         {categorie.sports.map((sport) => (
                           <div key={sport.sportName}>
-                            <h3 className="font-sans font-black text-foreground mb-3"
+                            <h3 className="font-display font-semibold text-foreground mb-3">
                               {sport.sportIcon} {sport.sportName}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -103,7 +103,7 @@ export default function DiscoverArticle() {
                                 <Card key={fed.id} className="hover:border-border transition-colors">
                                   <CardContent className="p-5">
                                     <div className="flex items-start justify-between gap-3">
-                                      <h4 className="font-sans text-base font-bold"{fed.nom}</h4>
+                                      <h4 className="font-display text-base font-semibold">{fed.nom}</h4>
                                       <div className="flex flex-wrap gap-1 justify-end">
                                         {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
                                         {avail.isReady && (
@@ -151,7 +151,7 @@ export default function DiscoverArticle() {
           <Button variant="ghost" className="mb-4 -ml-3" asChild>
             <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
           </Button>
-          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"{title}</h1>
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">{title}</h1>
           <p className="text-muted-foreground text-lg">Ce guide sera bientôt disponible.</p>
         </div>
       </section>

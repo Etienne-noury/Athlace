@@ -13,7 +13,7 @@ export function FootClubCard({ club }: Props) {
     <article className="bg-card rounded-2xl border border-border p-5 hover:shadow-lg transition-shadow flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="font-sans text-lg font-bold text-foreground truncate"
+          <h3 className="font-display text-lg font-semibold text-foreground truncate">
             {club.nom}
           </h3>
           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
@@ -34,7 +34,7 @@ export function FootClubCard({ club }: Props) {
         {club.google_rating != null && (
           <span className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-lime-500 text-lime-500" />
-            <span className="font-bold text-foreground"{club.google_rating.toFixed(1)}</span>
+            <span className="font-semibold text-foreground">{club.google_rating.toFixed(1)}</span>
             {club.google_nb_avis != null && (
               <span className="text-muted-foreground">({club.google_nb_avis})</span>
             )}

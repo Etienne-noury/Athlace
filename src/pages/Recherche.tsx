@@ -128,7 +128,7 @@ export default function Recherche() {
       {/* Header */}
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Rechercher un club
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -149,7 +149,7 @@ export default function Recherche() {
             <div className="mb-6 rounded-2xl border border-border bg-tint-100 p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <div className="text-3xl" aria-hidden>{fed.icon}</div>
               <div className="flex-1">
-                <p className="font-sans font-bold text-foreground"
+                <p className="font-display font-semibold text-foreground">
                   Annuaire officiel - {fed.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -171,7 +171,7 @@ export default function Recherche() {
             <div className="sticky top-24 space-y-6">
               <div className="bg-card rounded-2xl border border-border p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-sans font-black text-lg"Filtres</h2>
+                  <h2 className="font-display font-semibold text-lg">Filtres</h2>
                   {activeFiltersCount > 0 && (
                     <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground">
                       Effacer
@@ -182,7 +182,7 @@ export default function Recherche() {
                 <div className="space-y-6">
                   {/* Search */}
                   <div>
-                    <label className="text-sm font-bold text-foreground mb-2 block"
+                    <label className="text-sm font-medium text-foreground mb-2 block">
                       Recherche
                     </label>
                     <SearchAutocomplete
@@ -205,7 +205,7 @@ export default function Recherche() {
 
                   {/* Region */}
                   <div>
-                    <label className="text-sm font-bold text-foreground mb-2 block"
+                    <label className="text-sm font-medium text-foreground mb-2 block">
                       Région
                     </label>
                     <Select value={selectedRegion} onValueChange={setSelectedRegion}>
@@ -254,7 +254,7 @@ export default function Recherche() {
               <div className="space-y-6 mt-6">
                 {/* Same filters as sidebar */}
                 <div>
-                  <label className="text-sm font-bold mb-2 block"Recherche</label>
+                  <label className="text-sm font-medium mb-2 block">Recherche</label>
                   <SearchAutocomplete
                     value={searchQuery}
                     onChange={setSearchQuery}
@@ -271,7 +271,7 @@ export default function Recherche() {
                   onSubChange={setSelectedSub}
                 />
                 <div>
-                  <label className="text-sm font-bold mb-2 block"Région</label>
+                  <label className="text-sm font-medium mb-2 block">Région</label>
                   <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                     <SelectTrigger>
                       <SelectValue placeholder="Toutes" />
@@ -329,7 +329,7 @@ export default function Recherche() {
                 <div className="w-20 h-20 rounded-pill bg-muted flex items-center justify-center mx-auto mb-4">
                   <Search className="w-10 h-10 text-muted-foreground" />
                 </div>
-                <h3 className="font-sans text-xl font-black text-foreground mb-2"
+                <h3 className="font-display text-xl font-semibold text-foreground mb-2">
                   Aucun club trouvé
                 </h3>
                 <p className="text-muted-foreground mb-6">

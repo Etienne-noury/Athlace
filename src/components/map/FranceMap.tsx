@@ -244,7 +244,7 @@ export function FranceMap({
             <MapPin className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="font-bold text-foreground"
+            <p className="font-semibold text-foreground">
               {totalInView.toLocaleString("fr-FR")} clubs
             </p>
             <p className="text-sm text-muted-foreground">dans cette zone</p>

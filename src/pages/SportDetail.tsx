@@ -71,7 +71,7 @@ export default function SportDetail() {
       <Layout>
         <section className="py-16 lg:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="font-sans text-3xl font-black"Sport non trouvé</h1>
+            <h1 className="font-display text-3xl font-bold">Sport non trouvé</h1>
             <p className="text-muted-foreground mt-4">
               Ce sport n'est pas encore référencé sur Athlace.
             </p>
@@ -101,7 +101,7 @@ export default function SportDetail() {
             <span>/</span>
             <span className="text-foreground">{sport.name}</span>
           </div>
-          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-3"
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-3">
             {sport.name}
           </h1>
           <p className="text-muted-foreground text-lg max-w-3xl">
@@ -128,7 +128,7 @@ export default function SportDetail() {
 
             {!isChild && subDisciplines.length > 0 && (
               <div>
-                <h2 className="font-sans text-2xl font-black mb-4"Sous-disciplines</h2>
+                <h2 className="font-display text-2xl font-semibold mb-4">Sous-disciplines</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {subDisciplines.map((sub) => (
                     <Link
@@ -136,7 +136,7 @@ export default function SportDetail() {
                       to={`/sports/${sub.id}/`}
                       className="p-4 bg-card rounded-xl border border-border hover:border-border transition-colors"
                     >
-                      <h3 className="font-sans font-bold"{sub.name}</h3>
+                      <h3 className="font-display font-semibold">{sub.name}</h3>
                       <p className="text-sm text-muted-foreground mt-1">
                         {sub.description || `Clubs de ${sub.name}`}
                       </p>
@@ -147,7 +147,7 @@ export default function SportDetail() {
             )}
 
             <div>
-              <h2 className="font-sans text-2xl font-black mb-4"
+              <h2 className="font-display text-2xl font-semibold mb-4">
                 Clubs de {sport.name} en France
               </h2>
               {isLoading && (
@@ -160,7 +160,7 @@ export default function SportDetail() {
                 <div className="text-center py-10 border border-dashed border-border rounded-xl bg-muted">
                   {!sportAvailable ? (
                     <>
-                      <p className="font-sans font-bold text-lg text-foreground"
+                      <p className="font-display font-semibold text-lg text-foreground">
                         Ce sport arrive bientôt sur Athlace
                       </p>
                       <p className="text-muted-foreground mt-1">
@@ -177,7 +177,7 @@ export default function SportDetail() {
                   <Card key={club.id} className="group hover:border-border transition-colors">
                     <CardContent className="p-5">
                       <Link to={`/club/${club.id}`} className="block">
-                        <h3 className="font-sans font-bold text-lg group-hover:text-primary transition-colors"
+                        <h3 className="font-display font-semibold text-lg group-hover:text-primary transition-colors">
                           {club.name}
                         </h3>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -205,7 +205,7 @@ export default function SportDetail() {
             {federation && (
               <Card>
                 <CardContent className="p-5">
-                  <h3 className="font-sans font-black mb-2"Fédération officielle</h3>
+                  <h3 className="font-display font-semibold mb-2">Fédération officielle</h3>
                   <p className="text-sm text-muted-foreground mb-3">{federation.name}</p>
                   <Button variant="outline" size="sm" asChild>
                     <a href={federation.url} target="_blank" rel="noopener noreferrer">
@@ -218,7 +218,7 @@ export default function SportDetail() {
 
             <Card>
               <CardContent className="p-5">
-                <h3 className="font-sans font-black mb-3"Autres sports</h3>
+                <h3 className="font-display font-semibold mb-3">Autres sports</h3>
                 <div className="flex flex-wrap gap-2">
                   {parentSports.slice(0, 12).map((s) => {
                     const ok = avail.isSportAvailable(s.id);

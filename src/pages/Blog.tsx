@@ -29,7 +29,7 @@ export default function Blog() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Blog Athlace
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -47,11 +47,11 @@ export default function Blog() {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                     <Calendar className="w-3 h-3" /> {post.date}
                   </div>
-                  <h2 className="font-sans text-xl font-black group-hover:text-primary transition-colors"
+                  <h2 className="font-display text-xl font-semibold group-hover:text-primary transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-muted-foreground mt-2 text-sm">{post.excerpt}</p>
-                  <span className="inline-flex items-center mt-4 text-sm font-bold text-primary"
+                  <span className="inline-flex items-center mt-4 text-sm font-medium text-primary">
                     Lire l'article <ArrowRight className="w-4 h-4 ml-1" />
                   </span>
                 </CardContent>

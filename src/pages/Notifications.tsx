@@ -6,7 +6,7 @@ export default function Notifications() {
     <Layout>
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="font-sans text-3xl font-black text-foreground"Notifications</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Notifications</h1>
           <p className="text-muted-foreground mt-2">Gérez vos alertes et recommandations.</p>
         </div>
       </section>

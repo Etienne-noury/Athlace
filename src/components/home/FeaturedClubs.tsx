@@ -22,7 +22,7 @@ export function FeaturedClubs() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
           <div>
-            <h2 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2"
+            <h2 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-2">
               Clubs recommandés
             </h2>
             <p className="text-muted-foreground text-lg">

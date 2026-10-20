@@ -46,9 +46,9 @@ interface Submission {
 
 function AffBadge({ ok }: { ok: boolean }) {
   return ok ? (
-    <span className="rounded-pill bg-secondary px-2.5 py-0.5 text-micro font-bold text-secondary-foreground"Affiliation vérifiée</span>
+    <span className="rounded-pill bg-secondary px-2.5 py-0.5 text-micro font-semibold text-secondary-foreground">Affiliation vérifiée</span>
   ) : (
-    <span className="rounded-pill border border-destructive px-2.5 py-0.5 text-micro font-bold text-destructive"À vérifier</span>
+    <span className="rounded-pill border border-destructive px-2.5 py-0.5 text-micro font-semibold text-destructive">À vérifier</span>
   );
 }
 
@@ -88,7 +88,7 @@ function SubmissionsList() {
           <button type="button" onClick={() => setOpenId(openId === s.id ? null : s.id)}
             className="flex w-full flex-wrap items-center gap-3 p-4 text-left" aria-expanded={openId === s.id}>
             <div className="min-w-0 flex-1">
-              <p className="font-bold text-ink"
+              <p className="font-semibold text-ink">
                 {s.clubName}
                 {s.isNew && <span className="ml-2 rounded-pill bg-tint-100 px-2 py-0.5 text-micro text-blue-500">Nouveau club</span>}
               </p>
@@ -188,9 +188,9 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
 
   const Row = ({ r, hl }: { r: (typeof rows)[number]; hl: boolean }) => (
     <div className={cn('grid gap-2 px-4 py-3 text-small sm:grid-cols-[180px_1fr_1fr]', hl && 'bg-tint-100')}>
-      <p className="font-bold text-ink"{r.label}</p>
+      <p className="font-semibold text-ink">{r.label}</p>
       <p className="break-all text-slate-600">{fmt(r.cur)}</p>
-      <p className={cn('break-words', hl ? 'font-bold text-blue-500' : 'text-slate-600')}{fmt(r.next)}</p>
+      <p className={cn('break-words', hl ? 'font-semibold text-blue-500' : 'text-slate-600')}>{fmt(r.next)}</p>
     </div>
   );
 
@@ -198,7 +198,7 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
     <div className="space-y-4 border-t p-4">
       {isLoading ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : (
         <div className="overflow-hidden rounded-xl border bg-background">
-          <div className="hidden grid-cols-[180px_1fr_1fr] gap-2 border-b px-4 py-2 text-micro font-bold uppercase text-slate-500 sm:grid"
+          <div className="hidden grid-cols-[180px_1fr_1fr] gap-2 border-b px-4 py-2 text-micro font-semibold uppercase text-slate-500 sm:grid">
             <span>Champ</span><span>Donnée actuelle (fédération)</span><span>Proposé par le club</span>
           </div>
           {changed.length === 0 && <p className="px-4 py-3 text-small text-slate-600">Aucune modification proposée.</p>}
@@ -283,15 +283,15 @@ function ConflictsList() {
     <div className="divide-y rounded-2xl border bg-surface">
       {data.map((c) => (
         <div key={c.id} className="space-y-3 p-4">
-          <p className="font-bold text-ink"{c.clubName} <span className="font-light text-slate-500"· {c.field}</span></p>
+          <p className="font-semibold text-ink">{c.clubName} <span className="font-normal text-slate-500">· {c.field}</span></p>
           <div className="grid gap-2 text-small sm:grid-cols-2">
             <div className="rounded-xl bg-background p-3">
-              <p className="text-micro font-bold uppercase text-slate-500"Valeur du club</p>
+              <p className="text-micro font-semibold uppercase text-slate-500">Valeur du club</p>
               <p className="break-words text-ink">{c.club_value ?? '-'}</p>
             </div>
             <div className="rounded-xl bg-tint-100 p-3">
-              <p className="text-micro font-bold uppercase text-slate-500"Nouvelle valeur fédération</p>
-              <p className="break-words font-bold text-blue-500"{c.federation_value ?? '-'}</p>
+              <p className="text-micro font-semibold uppercase text-slate-500">Nouvelle valeur fédération</p>
+              <p className="break-words font-semibold text-blue-500">{c.federation_value ?? '-'}</p>
             </div>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
@@ -309,13 +309,13 @@ export function ClubSubmissionsAdmin() {
   return (
     <section className="space-y-6">
       <div className="space-y-1">
-        <h2 className="font-sans text-2xl font-black text-ink"Fiches clubs</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">Fiches clubs</h2>
         <p className="text-small text-slate-600">Fiches envoyées par les clubs et conflits avec les nouvelles données des fédérations.</p>
       </div>
       <div className="flex gap-2" role="tablist">
         {([['submissions', 'Fiches envoyées'], ['conflicts', 'Conflits']] as const).map(([v, l]) => (
           <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => setView(v)}
-            className={cn('rounded-pill px-4 py-1.5 text-small font-bold',
+            className={cn('rounded-pill px-4 py-1.5 text-small font-semibold',
               view === v ? 'bg-primary text-primary-foreground' : 'bg-surface-alt text-blue-500')}>
             {l}
           </button>

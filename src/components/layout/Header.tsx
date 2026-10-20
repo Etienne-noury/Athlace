@@ -179,12 +179,12 @@ export function Header() {
                 <Link
                   to={item.href}
                   className={cn(
-                    "px-4 py-2 rounded-lg font-bold transition-all duration-200 flex items-center gap-1.5",
+                    "px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1.5",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
                       ? "bg-primary text-primary-foreground hover:bg-blue-700"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
-                
+                >
                   {item.label}
                   {item.megaMenu && <ChevronDown className="h-3.5 w-3.5" />}
                 </Link>
@@ -201,12 +201,12 @@ export function Header() {
                               {avail.isCategoryAvailable(cat.id) ? (
                                 <Link
                                   to={`/sports/famille/${cat.id}/`}
-                                  className="font-sans font-bold text-sm text-foreground hover:text-primary block mb-2"
-                                
+                                  className="font-display font-semibold text-sm text-foreground hover:text-primary block mb-2"
+                                >
                                   {cat.icon} {cat.name}
                                 </Link>
                               ) : (
-                                <span className="font-sans font-bold text-sm text-muted-foreground opacity-60 block mb-2"
+                                <span className="font-display font-semibold text-sm text-muted-foreground opacity-60 block mb-2">
                                   {cat.icon} {cat.name} · Bientôt
                                 </span>
                               )}
@@ -220,8 +220,8 @@ export function Header() {
                                   <li>
                                     <Link
                                       to={`/sports/famille/${cat.id}/`}
-                                      className="text-sm text-primary font-bold hover:underline"
-                                    
+                                      className="text-sm text-primary font-medium hover:underline"
+                                    >
                                       Voir tout →
                                     </Link>
                                   </li>
@@ -238,7 +238,7 @@ export function Header() {
                       {item.type === 'clubs' && (
                         <div className="grid grid-cols-2 gap-8">
                           <div>
-                            <h3 className="font-sans font-bold text-foreground mb-3"Trouver un club</h3>
+                            <h3 className="font-display font-semibold text-foreground mb-3">Trouver un club</h3>
                             <ul className="space-y-2">
                               {clubMenuLinks.map((link) => (
                                 <li key={link.href}>
@@ -254,7 +254,7 @@ export function Header() {
                             </ul>
                           </div>
                           <div>
-                            <h3 className="font-sans font-bold text-foreground mb-3"Top villes</h3>
+                            <h3 className="font-display font-semibold text-foreground mb-3">Top villes</h3>
                             <ul className="space-y-2">
                               {['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'].map((city) => (
                                 <li key={city}>
@@ -371,7 +371,7 @@ export function Header() {
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
                   className={cn(
-                    "px-4 py-3 rounded-lg font-bold transition-all flex items-center gap-2",
+                    "px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2",
                     location.pathname === item.href || location.pathname.startsWith(item.href)
                       ? "bg-primary text-primary-foreground hover:bg-blue-700"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -385,7 +385,7 @@ export function Header() {
               <Accordion type="single" collapsible className="mt-2">
                 {ARBORESCENCE.map((cat) => (
                   <AccordionItem key={cat.id} value={cat.id}>
-                    <AccordionTrigger className="px-4 text-sm font-bold"
+                    <AccordionTrigger className="px-4 text-sm font-medium">
                       {cat.icon} {cat.name}
                     </AccordionTrigger>
                     <AccordionContent>
@@ -404,7 +404,7 @@ export function Header() {
                           <Link
                             to={`/sports/famille/${cat.id}/`}
                             onClick={() => setIsMenuOpen(false)}
-                            className="block py-1.5 text-sm text-primary font-bold"
+                            className="block py-1.5 text-sm text-primary font-medium"
                           >
                             Voir la catégorie →
                           </Link>
@@ -461,7 +461,7 @@ export function Header() {
               <Link
                 to="/aide/faq/"
                 onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-3 rounded-lg font-bold text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2"
+                className="px-4 py-3 rounded-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2"
               >
                 <HelpCircle className="h-4 w-4" />
                 Une question ?
