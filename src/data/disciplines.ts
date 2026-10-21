@@ -299,8 +299,24 @@ export const getPopularDisciplines = (limit = 8) =>
 export const getDisciplinesByCategory = (category: string) =>
   disciplines.filter((d) => d.category === category && !d.parentId);
 
-export const getDisciplineById = (id?: string | null) =>
-  id ? disciplines.find((d) => d.id === id || slugifyDiscipline(d.name) === id) : undefined;
+/** Sous-disciplines exactes issues de available_disciplines, regroupées par sport. */
+export type AvailableSportSubs = Record<string, { subList: { name: string; count: number }[] }>;
+
+export const getDisciplineById = (id?: string | null, available?: AvailableSportSubs): Discipline | undefined => {
+  if (!id) return undefined;
+  const separator = id.indexOf('--');
+  if (separator > 0) {
+    const parentId = id.slice(0, separator);
+    const subSlug = id.slice(separator + 2);
+    const parent = disciplines.find((d) => d.id === parentId && !d.parentId);
+    const sub = available?.[parentId]?.subList.find((s) => slugifyDiscipline(s.name) === subSlug);
+    if (parent && sub) {
+      return { ...parent, id, name: sub.name, parentId, clubCount: sub.count,
+        description: `${sub.name} - sous-discipline de ${parent.name}.` };
+    }
+  }
+  return disciplines.find((d) => d.id === id || slugifyDiscipline(d.name) === id);
+};
 
 export const getParentDisciplines = () => disciplines.filter((d) => !d.parentId);
 
@@ -321,9 +337,9 @@ const SPORT_NODES: Record<string, SportNode> = Object.fromEntries(
 /**
  * Libellés à interroger en base (clubs.discipline) pour un sport : uniquement sport.match.
  */
-export const getDisciplineQueryNames = (sportId?: string | null): string[] => {
+export const getDisciplineQueryNames = (sportId?: string | null, available?: AvailableSportSubs): string[] => {
   if (!sportId || sportId === 'all') return [];
-  const sport = getDisciplineById(sportId);
+  const sport = getDisciplineById(sportId, available);
   if (!sport) return [];
   const parent = sport.parentId ?? sport.id;
   const node = SPORT_NODES[parent];
@@ -334,9 +350,9 @@ export const getDisciplineQueryNames = (sportId?: string | null): string[] => {
  * Valeur exacte de sous-discipline à chercher dans clubs.sub_disciplines
  * (clubs.dance_families pour la Danse). null si aucune sous-discipline choisie.
  */
-export const getSubDisciplineValue = (sportId?: string | null, subId?: string | null): string | null => {
+export const getSubDisciplineValue = (sportId?: string | null, subId?: string | null, available?: AvailableSportSubs): string | null => {
   if (!sportId || sportId === 'all' || !subId || subId === 'all') return null;
-  const sub = getDisciplineById(subId);
+  const sub = getDisciplineById(subId, available);
   if (!sub || !sub.parentId) return null;
   const sport = getDisciplineById(sportId);
   if (sport && sub.parentId !== sport.id) return null;

@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils';
 import {
   ARBORESCENCE,
   getDisciplineById,
-  getSubDisciplines,
   slugifyDiscipline,
 } from '@/data/disciplines';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
@@ -52,9 +51,12 @@ export function DisciplineFilter({
   const selectedSport = sport !== 'all' ? getDisciplineById(sport) : undefined;
   const avail = useAvailableDisciplines();
   const subs = selectedSport
-    ? getSubDisciplines(selectedSport.id).filter((d) => avail.isSubAvailable(selectedSport.id, d.name))
+    ? avail.getSport(selectedSport.id).subList.map(({ name }) => ({
+        id: `${selectedSport.id}--${slugifyDiscipline(name)}`,
+        name,
+      }))
     : [];
-  const selectedSub = sub !== 'all' ? getDisciplineById(sub) : undefined;
+  const selectedSub = sub !== 'all' ? getDisciplineById(sub, avail.sports) : undefined;
 
   const selectSport = (value: string) => {
     onSportChange(value);
