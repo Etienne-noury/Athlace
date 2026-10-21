@@ -26,6 +26,7 @@ import {
 import { regions } from '@/data/clubs';
 import { disciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
+import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchClubsNear, resolveCity } from '@/lib/api/geo-search';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
@@ -43,6 +44,8 @@ export default function Recherche() {
   const [selectedDiscipline, setSelectedDiscipline] = useState(searchParams.get('discipline') || 'all');
   const [selectedSub, setSelectedSub] = useState(searchParams.get('sous-discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
+  const avail = useAvailableDisciplines();
+  const subDiscipline = getSubDisciplineValue(selectedDiscipline, selectedSub, avail.sports);
 
   useEffect(() => {
     setPage(0);
@@ -69,15 +72,15 @@ export default function Recherche() {
   useEffect(() => { setNearRadius(undefined); }, [nearCity, selectedDiscipline, selectedSub, selectedRegion]);
 
   const { data: searchResult = { clubs: [], total: 0 } as { clubs: Club[]; total: number; radiusKm?: number }, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, selectedRegion, page, nearCity?.lat, nearCity?.lng],
-    enabled: cityReady,
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, nearCity?.lat, nearCity?.lng],
+    enabled: cityReady && (selectedSub === 'all' || avail.isReady),
     queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
       if (nearCity) {
         const r = await fetchClubsNear({
           lat: nearCity.lat,
           lng: nearCity.lng,
           disciplines: getDisciplineQueryNames(selectedDiscipline),
-          sub: getSubDisciplineValue(selectedDiscipline, selectedSub),
+          sub: subDiscipline,
           region: selectedRegion,
           limit: 100,
           offset: page * 100,
@@ -89,7 +92,7 @@ export default function Recherche() {
       return fetchEnrichedClubs({
         q: searchQuery,
         disciplines: getDisciplineQueryNames(selectedDiscipline),
-        subDiscipline: getSubDisciplineValue(selectedDiscipline, selectedSub),
+        subDiscipline,
         region: selectedRegion,
         limit: 100,
         offset: page * 100,

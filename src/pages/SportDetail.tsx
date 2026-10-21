@@ -5,7 +5,7 @@ import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
-import { disciplines, getParentDisciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
+import { disciplines, getDisciplineById, getParentDisciplines, getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { MapPin, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import { slugify } from '@/lib/geo';
@@ -13,10 +13,12 @@ import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDi
 
 export default function SportDetail() {
   const { sportId } = useParams<{ sportId: string }>();
+  const avail = useAvailableDisciplines();
   const sport = useMemo(() => {
     if (!sportId) return undefined;
-    return disciplines.find((d) => d.id === sportId || slugify(d.name) === sportId);
-  }, [sportId]);
+    return getDisciplineById(sportId, avail.sports)
+      ?? disciplines.find((d) => slugify(d.name) === sportId);
+  }, [sportId, avail.sports]);
 
   const parentSports = useMemo(() => getParentDisciplines(), []);
   const isChild = !!sport?.parentId;
@@ -25,7 +27,6 @@ export default function SportDetail() {
     return disciplines.find((d) => d.id === sport.parentId);
   }, [sport]);
 
-  const avail = useAvailableDisciplines();
   const subDisciplines = useMemo(() => {
     if (!sport || isChild) return [];
     return disciplines.filter((d) => d.parentId === sport.id && avail.isSubAvailable(sport.id, d.name));
@@ -52,14 +53,14 @@ export default function SportDetail() {
   }, [sport]);
 
   const { data: result = { clubs: [], total: 0 }, isLoading } = useQuery({
-    queryKey: ['sport-detail', sport?.id],
+    queryKey: ['sport-detail', sport?.id, sport?.name],
     queryFn: () =>
       fetchEnrichedClubs({
         disciplines: getDisciplineQueryNames(sport?.parentId ?? sport?.id),
-        subDiscipline: sport?.parentId ? getSubDisciplineValue(sport.parentId, sport.id) : null,
+        subDiscipline: sport?.parentId ? getSubDisciplineValue(sport.parentId, sport.id, avail.sports) : null,
         limit: 100,
       }),
-    enabled: !!sport?.name,
+    enabled: !!sport?.name && (!sport?.parentId || avail.isReady),
     staleTime: 5 * 60 * 1000,
   });
 

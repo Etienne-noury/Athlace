@@ -14,6 +14,7 @@ export interface SportAvailability {
   count: number;
   /** sous-discipline (nom exact) → nombre de clubs */
   subs: Record<string, number>;
+  subList: { name: string; count: number }[];
 }
 
 export async function fetchAvailableDisciplines(): Promise<Row[]> {
@@ -35,16 +36,20 @@ export function computeDisciplineAvailability(rows: Row[]) {
     for (const sport of cat.sports) {
       let count = 0;
       const subTotals: Record<string, number> = {};
+      const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? [])]);
       for (const m of sport.match) {
         const row = byDisc.get(m);
         if (!row) continue;
         count += Number(row.clubs) || 0;
-        for (const s of sport.subs) {
-          const n = Number(row.subs?.[s]) || 0;
-          if (n > 0) subTotals[s] = (subTotals[s] ?? 0) + n;
+        for (const [name, total] of Object.entries(row.subs ?? {})) {
+          const n = Number(total) || 0;
+          if (n > 0 && !excluded.has(name)) subTotals[name] = (subTotals[name] ?? 0) + n;
         }
       }
-      sports[slugifyDiscipline(sport.name)] = { available: count > 0, count, subs: subTotals };
+      const subList = Object.entries(subTotals)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'fr'));
+      sports[slugifyDiscipline(sport.name)] = { available: count > 0, count, subs: subTotals, subList };
       if (count > 0) {
         catOk = true;
         availableSportCount += 1;
@@ -70,9 +75,11 @@ export function useAvailableDisciplines() {
 
   const isReady = !!query.data;
   const getSport = (sportId?: string | null): SportAvailability =>
-    (sportId && value.sports[sportId]) || { available: false, count: 0, subs: {} };
+    (sportId && value.sports[sportId]) || { available: false, count: 0, subs: {}, subList: [] };
 
   return {
+    sports: value.sports,
+    getSport,
     isReady,
     isLoading: query.isLoading,
     /** Tant que les données ne sont pas chargées, tout est considéré disponible pour éviter le clignotement. */

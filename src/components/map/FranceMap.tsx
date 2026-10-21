@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
 import { getDisciplineById, getDisciplineQueryNames, getSubDisciplineValue } from "@/data/disciplines";
 import { getDepartmentCodesByRegionName } from "@/lib/geo";
+import { useAvailableDisciplines } from "@/hooks/useAvailableDisciplines";
 import "leaflet/dist/leaflet.css";
 
 // Fix Leaflet default marker icons (Vite bundling)
@@ -67,7 +68,9 @@ export function FranceMap({
   const [zoom, setZoom] = useState<number>(FRANCE_ZOOM);
 
   const disciplineNames = getDisciplineQueryNames(selectedDiscipline);
-  const subDiscipline = getSubDisciplineValue(selectedDiscipline, selectedSub);
+  const avail = useAvailableDisciplines();
+  const subDiscipline = getSubDisciplineValue(selectedDiscipline, selectedSub, avail.sports);
+  const subReady = selectedSub === 'all' || avail.isReady;
   const postalPrefixes = getDepartmentCodesByRegionName(selectedRegion);
   const clusterMode = zoom < INDIVIDUAL_ZOOM;
 
@@ -93,11 +96,11 @@ export function FranceMap({
       }
       return (data ?? []) as ClusterCell[];
     },
-    enabled: bounds !== null && clusterMode,
+    enabled: bounds !== null && clusterMode && subReady,
   });
 
   const { data: displayedClubs = [], isFetching: isFetchingClubs } = useQuery({
-    queryKey: ["clubs", "map", selectedDiscipline, selectedSub, selectedRegion, locationQuery, bounds],
+    queryKey: ["clubs", "map", selectedDiscipline, selectedSub, subDiscipline, selectedRegion, locationQuery, bounds],
     queryFn: async () => {
       const result = await fetchEnrichedClubs({
         disciplines: disciplineNames,
@@ -109,7 +112,7 @@ export function FranceMap({
       });
       return result.clubs.filter((c) => c.coordinates?.lat && c.coordinates?.lng);
     },
-    enabled: bounds !== null && !clusterMode,
+    enabled: bounds !== null && !clusterMode && subReady,
   });
 
   const totalInView = clusterMode

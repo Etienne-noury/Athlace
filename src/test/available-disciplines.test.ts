@@ -23,6 +23,7 @@ describe("computeDisciplineAvailability", () => {
       available: true,
       count: rows.reduce((s, r) => s + r.clubs, 0),
       subs: {},
+      subList: [],
     });
     expect(res.availableSportCount).toBe(1);
     expect(res.categories[cat.id]).toBe(true);

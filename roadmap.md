@@ -1,5 +1,5 @@
-# Palette Athlace
+# Sous-disciplines dynamiques
 
-- [x] Remplacer les anciennes couleurs dans src et les valeurs précises demandées.
-- [x] Supprimer les alias de couleurs et App.css si inutilisé.
-- [x] Vérifier les contrastes, les tests existants et la compilation.
+- [x] Agréger les sous-disciplines de la base et exclure les offres/handi.
+- [x] Alimenter le filtre et résoudre les nouveaux identifiants sans casser les anciens.
+- [x] Vérifier les tests, les recherches réelles et la compilation.
