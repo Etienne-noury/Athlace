@@ -53,7 +53,7 @@ export default function Carte() {
       </section>
 
       {/* Filters */}
-      <div className="bg-card border-b border-border sticky top-0 z-[1001]">
+      <div className="bg-card border-b border-border sticky top-16 lg:top-20 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="lg:hidden flex items-center justify-between gap-2 pb-1">
             <Button

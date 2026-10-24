@@ -18,7 +18,11 @@ export default function Application() {
           <p className="text-muted-foreground mb-6">
             L'application Athlace pour iOS et Android est en cours de développement. Inscrivez-vous pour être informé du lancement.
           </p>
-          <Button>S'inscrire à la liste d'attente</Button>
+          <Button asChild>
+            <a href={`mailto:contact@athlace.fr?subject=${encodeURIComponent("Liste d'attente application Athlace")}`}>
+              Être prévenu du lancement
+            </a>
+          </Button>
         </div>
       </section>
     </Layout>

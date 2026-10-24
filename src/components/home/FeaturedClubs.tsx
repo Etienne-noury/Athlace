@@ -29,12 +29,12 @@ export function FeaturedClubs() {
               Une sélection de clubs référencés sur Athlace
             </p>
           </div>
-          <Link to="/clubs/">
-            <Button variant="outline" className="gap-2">
+          <Button asChild variant="outline" className="gap-2">
+            <Link to="/clubs/">
               Voir tous les clubs
               <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
 
         </div>
 

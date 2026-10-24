@@ -38,6 +38,7 @@ export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [page, setPage] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
@@ -239,7 +240,7 @@ export default function Recherche() {
 
 
           {/* Mobile Filter Sheet */}
-          <Sheet>
+          <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" className="lg:hidden mb-4 gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
@@ -249,12 +250,16 @@ export default function Recherche() {
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-full sm:max-w-md">
+            <SheetContent
+              side="left"
+              className="w-full sm:max-w-md flex flex-col overflow-y-auto"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
               <SheetHeader>
                 <SheetTitle>Filtres</SheetTitle>
                 <SheetDescription>Affinez votre recherche</SheetDescription>
               </SheetHeader>
-              <div className="space-y-6 mt-6">
+              <div className="space-y-6 mt-6 flex-1">
                 {/* Same filters as sidebar */}
                 <div>
                   <label className="text-sm font-bold mb-2 block">Recherche</label>
@@ -277,16 +282,26 @@ export default function Recherche() {
                   <label className="text-sm font-bold mb-2 block">Région</label>
                   <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Toutes" />
+                      <SelectValue placeholder="Toutes les régions" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Toutes</SelectItem>
+                      <SelectItem value="all">Toutes les régions</SelectItem>
                       {regions.map((r) => (
                         <SelectItem key={r} value={r}>{r}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+              <div className="sticky bottom-0 -mx-6 -mb-6 mt-6 flex gap-3 border-t border-border bg-background px-6 py-4">
+                {activeFiltersCount > 0 && (
+                  <Button type="button" variant="outline" className="flex-1" onClick={clearFilters}>
+                    Effacer
+                  </Button>
+                )}
+                <Button type="button" className="flex-1" onClick={() => setFiltersOpen(false)}>
+                  {isLoading ? 'Voir les clubs' : `Voir ${totalCount} club${totalCount > 1 ? 's' : ''}`}
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
@@ -308,6 +323,7 @@ export default function Recherche() {
                   variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
                   size="icon"
                   onClick={() => setViewMode('grid')}
+                  aria-label="Affichage en grille"
                 >
                   <Grid3X3 className="w-4 h-4" />
                 </Button>
@@ -315,6 +331,7 @@ export default function Recherche() {
                   variant={viewMode === 'list' ? 'secondary' : 'ghost'}
                   size="icon"
                   onClick={() => setViewMode('list')}
+                  aria-label="Affichage en liste"
                 >
                   <List className="w-4 h-4" />
                 </Button>

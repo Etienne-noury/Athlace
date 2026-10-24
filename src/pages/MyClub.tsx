@@ -568,8 +568,8 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
             <div key={ph} className="relative">
               <MediaImg src={ph} alt={`Photo ${i + 1}`} className="aspect-square w-full rounded-lg object-cover" />
               <button type="button" aria-label="Retirer la photo" onClick={() => set('photos', photos.filter((x) => x !== ph))}
-                className="absolute right-1 top-1 rounded-pill bg-background p-1 text-nuit shadow">
-                <X className="h-3 w-3" />
+                className="absolute right-1 top-1 inline-flex h-8 w-8 items-center justify-center rounded-pill bg-background text-nuit shadow">
+                <X className="h-4 w-4" />
               </button>
             </div>
           ))}

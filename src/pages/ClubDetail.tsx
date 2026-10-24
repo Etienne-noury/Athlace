@@ -336,7 +336,7 @@ export default function ClubDetail() {
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-sans text-2xl font-black mb-4">Club non trouvé</h1>
-          <Link to="/clubs/"><Button>Retour à la recherche</Button></Link>
+          <Button asChild><Link to="/clubs/">Retour à la recherche</Link></Button>
         </div>
       </Layout>
     );
@@ -412,8 +412,8 @@ export default function ClubDetail() {
                   <Badge variant="secondary">{club.disciplineName}</Badge>
                 </div>
 
-                <div className="flex items-start justify-between gap-4 mb-1">
-                  <h1 className="font-sans text-2xl lg:text-3xl font-black text-foreground">{club.name}</h1>
+                <div className="flex flex-col-reverse items-start gap-3 sm:flex-row sm:justify-between sm:gap-4 mb-1">
+                  <h1 className="font-sans text-2xl lg:text-3xl font-black text-foreground break-words min-w-0">{club.name}</h1>
                   <FavoriteButton clubId={club.id} withLabel className="flex-shrink-0" />
                 </div>
                 {r?.acronym && <p className="text-sm text-muted-foreground mb-3">{r.acronym}</p>}

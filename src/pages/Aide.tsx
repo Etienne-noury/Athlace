@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Search, ChevronDown, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Search, ChevronDown, Mail } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { formatCount } from '@/lib/format-stats';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Accordion,
@@ -181,34 +180,11 @@ export default function Aide() {
                 <p className="text-muted-foreground text-sm mb-4">
                   Réponse sous 24-48h
                 </p>
-                <a href="mailto:support@athlace.fr" className="text-primary hover:underline">
-                  support@athlace.fr
+                <a href="mailto:contact@athlace.fr" className="text-primary hover:underline">
+                  contact@athlace.fr
                 </a>
               </div>
 
-              <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-creme flex items-center justify-center mb-4">
-                  <Phone className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-bold text-foreground mb-2">Téléphone</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Lun-Ven 9h-18h
-                </p>
-                <a href="tel:0800123456" className="text-primary hover:underline">
-                  0 800 123 456
-                </a>
-              </div>
-
-              <div className="bg-card rounded-2xl border border-border p-6">
-                <div className="w-12 h-12 rounded-xl bg-creme flex items-center justify-center mb-4">
-                  <MessageCircle className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-bold text-foreground mb-2">Chat en ligne</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Assistance instantanée
-                </p>
-                <Button className="w-full">Démarrer un chat</Button>
-              </div>
             </div>
           </div>
         </div>

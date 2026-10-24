@@ -33,6 +33,13 @@ interface DisciplineFilterProps {
   layout?: 'stacked' | 'inline';
 }
 
+// Sur téléphone, ne pas ouvrir le clavier à l'ouverture de la liste : il masque les options.
+const preventKeyboardOnTouch = (event: Event) => {
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
+    event.preventDefault();
+  }
+};
+
 export function DisciplineFilter({
   sport,
   sub,
@@ -75,43 +82,38 @@ export function DisciplineFilter({
         {showLabels && (
           <label className="text-sm font-bold text-foreground mb-2 block">Sport</label>
         )}
-        <Popover open={sportOpen} onOpenChange={setSportOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              role="combobox"
-              aria-expanded={sportOpen}
-              aria-label="Choisir un sport"
-              className={cn('w-full justify-between font-light bg-background', triggerClassName)}
-            >
-              <span className="truncate">
-                {selectedSport ? `${selectedSport.icon} ${selectedSport.name}` : 'Tous les sports'}
-              </span>
-              <span className="flex items-center gap-1 shrink-0">
-                {selectedSport && (
-                  <X
-                    className="h-4 w-4 opacity-60 hover:opacity-100 !pointer-events-auto cursor-pointer"
-                    role="button"
-                    aria-label="Effacer le sport"
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      selectSport('all');
-                    }}
-                  />
-                )}
-                <ChevronsUpDown className="h-4 w-4 opacity-50" />
-              </span>
-            </Button>
-          </PopoverTrigger>
+        <Popover open={sportOpen} onOpenChange={setSportOpen} modal>
+          <div className="relative">
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                role="combobox"
+                aria-expanded={sportOpen}
+                aria-label="Choisir un sport"
+                className={cn('w-full justify-between font-light bg-background', selectedSport && 'pr-16', triggerClassName)}
+              >
+                <span className="truncate">
+                  {selectedSport ? `${selectedSport.icon} ${selectedSport.name}` : 'Tous les sports'}
+                </span>
+                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            {selectedSport && (
+              <button
+                type="button"
+                aria-label="Effacer le sport"
+                onClick={() => selectSport('all')}
+                className="absolute right-8 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-pill text-foreground/60 hover:bg-muted hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           <PopoverContent
             align="start"
             className={cn('w-[min(22rem,calc(100vw-2rem))] p-0 bg-popover', contentClassName)}
+            onOpenAutoFocus={preventKeyboardOnTouch}
           >
             <Command>
               <CommandInput placeholder="Rechercher un sport…" />
@@ -170,7 +172,7 @@ export function DisciplineFilter({
               Sous-discipline
             </label>
           )}
-          <Popover open={subOpen} onOpenChange={setSubOpen}>
+          <Popover open={subOpen} onOpenChange={setSubOpen} modal>
             <PopoverTrigger asChild>
               <Button
                 type="button"
@@ -189,6 +191,7 @@ export function DisciplineFilter({
             <PopoverContent
               align="start"
               className={cn('w-[min(22rem,calc(100vw-2rem))] p-0 bg-popover', contentClassName)}
+            onOpenAutoFocus={preventKeyboardOnTouch}
             >
               <Command>
                 <CommandInput placeholder="Rechercher une sous-discipline…" />

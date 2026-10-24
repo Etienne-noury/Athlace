@@ -73,10 +73,12 @@ export function FranceMap({
   const subReady = selectedSub === 'all' || avail.isReady;
   const postalPrefixes = getDepartmentCodesByRegionName(selectedRegion);
   const clusterMode = zoom < INDIVIDUAL_ZOOM;
+  // Sur petit écran, bulles plus petites et grille plus large pour éviter qu'elles se chevauchent.
+  const isSmallScreen = typeof window !== "undefined" && window.innerWidth < 640;
 
   // Bulles agrégées côté base : le nombre affiché est le nombre exact de clubs.
   const { data: clusters = [], isFetching: isFetchingClusters } = useQuery({
-    queryKey: ["clubs", "map-clusters", disciplineNames, subDiscipline, postalPrefixes, locationQuery, bounds, zoom],
+    queryKey: ["clubs", "map-clusters", disciplineNames, subDiscipline, postalPrefixes, locationQuery, bounds, zoom, isSmallScreen],
     queryFn: async (): Promise<ClusterCell[]> => {
       if (!bounds) return [];
       const { data, error } = await supabase.rpc("map_club_clusters", {
@@ -84,7 +86,7 @@ export function FranceMap({
         p_lat_max: bounds.latMax,
         p_lng_min: bounds.lngMin,
         p_lng_max: bounds.lngMax,
-        p_precision: gridPrecision(zoom),
+        p_precision: gridPrecision(zoom) * (isSmallScreen ? 1.8 : 1),
         p_disciplines: disciplineNames.length > 0 ? disciplineNames : null,
         p_postal_prefixes: postalPrefixes.length > 0 ? postalPrefixes : null,
         p_location: locationQuery?.trim() || null,
@@ -172,7 +174,8 @@ export function FranceMap({
 
     clusters.forEach((cell) => {
       const count = Number(cell.cnt);
-      const size = count < 10 ? 40 : count < 100 ? 52 : count < 1000 ? 64 : 76;
+      const baseSize = count < 10 ? 40 : count < 100 ? 52 : count < 1000 ? 64 : 76;
+      const size = isSmallScreen ? Math.round(baseSize * 0.75) : baseSize;
       const tier = count < 10 ? "sm" : count < 100 ? "md" : "lg";
       const label = count >= 1000 ? `${Math.round(count / 100) / 10}k` : String(count);
 
@@ -191,7 +194,7 @@ export function FranceMap({
 
       marker.addTo(layer);
     });
-  }, [clusters, clusterMode]);
+  }, [clusters, clusterMode, isSmallScreen]);
 
   // Marqueurs individuels (zoom quartier)
   useEffect(() => {

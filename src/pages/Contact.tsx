@@ -3,7 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail } from 'lucide-react';
+
+// Pas encore de back-end d'envoi : le formulaire ouvre la messagerie du visiteur avec le message prérempli.
+function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  const f = new FormData(e.currentTarget);
+  const name = `${f.get('firstName') ?? ''} ${f.get('lastName') ?? ''}`.trim();
+  const subject = String(f.get('subject') || 'Contact depuis athlace.fr');
+  const body = `${f.get('message') ?? ''}\n\n${name}${f.get('email') ? ` (${f.get('email')})` : ''}`;
+  window.location.href = `mailto:contact@athlace.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 export default function Contact() {
   return (
@@ -18,30 +28,31 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
             <h2 className="font-sans text-2xl font-black mb-6">Envoyer un message</h2>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">Prénom</Label>
-                  <Input id="firstName" placeholder="Votre prénom" />
+                  <Input id="firstName" name="firstName" placeholder="Votre prénom" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Nom</Label>
-                  <Input id="lastName" placeholder="Votre nom" />
+                  <Input id="lastName" name="lastName" placeholder="Votre nom" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="votre@email.com" />
+                <Input id="email" name="email" type="email" placeholder="votre@email.com" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="subject">Sujet</Label>
-                <Input id="subject" placeholder="Demande d'information" />
+                <Input id="subject" name="subject" placeholder="Demande d'information" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
-                <Textarea id="message" placeholder="Votre message..." rows={5} />
+                <Textarea id="message" name="message" required placeholder="Votre message..." rows={5} />
               </div>
               <Button type="submit">Envoyer</Button>
+              <p className="text-xs text-muted-foreground">Le bouton ouvre votre messagerie avec votre message prérempli.</p>
             </form>
           </div>
           <div className="bg-card border border-border rounded-2xl p-8">
@@ -63,14 +74,6 @@ export default function Contact() {
               </span>
             </a>
 
-            <div className="space-y-4">
-              <a href="tel:0800123456" className="flex items-center gap-3 text-muted-foreground hover:text-foreground">
-                <Phone className="w-5 h-5 text-primary" /> 0 800 123 456
-              </a>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <MapPin className="w-5 h-5 text-primary" /> Lundi - Vendredi : 9h - 18h
-              </div>
-            </div>
           </div>
         </div>
       </section>

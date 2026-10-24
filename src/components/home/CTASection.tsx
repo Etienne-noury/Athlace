@@ -24,12 +24,12 @@ export function CTASection() {
                 Créez votre compte gratuit pour enregistrer vos clubs favoris et retrouver en un clic leur lien d'inscription.
               </p>
               
-              <Link to="/compte/inscription/">
-                 <Button size="lg" variant="secondary" className="gap-2">
+              <Button asChild size="lg" variant="secondary" className="gap-2">
+                 <Link to="/compte/inscription/">
                   Créer mon compte
                   <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
 
             </div>
           </div>
@@ -54,18 +54,18 @@ export function CTASection() {
               </p>
               
               <div className="flex flex-wrap gap-3">
-                <Link to="/compte/mon-club/">
-                  <Button size="lg" className="gap-2">
+                <Button asChild size="lg" className="gap-2">
+                  <Link to="/compte/mon-club/">
                     Compléter ma fiche
                     <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/pour-les-clubs/">
-                  <Button size="lg" variant="secondary" className="gap-2">
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="secondary" className="gap-2">
+                  <Link to="/pour-les-clubs/">
                     Découvrir l'offre club
                     <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
 
             </div>

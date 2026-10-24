@@ -68,11 +68,11 @@ export function FootClubCard({ club }: Props) {
       </div>
 
       <div className="pt-2 mt-auto">
-        <Link to={`/football/club/${encodeURIComponent(club.data_es_id)}`}>
-          <Button variant="outline" size="sm" className="w-full">
+        <Button asChild variant="outline" size="sm" className="w-full">
+          <Link to={`/football/club/${encodeURIComponent(club.data_es_id)}`}>
             Voir la fiche
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </article>
   );

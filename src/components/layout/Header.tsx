@@ -259,7 +259,7 @@ export function Header() {
                               {['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'].map((city) => (
                                 <li key={city}>
                                   <Link
-                                    to={`/clubs/${city.toLowerCase().replace(/ /g, '-')}/`}
+                                    to={`/clubs/?q=${encodeURIComponent(city)}`}
                                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                   >
                                     Clubs à {city}
@@ -280,17 +280,16 @@ export function Header() {
           {/* Right Actions */}
           <div className="flex shrink-0 items-center justify-end gap-1 xl:justify-self-end">
 
-            <Link to="/clubs/" className="sm:hidden">
-              <Button variant="ghost" size="icon" aria-label="Rechercher un club">
+            <Button asChild variant="ghost" size="icon" className="sm:hidden">
+              <Link to="/clubs/" aria-label="Rechercher un club">
                 <Search className="h-5 w-5 text-muted-foreground" />
-              </Button>
-            </Link>
-            <Link to="/compte/mes-clubs/" className="hidden sm:flex xl:hidden" aria-label="Mes clubs favoris">
-
-              <Button variant="ghost" size="icon">
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon" className="hidden sm:inline-flex xl:hidden">
+              <Link to="/compte/mes-clubs/" aria-label="Mes clubs favoris">
                 <Heart className="h-5 w-5" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -323,17 +322,17 @@ export function Header() {
               </DropdownMenu>
             ) : (
               <div className="hidden sm:flex items-center gap-2">
-                <Link to="/compte/connexion/">
-                  <Button variant="outline" className="gap-2">
+                <Button asChild variant="outline" className="gap-2">
+                  <Link to="/compte/connexion/">
                     <User className="h-4 w-4" />
                     <span>Connexion</span>
-                  </Button>
-                </Link>
-                <Link to="/compte/inscription/">
-                  <Button className="gap-2">
+                  </Link>
+                </Button>
+                <Button asChild className="gap-2">
+                  <Link to="/compte/inscription/">
                     <span>Créer un compte</span>
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             )}
 
@@ -342,6 +341,8 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="xl:hidden"
+              aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -420,18 +421,18 @@ export function Header() {
                 {user ? (
                   <>
                     <div className="px-1 pb-1 text-sm text-muted-foreground truncate">{user.email}</div>
-                    <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="outline" className="w-full gap-2">
+                    <Button asChild variant="outline" className="w-full gap-2">
+                      <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
                         <User className="h-4 w-4" />
                         Mon Compte
-                      </Button>
-                    </Link>
-                    <Link to="/compte/mes-clubs/" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full gap-2">
+                      </Link>
+                    </Button>
+                    <Button asChild variant="ghost" className="w-full gap-2">
+                      <Link to="/compte/mes-clubs/" onClick={() => setIsMenuOpen(false)}>
                         <Heart className="h-4 w-4" />
                         Mes clubs
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                     <Button
                       variant="ghost"
                       className="w-full text-destructive"
@@ -446,15 +447,15 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    <Link to="/compte/connexion/" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="outline" className="w-full gap-2">
+                    <Button asChild variant="outline" className="w-full gap-2">
+                      <Link to="/compte/connexion/" onClick={() => setIsMenuOpen(false)}>
                         <User className="h-4 w-4" />
                         Connexion
-                      </Button>
-                    </Link>
-                    <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>
-                      <Button className="w-full">Créer un compte</Button>
-                    </Link>
+                      </Link>
+                    </Button>
+                    <Button asChild className="w-full">
+                      <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>Créer un compte</Link>
+                    </Button>
                   </>
                 )}
               </div>

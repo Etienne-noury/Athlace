@@ -22,12 +22,12 @@ export function PopularDisciplines() {
               Explorez les sports les plus pratiqués en France
             </p>
           </div>
-          <Link to="/sports/">
-            <Button variant="outline" className="gap-2">
+          <Button asChild variant="outline" className="gap-2">
+            <Link to="/sports/">
               Voir toutes les disciplines
               <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
 
         </div>
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,10 +21,13 @@ export default function GeoHub() {
   const [searchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page') || '0', 10);
 
-  const region = a;
+  // /clubs/:a/ peut être une région (/clubs/bretagne/) ou un sport (/clubs/football/).
+  const aIsRegion = !!(a && findRegionBySlug(a));
+  const aIsSport = !!(a && !b && !aIsRegion && getDisciplineDisplayName(a));
+  const region = aIsSport ? undefined : a;
   const dpt = b;
   const ville = c;
-  const sport = d;
+  const sport = aIsSport ? a : d;
 
 
   const regionData = useMemo(() => (region ? findRegionBySlug(region) : undefined), [region]);
@@ -52,6 +55,7 @@ export default function GeoHub() {
     if (cityName) return `Clubs à ${cityName}`;
     if (departmentData) return `Clubs en ${departmentData.name}`;
     if (regionData) return `Clubs en ${regionData.name}`;
+    if (sport) return `Clubs de ${getDisciplineDisplayName(sport) || sport} en France`;
     return 'Clubs par zone';
   }, [sport, cityName, departmentData, regionData]);
 
@@ -76,6 +80,9 @@ export default function GeoHub() {
   });
 
   const clubs = result.clubs;
+  const total = result.total || clubs.length;
+  const cleanAddress = (v?: string | null) =>
+    v && v.replace(/[\s,x.-]/gi, '').length > 2 ? v : undefined;
 
 
   // Sub-zones and sports for navigation
@@ -110,7 +117,7 @@ export default function GeoHub() {
       const key = slugify(c.discipline);
       const existing = counts.get(key);
       if (existing) existing.count += 1;
-      else counts.set(key, { label: c.discipline, slug: slugify(c.discipline), count: 1 });
+      else counts.set(key, { label: getDisciplineDisplayName(c.discipline) || c.discipline, slug: slugify(c.discipline), count: 1 });
     });
     return Array.from(counts.values()).sort((a, b) => b.count - a.count).slice(0, 30);
   }, [clubs]);
@@ -127,6 +134,11 @@ export default function GeoHub() {
     if (region) return `/clubs/${region}/${slug}/`;
     return `/clubs/${slug}/`;
   };
+
+  // Segment inconnu (ex : /clubs/paris/) : on bascule sur la recherche, qui gère les villes.
+  if (a && !b && !aIsRegion && !aIsSport) {
+    return <Navigate to={`/clubs/?q=${encodeURIComponent(a.replace(/-/g, ' '))}`} replace />;
+  }
 
   return (
     <Layout>
@@ -147,7 +159,7 @@ export default function GeoHub() {
             {title}
           </h1>
           <p className="text-muted-foreground text-lg">
-            {isLoading ? 'Chargement…' : `${clubs.length} club${clubs.length > 1 ? 's' : ''} trouvé${clubs.length > 1 ? 's' : ''}`}
+            {isLoading ? 'Chargement…' : `${total} club${total > 1 ? 's' : ''} trouvé${total > 1 ? 's' : ''}`}
           </p>
         </div>
       </section>
@@ -183,13 +195,13 @@ export default function GeoHub() {
                       </h3>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                         <MapPin className="w-4 h-4" />
-                        {club.address || club.city || 'Adresse non précisée'}
+                        {cleanAddress(club.address) || club.city || 'Adresse non précisée'}
                       </div>
                       {club.discipline && (
                         <div className="mt-3 text-sm">
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded-md text-muted-foreground">
                             <Building2 className="w-3 h-3" />
-                            {club.discipline}
+                            {getDisciplineDisplayName(club.discipline) || club.discipline}
                           </span>
                         </div>
                       )}

@@ -42,12 +42,12 @@ export function InteractiveMapSection() {
               contentClassName="z-[2000]"
             />
 
-            <Link to="/carte">
-              <Button variant="outline" className="gap-2">
+            <Button asChild variant="outline" className="gap-2">
+              <Link to="/carte">
                 Voir en plein écran
                 <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 

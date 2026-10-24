@@ -42,7 +42,7 @@ export default function FootballClubDetail() {
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-sans text-2xl font-black mb-4">Club non trouvé</h1>
-          <Link to="/football"><Button>Retour à l'annuaire</Button></Link>
+          <Button asChild><Link to="/football">Retour à l'annuaire</Link></Button>
         </div>
       </Layout>
     );
