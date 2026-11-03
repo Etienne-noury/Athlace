@@ -41,7 +41,7 @@ export default function Discover() {
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {GUIDES.map((guide) => (
-            <Link key={guide.slug} to={`/decouvrir/${guide.slug}/`}>
+            <Link key={guide.slug} to={`/blog/${guide.slug}/`}>
               <Card className="group hover:border-border transition-colors h-full">
                 <CardContent className="p-6">
                   <guide.icon className="w-10 h-10 text-primary mb-4" />

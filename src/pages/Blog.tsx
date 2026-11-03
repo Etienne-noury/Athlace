@@ -1,51 +1,41 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { PageTitle } from '@/components/PageTitle';
+import { Button } from '@/components/ui/button';
+import { JOURNAL_CATEGORIES, filterJournalArticles } from '@/data/journal';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Calendar } from 'lucide-react';
 
-const POSTS = [
-  {
-    id: 'choisir-club-sport',
-    title: 'Comment choisir son club de sport ?',
-    excerpt: 'Localisation, niveau, tarifs, ambiance : les critères à prendre en compte pour trouver le club idéal.',
-    date: '12 juin 2026',
-  },
-  {
-    id: 'licences-federations-2026',
-    title: 'Licences fédérales 2026 : ce qui change',
-    excerpt: "Tour d'horizon des évolutions tarifaires et des nouveautés dans les principales fédérations.",
-    date: '5 juin 2026',
-  },
-  {
-    id: 'sport-en-entreprise',
-    title: 'Le sport en entreprise : bienfaits et mise en place',
-    excerpt: 'Pourquoi et comment accompagner les salariés vers une pratique sportive régulière.',
-    date: '28 mai 2026',
-  },
-];
-
 export default function Blog() {
+  const [category, setCategory] = useState<typeof JOURNAL_CATEGORIES[number]>('Tous');
+  const posts = filterJournalArticles(category);
   return (
     <Layout>
+      <PageTitle title="Le journal d'Athlace" description="Actualités, guides et conseils autour de la pratique sportive en club." />
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">
-            Blog Athlace
+            Le journal d'Athlace
           </h1>
           <p className="text-muted-foreground text-lg">
             Actualités, guides et conseils autour de la pratique sportive en club.
           </p>
+          <div className="flex flex-wrap gap-2 mt-6" aria-label="Rubriques du journal">
+            {JOURNAL_CATEGORIES.map((rubrique) => <Button key={rubrique} size="sm" variant={category === rubrique ? 'default' : 'outline'} aria-pressed={category === rubrique} onClick={() => setCategory(rubrique)}>{rubrique}</Button>)}
+          </div>
         </div>
       </section>
 
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {POSTS.map((post) => (
+          {posts.map((post) => (
             <Link key={post.id} to={`/blog/${post.id}/`}>
               <Card className="group hover:border-border transition-colors h-full">
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                    <Calendar className="w-3 h-3" /> {post.date}
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-3">
+                    <span>{post.category}</span>
+                    {post.date && <><Calendar className="w-3 h-3" /> {post.date}</>}
                   </div>
                   <h2 className="font-sans text-xl font-black group-hover:text-primary transition-colors">
                     {post.title}
@@ -59,6 +49,7 @@ export default function Blog() {
             </Link>
           ))}
         </div>
+        {posts.length === 0 && <p role="status" className="py-12 text-center text-muted-foreground">Bientôt de nouveaux articles</p>}
       </section>
     </Layout>
   );
