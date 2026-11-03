@@ -9,3 +9,9 @@
 - [x] Réorganiser les filtres et résultats desktop, conserver le panneau mobile.
 - [x] Réutiliser FranceMap avec les résultats courants et synchroniser les interactions.
 - [x] Vérifier les filtres, la pagination, les liens et les deux formats à l'écran.
+
+# Carte intégrée à la recherche
+
+- [x] Retirer la carte de l'accueil et rediriger /carte avec ses paramètres.
+- [x] Ajouter la recherche Autour de moi et actualiser les liens du header.
+- [x] Vérifier acceptation, refus, redirections et affichage mobile/desktop.

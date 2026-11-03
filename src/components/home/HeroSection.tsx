@@ -139,7 +139,7 @@ export function HeroSection() {
           {/* Map CTA Button */}
           <div className="mt-6 animate-fade-up" style={{ animationDelay: '0.35s' }}>
             <Button asChild variant="outline" size="lg" className="gap-2 bg-glass border-glass-border text-creme hover:bg-glass hover:text-creme">
-              <Link to="/carte">
+              <Link to="/clubs/">
                 <Map className="w-5 h-5" />
                 Voir tous les clubs sur la carte
               </Link>

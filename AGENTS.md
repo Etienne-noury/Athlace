@@ -5,3 +5,4 @@
 - Keep Leaflet-specific layout and marker styles in `src/styles/map-and-layout.css`, separate from the supplied `src/index.css`. This preserves map and mobile behavior while keeping the supplied tokens unchanged.
 - Resolve dynamic sub-discipline IDs with the availability hook's sports map passed explicitly to discipline helpers; this preserves exact database names and reactive query updates without mutable global state.
 - FranceMap accepts optional current-page results and selection callbacks for search; its default database-driven mode must remain unchanged for the home and map pages.
+- Keep the legacy Carte component unmounted; redirect map URLs with their query strings to search, which reuses fetchClubsNear for both cities and browser coordinates to preserve identical proximity rules.
