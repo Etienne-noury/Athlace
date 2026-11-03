@@ -17,6 +17,7 @@ import { fetchEnrichedClubById } from '@/lib/api/enriched-clubs';
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
 import { getDisciplineById } from '@/data/disciplines';
+import { safeExternalUrl } from '@/lib/safe-url';
 import { cn } from '@/lib/utils';
 
 type Venue = Tables<'club_venues'>;
@@ -140,7 +141,7 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
     },
   });
 
-  const registerUrl = r.registration_url || r.helloasso_url || null;
+  const registerUrl = safeExternalUrl(r.registration_url || r.helloasso_url);
   const regPeriod = r.registration_start || r.registration_end
     ? [r.registration_start && `du ${formatDate(r.registration_start)}`, r.registration_end && `au ${formatDate(r.registration_end)}`].filter(Boolean).join(' ')
     : null;
@@ -344,7 +345,9 @@ export default function ClubDetail() {
 
   const r = club.row;
   const discipline = getDisciplineById(club.discipline);
-  const registerUrl = r?.registration_url || r?.helloasso_url || null;
+  const registerUrl = safeExternalUrl(r?.registration_url || r?.helloasso_url);
+  const websiteUrl = safeExternalUrl(club.website);
+  const sourceUrl = safeExternalUrl(r?.source_url);
   const fullAddress = [club.address, r?.address_complement, `${club.postalCode} ${club.city}`.trim()].filter(Boolean).join(', ');
   const directionsUrl = club.coordinates?.lat && club.coordinates?.lng
     ? `https://www.google.com/maps/dir/?api=1&destination=${club.coordinates.lat},${club.coordinates.lng}`
@@ -358,8 +361,8 @@ export default function ClubDetail() {
     { url: r?.linkedin_url, icon: Linkedin, label: 'LinkedIn' },
     { url: r?.youtube_url, icon: Youtube, label: 'YouTube' },
     { url: r?.tiktok_url, icon: Music2, label: 'TikTok' },
-  ].filter((s) => !!s.url);
-  const hasActions = registerUrl || club.website || contact?.email || contact?.phone || socials.length > 0 || !!directionsUrl;
+  ].map((s) => ({ ...s, url: safeExternalUrl(s.url) })).filter((s) => !!s.url);
+  const hasActions = registerUrl || websiteUrl || contact?.email || contact?.phone || socials.length > 0 || !!directionsUrl;
 
   const total = r?.licensees_total ?? null;
   const pct = (n: number | null | undefined) => (total && n != null ? Math.round((n / total) * 100) : null);
@@ -449,9 +452,9 @@ export default function ClubDetail() {
                     <a href={registerUrl} target="_blank" rel="noopener noreferrer"><UserPlus className="w-4 h-4" /> S'inscrire</a>
                   </Button>
                 )}
-                {club.website && (
+                {websiteUrl && (
                   <Button asChild variant="secondary" className="rounded-pill">
-                    <a href={club.website} target="_blank" rel="noopener noreferrer"><Globe className="w-4 h-4" /> Site web</a>
+                    <a href={websiteUrl} target="_blank" rel="noopener noreferrer"><Globe className="w-4 h-4" /> Site web</a>
                   </Button>
                 )}
                 {contact?.email && (
@@ -617,8 +620,8 @@ export default function ClubDetail() {
           {/* 10. Pied de fiche */}
           {(r?.source_url || r?.affiliation_number || updatedAt) && (
             <footer className="pt-2 space-y-1 text-center">
-              {r?.source_url && (
-                <a href={r.source_url} target="_blank" rel="noopener noreferrer"
+              {sourceUrl && (
+                <a href={sourceUrl} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline">
                   <ExternalLink className="w-4 h-4" /> Voir la fiche sur le site de la fédération
                 </a>

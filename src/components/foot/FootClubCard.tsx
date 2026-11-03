@@ -3,6 +3,7 @@ import { MapPin, Star, Phone, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { FootClub } from '@/lib/api/foot';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 interface Props {
   club: FootClub;
@@ -54,9 +55,9 @@ export function FootClubCard({ club }: Props) {
             {club.telephone}
           </span>
         )}
-        {club.site_web && (
+        {safeExternalUrl(club.site_web) && (
           <a
-            href={club.site_web}
+            href={safeExternalUrl(club.site_web) as string}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-primary hover:underline"

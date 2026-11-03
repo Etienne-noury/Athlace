@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClubMiniMap } from '@/components/foot/ClubMiniMap';
 import { fetchFootClubById, fetchGooglePlaces } from '@/lib/api/foot';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 export default function FootballClubDetail() {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +53,7 @@ export default function FootballClubDetail() {
   const rating = club.google_rating ?? google?.rating ?? null;
   const nbAvis = club.google_nb_avis ?? google?.user_ratings_total ?? null;
   const telephone = club.telephone ?? google?.formatted_phone_number ?? null;
-  const siteWeb = club.site_web ?? google?.website ?? null;
+  const siteWeb = safeExternalUrl(club.site_web ?? google?.website);
   const horairesArr: string[] | null =
     Array.isArray(club.horaires)
       ? (club.horaires as string[])

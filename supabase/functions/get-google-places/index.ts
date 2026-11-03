@@ -29,7 +29,9 @@ Deno.serve(async (req) => {
 
   try {
     const { clubNom, ville } = await req.json().catch(() => ({}));
-    if (!clubNom || typeof clubNom !== 'string') {
+    // Validation stricte : fonction appelable par tout visiteur, chaque appel est facturé par Google.
+    const isValidText = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
+    if (!isValidText(clubNom, 150) || (ville != null && ville !== '' && !isValidText(ville, 100))) {
       return new Response(JSON.stringify({ error: 'clubNom is required' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
