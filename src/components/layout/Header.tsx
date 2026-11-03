@@ -13,11 +13,15 @@ import {
   HelpCircle,
   Compass,
   Map,
+  Newspaper,
+  Calendar,
+  Landmark,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { SoonBadge } from '@/components/ui/SoonBadge';
 import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -32,10 +36,19 @@ import {
 import { useAuth, signOut } from '@/lib/auth';
 
 
-const navItems = [
+type NavItem = {
+  id: string;
+  label: string;
+  href: string | null;
+  icon: typeof Compass;
+  megaMenu?: boolean;
+  type?: string;
+};
+
+const navItems: NavItem[] = [
   {
     id: 'sports',
-    label: 'Trouver un sport',
+    label: 'Trouver par sport',
     href: '/sports/',
     icon: Compass,
     megaMenu: true,
@@ -43,31 +56,33 @@ const navItems = [
   },
   {
     id: 'clubs',
-    label: 'Trouver un club',
+    label: 'Trouver par localisation',
     href: '/clubs/',
     icon: MapPin,
     megaMenu: true,
     type: 'clubs',
   },
   {
-    id: 'b2b',
-    label: 'Pour les clubs',
-    href: '/pour-les-clubs/',
-    icon: Building2,
-  },
-  {
     id: 'decouvrir',
     label: 'Découvrir',
-    href: '/decouvrir/',
+    href: null,
     icon: Compass,
+    megaMenu: true,
+    type: 'decouvrir',
   },
 ];
 
-const clubMenuLinks = [
+const localisationMenuLinks = [
+  { label: 'Par région', href: '/clubs/tout/region/', icon: MapPin },
+  { label: 'Par département', href: null, soon: true, icon: MapPin },
   { label: 'Par ville', href: '/clubs/tout/ville/', icon: MapPin },
-  { label: 'Par sport', href: '/sports/', icon: Compass },
   { label: 'Autour de moi', href: '/carte/', icon: Map },
-  { label: 'Tous les clubs', href: '/clubs/', icon: Search },
+];
+
+const decouvrirMenuLinks = [
+  { label: 'Le journal', href: '/blog/', icon: Newspaper },
+  { label: 'Événements', href: '/evenements/', icon: Calendar },
+  { label: 'Fédérations', href: '/federations/', icon: Landmark },
 ];
 
 type Avail = ReturnType<typeof useAvailableDisciplines>;
@@ -127,9 +142,6 @@ export function Header() {
   }, [isMenuOpen]);
 
 
-
-
-
   const displayName = profile?.full_name || user?.email?.split('@')[0] || 'Mon compte';
   const initials = displayName
     .split(' ')
@@ -137,7 +149,6 @@ export function Header() {
     .join('')
     .slice(0, 2)
     .toUpperCase();
-
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,119 +173,165 @@ export function Header() {
           <nav className="hidden xl:flex shrink-0 items-center justify-center gap-1">
 
 
-            {navItems.map((item) => (
-              <div
-                key={item.id}
-                className="relative"
-                onMouseEnter={() => {
-                  if (item.megaMenu) {
-                    if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
-                    setActiveMega(item.id);
-                  }
-                }}
-                onMouseLeave={() => {
-                  megaTimeoutRef.current = setTimeout(() => setActiveMega(null), 150);
-                }}
-              >
-                <Link
-                  to={item.href}
-                  className={cn(
-                    "px-3 py-2 rounded-lg font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
-                    location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
+            {navItems.map((item) => {
+              const isActive = !!item.href && (location.pathname === item.href || location.pathname.startsWith(item.href));
+              return (
+                <div
+                  key={item.id}
+                  className="relative"
+                  onMouseEnter={() => {
+                    if (item.megaMenu) {
+                      if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
+                      setActiveMega(item.id);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    megaTimeoutRef.current = setTimeout(() => setActiveMega(null), 150);
+                  }}
                 >
-                  {item.label}
-                  {item.megaMenu && <ChevronDown className="h-3.5 w-3.5" />}
-                </Link>
+                  {item.href ? (
+                    <Link
+                      to={item.href}
+                      className={cn(
+                        "px-3 py-2 rounded-lg font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
+                        isActive
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
+                    >
+                      {item.label}
+                      {item.megaMenu && <ChevronDown className="h-3.5 w-3.5" />}
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className={cn(
+                        "px-3 py-2 rounded-lg font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
+                        "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
+                    >
+                      {item.label}
+                      {item.megaMenu && <ChevronDown className="h-3.5 w-3.5" />}
+                    </button>
+                  )}
 
-                {/* Mega menu */}
-                {item.megaMenu && activeMega === item.id && (
-                  <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 w-[900px] max-w-[95vw]">
-                    <div className="h-3 w-full" />
-                    <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
-                      {item.type === 'sports' && (
-                        <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto">
-                          {ARBORESCENCE.map((cat) => (
-                            <div key={cat.id}>
-                              {avail.isCategoryAvailable(cat.id) ? (
-                                <Link
-                                  to={`/sports/famille/${cat.id}/`}
-                                  className="font-sans font-bold text-sm text-foreground hover:text-primary block mb-2"
-                                >
-                                  {cat.icon} {cat.name}
-                                </Link>
-                              ) : (
-                                <span className="font-sans font-bold text-sm text-muted-foreground opacity-60 block mb-2">
-                                  {cat.icon} {cat.name} · Bientôt
-                                </span>
-                              )}
-                              <ul className="space-y-1.5">
-                                {cat.sports.slice(0, 6).map((sport) => (
-                                  <li key={sport.name}>
-                                    <SportMenuLink sport={sport.name} avail={avail} className="text-sm text-muted-foreground hover:text-foreground transition-colors" />
+                  {/* Mega menu */}
+                  {item.megaMenu && activeMega === item.id && (
+                    <div
+                      className={cn(
+                        'fixed left-1/2 -translate-x-1/2 top-16 lg:top-20',
+                        item.type === 'decouvrir' ? 'w-64' : 'w-[900px] max-w-[95vw]'
+                      )}
+                    >
+                      <div className="h-3 w-full" />
+                      <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
+                        {item.type === 'sports' && (
+                          <div className="grid grid-cols-4 gap-x-6 gap-y-5 max-h-[min(70vh,calc(100dvh-6rem))] overflow-y-auto">
+                            {ARBORESCENCE.map((cat) => (
+                              <div key={cat.id}>
+                                {avail.isCategoryAvailable(cat.id) ? (
+                                  <Link
+                                    to={`/sports/famille/${cat.id}/`}
+                                    className="font-sans font-bold text-sm text-foreground hover:text-primary block mb-2"
+                                  >
+                                    {cat.icon} {cat.name}
+                                  </Link>
+                                ) : (
+                                  <span className="font-sans font-bold text-sm text-muted-foreground opacity-60 block mb-2">
+                                    {cat.icon} {cat.name} · Bientôt
+                                  </span>
+                                )}
+                                <ul className="space-y-1.5">
+                                  {cat.sports.slice(0, 6).map((sport) => (
+                                    <li key={sport.name}>
+                                      <SportMenuLink sport={sport.name} avail={avail} className="text-sm text-muted-foreground hover:text-foreground transition-colors" />
+                                    </li>
+                                  ))}
+                                  {cat.sports.length > 6 && (
+                                    <li>
+                                      <Link
+                                        to={`/sports/famille/${cat.id}/`}
+                                        className="text-sm text-primary font-bold hover:underline"
+                                      >
+                                        Voir tout →
+                                      </Link>
+                                    </li>
+                                  )}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+
+                        {item.type === 'clubs' && (
+                          <div className="grid grid-cols-2 gap-8">
+                            <div>
+                              <h3 className="font-sans font-bold text-foreground mb-3">Trouver par localisation</h3>
+                              <ul className="space-y-2">
+                                {localisationMenuLinks.map((link) => (
+                                  <li key={link.label}>
+                                    {link.href ? (
+                                      <Link
+                                        to={link.href}
+                                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                      >
+                                        <link.icon className="h-4 w-4" />
+                                        {link.label}
+                                      </Link>
+                                    ) : (
+                                      <span
+                                        className="flex items-center gap-2 text-sm text-muted-foreground opacity-60 cursor-not-allowed"
+                                        aria-disabled="true"
+                                      >
+                                        <link.icon className="h-4 w-4" />
+                                        {link.label}
+                                        <SoonBadge />
+                                      </span>
+                                    )}
                                   </li>
                                 ))}
-                                {cat.sports.length > 6 && (
-                                  <li>
-                                    <Link
-                                      to={`/sports/famille/${cat.id}/`}
-                                      className="text-sm text-primary font-bold hover:underline"
-                                    >
-                                      Voir tout →
-                                    </Link>
-                                  </li>
-                                )}
                               </ul>
                             </div>
-                          ))}
-                        </div>
-                      )}
-
-
-
-
-                      {item.type === 'clubs' && (
-                        <div className="grid grid-cols-2 gap-8">
-                          <div>
-                            <h3 className="font-sans font-bold text-foreground mb-3">Trouver un club</h3>
-                            <ul className="space-y-2">
-                              {clubMenuLinks.map((link) => (
-                                <li key={link.href}>
-                                  <Link
-                                    to={link.href}
-                                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                  >
-                                    <link.icon className="h-4 w-4" />
-                                    {link.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
+                            <div>
+                              <h3 className="font-sans font-bold text-foreground mb-3">Top villes</h3>
+                              <ul className="space-y-2">
+                                {['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'].map((city) => (
+                                  <li key={city}>
+                                    <Link
+                                      to={`/clubs/?q=${encodeURIComponent(city)}`}
+                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                      Clubs à {city}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="font-sans font-bold text-foreground mb-3">Top villes</h3>
-                            <ul className="space-y-2">
-                              {['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'].map((city) => (
-                                <li key={city}>
-                                  <Link
-                                    to={`/clubs/?q=${encodeURIComponent(city)}`}
-                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                  >
-                                    Clubs à {city}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
+                        )}
+
+                        {item.type === 'decouvrir' && (
+                          <ul className="space-y-2">
+                            {decouvrirMenuLinks.map((link) => (
+                              <li key={link.href}>
+                                <Link
+                                  to={link.href}
+                                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                  <link.icon className="h-4 w-4" />
+                                  {link.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
           {/* Right Actions */}
@@ -290,51 +347,52 @@ export function Header() {
                 <Heart className="h-5 w-5" />
               </Link>
             </Button>
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="hidden sm:flex gap-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback className="text-micro">{initials}</AvatarFallback>
-                    </Avatar>
-                    <span className="max-w-[120px] truncate">{displayName}</span>
-                    <ChevronDown className="h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
-                  <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild><Link to="/compte/">Tableau de bord</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/compte/profil/">Mon profil</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/compte/mes-clubs/">Mes clubs</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link to="/compte/notifications/">Notifications</Link></DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={async () => {
-                      await signOut();
-                      navigate('/');
-                    }}
-                  >
-                    Déconnexion
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
+              <Button asChild variant="outline" className="gap-2">
+                <Link to="/pour-les-clubs/">
+                  <Building2 className="h-4 w-4" />
+                  <span>Espace club</span>
+                </Link>
+              </Button>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-micro">{initials}</AvatarFallback>
+                      </Avatar>
+                      <span className="max-w-[120px] truncate">{displayName}</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
+                    <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild><Link to="/compte/">Tableau de bord</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compte/profil/">Mon profil</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compte/mes-clubs/">Mes favoris</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compte/notifications/">Mes alertes</Link></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={async () => {
+                        await signOut();
+                        navigate('/');
+                      }}
+                    >
+                      Déconnexion
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
                 <Button asChild variant="outline" className="gap-2">
                   <Link to="/compte/connexion/">
                     <User className="h-4 w-4" />
                     <span>Connexion</span>
                   </Link>
                 </Button>
-                <Button asChild className="gap-2">
-                  <Link to="/compte/inscription/">
-                    <span>Créer un compte</span>
-                  </Link>
-                </Button>
-              </div>
-            )}
+              )}
+            </div>
 
 
             <Button
@@ -366,61 +424,122 @@ export function Header() {
             </form>
 
             <nav className="flex flex-col gap-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={cn(
-                    "px-4 py-3 rounded-lg font-bold transition-all flex items-center gap-2",
-                    location.pathname === item.href || location.pathname.startsWith(item.href)
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              ))}
+              <Accordion type="single" collapsible>
+                <AccordionItem value="nav-sports">
+                  <AccordionTrigger className="px-4 text-sm font-bold">
+                    <span className="flex items-center gap-2">
+                      <Compass className="h-4 w-4" />
+                      Trouver par sport
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <Accordion type="single" collapsible>
+                      {ARBORESCENCE.map((cat) => (
+                        <AccordionItem key={cat.id} value={cat.id}>
+                          <AccordionTrigger className="px-4 text-sm font-bold">
+                            {cat.icon} {cat.name}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <ul className="mobile-sports-list flex flex-col gap-1 px-4 pb-2">
+                              {cat.sports.map((sport) => (
+                                <li key={sport.name}>
+                                  <SportMenuLink
+                                    sport={sport.name}
+                                    avail={avail}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                                  />
+                                </li>
+                              ))}
+                              <li>
+                                <Link
+                                  to={`/sports/famille/${cat.id}/`}
+                                  onClick={() => setIsMenuOpen(false)}
+                                  className="block py-1.5 text-sm text-primary font-bold"
+                                >
+                                  Voir la catégorie →
+                                </Link>
+                              </li>
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <Accordion type="single" collapsible className="mt-2">
-                {ARBORESCENCE.map((cat) => (
-                  <AccordionItem key={cat.id} value={cat.id}>
-                    <AccordionTrigger className="px-4 text-sm font-bold">
-                      {cat.icon} {cat.name}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <ul className="mobile-sports-list flex flex-col gap-1 px-4 pb-2">
-                        {cat.sports.map((sport) => (
-                          <li key={sport.name}>
-                            <SportMenuLink
-                              sport={sport.name}
-                              avail={avail}
+                <AccordionItem value="nav-localisation">
+                  <AccordionTrigger className="px-4 text-sm font-bold">
+                    <span className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      Trouver par localisation
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="flex flex-col gap-1 px-4 pb-2">
+                      {localisationMenuLinks.map((link) => (
+                        <li key={link.label}>
+                          {link.href ? (
+                            <Link
+                              to={link.href}
                               onClick={() => setIsMenuOpen(false)}
-                              className="block py-1.5 text-sm text-muted-foreground hover:text-foreground"
-                            />
-                          </li>
-                        ))}
-                        <li>
+                              className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                            >
+                              <link.icon className="h-4 w-4" />
+                              {link.label}
+                            </Link>
+                          ) : (
+                            <span
+                              className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground opacity-60 cursor-not-allowed"
+                              aria-disabled="true"
+                            >
+                              <link.icon className="h-4 w-4" />
+                              {link.label}
+                              <SoonBadge />
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="nav-decouvrir">
+                  <AccordionTrigger className="px-4 text-sm font-bold">
+                    <span className="flex items-center gap-2">
+                      <Compass className="h-4 w-4" />
+                      Découvrir
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="flex flex-col gap-1 px-4 pb-2">
+                      {decouvrirMenuLinks.map((link) => (
+                        <li key={link.href}>
                           <Link
-                            to={`/sports/famille/${cat.id}/`}
+                            to={link.href}
                             onClick={() => setIsMenuOpen(false)}
-                            className="block py-1.5 text-sm text-primary font-bold"
+                            className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
                           >
-                            Voir la catégorie →
+                            <link.icon className="h-4 w-4" />
+                            {link.label}
                           </Link>
                         </li>
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
               </Accordion>
 
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
                 {user ? (
                   <>
                     <div className="px-1 pb-1 text-sm text-muted-foreground truncate">{user.email}</div>
+                    <Button asChild variant="outline" className="w-full gap-2">
+                      <Link to="/pour-les-clubs/" onClick={() => setIsMenuOpen(false)}>
+                        <Building2 className="h-4 w-4" />
+                        Espace club
+                      </Link>
+                    </Button>
                     <Button asChild variant="outline" className="w-full gap-2">
                       <Link to="/compte/" onClick={() => setIsMenuOpen(false)}>
                         <User className="h-4 w-4" />
@@ -430,7 +549,7 @@ export function Header() {
                     <Button asChild variant="ghost" className="w-full gap-2">
                       <Link to="/compte/mes-clubs/" onClick={() => setIsMenuOpen(false)}>
                         <Heart className="h-4 w-4" />
-                        Mes clubs
+                        Mes favoris
                       </Link>
                     </Button>
                     <Button
@@ -448,13 +567,16 @@ export function Header() {
                 ) : (
                   <>
                     <Button asChild variant="outline" className="w-full gap-2">
+                      <Link to="/pour-les-clubs/" onClick={() => setIsMenuOpen(false)}>
+                        <Building2 className="h-4 w-4" />
+                        Espace club
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full gap-2">
                       <Link to="/compte/connexion/" onClick={() => setIsMenuOpen(false)}>
                         <User className="h-4 w-4" />
                         Connexion
                       </Link>
-                    </Button>
-                    <Button asChild className="w-full">
-                      <Link to="/compte/inscription/" onClick={() => setIsMenuOpen(false)}>Créer un compte</Link>
                     </Button>
                   </>
                 )}
