@@ -36,7 +36,16 @@ import {
 import { useAuth, signOut } from '@/lib/auth';
 
 
-const navItems = [
+type NavItem = {
+  id: string;
+  label: string;
+  href: string | null;
+  icon: typeof Compass;
+  megaMenu?: boolean;
+  type?: string;
+};
+
+const navItems: NavItem[] = [
   {
     id: 'sports',
     label: 'Trouver par sport',
@@ -56,11 +65,12 @@ const navItems = [
   {
     id: 'decouvrir',
     label: 'Découvrir',
+    href: null,
     icon: Compass,
     megaMenu: true,
     type: 'decouvrir',
   },
-] as const;
+];
 
 const localisationMenuLinks = [
   { label: 'Par région', href: '/clubs/tout/region/', icon: MapPin },
