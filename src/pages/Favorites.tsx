@@ -6,6 +6,9 @@ import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { MapPin, Loader2, Trash2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { FollowedFavorites } from '@/components/account/FollowedFavorites';
+import { PageTitle } from '@/components/PageTitle';
 
 interface FavoriteClub {
   favoriteId: string;
@@ -27,6 +30,7 @@ export default function Favorites() {
       const { data: rows, error } = await supabase
         .from('favorites')
         .select('id, club_id')
+        .eq('user_id', user?.id ?? '')
         .order('created_at', { ascending: false });
       if (error) throw error;
       if (!rows?.length) return [];
@@ -57,13 +61,17 @@ export default function Favorites() {
       return;
     }
     queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
+    queryClient.invalidateQueries({ queryKey: ['favorites-count', user?.id] });
     toast({ title: 'Club retiré de vos favoris' });
   };
 
   return (
     <Layout>
       <section className="container mx-auto px-4 py-12">
-        <h1 className="font-sans text-3xl font-black mb-6">Mes clubs favoris</h1>
+        <PageTitle title="Mes favoris" />
+        <h1 className="font-sans text-3xl font-black mb-6">Mes favoris</h1>
+        <Tabs defaultValue="clubs" className="space-y-6"><TabsList><TabsTrigger value="clubs">Clubs</TabsTrigger><TabsTrigger value="cities">Villes</TabsTrigger><TabsTrigger value="sports">Sports</TabsTrigger></TabsList>
+        <TabsContent value="clubs">
 
         {isLoading ? (
           <div className="py-20 flex justify-center">
@@ -108,6 +116,10 @@ export default function Favorites() {
             ))}
           </div>
         )}
+        </TabsContent>
+        <TabsContent value="cities"><FollowedFavorites kind="cities" /></TabsContent>
+        <TabsContent value="sports"><FollowedFavorites kind="sports" /></TabsContent>
+        </Tabs>
       </section>
     </Layout>
   );
