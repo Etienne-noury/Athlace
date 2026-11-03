@@ -134,7 +134,7 @@ export default function ClubsB2B() {
             <p className="text-lg leading-relaxed max-w-xl">Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.</p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Button asChild variant="secondary" className="gap-2"><a href="#trouver-ma-fiche">Trouver ma fiche<ArrowDown className="h-4 w-4" /></a></Button>
-              <Button asChild variant="outline" className="gap-2"><a href="#rendez-vous">Prendre rendez-vous<CalendarCheck className="h-4 w-4" /></a></Button>
+              <Button asChild variant="tertiary" className="gap-2"><a href="#rendez-vous">Prendre rendez-vous<CalendarCheck className="h-4 w-4" /></a></Button>
             </div>
           </div>
         </div>

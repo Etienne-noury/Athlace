@@ -6,7 +6,7 @@
 - [ ] Vérifier l’enregistrement, la modification et la suppression de bout en bout : attend un événement réel, car aucun événement fictif ne doit être créé.
 
 # Espace club
-- [ ] Réorganiser la page, conserver recherche et offres, ajouter l’espace connecté et les quatre étapes.
-- [ ] Étendre les demandes de rendez-vous et leur affichage admin.
-- [ ] Enregistrer les demandes et notifier contact@athlace.fr.
-- [ ] Vérifier formulaire, réception et affichages desktop/mobile ; supprimer uniquement la demande de test.
+- [x] Réorganiser la page, conserver recherche et offres, ajouter l’espace connecté et les quatre étapes.
+- [x] Étendre les demandes de rendez-vous et leur affichage admin.
+- [x] Enregistrer les demandes et notifier contact@athlace.fr.
+- [x] Vérifier formulaire, réception et affichages desktop/mobile ; supprimer uniquement la demande de test.
