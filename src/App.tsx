@@ -10,6 +10,8 @@ import Recherche from "./pages/Recherche";
 import ClubDetail from "./pages/ClubDetail";
 import Aide from "./pages/Aide";
 import Federations from "./pages/Federations";
+import FederationsIndex from "./pages/FederationsIndex";
+import FederationDetail from "./pages/FederationDetail";
 import Football from "./pages/Football";
 import FootballClubDetail from "./pages/FootballClubDetail";
 import NotFound from "./pages/NotFound";
@@ -154,8 +156,8 @@ const App = () => (
           <Route path="/disciplines/*" element={<Navigate to="/sports/" replace />} />
           <Route path="/football" element={<Navigate to="/sports/football/" replace />} />
           <Route path="/football/club/:id" element={<FootballClubRedirect />} />
-          <Route path="/federations" element={<Navigate to="/decouvrir/guide-licences-federations/" replace />} />
-          <Route path="/federations/*" element={<Navigate to="/decouvrir/guide-licences-federations/" replace />} />
+          <Route path="/federations/" element={<FederationsIndex />} />
+          <Route path="/federations/:slug/" element={<FederationDetail />} />
           <Route path="/favoris" element={<Navigate to="/compte/mes-clubs/" replace />} />
 
           {/* Admin & legacy routes preserved */}

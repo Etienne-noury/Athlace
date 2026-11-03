@@ -6,3 +6,4 @@
 - Resolve dynamic sub-discipline IDs with the availability hook's sports map passed explicitly to discipline helpers; this preserves exact database names and reactive query updates without mutable global state.
 - FranceMap accepts optional current-page results and selection callbacks for search; its default database-driven mode must remain unchanged for the home and map pages.
 - Keep the legacy Carte component unmounted; redirect map URLs with their query strings to search, which reuses fetchClubsNear for both cities and browser coordinates to preserve identical proximity rules.
+- Federation directory pages fetch the official table through a distinct query key and aggregate only public club fields via federation_club_stats; legacy club codes require matching discipline to avoid ambiguous federation collisions.
