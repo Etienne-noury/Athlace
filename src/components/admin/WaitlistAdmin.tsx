@@ -28,7 +28,7 @@ export function WaitlistAdmin() {
           <table className="w-full text-small">
             <thead>
               <tr className="text-left text-muted-foreground">
-                <th className="py-2 pr-4">Date</th><th className="pr-4">Club</th><th className="pr-4">Email</th><th className="pr-4">Sport</th><th>Adhérents</th>
+                <th className="py-2 pr-4">Date</th><th className="pr-4">Club</th><th className="pr-4">Email</th><th className="pr-4">Téléphone</th><th className="pr-4">Sport</th><th className="pr-4">Adhérents</th><th className="pr-4">Rôle</th><th className="pr-4">Besoins</th><th>Message</th>
               </tr>
             </thead>
             <tbody>
@@ -37,8 +37,12 @@ export function WaitlistAdmin() {
                   <td className="py-2 pr-4">{new Date(r.created_at).toLocaleDateString('fr-FR')}</td>
                   <td className="pr-4">{r.club_name}</td>
                   <td className="pr-4"><a className="text-primary underline" href={`mailto:${r.email}`}>{r.email}</a></td>
+                  <td className="pr-4">{r.phone ?? '-'}</td>
                   <td className="pr-4">{r.sport ?? '-'}</td>
-                  <td>{r.members_estimate ?? '-'}</td>
+                  <td className="pr-4">{r.members_estimate ?? '-'}</td>
+                  <td className="pr-4">{r.club_role ?? '-'}</td>
+                  <td className="pr-4 min-w-48">{r.needs?.join(', ') || '-'}</td>
+                  <td className="min-w-64 whitespace-pre-wrap break-words">{r.message || '-'}</td>
                 </tr>
               ))}
             </tbody>

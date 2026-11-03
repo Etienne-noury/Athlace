@@ -347,26 +347,38 @@ export type Database = {
       club_waitlist: {
         Row: {
           club_name: string
+          club_role: string | null
           created_at: string
           email: string
           id: string
           members_estimate: string | null
+          message: string | null
+          needs: string[]
+          phone: string | null
           sport: string | null
         }
         Insert: {
           club_name: string
+          club_role?: string | null
           created_at?: string
           email: string
           id?: string
           members_estimate?: string | null
+          message?: string | null
+          needs?: string[]
+          phone?: string | null
           sport?: string | null
         }
         Update: {
           club_name?: string
+          club_role?: string | null
           created_at?: string
           email?: string
           id?: string
           members_estimate?: string | null
+          message?: string | null
+          needs?: string[]
+          phone?: string | null
           sport?: string | null
         }
         Relationships: []

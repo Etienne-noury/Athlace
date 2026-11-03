@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
-import { Search, CheckCircle, MapPin } from 'lucide-react';
+import { Search, CheckCircle, MapPin, Users, CalendarDays, MessageSquare, Newspaper, ChartNoAxesCombined, ClipboardList, ArrowDown, CalendarCheck } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { AppointmentForm } from '@/components/clubs/AppointmentForm';
+import { useAuth } from '@/lib/auth';
+import { PageTitle } from '@/components/PageTitle';
+import communityPhoto from '@/assets/espace-club-community.jpg';
 import { Badge } from '@/components/ui/badge';
 import { SoonBadge } from '@/components/ui/SoonBadge';
 import { supabase } from '@/integrations/supabase/client';
@@ -102,85 +104,56 @@ const offers = [
   },
 ];
 
-const waitlistSchema = z.object({
-  club_name: z.string().trim().min(1, 'Indiquez le nom du club').max(200),
-  email: z.string().trim().email('Email invalide').max(255),
-  sport: z.string().trim().max(100).optional(),
-  members_estimate: z.string().trim().max(50).optional(),
-});
-
-function WaitlistForm() {
-  const [form, setForm] = useState({ club_name: '', email: '', sport: '', members_estimate: '' });
-  const [error, setError] = useState<string | null>(null);
-  const [sending, setSending] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    const parsed = waitlistSchema.safeParse(form);
-    if (!parsed.success) {
-      setError(parsed.error.issues[0].message);
-      return;
-    }
-    setSending(true);
-    const { error } = await supabase.from('club_waitlist').insert({
-      club_name: parsed.data.club_name,
-      email: parsed.data.email,
-      sport: parsed.data.sport || null,
-      members_estimate: parsed.data.members_estimate || null,
-    });
-    setSending(false);
-    if (error) setError("L'envoi a échoué, réessayez dans un instant.");
-    else setDone(true);
-  };
-
-  if (done) {
-    return (
-      <div className="text-center py-6" role="status">
-        <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" aria-hidden />
-        <p className="font-sans text-xl font-bold">Merci, c'est noté !</p>
-        <p className="text-muted-foreground mt-1">Nous vous préviendrons dès le lancement d'Athlace Club.</p>
-      </div>
-    );
-  }
-
-  const field = (key: keyof typeof form, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
-    <div className="space-y-1.5">
-      <Label htmlFor={`wl-${key}`}>{label}</Label>
-      <Input id={`wl-${key}`} value={form[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })} {...props} />
-    </div>
-  );
-
-  return (
-    <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4" noValidate>
-      {field('club_name', 'Nom du club *', { required: true, maxLength: 200 })}
-      {field('email', 'Email *', { type: 'email', required: true, maxLength: 255 })}
-      {field('sport', 'Sport', { maxLength: 100 })}
-      {field('members_estimate', "Nombre d'adhérents (approx.)", { maxLength: 50, placeholder: 'ex. 150' })}
-      {error && <p className="sm:col-span-2 text-sm text-destructive" role="alert">{error}</p>}
-      <div className="sm:col-span-2 text-center">
-        <Button type="submit" disabled={sending}>{sending ? 'Envoi…' : 'Me prévenir'}</Button>
-      </div>
-    </form>
-  );
-}
+const tools = [
+  { name: 'Adhérents', icon: Users }, { name: 'Inscriptions en ligne', icon: ClipboardList },
+  { name: 'Calendrier et entraînements', icon: CalendarDays }, { name: 'Messagerie', icon: MessageSquare },
+  { name: 'Actualités et événements', icon: Newspaper }, { name: 'Statistiques de la fiche', icon: ChartNoAxesCombined },
+];
+const steps = [
+  { title: 'Trouvez votre club', text: 'Recherchez votre club par son nom ou sa ville.' },
+  { title: 'Identifiez-vous', text: 'Indiquez votre rôle dans le club et votre numéro d’affiliation fédérale.' },
+  { title: 'Complétez ou corrigez votre fiche', text: 'Horaires, tarifs, photos, contact : partagez les informations de votre club.' },
+  { title: 'Nous vérifions, puis votre fiche est mise à jour', text: 'Votre fiche actualisée permet aux sportifs de découvrir votre club.' },
+];
 
 export default function ClubsB2B() {
+  const { user } = useAuth();
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'auto' });
+  }, [hash]);
   return (
     <Layout>
-      <section className="bg-muted border-b border-border py-10 lg:py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-sans text-3xl lg:text-5xl font-black text-foreground mb-3">Athlace pour les clubs</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.
-          </p>
+      <PageTitle title="Espace club" description="Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit." />
+      <section className="relative isolate overflow-hidden bg-bleu-athlace text-creme">
+        <img src={communityPhoto} alt="" width={1536} height={1024} className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
+        <div className="absolute inset-0 -z-10 bg-bleu-athlace/85" aria-hidden="true" />
+        <div className="container mx-auto px-4 py-16 lg:py-24">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl lg:text-6xl font-black mb-6">Espace club</h1>
+            <p className="text-lg leading-relaxed max-w-xl">Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.</p>
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Button asChild variant="secondary" className="gap-2"><a href="#trouver-ma-fiche">Trouver ma fiche<ArrowDown className="h-4 w-4" /></a></Button>
+              <Button asChild variant="tertiary" className="gap-2"><a href="#rendez-vous">Prendre rendez-vous<CalendarCheck className="h-4 w-4" /></a></Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-12">
+      {user && <section className="container mx-auto px-4 py-12">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8"><h2 className="text-2xl lg:text-3xl font-black">Mon espace club</h2><Button asChild><Link to="/compte/mon-club/">Accéder à ma fiche club</Link></Button></div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tools.map((tool) => <Card key={tool.name} className="p-6 flex items-start gap-4"><tool.icon className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" /><div className="min-w-0 space-y-3"><h3 className="font-bold">{tool.name}</h3><SoonBadge /></div></Card>)}</div>
+      </section>}
+
+      <section id="trouver-ma-fiche" className="container mx-auto px-4 py-12 scroll-mt-24">
         <h2 className="font-sans text-2xl lg:text-3xl font-black text-center mb-6">Votre fiche existe déjà</h2>
         <ClubFinder />
+      </section>
+
+      <section id="comment-ca-marche" className="bg-bleu-athlace text-creme py-12 lg:py-16 scroll-mt-24">
+        <div className="container mx-auto px-4"><h2 className="text-2xl lg:text-3xl font-black mb-10">Comment ça marche</h2>
+          <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{steps.map((step, i) => <li key={step.title} className="space-y-4"><span className="inline-flex h-10 w-10 items-center justify-center rounded-pill bg-secondary text-secondary-foreground font-bold">{i + 1}</span><h3 className="text-lg font-bold">{step.title}</h3><p className="text-sm leading-relaxed">{step.text}</p></li>)}</ol>
+        </div>
       </section>
 
       <section className="bg-muted py-12">
@@ -202,11 +175,8 @@ export default function ClubsB2B() {
                       </li>
                     ))}
                   </ul>
-                  {o.available && (
-                    <Button asChild className="mt-6">
-                      <Link to="/compte/mon-club/">Compléter ma fiche</Link>
-                    </Button>
-                  )}
+                  {o.available ? <Button asChild className="mt-6"><Link to="/compte/mon-club/">Compléter ma fiche</Link></Button>
+                    : <div className="mt-6 flex flex-wrap gap-2 items-center"><Button disabled>Choisir cette offre</Button><SoonBadge /></div>}
                 </CardContent>
               </Card>
             ))}
@@ -214,10 +184,11 @@ export default function ClubsB2B() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-6 lg:p-8">
-          <h2 className="font-sans text-2xl font-black text-center mb-6">Être prévenu du lancement d'Athlace Club</h2>
-          <WaitlistForm />
+      <section id="rendez-vous" className="container mx-auto px-4 py-12 lg:py-16 scroll-mt-24">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl lg:text-3xl font-black mb-4">Prendre rendez-vous</h2>
+          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-8"><CalendarCheck className="h-5 w-5 text-primary" /><span>Réservation d'un créneau en ligne</span><SoonBadge /></div>
+          <AppointmentForm />
         </div>
       </section>
     </Layout>
