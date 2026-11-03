@@ -28,7 +28,6 @@ import GeoHub from "./pages/GeoHub";
 import ClubsB2B from "./pages/ClubsB2B";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
-import BlogDossier from "./pages/BlogDossier";
 import AideFAQ from "./pages/AideFAQ";
 import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
@@ -110,7 +109,6 @@ const App = () => (
           <Route path="/decouvrir/fiches-sport-par-sport/" element={<Redirect to="/blog/fiches-sport-par-sport/" />} />
           <Route path="/blog/" element={<Blog />} />
           <Route path="/blog/:id/" element={<BlogPost />} />
-          <Route path="/blog/dossier-:id/" element={<BlogPost />} />
 
           {/* Help */}
           <Route path="/aide/faq/" element={<AideFAQ />} />
