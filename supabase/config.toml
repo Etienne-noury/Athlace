@@ -5,3 +5,7 @@ project_id = "eoptlujvecbtorzrluoi"
     verify_jwt = false
   [functions.get-google-places]
     verify_jwt = true
+  [functions.preview-transactional-email]
+    verify_jwt = false
+  [functions.club-appointment]
+    verify_jwt = false
