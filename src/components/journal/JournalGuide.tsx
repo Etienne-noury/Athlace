@@ -1,0 +1,164 @@
+import { useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { FurtherReading } from '@/components/journal/FurtherReading';
+import { getJournalArticle } from '@/data/journal';
+import { useQuery } from '@tanstack/react-query';
+import { Layout } from '@/components/layout/Layout';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { fetchFederationsByCategorie } from '@/lib/federations-officielles';
+import { useSiteStats } from '@/hooks/useSiteStats';
+import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
+
+export function JournalGuide({ slug }: { slug: string }) {
+  const article = getJournalArticle(slug);
+  const { stats } = useSiteStats();
+  const avail = useAvailableDisciplines();
+
+  const title = useMemo(() => {
+    if (slug === 'guide-licences-federations') return 'Guide des licences fédérales';
+    if (slug === 'comment-choisir-son-club') return 'Comment choisir son club ?';
+    if (slug === 'fiches-sport-par-sport') return 'Fiches sport par sport';
+    return 'Guide';
+  }, [slug]);
+
+  useEffect(() => {
+    document.title = `${title} - Athlace`;
+  }, [title]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['federations-by-arborescence'],
+    queryFn: fetchFederationsByCategorie,
+    enabled: slug === 'guide-licences-federations',
+  });
+
+  const groups = Array.isArray(data) ? data : [];
+
+  if (slug === 'guide-licences-federations') {
+    const total = groups.reduce((acc, c) => acc + c.sports.reduce((n, s) => n + s.federations.length, 0), 0);
+    const updatedAt = new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    return (
+      <Layout>
+        <section className="bg-muted border-b border-border py-8 lg:py-12">
+          <div className="container mx-auto px-4">
+            <Button variant="ghost" className="mb-4 -ml-3" asChild>
+              <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour au journal</Link>
+            </Button>
+            <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">
+              Guide des licences fédérales
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              {total || stats.federations_total} fédérations sportives agréées par le Ministère des Sports.
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">Mise à jour : {updatedAt}</p>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 py-12">
+          {isLoading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <Accordion type="multiple" className="space-y-3">
+              {groups.map((categorie) => {
+                const count = categorie.sports.reduce((n, sp) => n + sp.federations.length, 0);
+                return (
+                  <AccordionItem
+                    key={categorie.id}
+                    value={categorie.id}
+                    className="border border-border rounded-xl px-4 bg-card"
+                  >
+                    <AccordionTrigger className="hover:no-underline">
+                      <span className="flex items-center gap-3 text-left">
+                        <span className="font-sans font-bold text-lg">
+                          {categorie.icon} {categorie.name}
+                        </span>
+                        <Badge variant="secondary">{count}</Badge>
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-6 pb-2">
+                        {categorie.sports.map((sport) => (
+                          <div key={sport.sportName}>
+                            <h3 className="font-sans font-black text-foreground mb-3">
+                              {sport.sportIcon} {sport.sportName}
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {sport.federations.map((fed) => (
+                                <Card key={fed.id} className="hover:border-border transition-colors">
+                                  <CardContent className="p-5">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <h4 className="font-sans text-base font-bold">{fed.nom}</h4>
+                                      <div className="flex flex-wrap gap-1 justify-end">
+                                        {fed.sigle && <Badge variant="outline">{fed.sigle}</Badge>}
+                                        {avail.isReady && (
+                                          <Badge variant={sport.sportSlug && avail.isSportAvailable(sport.sportSlug) ? 'default' : 'secondary'}>
+                                            {sport.sportSlug && avail.isSportAvailable(sport.sportSlug) ? 'Disponible' : 'Bientôt'}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                      <Button variant="outline" size="sm" asChild>
+                                        <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
+                                          Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
+                                        </a>
+                                      </Button>
+                                      {sport.sportSlug && avail.isSportAvailable(sport.sportSlug) && (
+                                        <Button variant="secondary" size="sm" asChild>
+                                          <Link to={`/sports/${sport.sportSlug}/`}>Voir le sport {sport.sportName}</Link>
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          )}
+          {article && <FurtherReading link={article.further} />}
+        </section>
+      </Layout>
+    );
+  }
+
+
+  return (
+    <Layout>
+      <section className="bg-muted border-b border-border py-8 lg:py-12">
+        <div className="container mx-auto px-4">
+          <Button variant="ghost" className="mb-4 -ml-3" asChild>
+            <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour au journal</Link>
+          </Button>
+          <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">{title}</h1>
+          <p className="text-muted-foreground text-lg">Ce guide sera bientôt disponible.</p>
+        </div>
+      </section>
+      <div className="container mx-auto px-4 pb-12">{article && <FurtherReading link={article.further} />}</div>
+    </Layout>
+  );
+}

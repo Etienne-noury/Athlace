@@ -26,11 +26,8 @@ import RegionsIndex from "./pages/RegionsIndex";
 import CitiesIndex from "./pages/CitiesIndex";
 import GeoHub from "./pages/GeoHub";
 import ClubsB2B from "./pages/ClubsB2B";
-import Discover from "./pages/Discover";
-import DiscoverArticle from "./pages/DiscoverArticle";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
-import BlogDossier from "./pages/BlogDossier";
 import AideFAQ from "./pages/AideFAQ";
 import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
@@ -106,11 +103,12 @@ const App = () => (
           {/* B2B & discover */}
           <Route path="/pour-les-clubs/" element={<ClubsB2B />} />
           <Route path="/pour-les-clubs/:slug/" element={<ClubsB2B />} />
-          <Route path="/decouvrir/" element={<Discover />} />
-          <Route path="/decouvrir/:slug/" element={<DiscoverArticle />} />
+          <Route path="/decouvrir/" element={<Redirect to="/blog/" />} />
+          <Route path="/decouvrir/guide-licences-federations/" element={<Redirect to="/blog/guide-licences-federations/" />} />
+          <Route path="/decouvrir/comment-choisir-son-club/" element={<Redirect to="/blog/comment-choisir-son-club/" />} />
+          <Route path="/decouvrir/fiches-sport-par-sport/" element={<Redirect to="/blog/fiches-sport-par-sport/" />} />
           <Route path="/blog/" element={<Blog />} />
           <Route path="/blog/:id/" element={<BlogPost />} />
-          <Route path="/blog/dossier-:id/" element={<BlogDossier />} />
 
           {/* Help */}
           <Route path="/aide/faq/" element={<AideFAQ />} />

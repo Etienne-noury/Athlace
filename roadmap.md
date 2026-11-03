@@ -21,3 +21,9 @@
 - [x] Vérifier la source officielle et les statistiques par fédération.
 - [x] Créer l'annuaire, les fiches et leurs routes sans modifier les autres pages.
 - [x] Tester les comptes, liens, sous-disciplines, fiches indisponibles et formats d'écran.
+
+# Journal d'Athlace
+
+- [x] Regrouper articles, dossiers et guides avec leurs rubriques.
+- [x] Rediriger les anciennes adresses et ajouter les liens pour aller plus loin.
+- [x] Vérifier contenu conservé, filtres, liens et affichage mobile/desktop.

@@ -54,7 +54,7 @@ export default function DiscoverArticle() {
         <section className="bg-muted border-b border-border py-8 lg:py-12">
           <div className="container mx-auto px-4">
             <Button variant="ghost" className="mb-4 -ml-3" asChild>
-              <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
+              <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
             </Button>
             <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">
               Guide des licences fédérales
@@ -149,7 +149,7 @@ export default function DiscoverArticle() {
       <section className="bg-muted border-b border-border py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <Button variant="ghost" className="mb-4 -ml-3" asChild>
-            <Link to="/decouvrir/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
+            <Link to="/blog/"><ArrowLeft className="w-4 h-4 mr-2" /> Retour aux guides</Link>
           </Button>
           <h1 className="font-sans text-3xl lg:text-4xl font-black text-foreground mb-2">{title}</h1>
           <p className="text-muted-foreground text-lg">Ce guide sera bientôt disponible.</p>
