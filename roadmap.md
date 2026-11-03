@@ -12,7 +12,7 @@
 - [x] Vérifier formulaire, réception et affichages desktop/mobile ; supprimer uniquement la demande de test.
 
 # Espace sportif
-- [ ] Ajouter favoris villes/sports et préférences privées en base.
-- [ ] Construire l’accueil connecté, les trois onglets favoris et les alertes.
-- [ ] Adapter les adresses du compte et les liens du header sans modifier l’authentification ni l’espace club.
-- [ ] Tester sauvegarde, suppression, préférences et affichage connecté desktop/mobile.
+- [x] Ajouter favoris villes/sports et préférences privées en base.
+- [x] Construire l’accueil connecté, les trois onglets favoris et les alertes.
+- [x] Adapter les adresses du compte et les liens du header sans modifier l’authentification ni l’espace club.
+- [x] Tester sauvegarde, suppression, préférences et affichage connecté desktop/mobile.
