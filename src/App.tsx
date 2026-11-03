@@ -29,7 +29,6 @@ import ClubsB2B from "./pages/ClubsB2B";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import AideFAQ from "./pages/AideFAQ";
-import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
 import HelpPratiquants from "./pages/HelpPratiquants";
 import About from "./pages/About";
@@ -113,7 +112,7 @@ const App = () => (
 
           {/* Help */}
           <Route path="/aide/faq/" element={<AideFAQ />} />
-          <Route path="/aide/comment-ca-marche/" element={<HowItWorks />} />
+          <Route path="/aide/comment-ca-marche/" element={<Redirect to="/pour-les-clubs/#comment-ca-marche" />} />
           <Route path="/aide/contact/" element={<Contact />} />
           <Route path="/aide/pratiquants/" element={<HelpPratiquants />} />
           <Route path="/aide" element={<Navigate to="/aide/faq/" replace />} />
