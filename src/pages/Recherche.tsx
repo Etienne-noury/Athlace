@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MapPin, ArrowRight, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
@@ -40,6 +40,7 @@ const EMPTY_RESULTS: { clubs: Club[]; total: number; radiusKm?: number } = { clu
 
 export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const aroundRequested = searchParams.get('autour') === '1';
   const [visitorPosition, setVisitorPosition] = useState<VisitorPosition | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'pending' | 'ready' | 'unavailable'>('idle');
@@ -68,6 +69,10 @@ export default function Recherche() {
   const listRef = useRef<HTMLDivElement>(null);
   const clubRefs = useRef(new Map<string, HTMLAnchorElement>());
   const selectMapClub = useCallback((id: string) => {
+    if (!clubRefs.current.has(id)) {
+      navigate(`/club/${id}`);
+      return;
+    }
     setSelectedClubId(id);
     setMobileMap(false);
     requestAnimationFrame(() => {
@@ -81,7 +86,7 @@ export default function Recherche() {
       }
       item?.focus({ preventScroll: true });
     });
-  }, []);
+  }, [navigate]);
   const [page, setPage] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -402,7 +407,10 @@ export default function Recherche() {
           'lg:block lg:sticky lg:inset-auto lg:top-48 lg:self-start lg:h-[calc(100dvh-192px)]',
           mobileMap ? 'fixed inset-x-0 bottom-0 top-16 z-30' : 'hidden',
         )}>
-          <FranceMap height="100%" clubs={filteredClubs}
+          <FranceMap height="100%" selectedDiscipline={selectedDiscipline} selectedSub={selectedSub}
+            selectedRegion={selectedRegion} searchQuery={searchPosition ? '' : searchQuery}
+            proximity={searchPosition && searchResult.radiusKm ? { lat: searchPosition.lat, lng: searchPosition.lng, radiusKm: searchResult.radiusKm } : undefined}
+            searchMode searchReady={!locationPending && cityReady && !isLoading}
             highlightedClubId={hoveredClubId ?? selectedClubId} onClubClick={selectMapClub}
             className="rounded-none border-0 border-l shadow-none" />
           {mobileMap && <Button variant="outline" className="absolute top-4 right-4 z-10 lg:hidden gap-2" onClick={() => setFiltersOpen(true)}>
