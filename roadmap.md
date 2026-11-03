@@ -18,6 +18,6 @@
 
 # Section Fédérations
 
-- [ ] Vérifier la source officielle et les statistiques par fédération.
-- [ ] Créer l'annuaire, les fiches et leurs routes sans modifier les autres pages.
-- [ ] Tester les comptes, liens, sous-disciplines, fiches indisponibles et formats d'écran.
+- [x] Vérifier la source officielle et les statistiques par fédération.
+- [x] Créer l'annuaire, les fiches et leurs routes sans modifier les autres pages.
+- [x] Tester les comptes, liens, sous-disciplines, fiches indisponibles et formats d'écran.
