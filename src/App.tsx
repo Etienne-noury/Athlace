@@ -56,6 +56,7 @@ import Confidentialite from "./pages/Confidentialite";
 import Cookies from "./pages/Cookies";
 import Accessibilite from "./pages/Accessibilite";
 import Evenements from "./pages/Evenements";
+import EventDetail from "./pages/EventDetail";
 import Application from "./pages/Application";
 
 const queryClient = new QueryClient();
@@ -145,6 +146,7 @@ const App = () => (
 
           {/* Misc */}
           <Route path="/evenements/" element={<Evenements />} />
+          <Route path="/evenements/:slug/" element={<EventDetail />} />
           <Route path="/application/" element={<Application />} />
 
           {/* Legacy redirects */}
