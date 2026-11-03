@@ -62,6 +62,7 @@ export default function Favorites() {
     }
     queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
     queryClient.invalidateQueries({ queryKey: ['favorites-count', user?.id] });
+    queryClient.invalidateQueries({ queryKey: ['favorite-ids', user?.id] });
     toast({ title: 'Club retiré de vos favoris' });
   };
 
