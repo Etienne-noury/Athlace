@@ -3,12 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Redirect, FootballClubRedirect, ClubLegacyRedirect } from "./components/Redirect";
+import { Redirect, FootballClubRedirect, ClubLegacyRedirect, MapSearchRedirect } from "./components/Redirect";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Recherche from "./pages/Recherche";
 import ClubDetail from "./pages/ClubDetail";
-import Carte from "./pages/Carte";
 import Aide from "./pages/Aide";
 import Federations from "./pages/Federations";
 import Football from "./pages/Football";
@@ -99,8 +98,8 @@ const App = () => (
           <Route path="/club/:id" element={<ClubDetail />} />
 
           {/* Map */}
-          <Route path="/carte" element={<Carte />} />
-          <Route path="/carte/" element={<Carte />} />
+          <Route path="/carte" element={<MapSearchRedirect />} />
+          <Route path="/carte/" element={<MapSearchRedirect />} />
 
           {/* B2B & discover */}
           <Route path="/pour-les-clubs/" element={<ClubsB2B />} />

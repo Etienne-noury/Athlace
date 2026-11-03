@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 
 interface RedirectProps {
   to: string;
@@ -6,6 +6,11 @@ interface RedirectProps {
 
 export function Redirect({ to }: RedirectProps) {
   return <Navigate to={to} replace />;
+}
+
+export function MapSearchRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={{ pathname: '/clubs/', search, hash }} replace />;
 }
 
 export function FootballClubRedirect() {

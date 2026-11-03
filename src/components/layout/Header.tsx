@@ -76,7 +76,7 @@ const localisationMenuLinks = [
   { label: 'Par région', href: '/clubs/tout/region/', icon: MapPin },
   { label: 'Par département', href: null, soon: true, icon: MapPin },
   { label: 'Par ville', href: '/clubs/tout/ville/', icon: MapPin },
-  { label: 'Autour de moi', href: '/carte/', icon: Map },
+  { label: 'Autour de moi', href: '/clubs/?autour=1', icon: Map },
 ];
 
 const decouvrirMenuLinks = [
@@ -129,7 +129,7 @@ export function Header() {
   // Close the mobile menu whenever the route changes
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   // Prevent background scroll while the mobile panel is open
   useEffect(() => {

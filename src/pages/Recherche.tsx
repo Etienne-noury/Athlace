@@ -34,11 +34,34 @@ import type { EnrichedClub as Club } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
+import { requestVisitorPosition, type VisitorPosition } from '@/lib/visitor-position';
 
 const EMPTY_RESULTS: { clubs: Club[]; total: number; radiusKm?: number } = { clubs: [], total: 0 };
 
 export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const aroundRequested = searchParams.get('autour') === '1';
+  const [visitorPosition, setVisitorPosition] = useState<VisitorPosition | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'pending' | 'ready' | 'unavailable'>('idle');
+  const locationPending = aroundRequested && (locationStatus === 'idle' || locationStatus === 'pending');
+
+  useEffect(() => {
+    let cancelled = false;
+    setVisitorPosition(null);
+    if (!aroundRequested) {
+      setLocationStatus('idle');
+      return;
+    }
+    setLocationStatus('pending');
+    requestVisitorPosition().then((position) => {
+      if (cancelled) return;
+      setVisitorPosition(position);
+      setLocationStatus('ready');
+    }).catch(() => {
+      if (!cancelled) setLocationStatus('unavailable');
+    });
+    return () => { cancelled = true; };
+  }, [aroundRequested]);
   const [mobileMap, setMobileMap] = useState(false);
   const [hoveredClubId, setHoveredClubId] = useState<string | null>(null);
   const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
@@ -72,36 +95,38 @@ export default function Recherche() {
 
   useEffect(() => {
     setPage(0);
-  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion]);
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, aroundRequested, visitorPosition]);
 
   useEffect(() => {
-    const next: Record<string, string> = {};
-    if (searchQuery) next.q = searchQuery;
-    if (selectedDiscipline !== 'all') next.discipline = selectedDiscipline;
-    if (selectedSub !== 'all') next['sous-discipline'] = selectedSub;
-    if (selectedRegion !== 'all') next.region = selectedRegion;
-    setSearchParams(next, { replace: true });
-  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, setSearchParams]);
+    const next = new URLSearchParams(searchParams);
+    const filters = { q: searchQuery, discipline: selectedDiscipline, 'sous-discipline': selectedSub, region: selectedRegion };
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value && value !== 'all') next.set(key, value);
+      else next.delete(key);
+    });
+    if (next.toString() !== searchParams.toString()) setSearchParams(next, { replace: true });
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, searchParams, setSearchParams]);
 
   // Si la saisie correspond à une commune, on cherche les clubs autour (rayon élargi si besoin).
   const { data: nearCity = null, isFetching: cityFetching } = useQuery({
     queryKey: ['resolve-city', searchQuery.trim().toLowerCase()],
     queryFn: () => resolveCity(searchQuery),
-    enabled: searchQuery.trim().length >= 2,
+    enabled: !aroundRequested && searchQuery.trim().length >= 2,
     staleTime: 60 * 60 * 1000,
   });
-  const cityReady = searchQuery.trim().length < 2 || !cityFetching;
+  const cityReady = aroundRequested || searchQuery.trim().length < 2 || !cityFetching;
+  const searchPosition = aroundRequested ? visitorPosition : nearCity;
   const [nearRadius, setNearRadius] = useState<number | undefined>(undefined);
-  useEffect(() => { setNearRadius(undefined); }, [nearCity, selectedDiscipline, selectedSub, selectedRegion]);
+  useEffect(() => { setNearRadius(undefined); }, [searchPosition, selectedDiscipline, selectedSub, selectedRegion]);
 
   const { data: searchResult = EMPTY_RESULTS, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, nearCity?.lat, nearCity?.lng],
-    enabled: cityReady && (selectedSub === 'all' || avail.isReady),
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, aroundRequested, searchPosition?.lat, searchPosition?.lng],
+    enabled: !locationPending && cityReady && (selectedSub === 'all' || avail.isReady),
     queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
-      if (nearCity) {
+      if (searchPosition) {
         const r = await fetchClubsNear({
-          lat: nearCity.lat,
-          lng: nearCity.lng,
+          lat: searchPosition.lat,
+          lng: searchPosition.lng,
           disciplines: getDisciplineQueryNames(selectedDiscipline),
           sub: subDiscipline,
           region: selectedRegion,
@@ -152,6 +177,7 @@ export default function Recherche() {
     selectedDiscipline !== 'all' ? selectedDiscipline : '',
     selectedSub !== 'all' ? selectedSub : '',
     selectedRegion !== 'all' ? selectedRegion : '',
+    aroundRequested ? 'autour' : '',
   ].filter(Boolean).length;
 
 
@@ -255,9 +281,13 @@ export default function Recherche() {
           <section className="mb-6">
             <h1 className="text-2xl font-black text-foreground mb-2">Rechercher un club</h1>
             <p className="text-muted-foreground">
-              {isLoading ? 'Recherche en cours…' : <>{totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}</>}
-              {!isLoading && nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
+              {locationPending ? 'Localisation en cours…' : isLoading ? 'Recherche en cours…' : <>{totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}</>}
+              {!locationPending && !isLoading && aroundRequested && visitorPosition ? `${searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km` : ''} autour de vous` : ''}
+              {!isLoading && !aroundRequested && nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
             </p>
+            {aroundRequested && locationStatus === 'unavailable' && (
+              <p role="status" className="mt-2 text-sm text-muted-foreground">Localisation indisponible. Tous les résultats sont affichés selon vos filtres.</p>
+            )}
           </section>
         {/* Bandeau annuaire fédéral */}
         {(() => {
@@ -287,7 +317,7 @@ export default function Recherche() {
 
 
             {/* Results */}
-            {isLoading ? (
+            {locationPending || isLoading ? (
               <div className="text-center py-16">
                 <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-4" />
                 <p className="text-muted-foreground">Chargement des clubs…</p>
