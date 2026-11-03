@@ -14,7 +14,7 @@ export default function Compte() {
   const firstName = (profile?.full_name || user?.user_metadata?.full_name || '').trim().split(/\s+/)[0];
   const count = (value: number | undefined) => favorites.loading || favorites.error ? '-' : String(value ?? 0);
   const cards = [
-    { to: '/compte/favoris/', icon: Heart, title: 'Mes favoris', desc: `${count(favorites.clubs.data)} clubs · ${count(favorites.cities.data?.length)} villes · ${count(favorites.sports.data?.length)} sports suivis` },
+    { to: '/compte/favoris/', icon: Heart, title: 'Mes favoris', desc: `${count(favorites.clubs.data)} club${favorites.clubs.data === 1 ? '' : 's'} · ${count(favorites.cities.data?.length)} ville${favorites.cities.data?.length === 1 ? '' : 's'} · ${count(favorites.sports.data?.length)} sport${favorites.sports.data?.length === 1 ? '' : 's'} suivi${favorites.sports.data?.length === 1 ? '' : 's'}` },
     { to: '/compte/alertes/', icon: Bell, title: 'Mes alertes', desc: 'Mes préférences d’alertes.' },
     { to: '/compte/profil/', icon: User, title: 'Mon profil', desc: 'Mes informations personnelles.' },
   ];
