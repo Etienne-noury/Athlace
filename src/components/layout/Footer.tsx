@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, Mail } from 'lucide-react';
+import { SoonBadge } from '@/components/ui/SoonBadge';
 
 const legalLinks = [
   { label: 'Mentions légales', href: '/mentions-legales/' },
@@ -9,33 +10,19 @@ const legalLinks = [
   { label: 'Accessibilité', href: '/accessibilite/' },
 ];
 
-const footerLinks: Record<string, { label: string; href: string; external?: boolean }[]> = {
-  'Notre entreprise': [
-    { label: 'Qui sommes-nous ?', href: '/entreprise/qui-sommes-nous/' },
+const footerLinks: Record<string, { label: string; href: string; soon?: boolean }[]> = {
+  'Athlace': [
+    { label: 'À propos', href: '/entreprise/qui-sommes-nous/' },
     { label: 'Notre mission', href: '/entreprise/mission/' },
-    { label: 'Presse et actualités', href: '/blog/actualites-athlace/' },
-    { label: 'Recrutement', href: '/entreprise/recrutement/' },
-    { label: 'Nos partenaires', href: '/entreprise/partenaires/' },
-  ],
-  "Besoin d'aide": [
-    { label: 'FAQ', href: '/aide/faq/' },
-    { label: 'Comment ça marche ?', href: '/aide/comment-ca-marche/' },
     { label: 'Contact', href: '/aide/contact/' },
-    { label: 'Aide clubs', href: '/pour-les-clubs/' },
-    { label: 'Aide pratiquants', href: '/aide/pratiquants/' },
+    { label: 'FAQ', href: '/aide/faq/' },
   ],
-  'Faire du sport': [
-    { label: 'Découvrir un sport', href: '/decouvrir/' },
-    { label: 'Conseils sportifs', href: '/decouvrir/conseils-sportifs/' },
-    { label: 'Événements à venir', href: '/evenements/' },
-    { label: 'Autour de moi', href: '/carte/' },
-  ],
-  'Nos services': [
-    { label: 'Devenir club partenaire', href: '/pour-les-clubs/rejoindre/' },
-    { label: 'Programme fidélité', href: '/compte/fidelite/' },
+  'Pour les clubs': [
+    { label: "L'offre Athlace", href: '/pour-les-clubs/' },
+    { label: 'Comment ça marche', href: '/pour-les-clubs/#comment-ca-marche' },
   ],
   'Application': [
-    { label: 'Télécharger', href: '/application/' },
+    { label: 'Télécharger', href: '/application/', soon: true },
   ],
 };
 
@@ -85,57 +72,24 @@ export function Footer() {
           </div>
 
           {/* Link columns */}
-          {Object.entries(footerLinks).slice(0, 3).map(([title, links]) => (
-            <div key={title}>
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title} className="min-w-0">
               <h4 className="font-sans font-bold text-lg mb-4">{title}</h4>
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-creme hover:text-creme transition-colors text-sm"
+                      className="inline-flex flex-wrap items-center gap-2 text-creme hover:text-creme transition-colors text-sm"
                     >
                       {link.label}
+                      {link.soon && <SoonBadge />}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Secondary link grid */}
-        <div className="mt-12 pt-8 border-t border-glass-border">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {Object.entries(footerLinks).slice(3).map(([title, links]) => (
-              <div key={title}>
-                <h4 className="font-sans font-bold text-base mb-3">{title}</h4>
-                <ul className="space-y-2">
-                  {links.map((link) => (
-                    <li key={link.href}>
-                      {link.external ? (
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-creme hover:text-creme transition-colors text-sm"
-                        >
-                          {link.label}
-                        </a>
-                      ) : (
-                        <Link
-                          to={link.href}
-                          className="text-creme hover:text-creme transition-colors text-sm"
-                        >
-                          {link.label}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Contact */}
