@@ -30,6 +30,8 @@ const INDIVIDUAL_ZOOM = 14;
 
 /** Taille de la grille d'agrégation (en degrés) selon le zoom. */
 function gridPrecision(zoom: number): number {
+  if (zoom <= 3) return 15;
+  if (zoom === 4) return 4;
   if (zoom <= 5) return 1.5;
   if (zoom === 6) return 1;
   if (zoom === 7) return 0.6;
@@ -171,7 +173,7 @@ export function FranceMap({
   const recenteredFilterRef = useRef<string | null>(null);
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !searchMode || !searchReady || recenteredFilterRef.current === filterKey) return;
+    if (!map || !containerRef.current?.clientWidth || !searchMode || !searchReady || recenteredFilterRef.current === filterKey) return;
     if (needsFilteredPoints ? !filteredPoints : !extentCells) return;
     recenteredFilterRef.current = filterKey;
     if (proximity) {
@@ -183,7 +185,7 @@ export function FranceMap({
       if (points.length) map.fitBounds(L.latLngBounds(points.map((point) => [point.lat, point.lng] as [number, number])), { padding: [30, 30], maxZoom: INDIVIDUAL_ZOOM, animate: false });
       else map.setView(FRANCE_CENTER, FRANCE_ZOOM, { animate: false });
     }
-  }, [filterKey, searchMode, searchReady, needsFilteredPoints, filteredPoints, extentCells, proximity]);
+  }, [filterKey, searchMode, searchReady, needsFilteredPoints, filteredPoints, extentCells, proximity, bounds]);
 
   // Bulles agrégées côté base : le nombre affiché est le nombre exact de clubs.
   const { data: clusters = [], isFetching: isFetchingClusters } = useQuery({
@@ -288,6 +290,7 @@ export function FranceMap({
     map.on("zoomend", updateBounds);
     const resizeObserver = new ResizeObserver(() => {
       map.invalidateSize();
+      updateBounds();
       const results = resultClustersRef.current;
       if (results && containerRef.current?.clientWidth && results.getLayers().length > 0) {
         map.fitBounds(results.getBounds(), { padding: [40, 40], maxZoom: INDIVIDUAL_ZOOM, animate: false });
