@@ -8,3 +8,4 @@
 - Keep the legacy Carte component unmounted; redirect map URLs with their query strings to search, which reuses fetchClubsNear for both cities and browser coordinates to preserve identical proximity rules.
 - Federation directory pages fetch the official table through a distinct query key and aggregate only public club fields via federation_club_stats; legacy club codes require matching discipline to avoid ambiguous federation collisions.
 - Keep journal article metadata, categories and further-reading targets in src/data/journal.ts; render migrated live guides through JournalGuide while leaving legacy Discover components unmounted to preserve their code.
+- Events use date-only boundaries in Europe/Paris, public queries exclude ended events even for admins, and shared validation in src/lib/events.ts; this keeps the public calendar consistent with RLS while admin queries retain archives.
