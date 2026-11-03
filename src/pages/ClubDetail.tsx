@@ -452,9 +452,9 @@ export default function ClubDetail() {
                     <a href={registerUrl} target="_blank" rel="noopener noreferrer"><UserPlus className="w-4 h-4" /> S'inscrire</a>
                   </Button>
                 )}
-                {club.website && (
+                {websiteUrl && (
                   <Button asChild variant="secondary" className="rounded-pill">
-                    <a href={club.website} target="_blank" rel="noopener noreferrer"><Globe className="w-4 h-4" /> Site web</a>
+                    <a href={websiteUrl} target="_blank" rel="noopener noreferrer"><Globe className="w-4 h-4" /> Site web</a>
                   </Button>
                 )}
                 {contact?.email && (
