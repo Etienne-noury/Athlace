@@ -197,6 +197,13 @@
       "when": 1793745127331,
       "tag": "0027_federation_club_stats",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1793746220833,
+      "tag": "0028_create_events",
+      "breakpoints": true
     }
   ]
 }

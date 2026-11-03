@@ -797,6 +797,66 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          address: string | null
+          city: string
+          created_at: string
+          description: string
+          end_date: string | null
+          external_url: string | null
+          federation_code: string | null
+          id: string
+          image_url: string | null
+          is_athlace: boolean
+          latitude: number | null
+          longitude: number | null
+          organizer_name: string
+          slug: string
+          sport_id: string
+          start_date: string
+          title: string
+        }
+        Insert: {
+          address?: string | null
+          city: string
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          external_url?: string | null
+          federation_code?: string | null
+          id?: string
+          image_url?: string | null
+          is_athlace?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          organizer_name: string
+          slug: string
+          sport_id: string
+          start_date: string
+          title: string
+        }
+        Update: {
+          address?: string | null
+          city?: string
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          external_url?: string | null
+          federation_code?: string | null
+          id?: string
+          image_url?: string | null
+          is_athlace?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          organizer_name?: string
+          slug?: string
+          sport_id?: string
+          start_date?: string
+          title?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           club_id: string
