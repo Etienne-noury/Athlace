@@ -53,7 +53,9 @@ export default function Recherche() {
       const list = listRef.current;
       if (item && list && window.matchMedia('(min-width: 1024px)').matches) {
         list.scrollTo({ top: list.scrollTop + item.getBoundingClientRect().top - list.getBoundingClientRect().top - (list.clientHeight - item.clientHeight) / 2, behavior });
-      } else item?.scrollIntoView({ behavior, block: 'center' });
+      } else if (item) {
+        window.scrollTo({ top: window.scrollY + item.getBoundingClientRect().top - 88, behavior: 'auto' });
+      }
       item?.focus({ preventScroll: true });
     });
   }, []);

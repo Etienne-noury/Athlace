@@ -6,6 +6,6 @@
 
 # Recherche liste et carte
 
-- [ ] Réorganiser les filtres et résultats desktop, conserver le panneau mobile.
-- [ ] Réutiliser FranceMap avec les résultats courants et synchroniser les interactions.
-- [ ] Vérifier les filtres, la pagination, les liens et les deux formats à l'écran.
+- [x] Réorganiser les filtres et résultats desktop, conserver le panneau mobile.
+- [x] Réutiliser FranceMap avec les résultats courants et synchroniser les interactions.
+- [x] Vérifier les filtres, la pagination, les liens et les deux formats à l'écran.
