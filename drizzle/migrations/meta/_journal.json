@@ -211,6 +211,13 @@
       "when": 1793746406938,
       "tag": "0029_restrict_events_anonymous_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1793746832061,
+      "tag": "0030_club_appointment_fields",
+      "breakpoints": true
     }
   ]
 }
