@@ -45,7 +45,8 @@ export function EventsAdmin() {
     }
     setBusy(true);
     try {
-      const { error } = draft.id ? await supabase.from('events').update(parsed.data).eq('id', draft.id) : await supabase.from('events').insert(parsed.data);
+      const row = { ...parsed.data, title: parsed.data.title ?? '', slug: parsed.data.slug ?? '', city: parsed.data.city ?? '', start_date: parsed.data.start_date ?? '', sport_id: parsed.data.sport_id ?? '', organizer_name: parsed.data.organizer_name ?? '' };
+      const { error } = draft.id ? await supabase.from('events').update(row).eq('id', draft.id) : await supabase.from('events').insert(row);
       if (error) throw error;
       toast({ title: draft.id ? 'Événement modifié' : 'Événement créé' });
       setDraft(null);
