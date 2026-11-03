@@ -27,7 +27,7 @@ export default function Notifications() {
     if (!user || saving || preferences.isError) return;
     setSaving(true);
     const current = preferences.data ?? EMPTY_ALERTS;
-    const { error } = await supabase.from('alert_preferences').upsert({ user_id: user.id, new_club_city: current.new_club_city, new_club_sport: current.new_club_sport, favorite_club_news: current.favorite_club_news, [key]: value, updated_at: new Date().toISOString() });
+    const { error } = await supabase.from('alert_preferences').upsert({ user_id: user.id, new_club_city: key === 'new_club_city' ? value : current.new_club_city, new_club_sport: key === 'new_club_sport' ? value : current.new_club_sport, favorite_club_news: key === 'favorite_club_news' ? value : current.favorite_club_news, updated_at: new Date().toISOString() });
     if (error) toast({ title: 'Préférences non enregistrées', variant: 'destructive' });
     else await client.invalidateQueries({ queryKey: ['alert-preferences', user.id] });
     setSaving(false);
