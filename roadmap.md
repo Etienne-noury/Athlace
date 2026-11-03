@@ -24,6 +24,6 @@
 
 # Journal d'Athlace
 
-- [ ] Regrouper articles, dossiers et guides avec leurs rubriques.
-- [ ] Rediriger les anciennes adresses et ajouter les liens pour aller plus loin.
-- [ ] Vérifier contenu conservé, filtres, liens et affichage mobile/desktop.
+- [x] Regrouper articles, dossiers et guides avec leurs rubriques.
+- [x] Rediriger les anciennes adresses et ajouter les liens pour aller plus loin.
+- [x] Vérifier contenu conservé, filtres, liens et affichage mobile/desktop.
