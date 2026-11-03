@@ -12,6 +12,6 @@
 
 # Carte intégrée à la recherche
 
-- [ ] Retirer la carte de l'accueil et rediriger /carte avec ses paramètres.
-- [ ] Ajouter la recherche Autour de moi et actualiser les liens du header.
-- [ ] Vérifier acceptation, refus, redirections et affichage mobile/desktop.
+- [x] Retirer la carte de l'accueil et rediriger /carte avec ses paramètres.
+- [x] Ajouter la recherche Autour de moi et actualiser les liens du header.
+- [x] Vérifier acceptation, refus, redirections et affichage mobile/desktop.
