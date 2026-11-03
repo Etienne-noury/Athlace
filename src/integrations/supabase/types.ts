@@ -1328,6 +1328,15 @@ export type Database = {
         }[]
       }
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
+      federation_club_stats: {
+        Args: never
+        Returns: {
+          clubs: number
+          discipline: string
+          federation_code: string
+          subs: string[]
+        }[]
+      }
       get_club_contact: {
         Args: { p_club_id: string }
         Returns: {
