@@ -15,3 +15,9 @@
 - [x] Retirer la carte de l'accueil et rediriger /carte avec ses paramètres.
 - [x] Ajouter la recherche Autour de moi et actualiser les liens du header.
 - [x] Vérifier acceptation, refus, redirections et affichage mobile/desktop.
+
+# Section Fédérations
+
+- [ ] Vérifier la source officielle et les statistiques par fédération.
+- [ ] Créer l'annuaire, les fiches et leurs routes sans modifier les autres pages.
+- [ ] Tester les comptes, liens, sous-disciplines, fiches indisponibles et formats d'écran.
