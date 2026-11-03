@@ -27,7 +27,7 @@ describe('federation directory rules', () => {
     ];
     // FFP is the official polo sigle; disambiguate its legacy import collision.
     expect(getFederationStats('FFP-PARA', rows).count).toBe(147);
-    expect(getFederationStats('FFP', rows).count).toBe(178);
+    expect(getFederationStats('FFP', rows).count).toBe(31);
   });
   it('returns only this federation’s database sub-disciplines as dynamic links', () => {
     const stats = getFederationStats('FFESSM', [

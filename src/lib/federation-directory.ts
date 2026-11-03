@@ -31,7 +31,8 @@ const LEGACY_CODES: Record<string, string[]> = {
 export function getFederationStats(sigle: string | null, rows: FederationClubStats[]) {
   const code = sigle?.toUpperCase() ?? '';
   const sports = getFederationSports(sigle);
-  const relevant = rows.filter((row) => row.federation_code.toUpperCase() === code ||
+  const relevant = rows.filter((row) => (row.federation_code.toUpperCase() === code &&
+    (code !== 'FFP' || sports.some((sport) => sport.match.includes(row.discipline)))) ||
     ((LEGACY_CODES[code] ?? []).includes(row.federation_code.toUpperCase()) &&
       sports.some((sport) => sport.match.includes(row.discipline))));
   const disciplines = sports.flatMap((sport) => {
