@@ -23,3 +23,6 @@
 
 /* Keep Leaflet panes/controls in their own stacking context, below the sticky header */
 .leaflet-container { isolation: isolate; z-index: 0; }
+
+/* Search selection also highlights the bubble containing a club at low zoom. */
+.athlace-result-highlight { outline: 4px solid hsl(var(--primary)); outline-offset: 4px; filter: drop-shadow(0 0 4px hsl(var(--primary))); }

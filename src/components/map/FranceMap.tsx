@@ -4,10 +4,12 @@ import L from "leaflet";
 import { MapPin, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchEnrichedClubs } from "@/lib/api/enriched-clubs";
+import type { EnrichedClub } from "@/lib/api/enriched-clubs";
 import { getDisciplineById, getDisciplineQueryNames, getSubDisciplineValue } from "@/data/disciplines";
 import { getDepartmentCodesByRegionName } from "@/lib/geo";
 import { useAvailableDisciplines } from "@/hooks/useAvailableDisciplines";
 import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
 
 // Fix Leaflet default marker icons (Vite bundling)
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
@@ -51,6 +53,11 @@ interface FranceMapProps {
   selectedRegion?: string;
   locationQuery?: string;
   maxClubs?: number;
+  /** Mode recherche : uniquement les résultats de la page courante, sans requête carte. */
+  clubs?: EnrichedClub[];
+  highlightedClubId?: string | null;
+  onClubClick?: (clubId: string) => void;
+  className?: string;
 }
 
 export function FranceMap({
@@ -60,10 +67,16 @@ export function FranceMap({
   selectedRegion = "all",
   locationQuery = "",
   maxClubs = 500,
+  clubs,
+  highlightedClubId,
+  onClubClick,
+  className = "",
 }: FranceMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const resultClustersRef = useRef<L.MarkerClusterGroup | null>(null);
+  const resultMarkersRef = useRef(new Map<string, L.Marker>());
   const [bounds, setBounds] = useState<{ latMin: number; latMax: number; lngMin: number; lngMax: number } | null>(null);
   const [zoom, setZoom] = useState<number>(FRANCE_ZOOM);
 
@@ -98,7 +111,7 @@ export function FranceMap({
       }
       return (data ?? []) as ClusterCell[];
     },
-    enabled: bounds !== null && clusterMode && subReady,
+    enabled: clubs === undefined && bounds !== null && clusterMode && subReady,
   });
 
   const { data: displayedClubs = [], isFetching: isFetchingClubs } = useQuery({
@@ -114,13 +127,14 @@ export function FranceMap({
       });
       return result.clubs.filter((c) => c.coordinates?.lat && c.coordinates?.lng);
     },
-    enabled: bounds !== null && !clusterMode && subReady,
+    enabled: clubs === undefined && bounds !== null && !clusterMode && subReady,
   });
 
-  const totalInView = clusterMode
+  const locatedResults = clubs?.filter((club) => Number.isFinite(club.coordinates.lat) && Number.isFinite(club.coordinates.lng) && club.coordinates.lat !== 0 && club.coordinates.lng !== 0);
+  const totalInView = locatedResults ? locatedResults.length : clusterMode
     ? clusters.reduce((sum, cell) => sum + Number(cell.cnt), 0)
     : displayedClubs.length;
-  const isFetching = clusterMode ? isFetchingClusters : isFetchingClubs;
+  const isFetching = clubs === undefined && (clusterMode ? isFetchingClusters : isFetchingClubs);
 
   // Create the map once
   useEffect(() => {
@@ -154,10 +168,19 @@ export function FranceMap({
     updateBounds();
     map.on("moveend", updateBounds);
     map.on("zoomend", updateBounds);
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+      const results = resultClustersRef.current;
+      if (results && containerRef.current?.clientWidth && results.getLayers().length > 0) {
+        map.fitBounds(results.getBounds(), { padding: [40, 40], maxZoom: INDIVIDUAL_ZOOM, animate: false });
+      }
+    });
+    resizeObserver.observe(containerRef.current);
 
     return () => {
       map.off("moveend", updateBounds);
       map.off("zoomend", updateBounds);
+      resizeObserver.disconnect();
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
@@ -168,7 +191,7 @@ export function FranceMap({
   useEffect(() => {
     const map = mapRef.current;
     const layer = layerRef.current;
-    if (!map || !layer || !clusterMode) return;
+    if (!map || !layer || !clusterMode || clubs !== undefined) return;
 
     layer.clearLayers();
 
@@ -194,12 +217,12 @@ export function FranceMap({
 
       marker.addTo(layer);
     });
-  }, [clusters, clusterMode, isSmallScreen]);
+  }, [clusters, clusterMode, isSmallScreen, clubs]);
 
   // Marqueurs individuels (zoom quartier)
   useEffect(() => {
     const layer = layerRef.current;
-    if (!layer || clusterMode) return;
+    if (!layer || clusterMode || clubs !== undefined) return;
 
     layer.clearLayers();
 
@@ -227,11 +250,74 @@ export function FranceMap({
       marker.bindPopup(popupHtml, { closeButton: true });
       marker.addTo(layer);
     });
-  }, [displayedClubs, clusterMode]);
+  }, [displayedClubs, clusterMode, clubs]);
+
+  // Même carte et mêmes bulles, mais regroupées uniquement sur la page de résultats.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || clubs === undefined) return;
+    layerRef.current?.clearLayers();
+    const group = L.markerClusterGroup({
+      maxClusterRadius: isSmallScreen ? 65 : 55,
+      disableClusteringAtZoom: INDIVIDUAL_ZOOM,
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      iconCreateFunction: (cluster) => {
+        const count = cluster.getChildCount();
+        const size = count < 10 ? 40 : count < 100 ? 52 : 64;
+        return L.divIcon({
+          html: `<span aria-label="${count} clubs dans cette zone">${count}</span>`,
+          className: `athlace-cluster athlace-cluster--${count < 10 ? 'sm' : 'md'}`,
+          iconSize: L.point(size, size),
+        });
+      },
+    });
+    const markers = new Map<string, L.Marker>();
+    clubs.forEach((club) => {
+      const { lat, lng } = club.coordinates;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat === 0 || lng === 0) return;
+      const marker = L.marker([lat, lng], { title: club.name, alt: club.name });
+      const tooltip = document.createElement('span');
+      tooltip.textContent = club.name;
+      marker.bindTooltip(tooltip);
+      marker.on('click', () => onClubClick?.(club.id));
+      markers.set(club.id, marker);
+      group.addLayer(marker);
+    });
+    resultMarkersRef.current = markers;
+    resultClustersRef.current = group;
+    group.addTo(map);
+    if (markers.size > 0) map.fitBounds(group.getBounds(), { padding: [40, 40], maxZoom: INDIVIDUAL_ZOOM, animate: false });
+    else map.setView(FRANCE_CENTER, FRANCE_ZOOM, { animate: false });
+    return () => {
+      map.removeLayer(group);
+      resultMarkersRef.current.clear();
+      resultClustersRef.current = null;
+    };
+  }, [clubs, onClubClick, isSmallScreen]);
+
+  useEffect(() => {
+    const group = resultClustersRef.current;
+    if (!group) return;
+    const clear = () => containerRef.current?.querySelectorAll('.athlace-result-highlight').forEach((node) => node.classList.remove('athlace-result-highlight'));
+    const highlight = () => {
+      clear();
+      const marker = highlightedClubId ? resultMarkersRef.current.get(highlightedClubId) : undefined;
+      if (marker) group.getVisibleParent(marker)?.getElement()?.classList.add('athlace-result-highlight');
+    };
+    highlight();
+    group.on('animationend', highlight);
+    mapRef.current?.on('zoomend', highlight);
+    return () => {
+      group.off('animationend', highlight);
+      mapRef.current?.off('zoomend', highlight);
+      clear();
+    };
+  }, [highlightedClubId, clubs]);
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden border border-border shadow-lg"
+      className={`relative rounded-2xl overflow-hidden border border-border shadow-lg ${className}`}
       style={{ height }}
     >
       <div ref={containerRef} className="h-full w-full" />
@@ -244,7 +330,7 @@ export function FranceMap({
       )}
 
       {/* Overlay info */}
-      <div className="absolute bottom-4 left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000]">
+      <div className={`absolute left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000] ${clubs === undefined ? 'bottom-4' : 'bottom-24 lg:bottom-4'}`}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-pill bg-creme flex items-center justify-center">
             <MapPin className="w-5 h-5 text-primary" />
@@ -253,7 +339,7 @@ export function FranceMap({
             <p className="font-bold text-foreground">
               {totalInView.toLocaleString("fr-FR")} clubs
             </p>
-            <p className="text-sm text-muted-foreground">dans cette zone</p>
+            <p className="text-sm text-muted-foreground">{clubs === undefined ? 'dans cette zone' : 'sur cette page'}</p>
           </div>
         </div>
       </div>
