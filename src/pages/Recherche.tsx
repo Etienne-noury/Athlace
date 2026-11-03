@@ -35,6 +35,8 @@ import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federa
 import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
 
+const EMPTY_RESULTS: { clubs: Club[]; total: number; radiusKm?: number } = { clubs: [], total: 0 };
+
 export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileMap, setMobileMap] = useState(false);
@@ -47,7 +49,11 @@ export default function Recherche() {
     setMobileMap(false);
     requestAnimationFrame(() => {
       const item = clubRefs.current.get(id);
-      item?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      const list = listRef.current;
+      if (item && list && window.matchMedia('(min-width: 1024px)').matches) {
+        list.scrollTo({ top: list.scrollTop + item.getBoundingClientRect().top - list.getBoundingClientRect().top - (list.clientHeight - item.clientHeight) / 2, behavior });
+      } else item?.scrollIntoView({ behavior, block: 'center' });
       item?.focus({ preventScroll: true });
     });
   }, []);
@@ -86,7 +92,7 @@ export default function Recherche() {
   const [nearRadius, setNearRadius] = useState<number | undefined>(undefined);
   useEffect(() => { setNearRadius(undefined); }, [nearCity, selectedDiscipline, selectedSub, selectedRegion]);
 
-  const { data: searchResult = { clubs: [], total: 0 } as { clubs: Club[]; total: number; radiusKm?: number }, isLoading, isFetching } = useQuery({
+  const { data: searchResult = EMPTY_RESULTS, isLoading, isFetching } = useQuery({
     queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, nearCity?.lat, nearCity?.lng],
     enabled: cityReady && (selectedSub === 'all' || avail.isReady),
     queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
@@ -179,7 +185,7 @@ export default function Recherche() {
           {/* Mobile Filter Sheet */}
           <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="lg:hidden mx-4 mt-4 gap-2">
+              <Button aria-label="Filtres" variant="outline" className="lg:hidden mx-4 mt-4 gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtres
                 {activeFiltersCount > 0 && (
@@ -303,7 +309,7 @@ export default function Recherche() {
                     data-club-id={club.id}
                     onMouseEnter={() => setHoveredClubId(club.id)} onMouseLeave={() => setHoveredClubId(null)}
                     onFocus={() => setHoveredClubId(club.id)} onBlur={() => setHoveredClubId(null)}
-                    className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    className="group block scroll-mt-24 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     <div className={cn(
                       "bg-card rounded-lg border border-border overflow-hidden flex transition-colors",
                       (selectedClubId === club.id || hoveredClubId === club.id) && 'border-primary ring-2 ring-primary/30' 
@@ -361,7 +367,7 @@ export default function Recherche() {
 
         </div>
         <aside aria-label="Carte des résultats" className={cn(
-          'lg:block lg:sticky lg:top-48 lg:self-start lg:h-[calc(100dvh-192px)]',
+          'lg:block lg:sticky lg:inset-auto lg:top-48 lg:self-start lg:h-[calc(100dvh-192px)]',
           mobileMap ? 'fixed inset-x-0 bottom-0 top-16 z-30' : 'hidden',
         )}>
           <FranceMap height="100%" clubs={filteredClubs}

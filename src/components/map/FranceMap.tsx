@@ -168,7 +168,13 @@ export function FranceMap({
     updateBounds();
     map.on("moveend", updateBounds);
     map.on("zoomend", updateBounds);
-    const resizeObserver = new ResizeObserver(() => map.invalidateSize());
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+      const results = resultClustersRef.current;
+      if (results && containerRef.current?.clientWidth && results.getLayers().length > 0) {
+        map.fitBounds(results.getBounds(), { padding: [40, 40], maxZoom: INDIVIDUAL_ZOOM, animate: false });
+      }
+    });
     resizeObserver.observe(containerRef.current);
 
     return () => {
@@ -271,10 +277,9 @@ export function FranceMap({
       const { lat, lng } = club.coordinates;
       if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat === 0 || lng === 0) return;
       const marker = L.marker([lat, lng], { title: club.name, alt: club.name });
-      marker.bindTooltip(club.name); // Leaflet treats the tooltip string as HTML: use textContent below.
       const tooltip = document.createElement('span');
       tooltip.textContent = club.name;
-      marker.setTooltipContent(tooltip);
+      marker.bindTooltip(tooltip);
       marker.on('click', () => onClubClick?.(club.id));
       markers.set(club.id, marker);
       group.addLayer(marker);
@@ -325,7 +330,7 @@ export function FranceMap({
       )}
 
       {/* Overlay info */}
-      <div className="absolute bottom-4 left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000]">
+      <div className={`absolute left-4 bg-card backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border z-[1000] ${clubs === undefined ? 'bottom-4' : 'bottom-24 lg:bottom-4'}`}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-pill bg-creme flex items-center justify-center">
             <MapPin className="w-5 h-5 text-primary" />
@@ -334,7 +339,7 @@ export function FranceMap({
             <p className="font-bold text-foreground">
               {totalInView.toLocaleString("fr-FR")} clubs
             </p>
-            <p className="text-sm text-muted-foreground">dans cette zone</p>
+            <p className="text-sm text-muted-foreground">{clubs === undefined ? 'dans cette zone' : 'sur cette page'}</p>
           </div>
         </div>
       </div>
