@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_preferences: {
+        Row: {
+          favorite_club_news: boolean
+          new_club_city: boolean
+          new_club_sport: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          favorite_club_news?: boolean
+          new_club_city?: boolean
+          new_club_sport?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          favorite_club_news?: boolean
+          new_club_city?: boolean
+          new_club_sport?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       club_field_status: {
         Row: {
           club_id: string
@@ -866,6 +890,54 @@ export type Database = {
           sport_id?: string
           start_date?: string
           title?: string
+        }
+        Relationships: []
+      }
+      favorite_cities: {
+        Row: {
+          city_code: string
+          city_name: string
+          created_at: string
+          id: string
+          postal_code: string | null
+          user_id: string
+        }
+        Insert: {
+          city_code: string
+          city_name: string
+          created_at?: string
+          id?: string
+          postal_code?: string | null
+          user_id: string
+        }
+        Update: {
+          city_code?: string
+          city_name?: string
+          created_at?: string
+          id?: string
+          postal_code?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      favorite_sports: {
+        Row: {
+          created_at: string
+          id: string
+          sport_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sport_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sport_id?: string
+          user_id?: string
         }
         Relationships: []
       }

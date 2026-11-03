@@ -10,3 +10,9 @@
 - [x] Étendre les demandes de rendez-vous et leur affichage admin.
 - [x] Enregistrer les demandes et notifier contact@athlace.fr.
 - [x] Vérifier formulaire, réception et affichages desktop/mobile ; supprimer uniquement la demande de test.
+
+# Espace sportif
+- [x] Ajouter favoris villes/sports et préférences privées en base.
+- [x] Construire l’accueil connecté, les trois onglets favoris et les alertes.
+- [x] Adapter les adresses du compte et les liens du header sans modifier l’authentification ni l’espace club.
+- [x] Tester sauvegarde, suppression, préférences et affichage connecté desktop/mobile.

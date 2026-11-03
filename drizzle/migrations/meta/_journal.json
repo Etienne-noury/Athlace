@@ -218,6 +218,13 @@
       "when": 1793746832061,
       "tag": "0030_club_appointment_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1793747381730,
+      "tag": "0031_athlete_favorites_and_alerts",
+      "breakpoints": true
     }
   ]
 }

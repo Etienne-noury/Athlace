@@ -8,6 +8,7 @@ import {
   User,
   MapPin,
   Heart,
+  Bell,
   ChevronDown,
   Building2,
   HelpCircle,
@@ -343,7 +344,7 @@ export function Header() {
               </Link>
             </Button>
             <Button asChild variant="ghost" size="icon" className="hidden sm:inline-flex xl:hidden">
-              <Link to="/compte/mes-clubs/" aria-label="Mes clubs favoris">
+              <Link to="/compte/favoris/" aria-label="Mes clubs favoris">
                 <Heart className="h-5 w-5" />
               </Link>
             </Button>
@@ -370,8 +371,8 @@ export function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild><Link to="/compte/">Tableau de bord</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/compte/profil/">Mon profil</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/compte/mes-clubs/">Mes favoris</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/compte/notifications/">Mes alertes</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compte/favoris/">Mes favoris</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compte/alertes/">Mes alertes</Link></DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="text-destructive"
@@ -547,11 +548,12 @@ export function Header() {
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="w-full gap-2">
-                      <Link to="/compte/mes-clubs/" onClick={() => setIsMenuOpen(false)}>
+                      <Link to="/compte/favoris/" onClick={() => setIsMenuOpen(false)}>
                         <Heart className="h-4 w-4" />
                         Mes favoris
                       </Link>
                     </Button>
+                    <Button asChild variant="ghost" className="w-full gap-2"><Link to="/compte/alertes/" onClick={() => setIsMenuOpen(false)}><Bell className="h-4 w-4" />Mes alertes</Link></Button>
                     <Button
                       variant="ghost"
                       className="w-full text-destructive"

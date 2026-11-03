@@ -25,7 +25,7 @@ export function FavoriteButton({ clubId, className, withLabel = false }: Favorit
     queryKey: ['favorite-ids', user?.id],
     enabled: !!user,
     queryFn: async (): Promise<string[]> => {
-      const { data, error } = await supabase.from('favorites').select('club_id');
+      const { data, error } = await supabase.from('favorites').select('club_id').eq('user_id', user?.id ?? '');
       if (error) throw error;
       return (data ?? []).map((r) => r.club_id);
     },
@@ -65,6 +65,7 @@ export function FavoriteButton({ clubId, className, withLabel = false }: Favorit
       }
       queryClient.invalidateQueries({ queryKey: ['favorite-ids', user.id] });
       queryClient.invalidateQueries({ queryKey: ['favorites', user.id] });
+      queryClient.invalidateQueries({ queryKey: ['favorites-count', user.id] });
     } catch (err) {
       toast({
         title: 'Erreur',
