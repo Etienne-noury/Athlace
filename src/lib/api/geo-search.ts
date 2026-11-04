@@ -45,7 +45,11 @@ export async function resolveCity(q: string): Promise<CityHit | null> {
   );
 }
 
-export const NEAR_RADII = [20, 50, 100];
+/** Rayons essayés en mode automatique, du plus serré au plus large. */
+export const NEAR_RADII = [2, 5, 10, 20, 50, 100];
+/** En mode automatique, on garde le premier rayon qui contient au moins ce nombre de clubs :
+ *  serré en ville (Paris, Lyon…), plus large à la campagne. */
+export const NEAR_MIN_CLUBS = 40;
 
 export async function fetchClubsNear(params: {
   lat: number;
@@ -55,34 +59,45 @@ export async function fetchClubsNear(params: {
   region?: string;
   limit?: number;
   offset?: number;
-  /** Rayon imposé (pages suivantes). */
+  /** Rayon imposé (curseur ou pages suivantes). Sinon : rayon automatique selon la densité de clubs. */
   radiusKm?: number;
 }): Promise<{ clubs: (EnrichedClub & { distanceKm: number })[]; total: number; radiusKm: number }> {
-  // Élargit le rayon jusqu'à trouver au moins un club.
-  const radii = params.radiusKm ? [params.radiusKm] : NEAR_RADII;
-  for (const radius of radii) {
-    const { data, error } = await supabase.rpc('clubs_near', {
+  const call = (radius: number, limit: number, offset: number) =>
+    supabase.rpc('clubs_near', {
       p_lat: params.lat,
       p_lng: params.lng,
       p_radius_km: radius,
       p_disciplines: params.disciplines?.length ? params.disciplines : null,
       p_sub: params.sub ?? null,
       p_region: params.region && params.region !== 'all' ? params.region : null,
-      p_limit: params.limit ?? 100,
-      p_offset: params.offset ?? 0,
+      p_limit: limit,
+      p_offset: offset,
     });
+
+  let radius = params.radiusKm;
+  if (!radius) {
+    // Les clubs arrivent triés par distance : la distance du Nième club donne le plus petit
+    // rayon qui en contient assez (serré en ville, large à la campagne).
+    const maxRadius = NEAR_RADII[NEAR_RADII.length - 1];
+    const { data, error } = await call(maxRadius, NEAR_MIN_CLUBS, 0);
     if (error) {
       console.error('[clubs_near]', error.message);
-      return { clubs: [], total: 0, radiusKm: radius };
+      return { clubs: [], total: 0, radiusKm: maxRadius };
     }
     const rows = data ?? [];
-    if (rows.length > 0 || radius === radii[radii.length - 1]) {
-      return {
-        clubs: rows.map((r) => ({ ...rowToClub(r.club as unknown as EnrichedClubRow), distanceKm: r.distance_km })),
-        total: Number(rows[0]?.total ?? 0),
-        radiusKm: radius,
-      };
-    }
+    const nth = rows.length >= NEAR_MIN_CLUBS ? rows[NEAR_MIN_CLUBS - 1].distance_km : Infinity;
+    radius = NEAR_RADII.find((r) => r >= nth) ?? maxRadius;
   }
-  return { clubs: [], total: 0, radiusKm: NEAR_RADII[NEAR_RADII.length - 1] };
+
+  const { data, error } = await call(radius, params.limit ?? 100, params.offset ?? 0);
+  if (error) {
+    console.error('[clubs_near]', error.message);
+    return { clubs: [], total: 0, radiusKm: radius };
+  }
+  const rows = data ?? [];
+  return {
+    clubs: rows.map((r) => ({ ...rowToClub(r.club as unknown as EnrichedClubRow), distanceKm: r.distance_km })),
+    total: Number(rows[0]?.total ?? 0),
+    radiusKm: radius,
+  };
 }

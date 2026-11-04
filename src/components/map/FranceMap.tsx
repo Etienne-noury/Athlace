@@ -187,6 +187,33 @@ export function FranceMap({
     }
   }, [filterKey, searchMode, searchReady, needsFilteredPoints, filteredPoints, extentCells, proximity, bounds]);
 
+  // Zone de recherche : cercle du rayon + point au centre (ville saisie ou position du visiteur).
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !proximity) return;
+    const css = getComputedStyle(document.documentElement);
+    const primary = `hsl(${css.getPropertyValue("--primary").trim()})`;
+    const white = `hsl(${css.getPropertyValue("--blanc").trim()})`;
+    const zone = L.layerGroup([
+      L.circle([proximity.lat, proximity.lng], {
+        radius: proximity.radiusKm * 1000,
+        color: primary,
+        weight: 1.5,
+        fillOpacity: 0.06,
+        interactive: false,
+      }),
+      L.circleMarker([proximity.lat, proximity.lng], {
+        radius: 7,
+        color: white,
+        weight: 2,
+        fillColor: primary,
+        fillOpacity: 1,
+        interactive: false,
+      }),
+    ]).addTo(map);
+    return () => { zone.remove(); };
+  }, [proximity?.lat, proximity?.lng, proximity?.radiusKm]);
+
   // Bulles agrégées côté base : le nombre affiché est le nombre exact de clubs.
   const { data: clusters = [], isFetching: isFetchingClusters } = useQuery({
     queryKey: ["clubs", "map-clusters", disciplineNames, subDiscipline, postalPrefixes, locationQuery, bounds, zoom, isSmallScreen],

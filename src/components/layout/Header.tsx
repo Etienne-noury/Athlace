@@ -85,16 +85,10 @@ const localisationMenuLinks: MenuLink[] = [
 
 const topCities = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'];
 
-const decouvrirGuides: MenuLink[] = [
-  { label: 'Comment choisir son club ?', description: 'Les critères pour trouver le bon club', href: '/blog/comment-choisir-son-club/', icon: Compass },
-  { label: 'Guide des licences fédérales', description: 'Prix et fonctionnement des licences', href: '/blog/guide-licences-federations/', icon: Landmark },
-  { label: 'Fiches sport par sport', description: 'Règles, équipement, clubs près de chez vous', href: '/blog/fiches-sport-par-sport/', icon: Newspaper },
-];
-
 const decouvrirMenuLinks: MenuLink[] = [
-  { label: 'Le journal', description: 'Actualités et conseils', href: '/blog/', icon: Newspaper },
-  { label: 'Événements', description: 'Compétitions et rendez-vous à venir', href: '/evenements/', icon: Calendar },
-  { label: 'Fédérations', description: 'Les fédérations agréées par l\'État', href: '/federations/', icon: Landmark },
+  { label: 'Le journal', description: 'Actualités, guides et conseils pour bien choisir son club', href: '/blog/', icon: Newspaper },
+  { label: 'Événements', description: 'Compétitions, portes ouvertes et rendez-vous sportifs à venir', href: '/evenements/', icon: Calendar },
+  { label: 'Fédérations', description: 'Les fédérations agréées par l\'État et leurs licences', href: '/federations/', icon: Landmark },
 ];
 
 /** Lien de méga-menu : même rendu dans les trois menus. */
@@ -339,19 +333,21 @@ export function Header() {
                         )}
 
                         {item.type === 'decouvrir' && (
-                          <div className="grid grid-cols-2 gap-8">
-                            <div>
-                              <MegaMenuHeading>Guides pratiques</MegaMenuHeading>
-                              <div className="space-y-1">
-                                {decouvrirGuides.map((link) => <MegaMenuLink key={link.label} link={link} />)}
-                              </div>
-                            </div>
-                            <div>
-                              <MegaMenuHeading>Le sport en France</MegaMenuHeading>
-                              <div className="space-y-1">
-                                {decouvrirMenuLinks.map((link) => <MegaMenuLink key={link.label} link={link} />)}
-                              </div>
-                            </div>
+                          <div className="grid grid-cols-3 gap-4">
+                            {decouvrirMenuLinks.map((link) => (
+                              <Link
+                                key={link.label}
+                                to={link.href ?? '/blog/'}
+                                className="group flex flex-col gap-3 rounded-xl border border-border p-5 transition-colors hover:border-primary hover:bg-muted"
+                              >
+                                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-creme text-primary">
+                                  <link.icon className="h-5 w-5" />
+                                </span>
+                                <span className="text-base font-bold text-foreground">{link.label}</span>
+                                <span className="flex-1 text-sm text-muted-foreground">{link.description}</span>
+                                <span className="text-sm font-bold text-primary group-hover:underline">Voir →</span>
+                              </Link>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -541,7 +537,7 @@ export function Header() {
                   </AccordionTrigger>
                   <AccordionContent>
                     <ul className="flex flex-col gap-1 px-4 pb-2">
-                      {[...decouvrirGuides, ...decouvrirMenuLinks].map((link) => (
+                      {decouvrirMenuLinks.map((link) => (
                         <li key={link.href}>
                           <Link
                             to={link.href ?? '/blog/'}
