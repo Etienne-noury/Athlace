@@ -2,6 +2,7 @@
 // Auth: caller must be authenticated and hold the 'admin' role (see _shared/require-admin.ts).
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { requireAdmin } from "../_shared/require-admin.ts";
+import { isCsvImportableClubColumn } from "../_shared/club-import-columns.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -210,7 +211,7 @@ Deno.serve(async (req) => {
     if (colErr) throw new Error(`Lecture des colonnes impossible: ${colErr.message}`);
     const columns = new Map<string, { data_type: string; udt_name: string }>();
     for (const c of (colRows ?? []) as Array<{ column_name: string; data_type: string; udt_name: string }>) {
-      columns.set(c.column_name, c);
+      if (isCsvImportableClubColumn(c.column_name)) columns.set(c.column_name, c);
     }
     const ignored = new Set<string>();
     for (const r of rows) {

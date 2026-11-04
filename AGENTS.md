@@ -11,3 +11,4 @@
 - Events use date-only boundaries in Europe/Paris, public queries exclude ended events even for admins, and shared validation in src/lib/events.ts; this keeps the public calendar consistent with RLS while admin queries retain archives.
 - Club appointment requests use a dedicated validated, rate-limited edge function to persist in club_waitlist before sending a fixed owner notification; this preserves requests when email delivery fails.
 - Athlete favorites and alert preferences use user-scoped queries and RLS with shared count invalidation; this keeps private account data and dashboard totals consistent without enabling email alerts.
+- Public club listing/counting RPCs must read clubs_public and scope child aggregates to it; the CSV import schema excludes visibility-managed columns before conversion and locked-field handling to preserve independent visibility control.

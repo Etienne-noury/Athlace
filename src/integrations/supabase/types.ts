@@ -448,6 +448,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           installments: boolean | null
+          is_hidden: boolean
           kit_image_url: string | null
           labels: string[] | null
           latitude: number | null
@@ -546,6 +547,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           installments?: boolean | null
+          is_hidden?: boolean
           kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
@@ -644,6 +646,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           installments?: boolean | null
+          is_hidden?: boolean
           kit_image_url?: string | null
           labels?: string[] | null
           latitude?: number | null
