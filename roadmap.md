@@ -18,5 +18,5 @@
 - [x] Tester sauvegarde, suppression, préférences et affichage connecté desktop/mobile.
 
 # Clubs masqués
-- [ ] Ajouter is_hidden et exclure les clubs masqués des données publiques et RPC.
-- [ ] Protéger l’import CSV et tester la conservation du masquage.
+- [x] Ajouter is_hidden et exclure les clubs masqués des données publiques et RPC.
+- [x] Protéger l’import CSV et tester la conservation du masquage.
