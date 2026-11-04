@@ -91,6 +91,11 @@ export function HeroSection() {
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
                 <SearchAutocomplete
+                  onLocate={() => {
+                    const params = new URLSearchParams({ autour: '1' });
+                    if (selectedDiscipline !== 'all') params.set('discipline', selectedDiscipline);
+                    navigate(`/clubs/?${params.toString()}`);
+                  }}
                   className="flex-1 min-w-0 lg:min-w-[220px]"
                   value={searchQuery}
                   onChange={setSearchQuery}

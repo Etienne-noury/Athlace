@@ -34,9 +34,11 @@ import type { EnrichedClub as Club } from '@/lib/api/enriched-clubs';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
-import { requestVisitorPosition, type VisitorPosition } from '@/lib/visitor-position';
+import { requestVisitorPosition, reversePlaceName, VisitorPositionError, POSITION_FAILURE_MESSAGES, type PositionFailure, type VisitorPosition } from '@/lib/visitor-position';
+import { Slider } from '@/components/ui/slider';
 
-const DISTANCE_OPTIONS = [5, 10, 20, 50, 100];
+const DISTANCE_MIN = 1;
+const DISTANCE_MAX = 100;
 
 const EMPTY_RESULTS: { clubs: Club[]; total: number; radiusKm?: number } = { clubs: [], total: 0 };
 
@@ -45,7 +47,7 @@ export default function Recherche() {
   const navigate = useNavigate();
   const aroundRequested = searchParams.get('autour') === '1';
   const radiusParam = Number(searchParams.get('rayon'));
-  const chosenRadius = DISTANCE_OPTIONS.includes(radiusParam) ? radiusParam : undefined;
+  const chosenRadius = Number.isFinite(radiusParam) && radiusParam >= DISTANCE_MIN && radiusParam <= DISTANCE_MAX ? Math.round(radiusParam) : undefined;
   const setUrlParam = useCallback((key: string, value: string | null) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
@@ -55,11 +57,16 @@ export default function Recherche() {
   }, [setSearchParams]);
   const [visitorPosition, setVisitorPosition] = useState<VisitorPosition | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'pending' | 'ready' | 'unavailable'>('idle');
+  const [locationFailure, setLocationFailure] = useState<PositionFailure | null>(null);
+  const [placeName, setPlaceName] = useState<string | null>(null);
+  const [locateAttempt, setLocateAttempt] = useState(0);
   const locationPending = aroundRequested && (locationStatus === 'idle' || locationStatus === 'pending');
 
   useEffect(() => {
     let cancelled = false;
     setVisitorPosition(null);
+    setPlaceName(null);
+    setLocationFailure(null);
     if (!aroundRequested) {
       setLocationStatus('idle');
       return;
@@ -69,11 +76,14 @@ export default function Recherche() {
       if (cancelled) return;
       setVisitorPosition(position);
       setLocationStatus('ready');
-    }).catch(() => {
-      if (!cancelled) setLocationStatus('unavailable');
+      reversePlaceName(position).then((name) => { if (!cancelled) setPlaceName(name); });
+    }).catch((error) => {
+      if (cancelled) return;
+      setLocationStatus('unavailable');
+      setLocationFailure(error instanceof VisitorPositionError ? error.reason : 'unavailable');
     });
     return () => { cancelled = true; };
-  }, [aroundRequested]);
+  }, [aroundRequested, locateAttempt]);
   const [mobileMap, setMobileMap] = useState(false);
   const [hoveredClubId, setHoveredClubId] = useState<string | null>(null);
   const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
@@ -184,45 +194,48 @@ export default function Recherche() {
     setSearchQuery(value);
     if (aroundRequested && value.trim()) setUrlParam('autour', null);
   };
-  const toggleAround = () => {
+  const startAround = () => {
+    setSearchQuery('');
     if (aroundRequested) {
-      setUrlParam('autour', null);
-    } else {
-      setSearchQuery('');
-      setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete('q');
-        next.set('autour', '1');
-        return next;
-      }, { replace: true });
+      setLocateAttempt((n) => n + 1);
+      return;
     }
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete('q');
+      next.set('autour', '1');
+      return next;
+    }, { replace: true });
+  };
+  const stopAround = () => setUrlParam('autour', null);
+
+  const locateProps = {
+    onLocate: startAround,
+    locating: locationPending,
+    aroundActive: aroundRequested && locationStatus !== 'unavailable',
+    aroundLabel: placeName,
+    onClearAround: stopAround,
   };
 
-  const aroundButton = (
-    <Button type="button" variant={aroundRequested ? 'default' : 'outline'} size="sm"
-      onClick={toggleAround} aria-pressed={aroundRequested} className="-my-1.5 h-8 gap-1.5 px-3 text-xs">
-      <LocateFixed className="h-3.5 w-3.5" />
-      Autour de moi
-      {aroundRequested && <X className="h-3.5 w-3.5" aria-hidden />}
-    </Button>
-  );
-
+  const shownRadius = chosenRadius ?? searchResult.radiusKm ?? 20;
+  const [draftRadius, setDraftRadius] = useState<number | null>(null);
   const distanceFilter = (
     <div className="min-w-0">
-      <label className="mb-2 block text-sm font-bold">Distance</label>
-      <Select value={searchPosition ? (chosenRadius ? String(chosenRadius) : 'auto') : ''}
-        onValueChange={(value) => setUrlParam('rayon', value === 'auto' ? null : value)}
-        disabled={!searchPosition}>
-        <SelectTrigger aria-label="Distance maximale" title={searchPosition ? undefined : 'Saisissez une ville ou utilisez « Autour de moi »'}>
-          <SelectValue placeholder="Choisir une ville d'abord" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="auto">Automatique</SelectItem>
-          {DISTANCE_OPTIONS.map((km) => <SelectItem key={km} value={String(km)}>Dans un rayon de {km} km</SelectItem>)}
-        </SelectContent>
-      </Select>
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <label id="distance-label" className="block text-sm font-bold">Distance</label>
+        <span className={cn('text-sm font-bold', searchPosition ? 'text-primary' : 'text-muted-foreground')}>
+          {searchPosition ? `${draftRadius ?? shownRadius} km` : '–'}
+        </span>
+      </div>
+      <div className="flex h-10 items-center">
+        <Slider aria-labelledby="distance-label" min={DISTANCE_MIN} max={DISTANCE_MAX} step={1}
+          disabled={!searchPosition}
+          value={[draftRadius ?? shownRadius]}
+          onValueChange={([km]) => setDraftRadius(km)}
+          onValueCommit={([km]) => { setDraftRadius(null); setUrlParam('rayon', String(km)); }} />
+      </div>
       {!searchPosition && (
-        <p className="mt-1 text-xs text-muted-foreground xl:hidden">Saisissez une ville ou utilisez « Autour de moi ».</p>
+        <p className="mt-1 text-xs text-muted-foreground xl:hidden">Choisissez une ville ou « Autour de moi ».</p>
       )}
     </div>
   );
@@ -250,13 +263,10 @@ export default function Recherche() {
       <div className="hidden xl:block sticky top-20 z-40 border-b border-border bg-blanc">
         <div className="grid grid-cols-[minmax(200px,1.2fr)_minmax(0,2fr)_minmax(160px,1fr)_minmax(170px,1fr)_auto] items-end gap-4 px-6 py-4">
           <div className="min-w-0">
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <label className="block text-sm font-bold">Recherche</label>
-              {aroundButton}
-            </div>
-            <SearchAutocomplete value={searchQuery} onChange={updateSearchQuery}
+            <label className="mb-2 block text-sm font-bold">Recherche</label>
+            <SearchAutocomplete value={searchQuery} onChange={updateSearchQuery} {...locateProps}
               onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
-              placeholder="Ville, code postal, sport..." iconClassName="left-3 h-4 w-4" inputClassName="pl-10" />
+              placeholder="Ville, code postal, sport…" iconClassName="left-3 h-4 w-4" inputClassName="pl-10" />
           </div>
           <DisciplineFilter sport={selectedDiscipline} sub={selectedSub}
             onSportChange={setSelectedDiscipline} onSubChange={setSelectedSub} layout="inline"
@@ -301,15 +311,13 @@ export default function Recherche() {
               <div className="space-y-6 mt-6 flex-1">
                 {/* Same filters as sidebar */}
                 <div>
-                  <div className="mb-2 flex items-center justify-between gap-2">
-                    <label className="text-sm font-bold block">Recherche</label>
-                    {aroundButton}
-                  </div>
+                  <label className="text-sm font-bold mb-2 block">Recherche</label>
                   <SearchAutocomplete
                     value={searchQuery}
                     onChange={updateSearchQuery}
+                    {...locateProps}
                     onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
-                    placeholder="Ville, code postal, sport..."
+                    placeholder="Ville, code postal, sport…"
                     iconClassName="left-3 h-4 w-4"
                     inputClassName="pl-10"
                   />
@@ -353,12 +361,21 @@ export default function Recherche() {
           <section className="mb-6">
             <h1 className="text-2xl font-black text-foreground mb-2">Rechercher un club</h1>
             <p className="text-muted-foreground">
-              {locationPending ? 'Localisation en cours…' : isLoading ? 'Recherche en cours…' : <>{totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}</>}
-              {!locationPending && !isLoading && aroundRequested && visitorPosition ? `${searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km` : ''} autour de vous` : ''}
+              {locationPending ? 'Localisation en cours… Autorisez l’accès à votre position si votre navigateur le demande.' : isLoading ? 'Recherche en cours…' : <>{totalCount} club{totalCount > 1 ? 's' : ''} trouvé{totalCount > 1 ? 's' : ''}</>}
+              {!locationPending && !isLoading && aroundRequested && visitorPosition ? `${searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km` : ''} autour de vous${placeName ? ` (${placeName})` : ''}` : ''}
               {!isLoading && !aroundRequested && nearCity && searchResult.radiusKm ? ` dans un rayon de ${searchResult.radiusKm} km autour ${/^[aeiouyhàâéèêîôûAEIOUYHÉÈÊ]/.test(nearCity.name) ? "d’" : "de "}${nearCity.name}` : ''}
             </p>
             {aroundRequested && locationStatus === 'unavailable' && (
-              <p role="status" className="mt-2 text-sm text-muted-foreground">Localisation indisponible. Tous les résultats sont affichés selon vos filtres.</p>
+              <div role="alert" className="mt-4 flex flex-col gap-3 rounded-xl border border-primary/30 bg-blanc p-4 sm:flex-row sm:items-center">
+                <LocateFixed className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+                <p className="flex-1 text-sm text-foreground">
+                  {POSITION_FAILURE_MESSAGES[locationFailure ?? 'unavailable']} En attendant, les résultats ne sont pas triés par distance.
+                </p>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => setLocateAttempt((n) => n + 1)}>Réessayer</Button>
+                  <Button size="sm" variant="outline" onClick={stopAround}>Saisir une ville</Button>
+                </div>
+              </div>
             )}
           </section>
         {/* Bandeau annuaire fédéral */}

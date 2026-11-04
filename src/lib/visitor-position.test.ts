@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { requestVisitorPosition } from './visitor-position';
+import { requestVisitorPosition, VisitorPositionError } from './visitor-position';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -14,11 +14,15 @@ describe('visitor proximity coordinates', () => {
   it('rejects denial so search can fall back without a position', async () => {
     const denied = { code: 1, message: 'Permission denied' };
     vi.stubGlobal('navigator', { geolocation: { getCurrentPosition: (_success: unknown, error: (reason: unknown) => void) => error(denied) } });
-    await expect(requestVisitorPosition()).rejects.toEqual(denied);
+    const error = await requestVisitorPosition().catch((e) => e);
+    expect(error).toBeInstanceOf(VisitorPositionError);
+    expect(error.reason).toBe('denied');
   });
 
   it('rejects unsupported geolocation without blocking ordinary search', async () => {
     vi.stubGlobal('navigator', {});
-    await expect(requestVisitorPosition()).rejects.toThrow('Géolocalisation indisponible');
+    const error = await requestVisitorPosition().catch((e) => e);
+    expect(error).toBeInstanceOf(VisitorPositionError);
+    expect(error.reason).toBe('unavailable');
   });
 });
