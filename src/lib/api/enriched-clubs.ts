@@ -68,7 +68,7 @@ export function rowToClub(r: EnrichedClubRow): EnrichedClub {
     departmentCode: r.department_code,
     logoUrl: full.logo_url ?? null,
     tags,
-    address: r.address ?? '',
+    address: cleanAddress(r.address),
     city: r.city ?? '',
     postalCode: r.postal_code ?? '',
     region: r.region ?? '',
@@ -81,6 +81,17 @@ export function rowToClub(r: EnrichedClubRow): EnrichedClub {
     levelLabel: r.level ?? null,
     dateCreation: r.creation_date,
   };
+}
+
+/** Nettoie les adresses importées : "null", "undefined", "x, x", virgules orphelines. */
+export function cleanAddress(value?: string | null): string {
+  if (!value) return '';
+  const cleaned = value
+    .replace(/\b(null|undefined|nan)\b/gi, '')
+    .replace(/\s*,\s*(,\s*)+/g, ', ')
+    .replace(/^[\s,.-]+|[\s,.-]+$/g, '')
+    .replace(/\s{2,}/g, ' ');
+  return cleaned.replace(/[\s,xX.-]/g, '').length > 2 ? cleaned : '';
 }
 
 export interface FetchEnrichedParams {

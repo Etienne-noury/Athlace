@@ -182,8 +182,8 @@ export default function SportDetail() {
                           {club.name}
                         </h3>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                          <MapPin className="w-4 h-4" />
-                          {club.address || `${club.postalCode} ${club.city}` || 'Adresse non précisée'}
+                          <MapPin className="w-4 h-4 shrink-0" />
+                          {[club.city, club.departmentCode ? `(${club.departmentCode})` : null].filter(Boolean).join(' ') || club.address || 'Ville non précisée'}
                         </div>
                       </Link>
                     </CardContent>

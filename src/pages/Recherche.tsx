@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, ArrowRight, List, SlidersHorizontal, X, Loader2, ExternalLink } from 'lucide-react';
+import { MapPin, ArrowRight, List, SlidersHorizontal, X, Loader2, ExternalLink, LocateFixed } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
 import { ClubCardVisual, ClubCardBody } from '@/components/clubs/ClubCardContent';
@@ -36,12 +36,23 @@ import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
 import { requestVisitorPosition, type VisitorPosition } from '@/lib/visitor-position';
 
+const DISTANCE_OPTIONS = [5, 10, 20, 50, 100];
+
 const EMPTY_RESULTS: { clubs: Club[]; total: number; radiusKm?: number } = { clubs: [], total: 0 };
 
 export default function Recherche() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const aroundRequested = searchParams.get('autour') === '1';
+  const radiusParam = Number(searchParams.get('rayon'));
+  const chosenRadius = DISTANCE_OPTIONS.includes(radiusParam) ? radiusParam : undefined;
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value) next.set(key, value); else next.delete(key);
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
   const [visitorPosition, setVisitorPosition] = useState<VisitorPosition | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'pending' | 'ready' | 'unavailable'>('idle');
   const locationPending = aroundRequested && (locationStatus === 'idle' || locationStatus === 'pending');
@@ -79,7 +90,7 @@ export default function Recherche() {
       const item = clubRefs.current.get(id);
       const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
       const list = listRef.current;
-      if (item && list && window.matchMedia('(min-width: 1024px)').matches) {
+      if (item && list && window.matchMedia('(min-width: 1280px)').matches) {
         list.scrollTo({ top: list.scrollTop + item.getBoundingClientRect().top - list.getBoundingClientRect().top - (list.clientHeight - item.clientHeight) / 2, behavior });
       } else if (item) {
         window.scrollTo({ top: window.scrollY + item.getBoundingClientRect().top - 88, behavior: 'auto' });
@@ -100,7 +111,7 @@ export default function Recherche() {
 
   useEffect(() => {
     setPage(0);
-  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, aroundRequested, visitorPosition]);
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, aroundRequested, visitorPosition, chosenRadius]);
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
@@ -122,10 +133,10 @@ export default function Recherche() {
   const cityReady = aroundRequested || searchQuery.trim().length < 2 || !cityFetching;
   const searchPosition = aroundRequested ? visitorPosition : nearCity;
   const [nearRadius, setNearRadius] = useState<number | undefined>(undefined);
-  useEffect(() => { setNearRadius(undefined); }, [searchPosition, selectedDiscipline, selectedSub, selectedRegion]);
+  useEffect(() => { setNearRadius(undefined); }, [searchPosition, selectedDiscipline, selectedSub, selectedRegion, chosenRadius]);
 
   const { data: searchResult = EMPTY_RESULTS, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, aroundRequested, searchPosition?.lat, searchPosition?.lng],
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, aroundRequested, searchPosition?.lat, searchPosition?.lng, chosenRadius],
     enabled: !locationPending && cityReady && (selectedSub === 'all' || avail.isReady),
     queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
       if (searchPosition) {
@@ -137,7 +148,7 @@ export default function Recherche() {
           region: selectedRegion,
           limit: 100,
           offset: page * 100,
-          radiusKm: page > 0 ? nearRadius : undefined,
+          radiusKm: chosenRadius ?? (page > 0 ? nearRadius : undefined),
         });
         if (page === 0) setNearRadius(r.radiusKm);
         return r;
@@ -169,6 +180,53 @@ export default function Recherche() {
     queryFn: fetchFederationSources,
   });
 
+  const updateSearchQuery = (value: string) => {
+    setSearchQuery(value);
+    if (aroundRequested && value.trim()) setUrlParam('autour', null);
+  };
+  const toggleAround = () => {
+    if (aroundRequested) {
+      setUrlParam('autour', null);
+    } else {
+      setSearchQuery('');
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('q');
+        next.set('autour', '1');
+        return next;
+      }, { replace: true });
+    }
+  };
+
+  const aroundButton = (
+    <Button type="button" variant={aroundRequested ? 'default' : 'outline'} size="sm"
+      onClick={toggleAround} aria-pressed={aroundRequested} className="-my-1.5 h-8 gap-1.5 px-3 text-xs">
+      <LocateFixed className="h-3.5 w-3.5" />
+      Autour de moi
+      {aroundRequested && <X className="h-3.5 w-3.5" aria-hidden />}
+    </Button>
+  );
+
+  const distanceFilter = (
+    <div className="min-w-0">
+      <label className="mb-2 block text-sm font-bold">Distance</label>
+      <Select value={searchPosition ? (chosenRadius ? String(chosenRadius) : 'auto') : ''}
+        onValueChange={(value) => setUrlParam('rayon', value === 'auto' ? null : value)}
+        disabled={!searchPosition}>
+        <SelectTrigger aria-label="Distance maximale" title={searchPosition ? undefined : 'Saisissez une ville ou utilisez « Autour de moi »'}>
+          <SelectValue placeholder="Choisir une ville d'abord" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="auto">Automatique</SelectItem>
+          {DISTANCE_OPTIONS.map((km) => <SelectItem key={km} value={String(km)}>Dans un rayon de {km} km</SelectItem>)}
+        </SelectContent>
+      </Select>
+      {!searchPosition && (
+        <p className="mt-1 text-xs text-muted-foreground xl:hidden">Saisissez une ville ou utilisez « Autour de moi ».</p>
+      )}
+    </div>
+  );
+
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedDiscipline('all');
@@ -183,16 +241,20 @@ export default function Recherche() {
     selectedSub !== 'all' ? selectedSub : '',
     selectedRegion !== 'all' ? selectedRegion : '',
     aroundRequested ? 'autour' : '',
+    chosenRadius ? 'rayon' : '',
   ].filter(Boolean).length;
 
 
   return (
     <Layout>
-      <div className="hidden lg:block sticky top-20 z-40 border-b border-border bg-blanc">
-        <div className="grid grid-cols-[minmax(180px,1fr)_minmax(0,2fr)_minmax(180px,1fr)_auto] items-end gap-4 px-6 py-4">
+      <div className="hidden xl:block sticky top-20 z-40 border-b border-border bg-blanc">
+        <div className="grid grid-cols-[minmax(200px,1.2fr)_minmax(0,2fr)_minmax(160px,1fr)_minmax(170px,1fr)_auto] items-end gap-4 px-6 py-4">
           <div className="min-w-0">
-            <label className="mb-2 block text-sm font-bold">Recherche</label>
-            <SearchAutocomplete value={searchQuery} onChange={setSearchQuery}
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <label className="block text-sm font-bold">Recherche</label>
+              {aroundButton}
+            </div>
+            <SearchAutocomplete value={searchQuery} onChange={updateSearchQuery}
               onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
               placeholder="Ville, code postal, sport..." iconClassName="left-3 h-4 w-4" inputClassName="pl-10" />
           </div>
@@ -209,6 +271,7 @@ export default function Recherche() {
               </SelectContent>
             </Select>
           </div>
+          {distanceFilter}
           <Button variant="ghost" onClick={clearFilters} disabled={!activeFiltersCount} className="gap-2">
             <X className="h-4 w-4" />Effacer
           </Button>
@@ -218,7 +281,7 @@ export default function Recherche() {
           {/* Mobile Filter Sheet */}
           <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
             <SheetTrigger asChild>
-              <Button aria-label="Filtres" variant="outline" className="lg:hidden mx-4 mt-4 gap-2">
+              <Button aria-label="Filtres" variant="outline" className="xl:hidden mx-4 mt-4 gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtres
                 {activeFiltersCount > 0 && (
@@ -238,10 +301,13 @@ export default function Recherche() {
               <div className="space-y-6 mt-6 flex-1">
                 {/* Same filters as sidebar */}
                 <div>
-                  <label className="text-sm font-bold mb-2 block">Recherche</label>
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <label className="text-sm font-bold block">Recherche</label>
+                    {aroundButton}
+                  </div>
                   <SearchAutocomplete
                     value={searchQuery}
-                    onChange={setSearchQuery}
+                    onChange={updateSearchQuery}
                     onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
                     placeholder="Ville, code postal, sport..."
                     iconClassName="left-3 h-4 w-4"
@@ -268,6 +334,7 @@ export default function Recherche() {
                     </SelectContent>
                   </Select>
                 </div>
+                {distanceFilter}
               </div>
               <div className="sticky bottom-0 -mx-6 -mb-6 mt-6 flex gap-3 border-t border-border bg-background px-6 py-4">
                 {activeFiltersCount > 0 && (
@@ -281,8 +348,8 @@ export default function Recherche() {
               </div>
             </SheetContent>
           </Sheet>
-      <div className="lg:grid lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
-        <div ref={listRef} className={cn('min-w-0 px-4 py-6 pb-24 lg:px-6 lg:pb-8 lg:h-[calc(100dvh-192px)] lg:overflow-y-auto lg:overscroll-contain', mobileMap && 'hidden lg:block')}>
+      <div className="xl:grid xl:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
+        <div ref={listRef} className={cn('min-w-0 px-4 py-6 pb-24 xl:px-6 xl:pb-8 xl:h-[calc(100dvh-192px)] xl:overflow-y-auto xl:overscroll-contain', mobileMap && 'hidden xl:block')}>
           <section className="mb-6">
             <h1 className="text-2xl font-black text-foreground mb-2">Rechercher un club</h1>
             <p className="text-muted-foreground">
@@ -341,7 +408,8 @@ export default function Recherche() {
             ) : (
               <div className="space-y-4">
                 {filteredClubs.map((club) => (
-                  <Link key={club.id} to={`/club/${club.id}`}
+                  <div key={club.id} className="relative">
+                  <Link to={`/club/${club.id}`}
                     ref={(node) => { if (node) clubRefs.current.set(club.id, node); else clubRefs.current.delete(club.id); }}
                     data-club-id={club.id}
                     onMouseEnter={() => setHoveredClubId(club.id)} onMouseLeave={() => setHoveredClubId(null)}
@@ -354,12 +422,7 @@ export default function Recherche() {
                       <ClubCardVisual
                         club={club}
                         className="w-24 sm:w-32 xl:w-40 min-h-36 flex-shrink-0"
-                      >
-                        <FavoriteButton
-                          clubId={club.id}
-                          className="absolute top-3 left-3 px-2 py-2 shadow-sm"
-                        />
-                      </ClubCardVisual>
+                      />
 
                       {/* Content */}
                       <div className="p-4 flex-1 min-w-0">
@@ -372,6 +435,11 @@ export default function Recherche() {
                       </div>
                     </div>
                   </Link>
+                  <FavoriteButton
+                    clubId={club.id}
+                    className="absolute top-3 left-3 z-10 px-2 py-2 shadow-sm"
+                  />
+                  </div>
                 ))}
               </div>
             )}
@@ -404,8 +472,8 @@ export default function Recherche() {
 
         </div>
         <aside aria-label="Carte des résultats" className={cn(
-          'lg:block lg:sticky lg:inset-auto lg:top-48 lg:self-start lg:h-[calc(100dvh-192px)]',
-          mobileMap ? 'fixed inset-x-0 bottom-0 top-16 z-30' : 'hidden',
+          'xl:block xl:sticky xl:inset-auto xl:top-48 xl:self-start xl:h-[calc(100dvh-192px)]',
+          mobileMap ? 'fixed inset-x-0 bottom-0 top-16 lg:top-20 z-30' : 'hidden',
         )}>
           <FranceMap height="100%" selectedDiscipline={selectedDiscipline} selectedSub={selectedSub}
             selectedRegion={selectedRegion} searchQuery={searchPosition ? '' : searchQuery}
@@ -413,12 +481,12 @@ export default function Recherche() {
             searchMode searchReady={!locationPending && cityReady && !isLoading}
             highlightedClubId={hoveredClubId ?? selectedClubId} onClubClick={selectMapClub}
             className="rounded-none border-0 border-l shadow-none" />
-          {mobileMap && <Button variant="outline" className="absolute top-4 right-4 z-10 lg:hidden gap-2" onClick={() => setFiltersOpen(true)}>
+          {mobileMap && <Button variant="outline" className="absolute top-4 right-4 z-10 xl:hidden gap-2" onClick={() => setFiltersOpen(true)}>
             <SlidersHorizontal className="h-4 w-4" />Filtres
           </Button>}
         </aside>
       </div>
-      <Button className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden gap-2 shadow-lg"
+      <Button className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 xl:hidden gap-2 shadow-lg"
         onClick={() => setMobileMap((value) => !value)}>
         {mobileMap ? <List className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
         {mobileMap ? 'Liste' : 'Carte'}

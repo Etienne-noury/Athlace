@@ -14,6 +14,7 @@ import {
   HelpCircle,
   Compass,
   Map,
+  LocateFixed,
   Newspaper,
   Calendar,
   Landmark,
@@ -73,18 +74,59 @@ const navItems: NavItem[] = [
   },
 ];
 
-const localisationMenuLinks = [
-  { label: 'Par région', href: '/clubs/tout/region/', icon: MapPin },
-  { label: 'Par département', href: null, soon: true, icon: MapPin },
-  { label: 'Par ville', href: '/clubs/tout/ville/', icon: MapPin },
-  { label: 'Autour de moi', href: '/clubs/?autour=1', icon: Map },
+type MenuLink = { label: string; description: string; href: string | null; icon: typeof Compass };
+
+const localisationMenuLinks: MenuLink[] = [
+  { label: 'Autour de moi', description: 'Les clubs proches de votre position', href: '/clubs/?autour=1', icon: LocateFixed },
+  { label: 'Par ville', description: 'Toutes les villes référencées', href: '/clubs/tout/ville/', icon: MapPin },
+  { label: 'Par région', description: 'Les clubs région par région', href: '/clubs/tout/region/', icon: Map },
+  { label: 'Par département', description: 'Bientôt disponible', href: null, icon: MapPin },
 ];
 
-const decouvrirMenuLinks = [
-  { label: 'Le journal', href: '/blog/', icon: Newspaper },
-  { label: 'Événements', href: '/evenements/', icon: Calendar },
-  { label: 'Fédérations', href: '/federations/', icon: Landmark },
+const topCities = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'];
+
+const decouvrirGuides: MenuLink[] = [
+  { label: 'Comment choisir son club ?', description: 'Les critères pour trouver le bon club', href: '/blog/comment-choisir-son-club/', icon: Compass },
+  { label: 'Guide des licences fédérales', description: 'Prix et fonctionnement des licences', href: '/blog/guide-licences-federations/', icon: Landmark },
+  { label: 'Fiches sport par sport', description: 'Règles, équipement, clubs près de chez vous', href: '/blog/fiches-sport-par-sport/', icon: Newspaper },
 ];
+
+const decouvrirMenuLinks: MenuLink[] = [
+  { label: 'Le journal', description: 'Actualités et conseils', href: '/blog/', icon: Newspaper },
+  { label: 'Événements', description: 'Compétitions et rendez-vous à venir', href: '/evenements/', icon: Calendar },
+  { label: 'Fédérations', description: 'Les fédérations agréées par l\'État', href: '/federations/', icon: Landmark },
+];
+
+/** Lien de méga-menu : même rendu dans les trois menus. */
+function MegaMenuLink({ link, onClick }: { link: MenuLink; onClick?: () => void }) {
+  const body = (
+    <>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-creme text-primary">
+        <link.icon className="h-4 w-4" />
+      </span>
+      <span className="min-w-0">
+        <span className="flex items-center gap-2 text-sm font-bold text-foreground">
+          {link.label}
+          {!link.href && <SoonBadge />}
+        </span>
+        <span className="block text-xs text-muted-foreground">{link.description}</span>
+      </span>
+    </>
+  );
+  if (!link.href) {
+    return <span className="flex items-start gap-3 rounded-lg p-2 opacity-60 cursor-not-allowed" aria-disabled="true">{body}</span>;
+  }
+  return (
+    <Link to={link.href} onClick={onClick} className="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+      {body}
+    </Link>
+  );
+}
+
+/** En-tête de colonne de méga-menu. */
+function MegaMenuHeading({ children }: { children: React.ReactNode }) {
+  return <h3 className="mb-2 px-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{children}</h3>;
+}
 
 type Avail = ReturnType<typeof useAvailableDisciplines>;
 
@@ -130,6 +172,7 @@ export function Header() {
   // Close the mobile menu whenever the route changes
   useEffect(() => {
     setIsMenuOpen(false);
+    setActiveMega(null);
   }, [location.pathname, location.search]);
 
   // Prevent background scroll while the mobile panel is open
@@ -175,7 +218,9 @@ export function Header() {
 
 
             {navItems.map((item) => {
-              const isActive = !!item.href && (location.pathname === item.href || location.pathname.startsWith(item.href));
+              const isActive = item.id === 'decouvrir'
+                ? ['/blog/', '/evenements/', '/federations/'].some((path) => location.pathname.startsWith(path))
+                : !!item.href && (location.pathname === item.href || location.pathname.startsWith(item.href));
               return (
                 <div
                   key={item.id}
@@ -206,9 +251,13 @@ export function Header() {
                   ) : (
                     <button
                       type="button"
+                      aria-expanded={activeMega === item.id}
+                      onClick={() => setActiveMega(activeMega === item.id ? null : item.id)}
                       className={cn(
                         "px-3 py-2 rounded-lg font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
-                        "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        isActive
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                     >
                       {item.label}
@@ -218,12 +267,7 @@ export function Header() {
 
                   {/* Mega menu */}
                   {item.megaMenu && activeMega === item.id && (
-                    <div
-                      className={cn(
-                        'fixed left-1/2 -translate-x-1/2 top-16 lg:top-20',
-                        item.type === 'decouvrir' ? 'w-64' : 'w-[900px] max-w-[95vw]'
-                      )}
-                    >
+                    <div className="fixed left-1/2 -translate-x-1/2 top-16 lg:top-20 w-[900px] max-w-[95vw]">
                       <div className="h-3 w-full" />
                       <div className="bg-popover border border-border rounded-xl shadow-xl p-6">
                         {item.type === 'sports' && (
@@ -266,66 +310,49 @@ export function Header() {
 
 
                         {item.type === 'clubs' && (
-                          <div className="grid grid-cols-2 gap-8">
+                          <div className="grid grid-cols-[1fr_1.4fr] gap-8">
                             <div>
-                              <h3 className="font-sans font-bold text-foreground mb-3">Trouver par localisation</h3>
-                              <ul className="space-y-2">
-                                {localisationMenuLinks.map((link) => (
-                                  <li key={link.label}>
-                                    {link.href ? (
-                                      <Link
-                                        to={link.href}
-                                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                      >
-                                        <link.icon className="h-4 w-4" />
-                                        {link.label}
-                                      </Link>
-                                    ) : (
-                                      <span
-                                        className="flex items-center gap-2 text-sm text-muted-foreground opacity-60 cursor-not-allowed"
-                                        aria-disabled="true"
-                                      >
-                                        <link.icon className="h-4 w-4" />
-                                        {link.label}
-                                        <SoonBadge />
-                                      </span>
-                                    )}
-                                  </li>
-                                ))}
-                              </ul>
+                              <MegaMenuHeading>Rechercher</MegaMenuHeading>
+                              <div className="space-y-1">
+                                {localisationMenuLinks.map((link) => <MegaMenuLink key={link.label} link={link} />)}
+                              </div>
                             </div>
                             <div>
-                              <h3 className="font-sans font-bold text-foreground mb-3">Top villes</h3>
-                              <ul className="space-y-2">
-                                {['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'].map((city) => (
-                                  <li key={city}>
-                                    <Link
-                                      to={`/clubs/?q=${encodeURIComponent(city)}`}
-                                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      Clubs à {city}
-                                    </Link>
-                                  </li>
+                              <MegaMenuHeading>Villes populaires</MegaMenuHeading>
+                              <div className="grid grid-cols-2 gap-1">
+                                {topCities.map((city) => (
+                                  <Link
+                                    key={city}
+                                    to={`/clubs/?q=${encodeURIComponent(city)}`}
+                                    className="flex items-center gap-2 rounded-lg p-2 text-sm text-foreground transition-colors hover:bg-muted"
+                                  >
+                                    <MapPin className="h-4 w-4 text-primary" />
+                                    Clubs à {city}
+                                  </Link>
                                 ))}
-                              </ul>
+                              </div>
+                              <Link to="/clubs/tout/ville/" className="mt-3 inline-block px-2 text-sm font-bold text-primary hover:underline">
+                                Toutes les villes →
+                              </Link>
                             </div>
                           </div>
                         )}
 
                         {item.type === 'decouvrir' && (
-                          <ul className="space-y-2">
-                            {decouvrirMenuLinks.map((link) => (
-                              <li key={link.href}>
-                                <Link
-                                  to={link.href}
-                                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                  <link.icon className="h-4 w-4" />
-                                  {link.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="grid grid-cols-2 gap-8">
+                            <div>
+                              <MegaMenuHeading>Guides pratiques</MegaMenuHeading>
+                              <div className="space-y-1">
+                                {decouvrirGuides.map((link) => <MegaMenuLink key={link.label} link={link} />)}
+                              </div>
+                            </div>
+                            <div>
+                              <MegaMenuHeading>Le sport en France</MegaMenuHeading>
+                              <div className="space-y-1">
+                                {decouvrirMenuLinks.map((link) => <MegaMenuLink key={link.label} link={link} />)}
+                              </div>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -514,10 +541,10 @@ export function Header() {
                   </AccordionTrigger>
                   <AccordionContent>
                     <ul className="flex flex-col gap-1 px-4 pb-2">
-                      {decouvrirMenuLinks.map((link) => (
+                      {[...decouvrirGuides, ...decouvrirMenuLinks].map((link) => (
                         <li key={link.href}>
                           <Link
-                            to={link.href}
+                            to={link.href ?? '/blog/'}
                             onClick={() => setIsMenuOpen(false)}
                             className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
                           >
