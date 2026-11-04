@@ -376,7 +376,52 @@ export function FranceMap({
     layer.clearLayers();
     resultMarkersRef.current.clear();
 
+    // Plusieurs clubs exactement au même endroit : un seul marqueur avec le nombre, et la liste au clic.
+    const byPosition = new Map<string, typeof displayedClubs>();
     displayedClubs.forEach((club) => {
+      const key = `${club.coordinates.lat.toFixed(5)},${club.coordinates.lng.toFixed(5)}`;
+      byPosition.set(key, [...(byPosition.get(key) ?? []), club]);
+    });
+    byPosition.forEach((group) => {
+      if (group.length < 2) return;
+      const { lat, lng } = group[0].coordinates;
+      const marker = L.marker([lat, lng], {
+        icon: L.divIcon({
+          html: `<span aria-label="${group.length} clubs à cette adresse">${group.length}</span>`,
+          className: "athlace-cluster athlace-cluster--sm",
+          iconSize: L.point(36, 36),
+        }),
+        title: `${group.length} clubs à cette adresse`,
+      });
+      const list = document.createElement("div");
+      list.style.minWidth = "220px";
+      const heading = document.createElement("div");
+      heading.style.cssText = "font-weight:700; margin-bottom:6px;";
+      heading.textContent = `${group.length} clubs à cette adresse`;
+      list.appendChild(heading);
+      const ul = document.createElement("ul");
+      ul.style.cssText = "max-height:220px; overflow:auto; margin:0; padding:0; list-style:none;";
+      group.forEach((club) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `/club/${club.id}`;
+        a.textContent = `${club.name} · ${club.disciplineName}`;
+        a.style.cssText = "display:block; padding:4px 0; color:hsl(var(--primary));";
+        if (searchMode && onClubClick) {
+          a.addEventListener("click", (event) => { event.preventDefault(); onClubClick(club.id); });
+        }
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      list.appendChild(ul);
+      marker.bindPopup(list, { closeButton: true });
+      group.forEach((club) => resultMarkersRef.current.set(club.id, marker));
+      marker.addTo(layer);
+    });
+
+    displayedClubs.forEach((club) => {
+      const key = `${club.coordinates.lat.toFixed(5)},${club.coordinates.lng.toFixed(5)}`;
+      if ((byPosition.get(key)?.length ?? 0) > 1) return;
       const discipline = getDisciplineById(club.discipline);
       const icon = discipline?.icon ?? "🏆";
       const disciplineName = club.disciplineName;
@@ -417,9 +462,12 @@ export function FranceMap({
     if (!map || clubs === undefined) return;
     layerRef.current?.clearLayers();
     const group = L.markerClusterGroup({
-      maxClusterRadius: isSmallScreen ? 65 : 55,
-      disableClusteringAtZoom: INDIVIDUAL_ZOOM,
+      // Rayon de regroupement réduit au zoom quartier, mais jamais nul : des clubs déclarés à la même
+      // adresse (même gymnase, ou position approximative au centre de la commune) restent regroupés
+      // et s'écartent en éventail au clic au lieu de se superposer en un seul point.
+      maxClusterRadius: (zoom: number) => (zoom >= INDIVIDUAL_ZOOM ? 12 : isSmallScreen ? 65 : 55),
       spiderfyOnMaxZoom: true,
+      spiderfyDistanceMultiplier: 1.6,
       showCoverageOnHover: false,
       iconCreateFunction: (cluster) => {
         const count = cluster.getChildCount();
