@@ -225,6 +225,13 @@
       "when": 1793747381730,
       "tag": "0031_athlete_favorites_and_alerts",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1793828972432,
+      "tag": "0032_hide_clubs_from_public_directory",
+      "breakpoints": true
     }
   ]
 }

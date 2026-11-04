@@ -16,3 +16,7 @@
 - [x] Construire l’accueil connecté, les trois onglets favoris et les alertes.
 - [x] Adapter les adresses du compte et les liens du header sans modifier l’authentification ni l’espace club.
 - [x] Tester sauvegarde, suppression, préférences et affichage connecté desktop/mobile.
+
+# Clubs masqués
+- [x] Ajouter is_hidden et exclure les clubs masqués des données publiques et RPC.
+- [x] Protéger l’import CSV et tester la conservation du masquage.
