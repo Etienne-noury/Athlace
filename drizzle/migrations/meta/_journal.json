@@ -232,6 +232,13 @@
       "when": 1793828972432,
       "tag": "0032_hide_clubs_from_public_directory",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1794005000000,
+      "tag": "0033_revoke_public_view_writes",
+      "breakpoints": true
     }
   ]
 }
