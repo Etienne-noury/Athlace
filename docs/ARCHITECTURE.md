@@ -27,6 +27,8 @@ Le navigateur ne détient jamais de secret : il parle à Supabase avec la clé p
 | `profiles`, `favorites` | chaque utilisateur voit les siens | idem |
 | `user_roles` | chaque utilisateur voit les siens | aucune écriture depuis le navigateur |
 
+**Règle des vues publiques** : `clubs_public` lit `clubs` avec les droits de son propriétaire (elle contourne la RLS pour n'exposer que des colonnes sûres). Elle ne doit donc avoir que le droit `SELECT` pour `anon` et `authenticated`. Toute nouvelle vue publique suit la même règle (voir `drizzle/migrations/0033_revoke_public_view_writes.sql`).
+
 Le rôle admin est vérifié côté serveur par `private.has_role(uid, 'admin')` (SQL) et `requireAdmin()` (fonctions edge).
 
 ## Parcours clés
