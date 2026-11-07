@@ -239,6 +239,13 @@
       "when": 1794005000000,
       "tag": "0033_revoke_public_view_writes",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1794059000000,
+      "tag": "0034_federation_scraping_status",
+      "breakpoints": true
     }
   ]
 }

@@ -965,6 +965,36 @@ export type Database = {
         }
         Relationships: []
       }
+      federation_scraping_status: {
+        Row: {
+          block_reason: string | null
+          last_scraped_on: string | null
+          next_step: string | null
+          sigle: string
+          source_total: number | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          block_reason?: string | null
+          last_scraped_on?: string | null
+          next_step?: string | null
+          sigle: string
+          source_total?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          block_reason?: string | null
+          last_scraped_on?: string | null
+          next_step?: string | null
+          sigle?: string
+          source_total?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       federations_sportives: {
         Row: {
           categorie: string
