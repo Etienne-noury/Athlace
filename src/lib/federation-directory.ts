@@ -28,13 +28,21 @@ const LEGACY_CODES: Record<string, string[]> = {
   'FFP-PARA': ['FFP'], FFP: ['FFPOLO'],
 };
 
-export function getFederationStats(sigle: string | null, rows: FederationClubStats[]) {
+export function isFederationRow(
+  sigle: string | null,
+  row: { federation_code: string; discipline: string },
+  sports: SportNode[] = getFederationSports(sigle),
+) {
   const code = sigle?.toUpperCase() ?? '';
+  const rowCode = row.federation_code.toUpperCase();
+  const matchesSport = sports.some((sport) => sport.match.includes(row.discipline));
+  return (rowCode === code && (code !== 'FFP' || matchesSport)) ||
+    ((LEGACY_CODES[code] ?? []).includes(rowCode) && matchesSport);
+}
+
+export function getFederationStats(sigle: string | null, rows: FederationClubStats[]) {
   const sports = getFederationSports(sigle);
-  const relevant = rows.filter((row) => (row.federation_code.toUpperCase() === code &&
-    (code !== 'FFP' || sports.some((sport) => sport.match.includes(row.discipline)))) ||
-    ((LEGACY_CODES[code] ?? []).includes(row.federation_code.toUpperCase()) &&
-      sports.some((sport) => sport.match.includes(row.discipline))));
+  const relevant = rows.filter((row) => isFederationRow(sigle, row, sports));
   const disciplines = sports.flatMap((sport) => {
     const names = new Set(relevant.filter((row) => sport.match.includes(row.discipline)).flatMap((row) => row.subs));
     const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? [])]);

@@ -1505,6 +1505,16 @@ export type Database = {
         }[]
       }
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
+      admin_scraping_stats: {
+        Args: never
+        Returns: {
+          clubs: number
+          discipline: string
+          federation_code: string
+          gps: number
+          last_import: string
+        }[]
+      }
       federation_club_stats: {
         Args: never
         Returns: {

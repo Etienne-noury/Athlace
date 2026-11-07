@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { fetchFederationClubStats, getFederationStats } from '@/lib/federation-directory';
+import { isFederationRow } from '@/lib/federation-directory';
 
 type Status = 'done' | 'in_progress' | 'to_import' | 'blocked' | 'todo';
 
@@ -17,6 +17,7 @@ interface Row {
   source_total: number | null;
   last_scraped_on: string | null;
   clubs: number;
+  gps: number;
 }
 
 const STATUS: Record<Status, { label: string; bar: string; badge: string }> = {
@@ -36,22 +37,40 @@ function StatusBadge({ status }: { status: Status }) {
 
 function Kpi({ label, value, alert }: { label: string; value: string; alert?: boolean }) {
   return (
-    <Card className={`p-4 ${alert ? 'border-2 border-destructive' : ''}`}>
-      <p className="text-small text-muted-foreground">{label}</p>
-      <p className={`mt-1 text-headline-sm ${alert ? 'text-destructive' : 'text-nuit'}`}>{value}</p>
+    <Card className={`flex flex-col justify-between gap-2 p-4 ${alert ? 'border-2 border-destructive' : ''}`}>
+      <p className="text-small leading-tight text-muted-foreground">{label}</p>
+      <p className={`whitespace-nowrap text-subhead font-black tabular-nums ${alert ? 'text-destructive' : 'text-nuit'}`}>{value}</p>
     </Card>
   );
 }
 
 function EditableCell({ row, field, onSave }: { row: Row; field: 'block_reason' | 'next_step'; onSave: (sigle: string, patch: Partial<Row>) => void }) {
+  const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(row[field] ?? '');
+  if (!editing) {
+    return (
+      <button
+        type="button"
+        className="w-full rounded-md px-1 py-0.5 text-left text-small hover:bg-muted"
+        title="Cliquer pour modifier"
+        onClick={() => { setValue(row[field] ?? ''); setEditing(true); }}
+      >
+        {row[field] || <span className="text-muted-foreground">Ajouter…</span>}
+      </button>
+    );
+  }
   return (
     <textarea
-      className="min-h-8 w-full min-w-48 resize-y rounded-md border border-transparent bg-transparent px-1 text-small hover:border-border focus:border-input focus:outline-none"
-      rows={1}
+      autoFocus
+      className="w-full rounded-md border border-input bg-background px-1 py-0.5 text-small focus:outline-none"
+      rows={Math.max(2, Math.ceil(value.length / 35))}
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      onBlur={() => { if ((row[field] ?? '') !== value) onSave(row.sigle, { [field]: value.trim() || null }); }}
+      onKeyDown={(e) => { if (e.key === 'Escape') setEditing(false); }}
+      onBlur={() => {
+        setEditing(false);
+        if ((row[field] ?? '') !== value.trim()) onSave(row.sigle, { [field]: value.trim() || null });
+      }}
     />
   );
 }
@@ -74,23 +93,38 @@ export function ScrapingAdmin() {
       return { feds: feds ?? [], statuses: statuses ?? [] };
     },
   });
-  const statsQuery = useQuery({ queryKey: ['admin-scraping-club-stats'], queryFn: fetchFederationClubStats });
+  const statsQuery = useQuery({
+    queryKey: ['admin-scraping-club-stats'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_scraping_stats');
+      if (error) throw error;
+      return (data ?? []).map((r) => ({ ...r, clubs: Number(r.clubs), gps: Number(r.gps) }));
+    },
+    refetchOnWindowFocus: true,
+  });
 
   const rows = useMemo<Row[]>(() => {
     if (!statusQuery.data || !statsQuery.data) return [];
     const bySigle = new Map(statusQuery.data.statuses.map((s) => [s.sigle, s]));
     return statusQuery.data.feds.map((f) => {
       const s = bySigle.get(f.sigle);
+      const stats = statsQuery.data.filter((r) => isFederationRow(f.sigle, r));
+      const clubs = stats.reduce((a, r) => a + r.clubs, 0);
+      const lastImport = stats.reduce<string | null>((max, r) => (r.last_import && (!max || r.last_import > max) ? r.last_import : max), null);
+      // Statut automatique : des clubs en base font passer une fédé "à tenter", "à importer" ou "bloquée" en "en base".
+      const manual = (s?.status ?? 'todo') as Status;
+      const status: Status = clubs > 0 && ['todo', 'to_import', 'blocked'].includes(manual) ? 'done' : manual;
       return {
         sigle: f.sigle,
         nom: f.nom,
         categorie: f.categorie,
-        status: (s?.status ?? 'todo') as Status,
+        status,
         block_reason: s?.block_reason ?? null,
         next_step: s?.next_step ?? null,
         source_total: s?.source_total ?? null,
-        last_scraped_on: s?.last_scraped_on ?? null,
-        clubs: getFederationStats(f.sigle, statsQuery.data).count,
+        last_scraped_on: lastImport ?? s?.last_scraped_on ?? null,
+        clubs,
+        gps: stats.reduce((a, r) => a + r.gps, 0),
       };
     });
   }, [statusQuery.data, statsQuery.data]);
@@ -140,11 +174,11 @@ export function ScrapingAdmin() {
         {saveError && <p className="text-small text-destructive">Enregistrement impossible : {saveError}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-        <Kpi label="Fédérations en base" value={`${count('done')} / ${total}`} />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <Kpi label={`Fédés en base (sur ${total})`} value={String(count('done'))} />
         <Kpi label="Clubs visibles" value={fr.format(rows.reduce((a, r) => a + r.clubs, 0))} />
-        <Kpi label={lastDate ? `Fédés du ${fmtDate(lastDate)}` : 'Dernier lot'} value={String(lastBatch.length)} />
-        <Kpi label="En cours / à importer" value={String(ongoing.length)} />
+        <Kpi label={lastDate ? `Importées le ${fmtDate(lastDate)}` : 'Dernier lot'} value={String(lastBatch.length)} />
+        <Kpi label="En cours" value={String(ongoing.length)} />
         <Kpi label="Bloquées" value={String(count('blocked'))} alert />
         <Kpi label="Pas encore tentées" value={String(todo.length)} />
       </div>
@@ -169,7 +203,7 @@ export function ScrapingAdmin() {
         <p className="text-small text-muted-foreground">Ce qu'on n'arrive pas à scraper, la raison et la piste pour l'avoir. Blocage et piste sont modifiables.</p>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-small">
-            <thead><tr className="text-left text-muted-foreground"><th className="py-2 pr-4">Sigle</th><th className="pr-4">Fédération</th><th className="pr-4">Statut</th><th className="pr-4">Blocage</th><th>Piste</th></tr></thead>
+            <thead><tr className="text-left text-muted-foreground"><th className="py-2 pr-4">Sigle</th><th className="pr-4">Fédération</th><th className="pr-4">Statut</th><th className="min-w-56 pr-4">Blocage</th><th className="min-w-56">Piste</th></tr></thead>
             <tbody>
               {toUnblock.map((r) => (
                 <tr key={r.sigle} className="border-t border-border align-top">
@@ -190,7 +224,7 @@ export function ScrapingAdmin() {
           <h3 className="text-subhead-sm text-nuit">En cours ou à importer</h3>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-small">
-              <thead><tr className="text-left text-muted-foreground"><th className="py-2 pr-4">Sigle</th><th className="pr-4">Statut</th><th className="pr-4 text-right">En base</th><th className="pr-4 text-right">Total source</th><th>Prochaine étape</th></tr></thead>
+              <thead><tr className="text-left text-muted-foreground"><th className="py-2 pr-4">Sigle</th><th className="pr-4">Statut</th><th className="pr-4 text-right">En base</th><th className="pr-4 text-right">Total source</th><th className="min-w-48">Prochaine étape</th></tr></thead>
               <tbody>
                 {ongoing.map((r) => (
                   <tr key={r.sigle} className="border-t border-border align-top">
@@ -247,7 +281,7 @@ export function ScrapingAdmin() {
         <Input className="mt-3 max-w-sm" type="search" placeholder="Chercher une fédé, un sigle, un statut" value={search} onChange={(e) => setSearch(e.target.value)} />
         <div className="mt-3 max-h-[36rem] overflow-auto">
           <table className="w-full text-small">
-            <thead className="sticky top-0 bg-card"><tr className="text-left text-muted-foreground">{th('sigle', 'Sigle')}{th('nom', 'Fédération')}{th('categorie', 'Catégorie')}{th('status', 'Statut')}{th('clubs', 'Clubs', true)}</tr></thead>
+            <thead className="sticky top-0 bg-card"><tr className="text-left text-muted-foreground">{th('sigle', 'Sigle')}{th('nom', 'Fédération')}{th('categorie', 'Catégorie')}{th('status', 'Statut')}{th('clubs', 'Clubs', true)}{th('gps', 'Avec GPS', true)}</tr></thead>
             <tbody>
               {allRows.map((r) => (
                 <tr key={r.sigle} className="border-t border-border">
@@ -270,6 +304,7 @@ export function ScrapingAdmin() {
                       {fr.format(r.clubs)}
                     </div>
                   </td>
+                  <td className="py-2 pr-4 text-right tabular-nums">{fr.format(r.gps)}</td>
                 </tr>
               ))}
             </tbody>
