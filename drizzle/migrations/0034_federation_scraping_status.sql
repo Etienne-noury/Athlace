@@ -12,6 +12,7 @@ REVOKE ALL ON public.federation_scraping_status FROM anon, PUBLIC;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.federation_scraping_status TO authenticated;
 GRANT ALL ON public.federation_scraping_status TO service_role;
 ALTER TABLE public.federation_scraping_status ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Admins manage scraping status" ON public.federation_scraping_status;
 CREATE POLICY "Admins manage scraping status" ON public.federation_scraping_status FOR ALL TO authenticated
   USING (private.has_role(auth.uid(), 'admin')) WITH CHECK (private.has_role(auth.uid(), 'admin'));
 
