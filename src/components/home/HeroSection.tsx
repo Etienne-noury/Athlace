@@ -2,19 +2,11 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, ChevronDown, Map } from 'lucide-react';
+import { ChevronDown, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { getParentDisciplines } from '@/data/disciplines';
-import { regions } from '@/data/clubs';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { formatCount, formatExact } from '@/lib/format-stats';
 
@@ -24,7 +16,7 @@ export function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiscipline, setSelectedDiscipline] = useState('all');
   const [selectedSub, setSelectedSub] = useState('all');
-  const [selectedRegion, setSelectedRegion] = useState('');
+  const [aroundMe, setAroundMe] = useState(false);
 
   // Get parent disciplines organized by category
   const parentDisciplines = getParentDisciplines();
@@ -41,10 +33,10 @@ export function HeroSection() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchQuery) params.set('q', searchQuery);
+    if (aroundMe) params.set('autour', '1');
+    else if (searchQuery) params.set('q', searchQuery);
     if (selectedDiscipline !== 'all') params.set('discipline', selectedDiscipline);
     if (selectedSub !== 'all') params.set('sous-discipline', selectedSub);
-    if (selectedRegion) params.set('region', selectedRegion);
     navigate(`/clubs/?${params.toString()}`);
   };
 
@@ -91,16 +83,14 @@ export function HeroSection() {
               <div className="flex flex-col lg:flex-row gap-3">
                 {/* Search Input */}
                 <SearchAutocomplete
-                  onLocate={() => {
-                    const params = new URLSearchParams({ autour: '1' });
-                    if (selectedDiscipline !== 'all') params.set('discipline', selectedDiscipline);
-                    navigate(`/clubs/?${params.toString()}`);
-                  }}
+                  onLocate={() => { setSearchQuery(''); setAroundMe(true); }}
+                  aroundActive={aroundMe}
+                  onClearAround={() => setAroundMe(false)}
                   className="flex-1 min-w-0 lg:min-w-[220px]"
                   value={searchQuery}
-                  onChange={setSearchQuery}
+                  onChange={(value) => { setSearchQuery(value); if (value.trim()) setAroundMe(false); }}
                   onPickSport={(id) => { setSelectedDiscipline(id); setSelectedSub('all'); }}
-                  placeholder="Ville, code postal, sport ou club..."
+                  placeholder="Ville, sport ou club…"
                   inputClassName="pl-12 h-14 text-base border-0 bg-muted focus-visible:ring-primary"
                 />
 
@@ -114,24 +104,9 @@ export function HeroSection() {
                   showSub={false}
                   layout="inline"
                   className="w-full lg:w-auto"
-                  triggerClassName="h-14 w-full lg:w-56 border-0 bg-muted"
+                  triggerClassName="h-14 w-full lg:w-64 border-0 bg-muted"
                   contentClassName="z-[2000]"
                 />
-
-                {/* Region Select */}
-                <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                  <SelectTrigger className="h-14 w-full lg:w-48 border-0 bg-muted text-left [&>span]:flex-1 [&>span]:text-left">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Région" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card z-[2000]">
-                    {regions.map((region) => (
-                      <SelectItem key={region} value={region}>
-                        {region}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
 
                 {/* Search Button */}
                 <Button type="submit" size="lg" className="h-14 px-8 text-lg font-bold">
