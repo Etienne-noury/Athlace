@@ -60,7 +60,7 @@ export function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
             <span className="text-sm font-bold text-creme">
-              🇫🇷 {isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(stats.federations_covered)} fédérations agréées` : 'Clubs sportifs référencés en France'}
+              🇫🇷 {isReady && avail.isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(avail.availableSportCount)} sports` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
 
