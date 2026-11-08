@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, ArrowRight, List, SlidersHorizontal, X, Loader2, ExternalLink, LocateFixed } from 'lucide-react';
+import { MapPin, ArrowRight, List, SlidersHorizontal, X, Loader2, LocateFixed } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
 import { ClubCardVisual, ClubCardBody } from '@/components/clubs/ClubCardContent';
@@ -31,7 +31,6 @@ import { fetchEnrichedClubs } from '@/lib/api/enriched-clubs';
 import { fetchClubsNear, resolveCity } from '@/lib/api/geo-search';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import type { EnrichedClub as Club } from '@/lib/api/enriched-clubs';
-import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { cn } from '@/lib/utils';
 import { FranceMap } from '@/components/map/FranceMap';
 import { requestVisitorPosition, reversePlaceName, VisitorPositionError, POSITION_FAILURE_MESSAGES, type PositionFailure, type VisitorPosition } from '@/lib/visitor-position';
@@ -184,11 +183,6 @@ export default function Recherche() {
     if (listRef.current) listRef.current.scrollTop = 0;
   }, [filteredClubs]);
 
-
-  const { data: federationSources = [] } = useQuery({
-    queryKey: ['federations'],
-    queryFn: fetchFederationSources,
-  });
 
   const updateSearchQuery = (value: string) => {
     setSearchQuery(value);
@@ -378,33 +372,6 @@ export default function Recherche() {
               </div>
             )}
           </section>
-        {/* Bandeau annuaire fédéral */}
-        {(() => {
-          const fed = getFederationForDiscipline(selectedDiscipline, federationSources);
-          if (!fed) return null;
-          const url = fed.buildSearchUrl({ city: searchQuery, postalCode: searchQuery });
-          return (
-            <div className="mb-6 rounded-2xl border border-border bg-creme p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <div className="text-3xl" aria-hidden>{fed.icon}</div>
-              <div className="flex-1">
-                <p className="font-sans font-bold text-foreground">
-                  Annuaire officiel - {fed.name}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Retrouvez l'exhaustivité des clubs affiliés{searchQuery ? ` à "${searchQuery}"` : ''} sur le site fédéral.
-                </p>
-              </div>
-              <Button asChild variant="default" className="gap-2">
-                <a href={url} target="_blank" rel="noopener noreferrer">
-                  Voir l'annuaire <ExternalLink className="w-4 h-4" />
-                </a>
-              </Button>
-            </div>
-          );
-        })()}
-
-
-
             {/* Results */}
             {locationPending || isLoading ? (
               <div className="text-center py-16">
