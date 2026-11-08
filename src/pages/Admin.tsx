@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Papa from "papaparse";
 import { supabase } from "@/integrations/supabase/client";
@@ -182,6 +182,19 @@ export default function Admin() {
   const [clResult, setClResult] = useState<{ upserted: number; errors: number; lastError: string; ignored: string[]; venues: number; schedules: number; jsonErrors: number } | null>(null);
 
   const queryClient = useQueryClient();
+
+  // Suivi en direct : toutes les données de la page sont relues toutes les 30 s (et au retour sur l'onglet).
+  const [lastRefresh, setLastRefresh] = useState(() => new Date());
+  useEffect(() => {
+    const refresh = () => {
+      queryClient.invalidateQueries({ refetchType: "active" });
+      setLastRefresh(new Date());
+    };
+    const timer = window.setInterval(() => { if (!document.hidden) refresh(); }, 30_000);
+    const onVisible = () => { if (!document.hidden) refresh(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", onVisible); };
+  }, [queryClient]);
 
   // Compteurs en direct, lus depuis la vue publique des clubs (miroir de la table clubs).
   const { data: stats } = useQuery({
@@ -486,9 +499,15 @@ export default function Admin() {
   };
 
   return (
-    <div className="container mx-auto max-w-2xl py-10 space-y-10">
+    <div className="container mx-auto max-w-6xl py-10 space-y-10">
       <header className="space-y-6">
-        <h1 className="font-sans text-3xl font-black text-nuit">Administration Athlace</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h1 className="font-sans text-3xl font-black text-nuit">Administration Athlace</h1>
+          <p className="inline-flex items-center gap-2 text-small text-muted-foreground">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-lime" aria-hidden="true" />
+            En direct, actualisé à {lastRefresh.toLocaleTimeString("fr-FR")}
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-2xl bg-creme p-4">
