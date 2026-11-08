@@ -119,7 +119,8 @@ export function ScrapingAdmin() {
         nom: f.nom,
         categorie: f.categorie,
         status,
-        block_reason: s?.block_reason ?? null,
+        // Une fédé débloquée automatiquement (des clubs sont arrivés) ne garde pas son ancien blocage.
+        block_reason: status === manual ? s?.block_reason ?? null : null,
         next_step: s?.next_step ?? null,
         source_total: s?.source_total ?? null,
         last_scraped_on: lastImport ?? s?.last_scraped_on ?? null,
