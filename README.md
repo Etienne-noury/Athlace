@@ -35,6 +35,13 @@ npm run lint       # ESLint
 npm test           # tests Vitest
 ```
 
+Hors de Lovable, `npm install` peut échouer en 403 : le `package-lock.json` pointe pour quelques paquets vers le miroir npm privé de Lovable, et il n'est pas tout à fait synchronisé avec `package.json`. Contournement local, sans committer le fichier modifié :
+
+```sh
+sed -i 's#https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/#https://registry.npmjs.org/#g' package-lock.json
+npm install && git checkout package-lock.json
+```
+
 Les variables nécessaires sont dans `.env` (URL et clé publique Supabase). Tout ce qui commence par `VITE_` est inclus dans le code envoyé au navigateur : **n'y mettre aucun secret**. Les secrets (clé `service_role`, clés d'API) se configurent uniquement dans les réglages des fonctions edge Supabase.
 
 ## Sécurité, en bref
