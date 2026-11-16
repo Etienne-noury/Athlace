@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -40,6 +40,28 @@ const preventKeyboardOnTouch = (event: Event) => {
   }
 };
 
+const MIN_SPACE_BELOW = 320;
+
+/** Avant d'ouvrir une liste, fait défiler la page (ou le panneau) pour qu'elle tienne sous le bouton. */
+function makeRoomBelow(trigger: HTMLElement | null) {
+  if (!trigger || typeof window === 'undefined') return;
+  const rect = trigger.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  if (spaceBelow >= MIN_SPACE_BELOW) return;
+  let scroller: HTMLElement | null = trigger.parentElement;
+  while (scroller && scroller !== document.body) {
+    const style = getComputedStyle(scroller);
+    if (/(auto|scroll)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
+    scroller = scroller.parentElement;
+  }
+  const delta = Math.min(MIN_SPACE_BELOW - spaceBelow, rect.top - 72);
+  if (delta <= 0) return;
+  if (scroller && scroller !== document.body) scroller.scrollBy({ top: delta });
+  else window.scrollBy({ top: delta });
+}
+
+const LIST_MAX_HEIGHT = 'max-h-[min(60dvh,calc(var(--radix-popover-content-available-height)-64px))]';
+
 export function DisciplineFilter({
   sport,
   sub,
@@ -54,6 +76,8 @@ export function DisciplineFilter({
 }: DisciplineFilterProps) {
   const [sportOpen, setSportOpen] = useState(false);
   const [subOpen, setSubOpen] = useState(false);
+  const sportTriggerRef = useRef<HTMLButtonElement>(null);
+  const subTriggerRef = useRef<HTMLButtonElement>(null);
 
   const selectedSport = sport !== 'all' ? getDisciplineById(sport) : undefined;
   const avail = useAvailableDisciplines();
@@ -78,16 +102,17 @@ export function DisciplineFilter({
         className,
       )}
     >
-      <div className={cn('min-w-0', layout === 'inline' && 'w-full lg:w-auto')}>
+      <div className={cn('min-w-0', layout === 'inline' && 'w-full lg:w-auto', !(showSub && subs.length > 0) && 'col-span-full')}>
         {showLabels && (
           <label className="text-sm font-bold text-foreground mb-2 block">Sport</label>
         )}
-        <Popover open={sportOpen} onOpenChange={setSportOpen} modal>
+        <Popover open={sportOpen} onOpenChange={(open) => { if (open) makeRoomBelow(sportTriggerRef.current); setSportOpen(open); }} modal>
           <div className="relative">
             <PopoverTrigger asChild>
               <Button
                 type="button"
                 variant="outline"
+                ref={sportTriggerRef}
                 role="combobox"
                 aria-expanded={sportOpen}
                 aria-label="Choisir un sport"
@@ -112,12 +137,15 @@ export function DisciplineFilter({
           </div>
           <PopoverContent
             align="start"
+            side="bottom"
+            avoidCollisions={false}
+            collisionPadding={12}
             className={cn('w-[min(22rem,calc(100vw-2rem))] p-0 bg-popover', contentClassName)}
             onOpenAutoFocus={preventKeyboardOnTouch}
           >
             <Command>
               <CommandInput placeholder="Rechercher un sport…" />
-              <CommandList className="max-h-[60dvh]">
+              <CommandList className={LIST_MAX_HEIGHT}>
                 <CommandEmpty>Aucun sport trouvé.</CommandEmpty>
                 <CommandGroup>
                   <CommandItem value="Tous les sports" onSelect={() => selectSport('all')}>
@@ -172,11 +200,12 @@ export function DisciplineFilter({
               Sous-discipline
             </label>
           )}
-          <Popover open={subOpen} onOpenChange={setSubOpen} modal>
+          <Popover open={subOpen} onOpenChange={(open) => { if (open) makeRoomBelow(subTriggerRef.current); setSubOpen(open); }} modal>
             <PopoverTrigger asChild>
               <Button
                 type="button"
                 variant="outline"
+                ref={subTriggerRef}
                 role="combobox"
                 aria-expanded={subOpen}
                 aria-label="Choisir une sous-discipline"
@@ -190,12 +219,15 @@ export function DisciplineFilter({
             </PopoverTrigger>
             <PopoverContent
               align="start"
+              side="bottom"
+              avoidCollisions={false}
+              collisionPadding={12}
               className={cn('w-[min(22rem,calc(100vw-2rem))] p-0 bg-popover', contentClassName)}
             onOpenAutoFocus={preventKeyboardOnTouch}
             >
               <Command>
                 <CommandInput placeholder="Rechercher une sous-discipline…" />
-                <CommandList className="max-h-[60dvh]">
+                <CommandList className={LIST_MAX_HEIGHT}>
                   <CommandEmpty>Aucune sous-discipline trouvée.</CommandEmpty>
                   <CommandGroup>
                     <CommandItem

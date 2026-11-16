@@ -37,11 +37,11 @@ export function CTASection() {
           {/* For Clubs */}
           <div className="relative bg-card rounded-3xl p-8 lg:p-10 border-2 border-border overflow-hidden">
             {/* Decorative */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-creme rounded-pill -translate-y-1/2 translate-x-1/2" />
+             <div className="absolute top-0 right-0 w-64 h-64 bg-lime/30 rounded-pill -translate-y-1/2 translate-x-1/2" />
             
             <div className="relative">
-               <div className="w-14 h-14 rounded-2xl bg-creme flex items-center justify-center mb-6">
-                 <Building2 className="w-7 h-7 text-bleu-athlace" />
+               <div className="w-14 h-14 rounded-2xl bg-lime flex items-center justify-center mb-6">
+                 <Building2 className="w-7 h-7 text-nuit" />
               </div>
               
               <h3 className="font-sans text-2xl lg:text-3xl font-black text-foreground mb-4">
