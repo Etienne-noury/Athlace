@@ -58,8 +58,8 @@ export function HeroSection() {
 
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-lime mb-6 animate-fade-up">
-            <span className="text-sm font-bold text-nuit">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-glass backdrop-blur-sm border border-glass-border mb-6 animate-fade-up">
+            <span className="text-sm font-bold text-creme">
               🇫🇷 {isReady && avail.isReady ? `${formatCount(stats.clubs)} clubs · ${formatExact(avail.availableSportCount)} sports` : 'Clubs sportifs référencés en France'}
             </span>
           </div>
@@ -109,7 +109,7 @@ export function HeroSection() {
                 />
 
                 {/* Search Button */}
-                <Button type="submit" size="lg" variant="secondary" className="h-14 px-8 text-lg font-bold hover:brightness-95">
+                <Button type="submit" size="lg" className="h-14 px-8 text-lg font-bold">
                   Rechercher
                 </Button>
               </div>
@@ -138,7 +138,7 @@ export function HeroSection() {
                   disabled={!ok}
                   onClick={() => ok && navigate(`/clubs/?discipline=${d.id}`)}
                   className={cn(
-                    'px-3 py-1.5 rounded-pill bg-glass text-creme text-sm transition-colors hover:bg-lime hover:text-nuit',
+                    'px-3 py-1.5 rounded-pill bg-glass text-creme text-sm hover:bg-glass transition-colors',
                     !ok && 'opacity-50 cursor-not-allowed',
                   )}
                 >
