@@ -1,0 +1,20 @@
+<!-- Schéma « L'aire de combat de taekwondo ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="280" rx="14" fill="#0F172A"/>
+<rect x="80" y="10" width="260" height="260" fill="#8FA2DC"/>
+<polygon points="170,40 250,40 310,100 310,180 250,240 170,240 110,180 110,100" fill="#415CAF" stroke="#F2EFE6" stroke-width="2"/>
+ <line x1="185" y1="125" x2="185" y2="155" stroke="#F2EFE6" stroke-width="4"/>
+<line x1="235" y1="125" x2="235" y2="155" stroke="#D5DE5B" stroke-width="4"/>
+<g>
+<circle cx="140" cy="90" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="140" y="94.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="95" cy="25" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="95" y="29.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="210" cy="175" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="210" y="179.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

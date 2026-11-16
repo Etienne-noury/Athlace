@@ -1,0 +1,37 @@
+<!-- Schéma « La piste de bowling ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="200" rx="14" fill="#0F172A"/>
+<rect x="20" y="60" width="380" height="80" fill="#5a6070"/>
+<rect x="20" y="70" width="380" height="60" fill="#d9b98a"/>
+ <line x1="70" y1="70" x2="70" y2="130" stroke="#0F172A" stroke-width="3"/>
+<polygon points="150,86 160,83 160,89" fill="#0F172A"/>
+<polygon points="150,93 160,90 160,96" fill="#0F172A"/>
+<polygon points="150,100 160,97 160,103" fill="#0F172A"/>
+<polygon points="150,107 160,104 160,110" fill="#0F172A"/>
+<polygon points="150,114 160,111 160,117" fill="#0F172A"/>
+<circle cx="340" cy="100" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="354" cy="93" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="354" cy="107" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="368" cy="86" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="368" cy="100" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="368" cy="114" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="382" cy="79" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="382" cy="93" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="382" cy="107" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="382" cy="121" r="5" fill="#FFFFFF" stroke="#0F172A"/>
+<circle cx="44" cy="100" r="10" fill="#415CAF"/>
+<line x1="56" y1="100" x2="330" y2="100" stroke="#415CAF" stroke-width="2.5" stroke-dasharray="6 4"/>
+<polygon points="330,100 321.8959760788259,103.91468980700107 321.8959760788259,96.08531019299893" fill="#415CAF"/>
+<g>
+<circle cx="70" cy="50" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="70" y="54.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="155" cy="150" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="155" y="154.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="360" cy="50" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="360" y="54.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

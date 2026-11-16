@@ -1,0 +1,32 @@
+<!-- Schéma « Le terrain de volley ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="260" rx="14" fill="#415CAF"/>
+<rect x="30" y="40" width="360" height="180" fill="#34498C" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="150" y1="40" x2="150" y2="220" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="270" y1="40" x2="270" y2="220" stroke="#F2EFE6" stroke-width="2" fill="none" />
+ <line x1="210" y1="26" x2="210" y2="234" stroke="#D5DE5B" stroke-width="5"/>
+<circle cx="210" cy="26" r="4" fill="#D5DE5B"/>
+<circle cx="210" cy="234" r="4" fill="#D5DE5B"/>
+<circle cx="180" cy="70" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<circle cx="180" cy="130" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<circle cx="180" cy="190" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<circle cx="100" cy="70" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<circle cx="100" cy="130" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<circle cx="100" cy="190" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<g>
+<circle cx="226" cy="60" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="226" y="64.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="150" cy="30" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="150" y="34.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="330" cy="130" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="330" y="134.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="60" cy="232" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="60" y="236.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+</svg>

@@ -1,0 +1,28 @@
+<!-- Schéma « Le terrain de hockey sur gazon ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="280" rx="14" fill="#415CAF"/>
+<rect x="20" y="30" width="380" height="220" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="210" y1="30" x2="210" y2="250" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="115" y1="30" x2="115" y2="250" stroke="#F2EFE6" stroke-width="2" fill="none" stroke-dasharray="8 6"/>
+<line x1="305" y1="30" x2="305" y2="250" stroke="#F2EFE6" stroke-width="2" fill="none" stroke-dasharray="8 6"/>
+ <path d="M20 82 Q82 82 82 140 Q82 198 20 198 Z" fill="#34498C" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<path d="M400 82 Q338 82 338 140 Q338 198 400 198 Z" fill="#34498C" stroke="#F2EFE6" stroke-width="2" fill="none" />
+ <rect x="11" y="128" width="9" height="24" fill="#D5DE5B"/>
+<rect x="400" y="128" width="9" height="24" fill="#D5DE5B"/>
+<g>
+<circle cx="52" cy="112" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="52" y="116.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="115" cy="50" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="115" y="54.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="15" cy="170" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="15" y="174.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="210" cy="60" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="210" y="64.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+</svg>

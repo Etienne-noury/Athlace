@@ -1,0 +1,32 @@
+<!-- Schéma « Le terrain de baseball ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="280" rx="14" fill="#0F172A"/>
+<path d="M210 262 L40 92 A240 240 0 0 1 380 92 Z" fill="#415CAF"/>
+ <path d="M210 262 L130 182 L210 102 L290 182 Z" fill="#b9a27a" stroke="#F2EFE6" stroke-width="2"/>
+<path d="M210 262 L130 182 L210 102 L290 182 Z" fill="#34498C"/>
+<circle cx="210" cy="190" r="12" fill="#b9a27a"/>
+ <line x1="210" y1="262" x2="40" y2="92" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="210" y1="262" x2="380" y2="92" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<rect x="204" y="256" width="12" height="12" fill="#D5DE5B" transform="rotate(45 210 262)"/>
+<rect x="284" y="176" width="12" height="12" fill="#D5DE5B" transform="rotate(45 290 182)"/>
+<rect x="204" y="96" width="12" height="12" fill="#D5DE5B" transform="rotate(45 210 102)"/>
+<rect x="124" y="176" width="12" height="12" fill="#D5DE5B" transform="rotate(45 130 182)"/>
+<line x1="214" y1="254" x2="284" y2="186" stroke="#F2EFE6" stroke-width="2.5" stroke-dasharray="6 4"/>
+<polygon points="284,186 280.9148505552015,194.45469413422268 275.4594509235023,188.83884157217938" fill="#F2EFE6"/>
+<g>
+<circle cx="232" cy="266" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="232" y="270.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="226" cy="196" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="226" y="200.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="308" cy="182" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="308" y="186.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="210" cy="50" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="210" y="54.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+</svg>
