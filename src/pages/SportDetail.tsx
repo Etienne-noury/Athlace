@@ -13,6 +13,7 @@ import {
   getDisciplineById,
   getDisciplineQueryNames,
   getSubDisciplineValue,
+  slugifyDiscipline,
 } from '@/data/disciplines';
 import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federations-map';
 import { ArrowRight, ExternalLink, MapPin } from 'lucide-react';
@@ -53,11 +54,11 @@ export default function SportDetail() {
 
   const practices = useMemo(() => {
     if (!root) return [];
-    return disciplines
-      .filter((d) => d.parentId === root.id)
-      .map((d) => ({ ...d, count: rootAvail.subs[d.name] ?? 0 }))
-      .filter((d) => d.count > 0)
-      .sort((a, b) => b.count - a.count);
+    // Toutes les sous-disciplines présentes en base, pas seulement celles déclarées dans l'arborescence.
+    return rootAvail.subList.map(({ name, count }) => {
+      const known = disciplines.find((d) => d.parentId === root.id && d.name === name);
+      return { id: known?.id ?? `${root.id}--${slugifyDiscipline(name)}`, name, count };
+    });
   }, [root, rootAvail]);
 
   const otherSports = useMemo(() => {
