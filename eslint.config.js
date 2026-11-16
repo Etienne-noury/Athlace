@@ -23,4 +23,16 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  {
+    // Fichiers d'e-mails générés par Lovable : on ne les retouche pas à la main.
+    files: [
+      "supabase/functions/_shared/transactional-email-templates/**",
+      "supabase/functions/_shared/email-templates/**",
+      "supabase/functions/auth-email-hook/**",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-refresh/only-export-components": "off",
+    },
+  },
 );
