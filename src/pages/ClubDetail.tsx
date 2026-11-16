@@ -19,6 +19,7 @@ import type { Tables } from '@/integrations/supabase/types';
 import { getDisciplineById } from '@/data/disciplines';
 import { safeExternalUrl } from '@/lib/safe-url';
 import { cn } from '@/lib/utils';
+import { useClubMediaUrl } from '@/hooks/useClubMediaUrl';
 
 type Venue = Tables<'club_venues'>;
 type Schedule = Tables<'club_schedules'>;
@@ -96,6 +97,15 @@ function KitImage({ src, clubName }: { src: string; clubName: string }) {
       onError={() => setBroken(true)}
       className="max-h-40 w-auto object-contain rounded-xl bg-creme p-3"
     />
+  );
+}
+
+function ClubLogo({ value, clubName, icon }: { value: string | null; clubName: string; icon: string }) {
+  const src = useClubMediaUrl(value);
+  return src ? (
+    <img src={src} alt={`Logo de ${clubName}`} className="w-full h-full object-contain" />
+  ) : (
+    <span className="text-5xl lg:text-6xl" aria-hidden>{icon}</span>
   );
 }
 
@@ -400,11 +410,7 @@ export default function ClubDetail() {
           <div className="bg-card rounded-2xl shadow-xl border border-border p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl bg-creme flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {r?.logo_url ? (
-                  <img src={r.logo_url} alt={`Logo de ${club.name}`} className="w-full h-full object-contain" />
-                ) : (
-                  <span className="text-5xl lg:text-6xl" aria-hidden>{discipline?.icon || '🏆'}</span>
-                )}
+                <ClubLogo value={r?.logo_url ?? null} clubName={club.name} icon={discipline?.icon || '🏆'} />
               </div>
 
               <div className="flex-1 min-w-0">

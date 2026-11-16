@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useClubMediaUrl } from '@/hooks/useClubMediaUrl';
 import type { EnrichedClub } from '@/lib/api/enriched-clubs';
 
 /** Visuel d'une carte club : logo réel s'il existe, sinon icône du sport. */
 export function ClubCardVisual({ club, className, children }: { club: EnrichedClub; className?: string; children?: React.ReactNode }) {
   const [broken, setBroken] = useState(false);
-  const logo = club.logoUrl && !broken ? club.logoUrl : null;
+  const logoUrl = useClubMediaUrl(club.logoUrl ?? null);
+  const logo = logoUrl && !broken ? logoUrl : null;
   return (
     <div className={cn('relative', logo ? 'bg-card' : 'bg-creme', className)}>
       <div className="absolute inset-0 flex items-center justify-center p-4">
