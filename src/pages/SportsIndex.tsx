@@ -8,8 +8,9 @@ import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDi
 export default function SportsIndex() {
   const avail = useAvailableDisciplines();
   const totalSports = ARBORESCENCE.reduce((acc, c) => acc + c.sports.length, 0);
+  // Sous-disciplines réellement présentes en base, comme dans la recherche.
   const totalSubs = ARBORESCENCE.reduce(
-    (acc, c) => acc + c.sports.reduce((s, sport) => s + sport.subs.length, 0),
+    (acc, c) => acc + c.sports.reduce((s, sport) => s + avail.getSport(slugifyDiscipline(sport.name)).subList.length, 0),
     0,
   );
 

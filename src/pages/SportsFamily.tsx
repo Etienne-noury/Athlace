@@ -65,7 +65,9 @@ export default function SportsFamily() {
           {categorie.sports.map((sport) => {
             const sportId = slugifyDiscipline(sport.name);
             const ok = avail.isSportAvailable(sportId);
-            const subs = sport.subs.filter((sub) => ok && avail.isSubAvailable(sportId, sub));
+            // Mêmes sous-disciplines que la recherche : celles présentes en base, par nombre de clubs.
+            const allSubs = ok ? avail.getSport(sportId).subList.map((s) => s.name) : [];
+            const subs = allSubs.slice(0, 8);
             return (
               <Card key={sport.name} className={cn('hover:border-border transition-colors', !ok && 'opacity-60')}>
                 <CardContent className="p-6 flex flex-col h-full">
@@ -74,7 +76,7 @@ export default function SportsFamily() {
                       {sport.icon} {sport.name}
                     </h2>
                     <Badge variant="secondary">
-                      {!ok ? 'Bientôt' : avail.isReady ? `${formatClubCount(avail.sportCount(sportId))} clubs` : sport.subs.length}
+                      {!ok ? 'Bientôt' : avail.isReady ? `${formatClubCount(avail.sportCount(sportId))} clubs` : ''}
                     </Badge>
                   </div>
                   <ul className="mt-3 space-y-1 flex-1">
@@ -88,6 +90,13 @@ export default function SportsFamily() {
                         </Link>
                       </li>
                     ))}
+                    {allSubs.length > subs.length && (
+                      <li>
+                        <Link to={`/sports/${sportId}/`} className="text-sm font-bold text-primary hover:underline">
+                          + {allSubs.length - subs.length} autre{allSubs.length - subs.length > 1 ? 's' : ''}
+                        </Link>
+                      </li>
+                    )}
                   </ul>
                   {ok ? (
                   <div className="mt-4 flex flex-wrap gap-2">
