@@ -253,6 +253,13 @@
       "when": 1794060000000,
       "tag": "0035_admin_scraping_stats",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1794815056757,
+      "tag": "0036_clubs_enriched_private",
+      "breakpoints": true
     }
   ]
 }
