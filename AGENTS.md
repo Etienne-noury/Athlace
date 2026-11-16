@@ -12,3 +12,4 @@
 - Club appointment requests use a dedicated validated, rate-limited edge function to persist in club_waitlist before sending a fixed owner notification; this preserves requests when email delivery fails.
 - Athlete favorites and alert preferences use user-scoped queries and RLS with shared count invalidation; this keeps private account data and dashboard totals consistent without enabling email alerts.
 - Public club listing/counting RPCs must read clubs_public and scope child aggregates to it; the CSV import schema excludes visibility-managed columns before conversion and locked-field handling to preserve independent visibility control.
+- Sport and sub-discipline guides ("Comprendre le sport") live in src/data/sport-guides.ts, keyed by the ids of src/data/disciplines.ts and loaded on demand via useSportGuides; every sport cites its sources, no price amounts, and sport-guides.test.ts checks coverage so new sports or subs must get a guide.

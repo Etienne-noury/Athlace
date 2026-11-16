@@ -18,11 +18,12 @@ import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federa
 import { ArrowRight, ExternalLink, MapPin } from 'lucide-react';
 import { slugify } from '@/lib/geo';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
+import { DisciplineGuideSection, SportGuideSection } from '@/components/sports/SportGuide';
+import { useSportGuides } from '@/hooks/useSportGuides';
 
 /**
- * Page d'un sport (piste A) : uniquement des informations sûres, issues de la base
- * (clubs, pratiques) ou des fédérations (nom, site). Un bloc « Comprendre le sport »
- * viendra s'ajouter quand des fiches vérifiées existeront.
+ * Page d'un sport ou d'une sous-discipline : clubs et pratiques issus de la base, fédération,
+ * et bloc « Comprendre le sport » alimenté par les fiches vérifiées de src/data/sport-guides.ts.
  */
 export default function SportDetail() {
   const { sportId } = useParams<{ sportId: string }>();
@@ -70,6 +71,10 @@ export default function SportDetail() {
     () => (root ? getFederationForDiscipline(root.id, federationSources) : undefined),
     [root, federationSources],
   );
+
+  const { data: guides } = useSportGuides();
+  const sportGuide = root ? guides?.SPORT_GUIDES[root.id] : undefined;
+  const disciplineGuide = sport?.parentId ? guides?.DISCIPLINE_GUIDES[sport.id] : undefined;
 
   useEffect(() => {
     if (sport) document.title = `${sport.name} : trouver un club - Athlace`;
@@ -218,6 +223,20 @@ export default function SportDetail() {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Comprendre le sport (fiches vérifiées) */}
+      {guides && sport.parentId && disciplineGuide && (
+        <DisciplineGuideSection
+          name={sport.name}
+          parentName={root.name}
+          guide={disciplineGuide}
+          parentGuide={sportGuide}
+          verifiedOn={guides.GUIDES_VERIFIED_ON}
+        />
+      )}
+      {guides && !sport.parentId && sportGuide && (
+        <SportGuideSection name={sport.name} guide={sportGuide} verifiedOn={guides.GUIDES_VERIFIED_ON} />
       )}
 
       {/* Clubs et carte */}
