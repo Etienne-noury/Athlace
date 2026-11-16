@@ -9,7 +9,8 @@ export interface CityHit {
   lng: number;
 }
 
-const API = 'https://api-adresse.data.gouv.fr/search/';
+// Base Adresse Nationale, servie par la Géoplateforme de l'IGN (l'ancien domaine api-adresse.data.gouv.fr ne répond plus).
+const API = 'https://data.geopf.fr/geocodage/search';
 
 export const normalizeText = (s: string) =>
   s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[-'’]/g, ' ').replace(/\s+/g, ' ').trim();

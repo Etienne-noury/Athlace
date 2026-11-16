@@ -52,7 +52,7 @@ export const POSITION_FAILURE_MESSAGES: Record<PositionFailure, string> = {
 /** Nom du lieu (commune ou arrondissement) pour une position, via la Base Adresse Nationale. */
 export async function reversePlaceName({ lat, lng }: VisitorPosition): Promise<string | null> {
   try {
-    const res = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${lng}&lat=${lat}&limit=1`);
+    const res = await fetch(`https://data.geopf.fr/geocodage/reverse?lon=${lng}&lat=${lat}&limit=1`);
     if (!res.ok) return null;
     const json = await res.json();
     const props = json.features?.[0]?.properties;

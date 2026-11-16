@@ -84,10 +84,10 @@ Deno.serve(async (req) => {
     form.append('postcode', 'postal_code');
     form.append('type', 'type');
 
-    const res = await fetch('https://api-adresse.data.gouv.fr/search/csv/', { method: 'POST', body: form });
+    const res = await fetch('https://data.geopf.fr/geocodage/search/csv', { method: 'POST', body: form });
     if (!res.ok) {
       const body = await res.text();
-      console.error(`api-adresse csv [${res.status}]: ${body}`);
+      console.error(`geocodage csv [${res.status}]: ${body}`);
       return json({ error: `API Adresse ${res.status}: ${body.slice(0, 300)}`, checked: 0, reset: 0, not_found: 0, remaining: 0 }, 502);
     }
     const rows = parseCsv(await res.text());

@@ -6,7 +6,7 @@ import { requireAdmin } from "../_shared/require-admin.ts";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function searchAddress(q: string, postcode?: string | null) {
-  let url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`;
+  let url = `https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(q)}&limit=1`;
   if (postcode) url += `&postcode=${encodeURIComponent(postcode)}`;
   const res = await fetch(url);
   const json = await res.json();
