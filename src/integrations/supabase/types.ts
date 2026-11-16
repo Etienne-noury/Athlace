@@ -1477,6 +1477,16 @@ export type Database = {
         Args: { status_id: string }
         Returns: undefined
       }
+      admin_scraping_stats: {
+        Args: never
+        Returns: {
+          clubs: number
+          discipline: string
+          federation_code: string
+          gps: number
+          last_import: string
+        }[]
+      }
       approve_submission: { Args: { submission_id: string }; Returns: string }
       available_disciplines: {
         Args: never
@@ -1505,16 +1515,6 @@ export type Database = {
         }[]
       }
       enrich_from_es: { Args: { batch_size?: number }; Returns: Json }
-      admin_scraping_stats: {
-        Args: never
-        Returns: {
-          clubs: number
-          discipline: string
-          federation_code: string
-          gps: number
-          last_import: string
-        }[]
-      }
       federation_club_stats: {
         Args: never
         Returns: {
