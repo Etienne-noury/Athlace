@@ -1,0 +1,42 @@
+<!-- Schéma « Le terrain de rugby ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="280" rx="14" fill="#415CAF"/>
+<rect x="20" y="20" width="380" height="240" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<rect x="20" y="20" width="34" height="240" fill="#34498C"/>
+<rect x="366" y="20" width="34" height="240" fill="#34498C"/>
+ <line x1="54" y1="20" x2="54" y2="260" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="366" y1="20" x2="366" y2="260" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<line x1="210" y1="20" x2="210" y2="260" stroke="#F2EFE6" stroke-width="2" fill="none" />
+ <line x1="120" y1="20" x2="120" y2="260" stroke="#F2EFE6" stroke-width="2" fill="none" stroke-dasharray="8 6"/>
+<line x1="300" y1="20" x2="300" y2="260" stroke="#F2EFE6" stroke-width="2" fill="none" stroke-dasharray="8 6"/>
+ <path d="M54 122 V158 M54 140 H54" stroke="#D5DE5B" stroke-width="4"/>
+<line x1="48" y1="122" x2="60" y2="122" stroke="#D5DE5B" stroke-width="4"/>
+<line x1="48" y1="158" x2="60" y2="158" stroke="#D5DE5B" stroke-width="4"/>
+ <line x1="366" y1="122" x2="366" y2="158" stroke="#D5DE5B" stroke-width="4"/>
+<line x1="360" y1="122" x2="372" y2="122" stroke="#D5DE5B" stroke-width="4"/>
+<line x1="360" y1="158" x2="372" y2="158" stroke="#D5DE5B" stroke-width="4"/>
+<circle cx="270" cy="200" r="6" fill="#D5DE5B" stroke="#0F172A" stroke-width="1"/>
+<circle cx="240" cy="222" r="6" fill="#D5DE5B" stroke="#0F172A" stroke-width="1"/>
+<line x1="266" y1="204" x2="246" y2="218" stroke="#D5DE5B" stroke-width="2.5" stroke-dasharray="6 4"/>
+<polygon points="246,218 250.39414788669762,210.14560859456122 254.88400227505375,216.5596862922128" fill="#D5DE5B"/>
+<g>
+<circle cx="37" cy="60" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="37" y="64.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="54" cy="104" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="54" y="108.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="120" cy="40" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="120" y="44.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="210" cy="60" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="210" y="64.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+<g>
+<circle cx="280" cy="180" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="280" y="184.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">5</text>
+</g>
+</svg>

@@ -1,0 +1,23 @@
+<!-- Schéma « Le fronton de pelote basque ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="260" rx="14" fill="#e9e1cf"/>
+<path d="M30 220 L30 60 Q70 20 110 60 L110 220 Z" fill="#e6d7b5" stroke="#b39b6c" stroke-width="2"/>
+<line x1="30" y1="190" x2="110" y2="190" stroke="#d64545" stroke-width="3"/>
+<rect x="30" y="220" width="370" height="16" fill="#b9a27a"/>
+ <line x1="200" y1="220" x2="200" y2="236" stroke="#0F172A" stroke-width="2"/>
+<line x1="300" y1="220" x2="300" y2="236" stroke="#0F172A" stroke-width="2"/>
+ <path d="M330 200 Q 200 60 112 150 Q 160 200 240 222" fill="none" stroke="#415CAF" stroke-width="2.5" stroke-dasharray="6 4"/>
+<circle cx="330" cy="200" r="6" fill="#415CAF"/>
+<g>
+<circle cx="70" cy="90" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="70" y="94.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="70" cy="170" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="70" y="174.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="250" cy="246" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="250" y="250.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

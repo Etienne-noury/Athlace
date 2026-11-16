@@ -1,0 +1,20 @@
+<!-- Schéma « L'aire de combat ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="280" rx="14" fill="#0F172A"/>
+<rect x="80" y="10" width="260" height="260" fill="#8FA2DC"/>
+<rect x="110" y="40" width="200" height="200" fill="#415CAF" stroke="#F2EFE6" stroke-width="2"/>
+ <line x1="190" y1="125" x2="190" y2="155" stroke="#F2EFE6" stroke-width="4"/>
+<line x1="230" y1="125" x2="230" y2="155" stroke="#D5DE5B" stroke-width="4"/>
+<g>
+<circle cx="140" cy="70" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="140" y="74.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="95" cy="25" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="95" y="29.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="210" cy="175" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="210" y="179.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

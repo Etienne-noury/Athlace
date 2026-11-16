@@ -1,0 +1,28 @@
+<!-- Schéma « Un trou de golf ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="260" rx="14" fill="#6d8a4a"/>
+<path d="M50 210 C 120 160, 160 200, 230 140 S 330 70, 360 70" stroke="#a8c97a" stroke-width="56" fill="none" stroke-linecap="round"/>
+ <rect x="34" y="200" width="36" height="24" rx="6" fill="#c3df98"/>
+<ellipse cx="360" cy="70" rx="40" ry="30" fill="#c8e6a0"/>
+<ellipse cx="300" cy="128" rx="22" ry="11" fill="#efe2b8"/>
+<ellipse cx="170" cy="96" rx="34" ry="18" fill="#5d7bd0"/>
+ <line x1="362" y1="70" x2="362" y2="34" stroke="#0F172A" stroke-width="2"/>
+<polygon points="362,34 384,41 362,48" fill="#D5DE5B"/>
+<circle cx="362" cy="70" r="3" fill="#0F172A"/>
+<g>
+<circle cx="52" cy="236" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="52" y="240.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="200" cy="160" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="200" y="164.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="300" cy="108" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="300" y="112.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="386" cy="92" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="386" y="96.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+</svg>

@@ -1,0 +1,29 @@
+<!-- Schéma « Les étapes d'un saut ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="300" rx="14" fill="#8fb6ff"/>
+<rect x="0" y="250" width="420" height="50" rx="0" fill="#6d8a4a"/>
+ <text x="70" y="60" font-size="36">✈️</text>
+<text x="170" y="130" font-size="30">🤸</text>
+<path d="M250 170 q30 -30 60 0 z" fill="#D5DE5B" stroke="#0F172A"/>
+<line x1="252" y1="170" x2="280" y2="200" stroke="#0F172A"/>
+<line x1="308" y1="170" x2="280" y2="200" stroke="#0F172A"/>
+<circle cx="280" cy="205" r="5" fill="#0F172A"/>
+ <circle cx="350" cy="262" r="12" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+ <path d="M110 70 C 150 90, 170 100, 185 112 M200 140 C 220 160, 240 168, 255 172 M285 212 C 310 235, 330 250, 346 258" fill="none" stroke="#0F172A" stroke-dasharray="4 4"/>
+<g>
+<circle cx="40" cy="40" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="40" y="44.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="150" cy="150" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="150" y="154.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="330" cy="160" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="330" y="164.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+<g>
+<circle cx="380" cy="262" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="380" y="266.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">4</text>
+</g>
+</svg>

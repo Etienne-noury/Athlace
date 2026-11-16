@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { safeExternalUrl } from '@/lib/safe-url';
 import type { DisciplineGuide, GuideSource, SportGuide } from '@/data/sport-guides';
-import { SPORT_SCHEMAS } from '@/data/sport-schemas';
+import { getSportPhoto, getSportSchema, PHOTO_SLOT_SUBJECT, type PhotoSlot } from './sport-media';
 import '@/styles/sport-guide.css';
 
 /**
  * Fiches « Comprendre le sport » des pages /sports/:sportId/, mise en page reprise de la maquette
- * validée (styles dans src/styles/sport-guide.css). Les cadres photo sont décoratifs en attendant
- * de vraies photos.
+ * validée (styles dans src/styles/sport-guide.css). Chaque cadre photo affiche la photo déposée dans
+ * src/assets/sport-photos/<id>/<emplacement>.jpg, sinon un décor aux couleurs de la marque
+ * (voir docs/PHOTOS-ET-SCHEMAS.md).
  */
 
 const BENEFIT_ICONS: [RegExp, string][] = [
@@ -32,7 +33,15 @@ const benefitIcon = (t: string) => BENEFIT_ICONS.find(([r]) => r.test(t))?.[1] ?
 const sentences = (t: string) => t.split(/(?<=[.!])\s+(?=[A-ZÀ-Ý])/).map((x) => x.trim()).filter(Boolean);
 const BUDGET_LABEL = ['', 'Accessible', 'Modéré', 'Élevé'];
 
-function Photo({ icon, variant = '' }: { icon?: string; variant?: '' | 'v2' | 'v3' }) {
+function Photo({ id, slot, name, icon, variant = '' }: { id: string; slot: PhotoSlot; name: string; icon?: string; variant?: '' | 'v2' | 'v3' }) {
+  const src = getSportPhoto(id, slot);
+  if (src) {
+    return (
+      <div className="photo">
+        <img src={src} alt={`${name} : ${PHOTO_SLOT_SUBJECT[slot]}`} loading="lazy" decoding="async" />
+      </div>
+    );
+  }
   return (
     <div className={`photo ${variant}`} aria-hidden>
       <div className="pat" />
@@ -52,7 +61,7 @@ function SectionHead({ index, label, title, intro }: { index: number; label: str
 }
 
 function Rules({ items, schemaKey, threeCols }: { items: string[]; schemaKey: string | null; threeCols?: boolean }) {
-  const schema = schemaKey ? SPORT_SCHEMAS[schemaKey] : undefined;
+  const schema = getSportSchema(schemaKey);
   const list = (cls: string) => (
     <div className={cls}>
       {items.map((r, i) => (
@@ -66,7 +75,7 @@ function Rules({ items, schemaKey, threeCols }: { items: string[]; schemaKey: st
       {list('rules stack')}
       <figure className="schema">
         <figcaption className="cap">{schema.cap}</figcaption>
-        {/* SVG statique écrit par l'équipe (src/data/sport-schemas.ts), sans contenu utilisateur */}
+        {/* SVG du dépôt (src/assets/sport-schemas), sans contenu utilisateur */}
         <div dangerouslySetInnerHTML={{ __html: schema.svg }} />
         <ol>{schema.legend.map((l, i) => <li key={i}>{l}</li>)}</ol>
       </figure>
@@ -158,7 +167,7 @@ const SPORT_NAV: [string, string][] = [
   ['sg-bienfaits', 'Bienfaits & budget'],
 ];
 
-export function SportGuideSection({ guide, icon, verifiedOn }: { name: string; guide: SportGuide; icon: string; verifiedOn: string }) {
+export function SportGuideSection({ id, name, guide, icon, verifiedOn }: { id: string; name: string; guide: SportGuide; icon: string; verifiedOn: string }) {
   const r = guide.repere;
   const ageLabel = r?.age ?? 'Tout âge';
   const extra = [...guide.offres.map((o) => `🎈 ${o}`), ...guide.handi.map((o) => `♿ ${o}`)];
@@ -184,7 +193,7 @@ export function SportGuideSection({ guide, icon, verifiedOn }: { name: string; g
             <SectionHead index={1} label="Le principe" title="Le principe en 30 secondes" />
             <p className="bigtext">{guide.principe}</p>
           </div>
-          <Photo icon={icon} variant="v2" />
+          <Photo id={id} slot="principe" name={name} icon={icon} variant="v2" />
         </div>
       </section>
 
@@ -202,9 +211,9 @@ export function SportGuideSection({ guide, icon, verifiedOn }: { name: string; g
 
       <section className="sp" style={{ paddingBottom: 0 }}>
         <div className="container mx-auto px-4 gallery">
-          <Photo variant="v3" />
-          <Photo />
-          <Photo variant="v2" />
+          <Photo id={id} slot="galerie-1" name={name} variant="v3" />
+          <Photo id={id} slot="galerie-2" name={name} />
+          <Photo id={id} slot="galerie-3" name={name} variant="v2" />
         </div>
       </section>
 
@@ -214,7 +223,7 @@ export function SportGuideSection({ guide, icon, verifiedOn }: { name: string; g
             <SectionHead index={3} label="Matériel" title="Matériel et tenue" intro="Ce qu'il te faut pour commencer." />
             <ul className="checks">{sentences(guide.materiel).map((x) => <li key={x}>{x}</li>)}</ul>
           </div>
-          <Photo icon={icon} variant="v3" />
+          <Photo id={id} slot="materiel" name={name} icon={icon} variant="v3" />
         </div>
       </section>
 
@@ -297,6 +306,7 @@ const DISC_NAV: [string, string][] = [
 ];
 
 export function DisciplineGuideSection({
+  id,
   name,
   parentName,
   guide,
@@ -304,6 +314,7 @@ export function DisciplineGuideSection({
   icon,
   verifiedOn,
 }: {
+  id: string;
   name: string;
   parentName: string;
   guide: DisciplineGuide;
@@ -330,7 +341,7 @@ export function DisciplineGuideSection({
             <SectionHead index={1} label="Le principe" title="Le principe" />
             <p className="bigtext">{guide.principe}</p>
           </div>
-          <Photo icon={icon} variant="v2" />
+          <Photo id={id} slot="principe" name={name} icon={icon} variant="v2" />
         </div>
       </section>
 

@@ -1,0 +1,24 @@
+<!-- Schéma « Le terrain d'ultimate ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="220" rx="14" fill="#415CAF"/>
+<rect x="20" y="30" width="380" height="160" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<rect x="20" y="30" width="70" height="160" fill="#34498C" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<rect x="330" y="30" width="70" height="160" fill="#34498C" stroke="#F2EFE6" stroke-width="2" fill="none" />
+<circle cx="200" cy="110" r="7" fill="#FFFFFF" stroke="#0F172A" stroke-width="1"/>
+<circle cx="200" cy="110" r="18" fill="none" stroke="#FFFFFF" stroke-dasharray="3 3"/>
+<line x1="212" y1="104" x2="300" y2="70" stroke="#D5DE5B" stroke-width="2.5" stroke-dasharray="6 4"/>
+<polygon points="300,70 293.85143298989374,76.57229972857543 291.02973022040726,69.26906903108102" fill="#D5DE5B"/>
+<circle cx="305" cy="68" r="7" fill="#F2EFE6" stroke="#0F172A" stroke-width="1"/>
+<g>
+<circle cx="55" cy="60" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="55" y="64.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="200" cy="140" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="200" y="144.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="262" cy="64" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="262" y="68.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

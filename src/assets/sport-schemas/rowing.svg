@@ -1,0 +1,31 @@
+<!-- Schéma « Le bassin de course ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="220" rx="14" fill="#5d7bd0"/>
+<line x1="40" y1="36" x2="380" y2="36" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="61" x2="380" y2="61" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="86" x2="380" y2="86" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="111" x2="380" y2="111" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="136" x2="380" y2="136" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="161" x2="380" y2="161" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="186" x2="380" y2="186" stroke="#D5DE5B" stroke-width="2" stroke-dasharray="2 8"/>
+<line x1="40" y1="30" x2="40" y2="190" stroke="#FFFFFF" stroke-width="3"/>
+<line x1="380" y1="30" x2="380" y2="190" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6 3"/>
+<ellipse cx="120" cy="48" rx="34" ry="4" fill="#F2EFE6"/>
+<ellipse cx="160" cy="73" rx="34" ry="4" fill="#F2EFE6"/>
+<ellipse cx="140" cy="98" rx="34" ry="4" fill="#F2EFE6"/>
+<ellipse cx="110" cy="123" rx="34" ry="4" fill="#F2EFE6"/>
+<ellipse cx="150" cy="148" rx="34" ry="4" fill="#F2EFE6"/>
+<ellipse cx="130" cy="173" rx="34" ry="4" fill="#F2EFE6"/>
+<g>
+<circle cx="40" cy="206" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="40" y="210.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="250" cy="48" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="250" y="52.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="380" cy="206" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="380" y="210.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

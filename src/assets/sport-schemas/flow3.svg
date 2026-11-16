@@ -1,0 +1,29 @@
+<!-- Schéma « L'enchaînement du triathlon ». Les repères numérotés correspondent à la légende de src/data/sport-schemas.ts. -->
+<svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="420" height="200" rx="14" fill="#0F172A"/>
+<circle cx="70" cy="90" r="44" fill="#415CAF" stroke="#D5DE5B" stroke-width="3"/>
+<text x="70" y="104" text-anchor="middle" font-size="40">🏊</text>
+<text x="70" y="160" font-size="11" font-weight="600" fill="#F2EFE6" font-family="Poppins,sans-serif" text-anchor="middle" font-size="14">Natation</text>
+<circle cx="210" cy="90" r="44" fill="#415CAF" stroke="#D5DE5B" stroke-width="3"/>
+<text x="210" y="104" text-anchor="middle" font-size="40">🚴</text>
+<text x="210" y="160" font-size="11" font-weight="600" fill="#F2EFE6" font-family="Poppins,sans-serif" text-anchor="middle" font-size="14">Vélo</text>
+<circle cx="350" cy="90" r="44" fill="#415CAF" stroke="#D5DE5B" stroke-width="3"/>
+<text x="350" y="104" text-anchor="middle" font-size="40">🏃</text>
+<text x="350" y="160" font-size="11" font-weight="600" fill="#F2EFE6" font-family="Poppins,sans-serif" text-anchor="middle" font-size="14">Course</text>
+<rect x="126" y="80" width="28" height="20" rx="4" fill="#D5DE5B"/>
+<rect x="266" y="80" width="28" height="20" rx="4" fill="#D5DE5B"/>
+<text x="140" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="#0F172A" font-family="Poppins">T1</text>
+<text x="280" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="#0F172A" font-family="Poppins">T2</text>
+<g>
+<circle cx="70" cy="32" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="70" y="36.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">1</text>
+</g>
+<g>
+<circle cx="140" cy="124" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="140" y="128.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">2</text>
+</g>
+<g>
+<circle cx="350" cy="32" r="11" fill="#D5DE5B" stroke="#0F172A" stroke-width="1.5"/>
+<text x="350" y="36.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A" font-family="Poppins,sans-serif">3</text>
+</g>
+</svg>

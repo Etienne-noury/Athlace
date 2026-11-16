@@ -232,6 +232,7 @@ export default function SportDetail() {
       <Suspense fallback={null}>
       {guides && sport.parentId && disciplineGuide && (
         <DisciplineGuideSection
+          id={sport.id}
           name={sport.name}
           parentName={root.name}
           guide={disciplineGuide}
@@ -241,7 +242,7 @@ export default function SportDetail() {
         />
       )}
       {guides && !sport.parentId && sportGuide && (
-        <SportGuideSection name={sport.name} guide={sportGuide} icon={root.icon} verifiedOn={guides.GUIDES_VERIFIED_ON} />
+        <SportGuideSection id={root.id} name={sport.name} guide={sportGuide} icon={root.icon} verifiedOn={guides.GUIDES_VERIFIED_ON} />
       )}
       </Suspense>
 
