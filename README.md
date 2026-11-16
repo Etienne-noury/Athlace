@@ -42,10 +42,12 @@ sed -i 's#https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/#
 npm install && git checkout package-lock.json
 ```
 
-Les variables nécessaires sont dans `.env` (URL et clé publique Supabase). Tout ce qui commence par `VITE_` est inclus dans le code envoyé au navigateur : **n'y mettre aucun secret**. Les secrets (clé `service_role`, clés d'API) se configurent uniquement dans les réglages des fonctions edge Supabase.
+Les variables nécessaires sont dans `.env` (URL et clé publique Supabase, clé navigateur Google Maps). Ce fichier est versionné exprès par Lovable, bien qu'il figure dans `.gitignore` : il ne contient que des clés publiques, protégées côté serveur (RLS pour Supabase, restriction par domaine pour Google Maps). Tout ce qui commence par `VITE_` est inclus dans le code envoyé au navigateur : **n'y mettre aucun secret**. Les secrets (clé `service_role`, clés d'API) se configurent uniquement dans les réglages des fonctions edge Supabase.
 
 ## Sécurité, en bref
 
 - Les données publiques sont lues via la vue `clubs_public` ; e-mail et téléphone des clubs ne sont accessibles qu'un par un via la fonction `get_club_contact`.
 - Les écritures sensibles passent par des fonctions SQL ou edge qui vérifient le rôle `admin` côté serveur. Les protections de routes côté navigateur (`RequireAuth`, `RequireAdmin`) ne servent qu'à l'affichage.
+- Un visiteur non connecté n'a aucun droit d'écriture en base ; les formulaires publics passent par une fonction edge qui valide et limite les envois.
+- Supprimer son compte efface toutes ses données (fonction `delete-account` + cascade en base).
 - Tout lien externe affiché sur le site passe par `safeExternalUrl` (`src/lib/safe-url.ts`).

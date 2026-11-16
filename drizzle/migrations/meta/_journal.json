@@ -267,6 +267,13 @@
       "when": 1794815434293,
       "tag": "0037_public_read_published_club_media",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1794819484847,
+      "tag": "0038_security_hardening",
+      "breakpoints": true
     }
   ]
 }

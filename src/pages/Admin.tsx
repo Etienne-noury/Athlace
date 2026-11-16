@@ -94,15 +94,11 @@ const parseTabFile = (file: File): Promise<Record<string, string>[]> =>
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      console.log('Premières colonnes:', content.split('\n')[0].split('\t').slice(0, 5));
-      console.log('Nombre de lignes brutes:', content.split('\n').length);
       Papa.parse<Record<string, string>>(content, {
         header: true,
         delimiter: ';',
         skipEmptyLines: true,
         complete: (result) => {
-          console.log('Lignes parsées:', result.data.length);
-          console.log('Colonnes détectées:', result.meta.fields?.slice(0, 5));
           resolve(result.data);
         },
         error: reject,

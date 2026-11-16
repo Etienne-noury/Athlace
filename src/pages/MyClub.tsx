@@ -37,6 +37,9 @@ const PERIODS: PriceDraft['period'][] = ['saison', 'mois', 'trimestre', 'séance
 const AIDS = ["Pass'Sport", 'Chèques ANCV', 'Coupons sport', 'Aide mairie ou CAF'];
 const AMENITIES = ['Vestiaires', 'Douches', 'Parking', 'Club-house', 'Matériel en prêt'];
 const MEDIA_BUCKET = 'club-media';
+// Mêmes limites que le bucket Supabase (voir drizzle/migrations/0038_security_hardening.sql).
+const MEDIA_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+const MEDIA_MAX_BYTES = 5 * 1024 * 1024;
 
 interface SportQuestion {
   id: string; key: string; label: string; help: string | null;
@@ -242,7 +245,8 @@ export default function MyClub() {
     if (!r) return;
     setClub(r.club);
     setPrefill(r.prefill);
-    setP((o) => ({ ...r.prefill, role: o.role, affiliation_number: o.affiliation_number || r.prefill.affiliation_number, club_id: id, new_club: null }));
+    // Le n° d'affiliation sert de preuve de lien avec le club : il doit être saisi, jamais pré-rempli.
+    setP((o) => ({ ...r.prefill, role: o.role, affiliation_number: o.affiliation_number, club_id: id, new_club: null }));
   };
 
   const fedCode = club?.federation_code ?? null;
@@ -530,6 +534,14 @@ function Step1({
 function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
   const [uploading, setUploading] = useState(false);
   const upload = async (file: File) => {
+    if (!MEDIA_TYPES.includes(file.type)) {
+      toast({ title: 'Format non accepté', description: 'Formats acceptés : PNG, JPEG ou WebP.', variant: 'destructive' });
+      return null;
+    }
+    if (file.size > MEDIA_MAX_BYTES) {
+      toast({ title: 'Image trop lourde', description: 'Taille maximale : 5 Mo.', variant: 'destructive' });
+      return null;
+    }
     const ext = file.name.split('.').pop() ?? 'jpg';
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
     const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, { contentType: file.type });
@@ -545,7 +557,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
           {p.logo && <MediaImg src={p.logo} alt="Logo du club" className="h-16 w-16 rounded-xl border object-contain" />}
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-creme px-4 py-2 text-small font-bold text-bleu-athlace">
             <Upload className="h-4 w-4" /> {p.logo ? 'Remplacer' : 'Ajouter un logo'}
-            <input type="file" accept="image/*" className="sr-only" disabled={uploading}
+            <input type="file" accept={MEDIA_TYPES.join(',')} className="sr-only" disabled={uploading}
               onChange={async (e) => {
                 const f = e.target.files?.[0]; if (!f) return;
                 setUploading(true); const path = await upload(f); setUploading(false);
@@ -576,7 +588,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
           {photos.length < 6 && (
             <label className="flex aspect-square cursor-pointer items-center justify-center rounded-lg border border-dashed text-nuit/70 hover:border-primary">
               {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
-              <input type="file" accept="image/*" multiple className="sr-only" disabled={uploading}
+              <input type="file" accept={MEDIA_TYPES.join(',')} multiple className="sr-only" disabled={uploading}
                 onChange={async (e) => {
                   const files = [...(e.target.files ?? [])].slice(0, 6 - photos.length);
                   setUploading(true);
