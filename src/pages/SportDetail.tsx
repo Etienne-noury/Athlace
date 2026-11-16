@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
@@ -18,8 +18,11 @@ import { fetchFederationSources, getFederationForDiscipline } from '@/lib/federa
 import { ArrowRight, ExternalLink, MapPin } from 'lucide-react';
 import { slugify } from '@/lib/geo';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
-import { DisciplineGuideSection, SportGuideSection } from '@/components/sports/SportGuide';
 import { useSportGuides } from '@/hooks/useSportGuides';
+
+// Fiches (mise en page, styles et schémas) chargées seulement quand une fiche s'affiche.
+const SportGuideSection = lazy(() => import('@/components/sports/SportGuide').then((m) => ({ default: m.SportGuideSection })));
+const DisciplineGuideSection = lazy(() => import('@/components/sports/SportGuide').then((m) => ({ default: m.DisciplineGuideSection })));
 
 /**
  * Page d'un sport ou d'une sous-discipline : clubs et pratiques issus de la base, fédération,
@@ -226,18 +229,21 @@ export default function SportDetail() {
       )}
 
       {/* Comprendre le sport (fiches vérifiées) */}
+      <Suspense fallback={null}>
       {guides && sport.parentId && disciplineGuide && (
         <DisciplineGuideSection
           name={sport.name}
           parentName={root.name}
           guide={disciplineGuide}
           parentGuide={sportGuide}
+          icon={root.icon}
           verifiedOn={guides.GUIDES_VERIFIED_ON}
         />
       )}
       {guides && !sport.parentId && sportGuide && (
-        <SportGuideSection name={sport.name} guide={sportGuide} verifiedOn={guides.GUIDES_VERIFIED_ON} />
+        <SportGuideSection name={sport.name} guide={sportGuide} icon={root.icon} verifiedOn={guides.GUIDES_VERIFIED_ON} />
       )}
+      </Suspense>
 
       {/* Clubs et carte */}
       {available && (

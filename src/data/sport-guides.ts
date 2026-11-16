@@ -16,7 +16,12 @@ export interface SportGuide {
   jeu: string[];
   materiel: string;
   pourQui: string;
-  repere: { format: string; lieu: string; age: string } | null;
+  /** ageMin : âge de début en années quand il est connu (règle des âges) */
+  repere: { format: string; lieu: string; age: string; ageMin: number | null } | null;
+  /** clé de src/data/sport-schemas.ts, ou null */
+  schema: string | null;
+  offres: string[];
+  handi: string[];
   niveaux: string[];
   competitions: string[];
   bienfaits: string[];
@@ -35,6 +40,7 @@ export interface DisciplineGuide {
   lieu: string;
   age: string;
   tags: string[];
+  schema: string | null;
 }
 
 export const SPORT_GUIDES: Record<string, SportGuide> = {
@@ -57,8 +63,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "foot",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par tranche d'âge, de U6-U7 (licence dès 5 ans) jusqu'aux U20, puis seniors et vétérans.",
       "Équipes de niveaux différents dans un même club : une équipe « première » en compétition, d'autres plus loisir.",
@@ -106,8 +116,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Jeunes (flag), puis contact"
+      "age": "Jeunes (flag), puis contact",
+      "ageMin": null
     },
+    "schema": "fa",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes (U14, U16, U19) puis seniors.",
       "Flag football en loisir comme en compétition, mixte possible.",
@@ -154,8 +168,15 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Dès 3 ans"
+      "age": "Dès 3 ans",
+      "ageMin": 3
     },
+    "schema": "rugby",
+    "offres": [
+      "Ecole de Rugby",
+      "Baby Rugby"
+    ],
+    "handi": [],
     "niveaux": [
       "École de rugby par tranches d'âge (baby rugby M5-M6, puis M8 à M14), puis cadets, juniors et seniors.",
       "Équipes féminines à tous les âges.",
@@ -203,8 +224,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Dès l'école de rugby"
+      "age": "Dès l'école de rugby",
+      "ageMin": null
     },
+    "schema": "rugby",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes par âge, puis juniors et seniors.",
       "Équipes féminines.",
@@ -251,8 +276,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Salle",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "basket",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge (U7 à U20), puis seniors.",
       "Différents niveaux de championnat selon les envies, du loisir à l'élite.",
@@ -304,8 +333,16 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Salle",
-      "age": "Dès 3 ans"
+      "age": "Dès 3 ans",
+      "ageMin": 3
     },
+    "schema": "hand",
+    "offres": [
+      "BabyHand"
+    ],
+    "handi": [
+      "ParaHand"
+    ],
     "niveaux": [
       "Catégories par âge (−11, −13, −15, −18 ans), puis seniors.",
       "Équipes masculines, féminines et parfois mixtes chez les jeunes.",
@@ -356,8 +393,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Salle et sable",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "volley",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes (M9 à M21), puis seniors.",
       "Volley loisir mixte, souvent sans classement strict.",
@@ -404,8 +445,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur et salle",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "hockey",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge (U8 à U19), puis seniors et vétérans.",
       "Hockey en salle l'hiver, hockey sur gazon le reste de l'année.",
@@ -452,8 +497,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Patinoire",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "rink",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes (U7 à U20), puis seniors.",
       "Hockey loisir pour adultes, souvent avec moins de contacts.",
@@ -500,8 +549,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "baseball",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes (U9 à U18), puis seniors.",
       "Baseball, softball, slowpitch mixte loisir.",
@@ -552,8 +605,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur et salle",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "ultimate",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes, puis seniors (open, femmes, mixte).",
       "Ultimate en salle l'hiver, sur herbe ou sur plage l'été.",
@@ -600,8 +657,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "À cheval",
-      "age": "Cavaliers à l'aise"
+      "age": "Cavaliers à l'aise",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement par handicap, de −2 à +10.",
       "Initiation, polo loisir, tournois de niveau croissant.",
@@ -648,8 +709,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Simple ou double",
       "lieu": "Extérieur et couvert",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "tennis",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement national : non classé, puis 4e série (40 à 30/1), 3e, 2e et 1re série.",
       "Galaxie Tennis pour les enfants : niveaux par couleur (blanc, violet, rouge, orange, vert).",
@@ -696,8 +761,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Simple ou double",
       "lieu": "Salle",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "bad",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement par séries, de NC (non classé) à N1 en passant par P12-P10, D9-D7, R6-R4, N3-N1 (nouveau mode de calcul depuis septembre 2025).",
       "Badminton loisir, souvent en créneaux libres.",
@@ -744,8 +813,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Simple ou double",
       "lieu": "Salle",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "tt",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement par points : chaque match gagné ou perdu fait évoluer ton total.",
       "Catégories par âge (poussins à juniors, seniors, vétérans).",
@@ -792,8 +865,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": "squash",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement national par points.",
       "Balles repérées par un point de couleur selon le niveau : de la balle d'initiation, qui rebondit le plus, à la balle double point jaune des confirmés.",
@@ -840,8 +917,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel et relais",
       "lieu": "Piscine",
-      "age": "Dès les bébés nageurs"
+      "age": "Dès les bébés nageurs",
+      "ageMin": null
     },
+    "schema": "pool",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Parcours de l'École de natation française : Sauv'nage, Pass'sports de l'eau, Pass'compétition.",
       "Catégories par âge (avenirs, jeunes, juniors, seniors), puis Maîtres.",
@@ -888,8 +969,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En binôme",
       "lieu": "Piscine et mer",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": null,
+    "offres": [
+      "Plongée enfant"
+    ],
+    "handi": [],
     "niveaux": [
       "Niveaux 1 à 3 du plongeur (de 20 m encadré à 60 m en autonomie, Niveau 3 dès 18 ans), puis guide de palanquée (niveau 4) et moniteur.",
       "Brevets spécifiques : Nitrox, recycleur, Trimix, plongée souterraine.",
@@ -939,8 +1026,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Mer",
-      "age": "Dès 16 ans"
+      "age": "Dès 16 ans",
+      "ageMin": 16
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Formation à l'apnée et à la sécurité.",
       "Pratique loisir encadrée par le club.",
@@ -986,8 +1077,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou équipage",
       "lieu": "Mer et lacs",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": "voile",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Niveaux de compétence de la FFVoile, de la découverte à l'autonomie.",
       "Catégories de régate par âge et par support.",
@@ -1034,8 +1129,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou équipage",
       "lieu": "Rivières et lacs",
-      "age": "Dès 10 ans"
+      "age": "Dès 10 ans",
+      "ageMin": 10
     },
+    "schema": "rowing",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Brevets de rameur (bronze, argent, or chez les jeunes ; en eaux intérieures, en mer et en indoor).",
       "Catégories par âge (J10 à J18, seniors, masters).",
@@ -1082,8 +1181,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou équipage",
       "lieu": "Eaux calmes et vives",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "slalomwater",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Pagaies couleurs : de la pagaie blanche à la pagaie noire, pour valider ta progression.",
       "Catégories par âge, de poussins à vétérans.",
@@ -1130,8 +1233,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Océan",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Passeports glisse pour valider ta progression.",
       "Catégories par âge, de benjamins à vétérans.",
@@ -1178,8 +1285,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Plans d'eau",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Brevets fédéraux de progression.",
       "Catégories par âge en compétition.",
@@ -1225,8 +1336,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Plans d'eau",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Licences loisir et compétition.",
       "Catégories selon l'âge et la puissance des engins."
@@ -1271,8 +1386,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel et relais",
       "lieu": "Piscine et plage",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "pool",
+    "offres": [
+      "Formations"
+    ],
+    "handi": [],
     "niveaux": [
       "Catégories par âge, de benjamins à masters.",
       "Brevets de sauvetage et diplômes de secourisme."
@@ -1317,8 +1438,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Dojo",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "tatami",
+    "offres": [],
+    "handi": [
+      "Para judo"
+    ],
     "niveaux": [
       "Ceintures de couleur : blanche, jaune, orange, verte, bleue, marron, puis noire et ses dans (degrés).",
       "Ceintures intermédiaires pour les plus jeunes.",
@@ -1365,8 +1492,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel ou solo (kata)",
       "lieu": "Dojo",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "tatami",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Ceintures : blanche, jaune, orange, verte, bleue, marron, puis noire et ses dans.",
       "Catégories par âge et par poids en combat.",
@@ -1413,8 +1544,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel ou solo",
       "lieu": "Dojo",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "octagon",
+    "offres": [],
+    "handi": [
+      "Handi Taekwondo"
+    ],
     "niveaux": [
       "Keups (grades de couleur) puis dans (ceinture noire).",
       "Catégories par âge et par poids.",
@@ -1466,8 +1603,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "À deux",
       "lieu": "Dojo",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "tatami",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Grades kyu (souvent sans couleur de ceinture chez les adultes), puis dan (ceinture noire).",
       "Cours enfants, adultes, et stages avec des experts."
@@ -1515,8 +1656,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou duel",
       "lieu": "Salle",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "tatami",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Grades ou ceintures selon les écoles.",
       "Pratiques internes (tai-chi, qi gong) et externes (kung-fu, sanda)."
@@ -1561,8 +1706,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "ring",
+    "offres": [
+      "École de boxe"
+    ],
+    "handi": [],
     "niveaux": [
       "Boxe éducative assaut (sans frapper fort), puis boxe amateur, puis boxe professionnelle.",
       "Gants de couleur pour valider la technique.",
@@ -1613,8 +1764,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "ring",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Gants de couleur techniques : bleu, vert, rouge, blanc, jaune, puis gants d'argent.",
       "Assaut, pré-combat, combat.",
@@ -1664,8 +1819,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": "ring",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Grades techniques (prajieds en muay thaï, ceintures ou gants en kick-boxing).",
       "Loisir, light contact, plein contact.",
@@ -1711,8 +1870,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": "ring",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Ceintures de couleur.",
       "Light contact puis full contact."
@@ -1757,8 +1920,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 3 ans (baby lutte)"
+      "age": "Dès 3 ans (baby lutte)",
+      "ageMin": null
     },
+    "schema": "wrestle",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Maîtrises de couleur pour valider la progression technique.",
       "Catégories par âge (poussins à vétérans) et par poids.",
@@ -1805,8 +1972,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "piste",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Blasons jaune, rouge et bleu pour valider les progrès (et blason vert pour l'arbitrage).",
       "Catégories par âge, dès M5-M7 jusqu'aux vétérans.",
@@ -1853,8 +2024,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel et relais",
       "lieu": "Stade et nature",
-      "age": "Dès 3 ans"
+      "age": "Dès 3 ans",
+      "ageMin": 3
     },
+    "schema": "track",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge : baby athlé, éveil, poussins, benjamins, minimes, cadets, juniors, espoirs, seniors, masters.",
       "Pass'Athlé pour les enfants : Pass'Aventure (4-6 ans), Pass'Éveil (7-9 ans).",
@@ -1910,8 +2085,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Eau, route, chemins",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "flow3",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge, de mini-poussins à vétérans.",
       "Distances progressives de XS à XXL.",
@@ -1962,8 +2141,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Multisites",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "flow5",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge, de U9 à masters.",
       "Laser run, biathle, triathle, tétrathlon, pentathlon complet."
@@ -2012,8 +2195,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou relais",
       "lieu": "Forêt et ville",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "orient",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Circuits par couleur : vert, bleu, jaune, orange, violet et noir ; les jeunes valident des « balises de couleur ».",
       "Catégories par âge et par niveau.",
@@ -2064,8 +2251,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En groupe",
       "lieu": "Sentiers",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [
+      "Randochallenges (Participation)"
+    ],
+    "handi": [],
     "niveaux": [
       "Sorties par niveau : facile, moyen, sportif.",
       "Rando santé pour les personnes qui reprennent ou ont une fragilité.",
@@ -2112,8 +2305,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En binôme",
       "lieu": "Salle et falaise",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "climb",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Cotations de difficulté (du 3 au 9c en voie).",
       "Passeports FFME (blanc, jaune, orange, vert, bleu…) pour valider l'autonomie.",
@@ -2160,8 +2357,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En cordée",
       "lieu": "Montagne",
-      "age": "Enfants, ados et adultes"
+      "age": "Enfants, ados et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Cotations de difficulté des courses (F, PD, AD, D, TD, ED).",
       "Formations progressives pour devenir autonome, puis encadrant.",
@@ -2211,8 +2412,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Grottes",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Initiation, puis autonomie, puis encadrement.",
       "Stages fédéraux d'initiateur et de moniteur.",
@@ -2257,8 +2462,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel et en équipe",
       "lieu": "Route, piste, chemins",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge (pré-licenciés à masters).",
       "Licences selon le niveau (départemental, régional, national, élite).",
@@ -2305,8 +2514,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En groupe",
       "lieu": "Route et chemins",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Groupes de niveau dans chaque club.",
       "Brevets de distance croissante.",
@@ -2359,8 +2572,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Avec un cheval",
       "lieu": "Centre équestre",
-      "age": "Dès 3 ans"
+      "age": "Dès 3 ans",
+      "ageMin": 3
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Galops de 1 à 7 pour valider les connaissances et la pratique.",
       "Compétitions Club, Amateur, puis Pro.",
@@ -2407,8 +2624,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Parcours",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": "golf",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Drapeaux de progression pour apprendre.",
       "Index de 54 (débutant) jusqu'à moins de 0 pour les meilleurs.",
@@ -2457,8 +2678,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Avec ton chien",
       "lieu": "Nature et neige",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Initiation, loisir, compétition.",
       "Catégories selon la discipline et le nombre de chiens."
@@ -2507,8 +2732,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Rivières, lacs, mer",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories jeunes, seniors, vétérans, dames.",
       "Divisions régionales et nationales.",
@@ -2554,8 +2783,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Montagne",
-      "age": "Dès 3 ans"
+      "age": "Dès 3 ans",
+      "ageMin": 3
     },
+    "schema": "slalom",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Tests de niveau de l'École du ski français, utilisés aussi en club (Ourson, Flocons, Étoiles, Flèche, Chamois).",
       "Catégories par âge (U8 à U21, puis seniors et masters).",
@@ -2602,8 +2835,14 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo, duo ou équipe",
       "lieu": "Patinoire",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": null,
+    "offres": [],
+    "handi": [
+      "Para Sports de Glace"
+    ],
     "niveaux": [
       "Tests fédéraux de patinage homologués par la FFSG, récompensés par des insignes.",
       "Catégories par âge.",
@@ -2654,8 +2893,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Rue, skatepark, salle",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Roues de couleur pour valider la progression.",
       "Catégories par âge en compétition.",
@@ -2702,8 +2945,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Plage",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Niveaux de pratique fédéraux.",
       "Classes de chars selon la taille et la puissance.",
@@ -2753,8 +3000,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Salle",
-      "age": "Dès 15 mois (baby gym)"
+      "age": "Dès 15 mois (baby gym)",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Programmes Fédéral, Performance, puis Élite.",
       "Catégories par âge.",
@@ -2801,8 +3052,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo, duo ou groupe",
       "lieu": "Studio",
-      "age": "Dès 4 ans"
+      "age": "Dès 4 ans",
+      "ageMin": 4
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Niveaux débutant, intermédiaire, avancé selon les écoles.",
       "Catégories par âge et par niveau en compétition.",
@@ -2849,8 +3104,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Salle",
-      "age": "Dès 10 ans"
+      "age": "Dès 10 ans",
+      "ageMin": 10
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge et par poids de corps.",
       "Niveaux de performance régionaux puis nationaux.",
@@ -2901,8 +3160,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou équipe",
       "lieu": "Salle",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Niveaux techniques de progression.",
       "Catégories par âge et par niveau.",
@@ -2952,8 +3215,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Salle et rue",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Initiation, loisir, compétition.",
       "Catégories par âge."
@@ -2998,8 +3265,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Circuit",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Licences selon la discipline et le niveau (régional, national, international).",
       "Catégories de karting par âge (Minikart, Mini 60, Cadet, Junior, Senior).",
@@ -3050,8 +3321,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Terrain et circuit",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Guidons de progression pour les jeunes (bronze dès 6 ans, argent dès 7 ans, or), puis le CASM obligatoire dès 12 ans.",
       "Catégories par âge et par cylindrée.",
@@ -3097,8 +3372,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Piste",
-      "age": "Dès 7 ans"
+      "age": "Dès 7 ans",
+      "ageMin": 7
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par type de voiture et d'échelle.",
       "Loisir, courses de club, compétition."
@@ -3143,8 +3422,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Terrain de vol",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Brevets et qualifications de pilote délivrés par la fédération.",
       "Catégories selon le type de modèle.",
@@ -3190,8 +3473,16 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou en groupe",
       "lieu": "Ciel",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": "para",
+    "offres": [
+      "Tandem",
+      "PAC",
+      "Traditionnelle"
+    ],
+    "handi": [],
     "niveaux": [
       "Brevets A, B, C, D selon le nombre de sauts et les compétences.",
       "Spécialisations par discipline.",
@@ -3237,8 +3528,19 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo",
       "lieu": "Ciel",
-      "age": "Dès 14 ans"
+      "age": "Dès 14 ans",
+      "ageMin": 14
     },
+    "schema": null,
+    "offres": [
+      "Vols Découverte",
+      "École de pilotage",
+      "Stage Découverte",
+      "Vol découverte voltige"
+    ],
+    "handi": [
+      "Handiplaneur"
+    ],
     "niveaux": [
       "Brevet de pilote planeur (SPL), puis qualifications.",
       "Insignes de performance (argent, or, diamant).",
@@ -3284,8 +3586,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo",
       "lieu": "Ciel",
-      "age": "Dès 14 ans"
+      "age": "Dès 14 ans",
+      "ageMin": 14
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Brevets (initial, pilote, pilote confirmé) et passeport de progression.",
       "Vol de distance, voltige, vol rando, kite."
@@ -3334,8 +3640,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou à deux",
       "lieu": "Ciel",
-      "age": "Dès 15 ans"
+      "age": "Dès 15 ans",
+      "ageMin": 15
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Brevet et licence de pilote ULM par classe.",
       "Qualifications d'emport de passager et d'instructeur."
@@ -3380,8 +3690,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou à deux",
       "lieu": "Ciel",
-      "age": "Dès l'adolescence"
+      "age": "Dès l'adolescence",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "BIA, brevet de base, LAPL, PPL.",
       "Qualifications voltige, vol de nuit, instructeur."
@@ -3426,8 +3740,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo",
       "lieu": "Ciel",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Licence pilote privé hélicoptère.",
       "Qualifications et épreuves sportives."
@@ -3471,8 +3789,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipage",
       "lieu": "Ciel",
-      "age": "Ados et adultes"
+      "age": "Ados et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Licence de pilote de ballon.",
       "Qualifications pour emporter des passagers."
@@ -3516,8 +3838,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Stand de tir",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "shoot",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "« Cibles Couleurs » pour valider la progression (blanche, jaune, orange, verte, bleue, marron, arc-en-ciel), puis niveaux averti, confirmé et expert.",
       "Catégories par âge, de poussins à seniors.",
@@ -3564,8 +3890,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Salle et extérieur",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "archery",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Plumes de progression pour les plus jeunes, puis flèches de progression (blanche, noire, bleue, rouge, jaune).",
       "Catégories par âge et par type d'arc.",
@@ -3612,8 +3942,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Stand",
-      "age": "Dès 12 ans"
+      "age": "Dès 12 ans",
+      "ageMin": 12
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge et par niveau.",
       "Loisir et compétition."
@@ -3658,8 +3992,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou en équipe",
       "lieu": "Salle et estaminet",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": "javelot",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge et par niveau.",
       "Loisir et compétition."
@@ -3703,8 +4041,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Salle",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "billiard",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories de niveau (Régional, National, Master…) selon les moyennes.",
       "Catégories par âge.",
@@ -3750,8 +4092,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Bowling",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "bowling",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement par moyenne de score.",
       "Catégories jeunes, seniors, vétérans.",
@@ -3801,8 +4147,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo, doublette, triplette",
       "lieu": "Boulodrome",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": "petanque",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories : minimes, cadets, juniors, seniors, vétérans, féminines.",
       "Classement des joueurs (promotion, honneur, élite).",
@@ -3849,8 +4199,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou en équipe",
       "lieu": "Boulodrome",
-      "age": "Dès 8 ans"
+      "age": "Dès 8 ans",
+      "ageMin": 8
     },
+    "schema": "petanque",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge et par division.",
       "Jeu traditionnel et épreuves athlétiques."
@@ -3895,8 +4249,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Club",
-      "age": "Dès 5 ans"
+      "age": "Dès 5 ans",
+      "ageMin": 5
     },
+    "schema": "chess",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classement Elo, de débutant à grand maître international.",
       "Catégories par âge en compétition jeune.",
@@ -3943,8 +4301,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Solo ou en équipe",
       "lieu": "Fronton et trinquet",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": "fronton",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge et par niveau (Nationale B, Nationale A, Première…).",
       "De nombreuses spécialités, à main nue ou avec instrument."
@@ -3989,8 +4351,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur",
-      "age": "Jeunes et adultes"
+      "age": "Jeunes et adultes",
+      "ageMin": null
     },
+    "schema": "gagne",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par niveau et par âge.",
       "Simple et équipes."
@@ -4039,8 +4405,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur et salle",
-      "age": "Jeunes et adultes"
+      "age": "Jeunes et adultes",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge, de jeunes à seniors.",
       "Divisions nationales et régionales, féminines et masculines.",
@@ -4086,8 +4456,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En équipe",
       "lieu": "Extérieur et salle",
-      "age": "Jeunes et adultes"
+      "age": "Jeunes et adultes",
+      "ageMin": null
     },
+    "schema": "gagne",
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories par âge.",
       "Championnat en extérieur et championnat en salle."
@@ -4135,8 +4509,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel",
       "lieu": "Arènes",
-      "age": "Dès l'adolescence"
+      "age": "Dès l'adolescence",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Écoles de raseteurs, puis courses de l'Avenir, puis courses des As pour les meilleurs."
     ],
@@ -4180,8 +4558,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En cuadrilla",
       "lieu": "Arènes",
-      "age": "Dès l'adolescence"
+      "age": "Dès l'adolescence",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Écoles, courses formelles, concours.",
       "Écarteurs, sauteurs, cordiers."
@@ -4226,8 +4608,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "En duel",
       "lieu": "Canaux et rivières",
-      "age": "Dès 6 ans"
+      "age": "Dès 6 ans",
+      "ageMin": 6
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Catégories de poids et d'âge.",
       "Juniors, seniors, vétérans."
@@ -4272,8 +4658,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Selon la discipline",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classification médico-sportive par discipline.",
       "Loisir, compétition régionale, nationale et internationale."
@@ -4318,8 +4708,12 @@ export const SPORT_GUIDES: Record<string, SportGuide> = {
     "repere": {
       "format": "Individuel ou en équipe",
       "lieu": "Selon la discipline",
-      "age": "Tout âge"
+      "age": "Tout âge",
+      "ageMin": null
     },
+    "schema": null,
+    "offres": [],
+    "handi": [],
     "niveaux": [
       "Classes de compétition AB, BC, CD selon l'autonomie.",
       "Loisir, compétition, haut niveau (sport adapté para)."
@@ -4363,7 +4757,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Dès l'école de rugby",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "rugby"
   },
   "rugby--competition-a-x": {
     "accroche": "Un rugby plus aéré et plus rapide, à 10 joueurs : plus de course, plus de ballons touchés.",
@@ -4381,7 +4776,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Plein air"
-    ]
+    ],
+    "schema": "rugby"
   },
   "rugby--competition-a-7": {
     "accroche": "La version olympique du rugby : 7 joueurs sur un grand terrain, des matchs éclairs et beaucoup de vitesse.",
@@ -4399,7 +4795,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": "rugby"
   },
   "rugby--rugby-a-5-loisir-bien-etre": {
     "accroche": "Du rugby sans plaquage ni mêlée, mixte et convivial : la meilleure façon de découvrir ou de reprendre.",
@@ -4418,7 +4815,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Santé",
       "Découverte"
-    ]
+    ],
+    "schema": null
   },
   "rugby--rugby-loisir-avec-plaquage": {
     "accroche": "Le vrai rugby avec contact, mais sans la pression du classement : pour le plaisir du jeu et de la troisième mi-temps.",
@@ -4435,7 +4833,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "rugby--rugby-sante": {
     "accroche": "Bouger pour sa santé avec un ballon ovale : une pratique douce, encadrée par des éducateurs formés.",
@@ -4453,7 +4852,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "rugby--beach": {
     "accroche": "Le rugby les pieds dans le sable, en équipes réduites et en tournois festifs l'été.",
@@ -4472,7 +4872,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Compétition",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "rugby--rugby-entreprises": {
     "accroche": "Jouer au rugby entre collègues : cohésion d'équipe garantie, sur le terrain comme au bureau.",
@@ -4489,7 +4890,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "handball--handball-a-7": {
     "accroche": "Le handball classique : 6 joueurs de champ et un gardien, en salle, en championnat.",
@@ -4507,7 +4909,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "hand"
   },
   "handball--hand-a-4": {
     "accroche": "Un handball sur petit terrain, à 4 contre 4 : on touche plus le ballon et on marque plus.",
@@ -4525,7 +4928,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "handball--handfit": {
     "accroche": "Le handball version santé : renforcement, cardio et ballon, sans compétition.",
@@ -4543,7 +4947,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "handball--beach-handball": {
     "accroche": "Le handball sur sable, spectaculaire, où les buts acrobatiques valent double.",
@@ -4562,7 +4967,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Compétition",
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--plongee-sous-marine": {
     "accroche": "Respirer sous l'eau et découvrir un monde silencieux : la plongée avec bouteille, en toute sécurité.",
@@ -4581,7 +4987,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Découverte",
       "Formation",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--rando-sub": {
     "accroche": "Observer les fonds marins en surface, avec masque, palmes et tuba : la porte d'entrée vers la mer.",
@@ -4600,7 +5007,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Découverte",
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--apnee": {
     "accroche": "Plonger sur une seule inspiration : un travail de relaxation, de souffle et de maîtrise de soi.",
@@ -4618,7 +5026,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Formation",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--plongee-nitrox": {
     "accroche": "Plonger avec un air enrichi en oxygène pour rester plus longtemps sous l'eau.",
@@ -4636,7 +5045,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Formation",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--environnement-et-bio": {
     "accroche": "Apprendre à reconnaître ce que tu vois sous l'eau, et à le protéger.",
@@ -4654,7 +5064,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--nage-avec-palmes": {
     "accroche": "La discipline la plus rapide dans l'eau : on nage avec une monopalme ou deux palmes.",
@@ -4672,7 +5083,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": "pool"
   },
   "plongee-et-sports-sous-marins--photo-et-video": {
     "accroche": "Rapporter des images du monde sous-marin : cadrage, lumière et patience.",
@@ -4690,7 +5102,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--plongee-recycleur": {
     "accroche": "Plonger sans bulles, avec un appareil qui recycle l'air que tu expires.",
@@ -4708,7 +5121,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Formation",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--nage-en-eau-vive": {
     "accroche": "Descendre une rivière en palmes, allongé sur un flotteur : sensations garanties.",
@@ -4727,7 +5141,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Plein air",
       "Loisir",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--plongee-trimix": {
     "accroche": "Explorer en profondeur grâce à un mélange de gaz contenant de l'hélium.",
@@ -4745,7 +5160,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Formation",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--peche-sous-marine": {
     "accroche": "Pêcher en apnée, au fusil, en connaissant et en respectant la mer.",
@@ -4763,7 +5179,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--orientation": {
     "accroche": "Une course d'orientation sous l'eau, à la boussole.",
@@ -4781,7 +5198,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--tir-sur-cible": {
     "accroche": "Viser une cible au fusil sous-marin, en apnée : un sport de précision dans l'eau.",
@@ -4798,7 +5216,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--hockey": {
     "accroche": "Le hockey subaquatique : un sport collectif qui se joue au fond de la piscine, en apnée.",
@@ -4816,7 +5235,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--plongee-souterraine": {
     "accroche": "Explorer les galeries noyées des grottes : une aventure réservée aux plongeurs expérimentés.",
@@ -4834,7 +5254,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Technique",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--archeologie": {
     "accroche": "Participer à la découverte d'épaves et de vestiges sous l'eau.",
@@ -4852,7 +5273,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "plongee-et-sports-sous-marins--sirenes-tritons": {
     "accroche": "Nager avec une queue de sirène : de la grâce, de l'imaginaire et beaucoup de gainage.",
@@ -4870,7 +5292,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Découverte"
-    ]
+    ],
+    "schema": null
   },
   "sauvetage-et-secourisme--secourisme-operationnel": {
     "accroche": "Apprendre les gestes qui sauvent, puis tenir des postes de secours lors d'événements.",
@@ -4887,7 +5310,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "sauvetage-et-secourisme--sauvetage-sportif": {
     "accroche": "Nager, courir et remorquer comme un sauveteur : un sport complet et utile.",
@@ -4905,7 +5329,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Formation"
-    ]
+    ],
+    "schema": "pool"
   },
   "judo-jujitsu--judo": {
     "accroche": "Projeter, contrôler au sol, respecter son partenaire : le judo, sport éducatif par excellence.",
@@ -4924,7 +5349,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Compétition",
       "Loisir",
       "Enfants"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--taiso": {
     "accroche": "La préparation physique du judo, sans combat ni chute : idéal pour se remettre en forme.",
@@ -4942,7 +5368,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--jujitsu": {
     "accroche": "L'art de se défendre en combinant coups, projections et contrôles au sol.",
@@ -4960,7 +5387,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Self-défense"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--kendo": {
     "accroche": "L'escrime japonaise : sabre de bambou, armure, cris et précision.",
@@ -4978,7 +5406,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Technique"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--self-defense": {
     "accroche": "Apprendre des gestes simples et efficaces pour se protéger.",
@@ -4996,7 +5425,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Self-défense"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--kata": {
     "accroche": "Des enchaînements codifiés réalisés à deux, notés sur leur précision et leur beauté.",
@@ -5014,7 +5444,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Technique"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--iaido": {
     "accroche": "L'art de dégainer et de trancher au sabre, en gestes lents et précis.",
@@ -5031,7 +5462,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--ne-waza": {
     "accroche": "Le combat entièrement au sol : immobilisations, clés et étranglements.",
@@ -5048,7 +5480,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "tatami"
   },
   "judo-jujitsu--kyudo": {
     "accroche": "Le tir à l'arc japonais, pratiqué comme une voie de concentration.",
@@ -5065,7 +5498,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--sport-chanbara": {
     "accroche": "Le combat au sabre en mousse : ludique, rapide et sans danger.",
@@ -5084,7 +5518,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Enfants",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--jodo": {
     "accroche": "L'art du bâton face au sabre, en formes codifiées.",
@@ -5101,7 +5536,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--jiu-jitsu-bresilien": {
     "accroche": "Le combat au sol en kimono, centré sur les clés et les étranglements.",
@@ -5118,7 +5554,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "judo-jujitsu--naginata": {
     "accroche": "Un art martial japonais pratiqué avec une longue hallebarde en bois.",
@@ -5135,7 +5572,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "taekwondo--body-taekwondo": {
     "accroche": "Un cours de fitness en musique, inspiré des coups de pied et de poing du taekwondo.",
@@ -5153,7 +5591,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "taekwondo--taekwondo-impact": {
     "accroche": "Frapper fort dans des cibles : la puissance du taekwondo, sans combat.",
@@ -5170,7 +5609,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "taekwondo--taekwonkido": {
     "accroche": "Une méthode coréenne de défense personnelle, entre frappes, clés et projections.",
@@ -5187,7 +5627,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Self-défense"
-    ]
+    ],
+    "schema": null
   },
   "taekwondo--hoshin-moosool": {
     "accroche": "Un art martial coréen de défense personnelle, centré sur les clés et les projections.",
@@ -5204,7 +5645,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Self-défense"
-    ]
+    ],
+    "schema": null
   },
   "boxe-anglaise--boxe-anglaise": {
     "accroche": "Le noble art : uniquement les poings, beaucoup de jeu de jambes et de stratégie.",
@@ -5222,7 +5664,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "ring"
   },
   "lutte--lutte": {
     "accroche": "Lutte libre, gréco-romaine et féminine : les styles olympiques de la lutte.",
@@ -5240,7 +5683,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Enfants"
-    ]
+    ],
+    "schema": "wrestle"
   },
   "lutte--grappling": {
     "accroche": "Le combat de saisie sans kimono : clés, étranglements et contrôles, sans aucune frappe.",
@@ -5257,7 +5701,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "tatami"
   },
   "lutte--sambo": {
     "accroche": "L'art martial russe qui mêle projections et clés de jambes.",
@@ -5274,7 +5719,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "wrestle"
   },
   "randonnee-pedestre--randonnee-pedestre": {
     "accroche": "Marcher en groupe sur les sentiers, à la journée ou à la demi-journée : le grand classique des clubs de rando.",
@@ -5293,7 +5739,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Plein air",
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--raquette-a-neige": {
     "accroche": "Randonner l'hiver dans la neige, sans s'enfoncer, au calme des forêts enneigées.",
@@ -5311,7 +5758,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--marche-nordique": {
     "accroche": "Une marche dynamique avec des bâtons qui font travailler tout le corps.",
@@ -5329,7 +5777,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--longe-cote-marche-aquatique": {
     "accroche": "Marcher dans la mer, de l'eau jusqu'à la taille ou la poitrine : tonique et doux à la fois.",
@@ -5347,7 +5796,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--cyclotourisme": {
     "accroche": "Des balades à vélo organisées par les clubs de randonnée.",
@@ -5365,7 +5815,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--marche-d-endurance": {
     "accroche": "Marcher longtemps, sur de grandes distances : un défi d'endurance à son rythme.",
@@ -5383,7 +5834,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Dépassement"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--ski-de-fond": {
     "accroche": "Glisser sur les pistes nordiques, en forêt : la randonnée version hiver.",
@@ -5401,7 +5853,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--ski-de-randonnee-ou-ski-alpinisme": {
     "accroche": "Monter en peaux de phoque, redescendre dans la poudreuse : la montagne à ski, loin des remontées.",
@@ -5419,7 +5872,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Dépassement"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--geocaching-caches-et-gps-ou-randocaching": {
     "accroche": "Une chasse au trésor grandeur nature, avec un GPS ou un smartphone.",
@@ -5438,7 +5892,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Enfants",
       "Découverte"
-    ]
+    ],
+    "schema": null
   },
   "randonnee-pedestre--alpinisme": {
     "accroche": "Les courses en haute montagne, sur neige, glace et rocher.",
@@ -5456,7 +5911,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-alpin": {
     "accroche": "Dévaler les pistes et enchaîner les virages, en loisir ou entre les portes de slalom.",
@@ -5474,7 +5930,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "slalom"
   },
   "ski--snowboard": {
     "accroche": "Glisser sur une planche unique : en piste, en snowpark ou en boardercross.",
@@ -5492,7 +5949,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-de-fond": {
     "accroche": "Le ski nordique, sur pistes damées : un des sports d'endurance les plus complets.",
@@ -5511,7 +5969,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Compétition",
       "Loisir",
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-de-randonnee": {
     "accroche": "Monter avec des peaux sous les skis, puis redescendre en neige naturelle.",
@@ -5529,7 +5988,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "ski--biathlon": {
     "accroche": "Ski de fond et tir à la carabine : il faut aller vite, puis se calmer pour viser juste.",
@@ -5546,7 +6006,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Dès 10 ans environ",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "shoot"
   },
   "ski--rollerski": {
     "accroche": "Des skis à roulettes pour s'entraîner au ski de fond toute l'année.",
@@ -5564,7 +6025,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-freestyle": {
     "accroche": "Sauts, figures et créativité : le ski version acrobatique.",
@@ -5582,7 +6044,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "ski--telemark": {
     "accroche": "Une technique ancienne et élégante, talon libre et genou fléchi.",
@@ -5600,7 +6063,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Technique"
-    ]
+    ],
+    "schema": null
   },
   "ski--randonnee-nordique": {
     "accroche": "Randonner sur des skis de fond hors des pistes damées.",
@@ -5618,7 +6082,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Plein air"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-sur-herbe": {
     "accroche": "Le ski alpin sans neige : on dévale des pentes d'herbe l'été.",
@@ -5636,7 +6101,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "ski--saut-a-ski": {
     "accroche": "S'élancer d'un tremplin et voler le plus loin possible.",
@@ -5654,7 +6120,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": null
   },
   "ski--combine-nordique": {
     "accroche": "Saut à ski puis course de ski de fond : un des sports les plus complets de l'hiver.",
@@ -5672,7 +6139,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-de-vitesse": {
     "accroche": "Descendre tout droit le plus vite possible : la discipline la plus rapide sur la neige.",
@@ -5689,7 +6157,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "ski--biathlon-running": {
     "accroche": "La version estivale du biathlon : course à pied et tir.",
@@ -5707,7 +6176,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "ski--hors-piste-freeride": {
     "accroche": "Skier en neige vierge, loin des pistes balisées, avec un encadrement et le bon matériel.",
@@ -5725,7 +6195,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-forme": {
     "accroche": "Skier pour le plaisir et la forme, sans compétition.",
@@ -5743,7 +6214,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "ski--ski-sante": {
     "accroche": "Le ski adapté aux personnes qui reprennent une activité ou ont une fragilité de santé.",
@@ -5760,7 +6232,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes et seniors",
     "tags": [
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--patinage-artistique": {
     "accroche": "Sauts, pirouettes et chorégraphies en musique : la grâce et la puissance sur glace.",
@@ -5779,7 +6252,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Compétition",
       "Loisir",
       "Enfants"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--danse-sur-glace": {
     "accroche": "En couple, sur le rythme : la danse sur glace mise sur l'interprétation et les pas.",
@@ -5796,7 +6270,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Enfants et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--ballet-sur-glace": {
     "accroche": "Des chorégraphies en groupe, avec costumes et mises en scène.",
@@ -5814,7 +6289,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Spectacle",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--curling": {
     "accroche": "Faire glisser des pierres de granit vers une cible, en balayant devant elles : stratégique et convivial.",
@@ -5832,7 +6308,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "curling"
   },
   "sports-de-glace--patinage-synchronise": {
     "accroche": "Une équipe de patineurs qui évolue comme un seul corps.",
@@ -5850,7 +6327,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--sports-extreme": {
     "accroche": "Les disciplines de glisse spectaculaires sur glace.",
@@ -5868,7 +6346,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--short-track": {
     "accroche": "La course de vitesse en peloton sur une petite piste ovale : tactique et dépassements.",
@@ -5886,7 +6365,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--glace-inline": {
     "accroche": "Les pratiques de patinage en ligne liées aux sports de glace.",
@@ -5903,7 +6383,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Enfants et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--ice-cross": {
     "accroche": "Descendre à quatre une piste de glace avec bosses et virages, en patins.",
@@ -5920,7 +6401,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--freestyle": {
     "accroche": "Figures libres et créatives sur patins.",
@@ -5937,7 +6419,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--bobsleigh": {
     "accroche": "Descendre une piste de glace en équipage, à grande vitesse.",
@@ -5955,7 +6438,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Haut niveau"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--luge": {
     "accroche": "Descendre allongé sur le dos, pieds en avant, sur une piste de glace.",
@@ -5972,7 +6456,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "sports-de-glace--skeleton": {
     "accroche": "Descendre à plat ventre, tête en avant, sur une luge plate.",
@@ -5989,7 +6474,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "danse--modern-jazz": {
     "accroche": "Une danse énergique et expressive, entre technique classique et rythme jazz.",
@@ -6008,7 +6494,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Spectacle",
       "Enfants"
-    ]
+    ],
+    "schema": null
   },
   "danse--jazz": {
     "accroche": "Rythme, swing et énergie : la danse jazz est née de la culture afro-américaine.",
@@ -6026,7 +6513,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-hip-hop": {
     "accroche": "Popping, locking, house, new style : les danses nées dans la rue, entre freestyle et chorégraphie.",
@@ -6045,7 +6533,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Compétition",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--ateliers-de-creation": {
     "accroche": "Créer ses propres chorégraphies, en groupe, guidé par un professeur.",
@@ -6063,7 +6552,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--contemporain": {
     "accroche": "Une danse libre et inventive, qui explore le poids, le sol et l'émotion.",
@@ -6081,7 +6571,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-latines": {
     "accroche": "Samba, cha-cha, rumba, paso doble et jive : les danses latines de compétition.",
@@ -6099,7 +6590,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--classique": {
     "accroche": "La base de toutes les danses : placement, souplesse, rigueur et élégance.",
@@ -6118,7 +6610,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
       "Loisir",
       "Spectacle",
       "Enfants"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-standards": {
     "accroche": "Valse, tango, quickstep, slow fox : l'élégance des danses de salon en couple fermé.",
@@ -6136,7 +6629,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-de-salon": {
     "accroche": "Les danses de couple pour les soirées et les bals : valse, tango, paso, cha-cha…",
@@ -6153,7 +6647,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes et seniors",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--salsa": {
     "accroche": "La danse de couple cubaine et portoricaine, festive et rythmée.",
@@ -6170,7 +6665,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--bachata": {
     "accroche": "Une danse de couple venue de République dominicaine, douce et sensuelle.",
@@ -6187,7 +6683,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--rock-n-roll": {
     "accroche": "Une danse de couple énergique sur des musiques rock.",
@@ -6204,7 +6701,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--country-line": {
     "accroche": "Danser en ligne, sans partenaire, sur des musiques country et pop.",
@@ -6222,7 +6720,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-ethniques": {
     "accroche": "Danses africaines, orientales, indiennes, polynésiennes : un voyage autour du monde en musique.",
@@ -6240,7 +6739,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Découverte"
-    ]
+    ],
+    "schema": null
   },
   "danse--zumba": {
     "accroche": "Un cours de fitness dansé sur des rythmes latinos : on se dépense sans s'en rendre compte.",
@@ -6258,7 +6758,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--rock-saute": {
     "accroche": "Un rock rapide avec de petits sauts : très dynamique et joyeux.",
@@ -6276,7 +6777,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "danse--barre-au-sol-classique": {
     "accroche": "Les exercices de la danse classique, faits au sol, pour la souplesse et le placement.",
@@ -6294,7 +6796,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--barre-au-sol-contemporaine": {
     "accroche": "Un travail au sol inspiré de la danse contemporaine, pour la souplesse et la conscience du corps.",
@@ -6312,7 +6815,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Santé",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--west-coast-swing": {
     "accroche": "Une danse de couple swing, fluide, élastique et improvisée.",
@@ -6330,7 +6834,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "danse--pole-dance": {
     "accroche": "Des figures acrobatiques autour d'une barre verticale, entre force et grâce.",
@@ -6348,7 +6853,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Santé"
-    ]
+    ],
+    "schema": null
   },
   "danse--breaking": {
     "accroche": "La danse acrobatique au sol née dans le hip-hop, discipline olympique à Paris 2024.",
@@ -6366,7 +6872,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--kizomba": {
     "accroche": "Une danse de couple angolaise, lente et très connectée.",
@@ -6383,7 +6890,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--cabaret": {
     "accroche": "La danse de spectacle avec costumes, plumes et mises en scène.",
@@ -6401,7 +6909,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Spectacle",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--boogie-woogie": {
     "accroche": "Une danse swing rapide et joyeuse, en couple.",
@@ -6419,7 +6928,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "danse--lindy-hop": {
     "accroche": "La danse swing des années 30, festive et parfois acrobatique.",
@@ -6436,7 +6946,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--disco": {
     "accroche": "La danse des années 70 : fun, rythmée et pleine de bonne humeur.",
@@ -6453,7 +6964,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Tout âge",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--comedie-musicale": {
     "accroche": "Danser, chanter et jouer : tout ce qu'il faut pour monter sur scène.",
@@ -6471,7 +6983,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Spectacle",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-aeriennes": {
     "accroche": "Danser en l'air, suspendu à un tissu, un cerceau ou un trapèze.",
@@ -6489,7 +7002,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--pole-sport": {
     "accroche": "La version sportive de la pole dance, avec figures notées en compétition.",
@@ -6506,7 +7020,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "danse--tango-argentin": {
     "accroche": "Une danse de couple improvisée et intense, venue de Buenos Aires.",
@@ -6523,7 +7038,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-latino-caraibes": {
     "accroche": "Salsa, bachata, merengue : les danses festives des Caraïbes.",
@@ -6540,7 +7056,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--claquettes": {
     "accroche": "Danser en créant le rythme avec ses pieds, comme un musicien.",
@@ -6558,7 +7075,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--afro-jazz": {
     "accroche": "Un mélange de danses africaines et de jazz, énergique et terrien.",
@@ -6575,7 +7093,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "danse--rock-acrobatique": {
     "accroche": "Le rock avec portés et acrobaties, très spectaculaire.",
@@ -6593,7 +7112,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--flamenco": {
     "accroche": "La danse andalouse rythmée par les pieds, les mains et la guitare.",
@@ -6611,7 +7131,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Spectacle"
-    ]
+    ],
+    "schema": null
   },
   "danse--danses-traditionnelles": {
     "accroche": "Les danses folkloriques des régions françaises et d'ailleurs.",
@@ -6629,7 +7150,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Patrimoine"
-    ]
+    ],
+    "schema": null
   },
   "danse--danse-historique": {
     "accroche": "Les danses des siècles passés (Renaissance, baroque…), en costumes.",
@@ -6647,7 +7169,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Loisir",
       "Patrimoine"
-    ]
+    ],
+    "schema": null
   },
   "parachutisme--parachutisme": {
     "accroche": "Sauter d'un avion, voler en chute libre, puis piloter sa voile jusqu'au sol.",
@@ -6665,7 +7188,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Formation"
-    ]
+    ],
+    "schema": "para"
   },
   "parachutisme--ascensionnel": {
     "accroche": "S'élever sous un parachute tracté par un véhicule ou un bateau, puis redescendre en douceur.",
@@ -6683,7 +7207,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "parachutisme--parapente": {
     "accroche": "Décoller d'une pente à pied et planer en utilisant les courants.",
@@ -6701,7 +7226,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Plein air",
       "Loisir"
-    ]
+    ],
+    "schema": null
   },
   "parachutisme--soufflerie": {
     "accroche": "Simuler la chute libre dans un tube de vent vertical, sans avion.",
@@ -6719,7 +7245,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Découverte",
       "Compétition"
-    ]
+    ],
+    "schema": null
   },
   "vol-en-planeur--remorquage": {
     "accroche": "Décoller derrière un avion remorqueur, jusqu'à l'altitude de largage.",
@@ -6736,7 +7263,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Dès 14 ans",
     "tags": [
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "vol-en-planeur--eplaneur": {
     "accroche": "Le planeur équipé d'un moteur électrique d'appoint.",
@@ -6753,7 +7281,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "vol-en-planeur--motoplaneur": {
     "accroche": "Un planeur avec moteur, capable de décoller seul.",
@@ -6770,7 +7299,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "vol-en-planeur--treuil": {
     "accroche": "Un décollage rapide et spectaculaire, tiré par un câble enroulé au sol.",
@@ -6787,7 +7317,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Dès 14 ans",
     "tags": [
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "vol-en-planeur--voltige": {
     "accroche": "Boucles, tonneaux, vols dos : les figures acrobatiques en planeur.",
@@ -6805,7 +7336,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Formation"
-    ]
+    ],
+    "schema": null
   },
   "billard--carambole": {
     "accroche": "Le billard français, sans poches : il faut toucher les deux autres billes avec la sienne.",
@@ -6823,7 +7355,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "billiard"
   },
   "billard--blackball": {
     "accroche": "Le billard anglais à billes de couleur : empoche les tiennes, puis la noire.",
@@ -6841,7 +7374,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "billiard"
   },
   "billard--americain": {
     "accroche": "Le billard à billes numérotées : 8-pool, 9-pool, 10-pool.",
@@ -6859,7 +7393,8 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "tags": [
       "Compétition",
       "Loisir"
-    ]
+    ],
+    "schema": "billiard"
   },
   "billard--snooker": {
     "accroche": "Le billard britannique sur grande table, très stratégique.",
@@ -6876,6 +7411,7 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     "age": "Ados et adultes",
     "tags": [
       "Compétition"
-    ]
+    ],
+    "schema": "billiard"
   }
 };
