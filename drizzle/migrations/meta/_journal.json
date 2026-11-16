@@ -260,6 +260,13 @@
       "when": 1794815056757,
       "tag": "0036_clubs_enriched_private",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1794815434293,
+      "tag": "0037_public_read_published_club_media",
+      "breakpoints": true
     }
   ]
 }

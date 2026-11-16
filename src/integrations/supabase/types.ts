@@ -1540,6 +1540,7 @@ export type Database = {
         }[]
       }
       home_stats: { Args: never; Returns: Json }
+      is_published_club_media: { Args: { p_name: string }; Returns: boolean }
       map_club_clusters: {
         Args: {
           p_disciplines?: string[]
