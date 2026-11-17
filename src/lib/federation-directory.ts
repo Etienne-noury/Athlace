@@ -45,7 +45,7 @@ export function getFederationStats(sigle: string | null, rows: FederationClubSta
   const relevant = rows.filter((row) => isFederationRow(sigle, row, sports));
   const disciplines = sports.flatMap((sport) => {
     const names = new Set(relevant.filter((row) => sport.match.includes(row.discipline)).flatMap((row) => row.subs));
-    const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? [])]);
+    const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? []), ...(sport.exclude ?? [])]);
     const sportId = slugifyDiscipline(sport.name);
     return [...names].filter((name) => !excluded.has(name)).sort((a, b) => a.localeCompare(b, 'fr'))
       .map((name) => ({ name, sportId, id: `${sportId}--${slugifyDiscipline(name)}` }));

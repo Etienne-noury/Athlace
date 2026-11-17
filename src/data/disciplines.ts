@@ -23,6 +23,8 @@ export interface SportNode {
   offers?: string[];
   /** Offres handi (pas des sous-disciplines) */
   handi?: string[];
+  /** Valeurs importées à ne pas afficher comme sous-discipline (déjà un sport à part entière) */
+  exclude?: string[];
 }
 
 export interface CategoryNode {
@@ -134,14 +136,13 @@ export const ARBORESCENCE: CategoryNode[] = [
     color: "bg-primary",
     icon: "🏔️",
     sports: [
-      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Cyclotourisme","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"]},
+      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"],"exclude":["Cyclotourisme"]},
       {"name":"Escalade","icon":"🧗","popularity":7,"feds":["FFME"],"match":["Montagne et escalade","Escalade"],"subs":[]},
       {"name":"Alpinisme et montagne","icon":"⛰️","popularity":5,"feds":["FFCAM"],"match":["Clubs alpins et de montagne","Alpinisme et montagne"],"subs":[]},
       {"name":"Spéléologie","icon":"🕳️","popularity":2,"feds":["FFS"],"match":["Spéléologie"],"subs":[]},
       {"name":"Cyclisme","icon":"🚴","popularity":8,"feds":["FFC"],"match":["Cyclisme"],"subs":[]},
       {"name":"Cyclotourisme","icon":"🚲","popularity":5,"feds":["FFVELO"],"match":["Cyclotourisme"],"subs":[]},
       {"name":"Équitation","icon":"🐴","popularity":7,"feds":["FFE-EQ"],"match":["Équitation"],"subs":[]},
-      {"name":"Golf","icon":"⛳","popularity":6,"feds":["FFGOLF"],"match":["Golf"],"subs":[]},
       {"name":"Sports canins et traîneau","icon":"🐕","popularity":2,"feds":["FFST","FFPULKA","FFSLC"],"match":["Sports de traîneau/ski-VTT joëring/canicross","Pulka et traîneau à chiens","Sports et loisirs canins","Sports canins et traîneau"],"subs":[]},
       {"name":"Pêche sportive","icon":"🎣","popularity":3,"feds":["FFPS"],"match":["Pêches sportives","Pêche sportive"],"subs":[]},
     ],
@@ -206,6 +207,7 @@ export const ARBORESCENCE: CategoryNode[] = [
     sports: [
       {"name":"Tir sportif","icon":"🎯","popularity":5,"feds":["FFTIR"],"match":["Tir","Tir sportif"],"subs":[]},
       {"name":"Tir à l'arc","icon":"🏹","popularity":5,"feds":["FFTA"],"match":["Tir à l'arc"],"subs":[]},
+      {"name":"Golf","icon":"⛳","popularity":6,"feds":["FFGOLF"],"match":["Golf"],"subs":[]},
       {"name":"Ball-trap","icon":"🔫","popularity":2,"feds":["FFBT"],"match":["Ball-trap"],"subs":[]},
       {"name":"Javelot tir sur cible","icon":"🎯","popularity":1,"feds":["FFJTC"],"match":["Javelot tir sur cible"],"subs":[]},
       {"name":"Billard","icon":"🎱","popularity":4,"feds":["FFB-BIL"],"match":["Billard"],"subs":["Carambole","Blackball","Américain","Snooker"]},

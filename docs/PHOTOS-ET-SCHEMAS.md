@@ -237,7 +237,6 @@ Déposer les photos directement depuis l'administration du site est possible : i
 | Randonnée pédestre · Raquette à neige | `randonnee-pedestre--raquette-a-neige` |
 | Randonnée pédestre · Marche nordique | `randonnee-pedestre--marche-nordique` |
 | Randonnée pédestre · Longe Côte - Marche Aquatique | `randonnee-pedestre--longe-cote-marche-aquatique` |
-| Randonnée pédestre · Cyclotourisme | `randonnee-pedestre--cyclotourisme` |
 | Randonnée pédestre · Marche d'Endurance | `randonnee-pedestre--marche-d-endurance` |
 | Randonnée pédestre · Ski de fond | `randonnee-pedestre--ski-de-fond` |
 | Randonnée pédestre · Ski de randonnée (ou ski alpinisme) | `randonnee-pedestre--ski-de-randonnee-ou-ski-alpinisme` |

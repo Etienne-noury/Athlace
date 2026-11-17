@@ -5799,25 +5799,6 @@ export const DISCIPLINE_GUIDES: Record<string, DisciplineGuide> = {
     ],
     "schema": null
   },
-  "randonnee-pedestre--cyclotourisme": {
-    "accroche": "Des balades à vélo organisées par les clubs de randonnée.",
-    "principe": "Certains clubs de randonnée proposent aussi des sorties à vélo, sur route ou en VTT. L'esprit reste le même : découvrir, à son rythme, en groupe.",
-    "pratique": [
-      "Sorties par niveau de distance.",
-      "Balades sur routes calmes et voies vertes.",
-      "Encadrement par des animateurs du club."
-    ],
-    "pourQui": "Pour tous ceux qui savent faire du vélo.",
-    "materiel": "Un vélo en bon état, un casque.",
-    "format": "En groupe",
-    "lieu": "Route et chemins",
-    "age": "Tout âge",
-    "tags": [
-      "Loisir",
-      "Plein air"
-    ],
-    "schema": null
-  },
   "randonnee-pedestre--marche-d-endurance": {
     "accroche": "Marcher longtemps, sur de grandes distances : un défi d'endurance à son rythme.",
     "principe": "La marche d'endurance consiste à parcourir de longues distances en une journée ou plus. On s'entraîne progressivement pour participer à des événements comme les marches de nuit ou les randonnées au long cours.",

@@ -36,7 +36,7 @@ export function computeDisciplineAvailability(rows: Row[]) {
     for (const sport of cat.sports) {
       let count = 0;
       const subTotals: Record<string, number> = {};
-      const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? [])]);
+      const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? []), ...(sport.exclude ?? [])]);
       for (const m of sport.match) {
         const row = byDisc.get(m);
         if (!row) continue;
