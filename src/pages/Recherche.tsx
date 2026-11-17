@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
 import { DEPARTMENTS, REGIONS } from '@/lib/geo';
+import { useSiteStats } from '@/hooks/useSiteStats';
 import { getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
@@ -116,6 +117,7 @@ export default function Recherche() {
   const [selectedDiscipline, setSelectedDiscipline] = useState(searchParams.get('discipline') || 'all');
   const [selectedSub, setSelectedSub] = useState(searchParams.get('sous-discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
+  const siteStats = useSiteStats();
   const [selectedDepartment, setSelectedDepartment] = useState(searchParams.get('departement') || 'all');
   const departmentOptions = DEPARTMENTS
     .filter((d) => selectedRegion === 'all' || REGIONS.find((r) => r.slug === d.regionSlug)?.name === selectedRegion)
@@ -393,6 +395,16 @@ export default function Recherche() {
               <div className="text-center py-16">
                 <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-4" />
                 <p className="text-muted-foreground">Chargement des clubs…</p>
+              </div>
+            ) : filteredClubs.length === 0 && siteStats.isReady && siteStats.stats.clubs === 0 ? (
+              <div className="text-center py-16">
+                <img src="/brand/picto-info-bleu.svg" alt="" className="h-16 w-auto mx-auto mb-4" />
+                <h3 className="font-sans text-xl font-black text-foreground mb-2">
+                  Les clubs arrivent bientôt
+                </h3>
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  Nous finalisons avec les fédérations l'accord pour publier leurs clubs. L'annuaire sera disponible très prochainement.
+                </p>
               </div>
             ) : filteredClubs.length === 0 ? (
               <div className="text-center py-16">

@@ -10,19 +10,19 @@ export function StatsSection() {
   const items = [
     {
       icon: MapPin,
-      value: isReady ? formatCount(stats.clubs) : null,
+      value: isReady ? (stats.clubs > 0 ? formatCount(stats.clubs) : 'Bientôt') : null,
       label: 'Clubs référencés',
       description: 'Données publiques officielles',
     },
     {
       icon: Map,
-      value: isReady ? formatExact(stats.cities) : null,
+      value: isReady ? (stats.clubs > 0 ? formatExact(stats.cities) : 'Bientôt') : null,
       label: 'Villes couvertes',
       description: 'Métropole et Outre-mer',
     },
     {
       icon: Activity,
-      value: sportsReady ? formatExact(availableSportCount) : null,
+      value: sportsReady ? (availableSportCount > 0 ? formatExact(availableSportCount) : 'Bientôt') : null,
       label: 'Sports disponibles',
       description: 'Et d\'autres chaque mois',
     },

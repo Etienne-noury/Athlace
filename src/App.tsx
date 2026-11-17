@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthQueryReset } from "@/components/auth/AuthQueryReset";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Redirect, FootballClubRedirect, MapSearchRedirect } from "./components/Redirect";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -92,6 +93,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <AuthQueryReset />
           <ScrollToTop />
           <Suspense fallback={<PageLoader />}>
             <Routes>

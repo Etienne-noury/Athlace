@@ -18,6 +18,10 @@ interface Row {
   last_scraped_on: string | null;
   clubs: number;
   gps: number;
+  /** Codes fédération présents dans la base pour cette fédé (codes historiques compris). */
+  codes: string[];
+  /** Publiée au grand public (accord écrit de la fédération reçu). */
+  published: boolean;
 }
 
 const STATUS: Record<Status, { label: string; bar: string; badge: string }> = {
@@ -90,7 +94,9 @@ export function ScrapingAdmin() {
       ]);
       if (e1) throw e1;
       if (e2) throw e2;
-      return { feds: feds ?? [], statuses: statuses ?? [] };
+      const { data: publication, error: e3 } = await supabase.from('federation_publication').select('federation_code, authorized');
+      if (e3) throw e3;
+      return { feds: feds ?? [], statuses: statuses ?? [], publication: publication ?? [] };
     },
   });
   const statsQuery = useQuery({
@@ -106,6 +112,7 @@ export function ScrapingAdmin() {
   const rows = useMemo<Row[]>(() => {
     if (!statusQuery.data || !statsQuery.data) return [];
     const bySigle = new Map(statusQuery.data.statuses.map((s) => [s.sigle, s]));
+    const authorized = new Set(statusQuery.data.publication.filter((p) => p.authorized).map((p) => p.federation_code));
     return statusQuery.data.feds.map((f) => {
       const s = bySigle.get(f.sigle);
       const stats = statsQuery.data.filter((r) => isFederationRow(f.sigle, r));
@@ -126,6 +133,8 @@ export function ScrapingAdmin() {
         last_scraped_on: lastImport ?? s?.last_scraped_on ?? null,
         clubs,
         gps: stats.reduce((a, r) => a + r.gps, 0),
+        codes: [...new Set(stats.map((r) => r.federation_code))],
+        published: stats.length > 0 && stats.every((r) => authorized.has(r.federation_code)),
       };
     });
   }, [statusQuery.data, statsQuery.data]);
@@ -134,6 +143,18 @@ export function ScrapingAdmin() {
     const { error } = await supabase
       .from('federation_scraping_status')
       .upsert({ sigle, ...patch, updated_at: new Date().toISOString() } as never, { onConflict: 'sigle' });
+    if (error) { setSaveError(error.message); return; }
+    setSaveError(null);
+    queryClient.invalidateQueries({ queryKey: ['admin-scraping-status'] });
+  };
+
+  const setPublished = async (row: Row, published: boolean) => {
+    if (published && !window.confirm(`Publier les ${fr.format(row.clubs)} clubs ${row.sigle} pour tous les visiteurs ? À faire uniquement avec l'accord écrit de la fédération.`)) return;
+    const now = new Date().toISOString();
+    const { error } = await supabase.from('federation_publication').upsert(
+      row.codes.map((code) => ({ federation_code: code, authorized: published, authorized_at: published ? now : null, updated_at: now })),
+      { onConflict: 'federation_code' },
+    );
     if (error) { setSaveError(error.message); return; }
     setSaveError(null);
     queryClient.invalidateQueries({ queryKey: ['admin-scraping-status'] });
@@ -175,13 +196,14 @@ export function ScrapingAdmin() {
         {saveError && <p className="text-small text-destructive">Enregistrement impossible : {saveError}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
         <Kpi label={`Fédés en base (sur ${total})`} value={String(count('done'))} />
         <Kpi label="Clubs visibles" value={fr.format(rows.reduce((a, r) => a + r.clubs, 0))} />
         <Kpi label={lastDate ? `Importées le ${fmtDate(lastDate)}` : 'Dernier lot'} value={String(lastBatch.length)} />
         <Kpi label="En cours" value={String(ongoing.length)} />
         <Kpi label="Bloquées" value={String(count('blocked'))} alert />
         <Kpi label="Pas encore tentées" value={String(todo.length)} />
+        <Kpi label="Publiées au public" value={`${rows.filter((r) => r.published).length} / ${rows.filter((r) => r.clubs > 0).length}`} />
       </div>
 
       <Card className="p-4">
@@ -282,7 +304,7 @@ export function ScrapingAdmin() {
         <Input className="mt-3 max-w-sm" type="search" placeholder="Chercher une fédé, un sigle, un statut" value={search} onChange={(e) => setSearch(e.target.value)} />
         <div className="mt-3 max-h-[36rem] overflow-auto">
           <table className="w-full text-small">
-            <thead className="sticky top-0 bg-card"><tr className="text-left text-muted-foreground">{th('sigle', 'Sigle')}{th('nom', 'Fédération')}{th('categorie', 'Catégorie')}{th('status', 'Statut')}{th('clubs', 'Clubs', true)}{th('gps', 'Avec GPS', true)}</tr></thead>
+            <thead className="sticky top-0 bg-card"><tr className="text-left text-muted-foreground">{th('sigle', 'Sigle')}{th('nom', 'Fédération')}{th('categorie', 'Catégorie')}{th('status', 'Statut')}{th('clubs', 'Clubs', true)}{th('gps', 'Avec GPS', true)}{th('published', 'Publié')}</tr></thead>
             <tbody>
               {allRows.map((r) => (
                 <tr key={r.sigle} className="border-t border-border">
@@ -306,6 +328,14 @@ export function ScrapingAdmin() {
                     </div>
                   </td>
                   <td className="py-2 pr-4 text-right tabular-nums">{fr.format(r.gps)}</td>
+                  <td className="py-2 pr-4">
+                    {r.clubs > 0 ? (
+                      <label className="inline-flex items-center gap-2 text-small">
+                        <input type="checkbox" checked={r.published} onChange={(e) => setPublished(r, e.target.checked)} aria-label={`Publier ${r.sigle}`} />
+                        {r.published ? 'Oui' : 'Admin seul'}
+                      </label>
+                    ) : <span className="text-muted-foreground">-</span>}
+                  </td>
                 </tr>
               ))}
             </tbody>

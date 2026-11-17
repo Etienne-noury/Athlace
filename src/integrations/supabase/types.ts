@@ -965,6 +965,12 @@ export type Database = {
         }
         Relationships: []
       }
+      federation_publication: {
+        Row: { authorized: boolean; authorized_at: string | null; federation_code: string; note: string | null; updated_at: string }
+        Insert: { authorized?: boolean; authorized_at?: string | null; federation_code: string; note?: string | null; updated_at?: string }
+        Update: { authorized?: boolean; authorized_at?: string | null; federation_code?: string; note?: string | null; updated_at?: string }
+        Relationships: []
+      }
       federation_scraping_status: {
         Row: {
           block_reason: string | null

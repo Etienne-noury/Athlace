@@ -288,6 +288,13 @@
       "when": 1795420000000,
       "tag": "0040_location_index",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1795440000000,
+      "tag": "0041_publication_gate",
+      "breakpoints": true
     }
   ]
 }
