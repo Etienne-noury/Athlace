@@ -25,8 +25,7 @@ const SportDetail = lazy(() => import("./pages/SportDetail"));
 
 // Recherche de clubs (liste + carte) et fiche club
 const ClubsIndex = lazy(() => import("./pages/ClubsIndex"));
-const RegionsIndex = lazy(() => import("./pages/RegionsIndex"));
-const CitiesIndex = lazy(() => import("./pages/CitiesIndex"));
+const LocationIndex = lazy(() => import("./pages/LocationIndex"));
 const GeoHub = lazy(() => import("./pages/GeoHub"));
 const ClubDetail = lazy(() => import("./pages/ClubDetail"));
 
@@ -111,8 +110,9 @@ const App = () => (
 
               {/* Recherche de clubs : GeoHub lit les segments (sport, région, ville…) */}
               <Route path="/clubs/" element={<ClubsIndex />} />
-              <Route path="/clubs/tout/region/" element={<RegionsIndex />} />
-              <Route path="/clubs/tout/ville/" element={<CitiesIndex />} />
+              <Route path="/clubs/tout/" element={<LocationIndex />} />
+              <Route path="/clubs/tout/region/" element={<Navigate to="/clubs/tout/?onglet=regions" replace />} />
+              <Route path="/clubs/tout/ville/" element={<Navigate to="/clubs/tout/?onglet=villes" replace />} />
               <Route path="/clubs/:a/" element={<GeoHub />} />
               <Route path="/clubs/:a/:b/" element={<GeoHub />} />
               <Route path="/clubs/:a/:b/:c/" element={<GeoHub />} />

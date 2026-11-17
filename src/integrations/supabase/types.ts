@@ -1540,6 +1540,17 @@ export type Database = {
         }[]
       }
       home_stats: { Args: never; Returns: Json }
+      location_stats: { Args: never; Returns: Json }
+      search_cities: {
+        Args: { p_limit?: number; p_q?: string }
+        Returns: {
+          city: string
+          clubs: number
+          department_code: string
+          postal_code: string
+          region: string
+        }[]
+      }
       is_published_club_media: { Args: { p_name: string }; Returns: boolean }
       map_club_clusters: {
         Args: {

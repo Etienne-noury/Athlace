@@ -78,9 +78,9 @@ type MenuLink = { label: string; description: string; href: string | null; icon:
 
 const localisationMenuLinks: MenuLink[] = [
   { label: 'Autour de moi', description: 'Les clubs proches de votre position', href: '/clubs/?autour=1', icon: LocateFixed },
-  { label: 'Par ville', description: 'Toutes les villes référencées', href: '/clubs/tout/ville/', icon: MapPin },
-  { label: 'Par région', description: 'Les clubs région par région', href: '/clubs/tout/region/', icon: Map },
-  { label: 'Par département', description: 'Bientôt disponible', href: null, icon: MapPin },
+  { label: 'Par ville', description: 'Cherchez parmi toutes les villes', href: '/clubs/tout/?onglet=villes', icon: MapPin },
+  { label: 'Par département', description: 'Tous les départements, en un clic', href: '/clubs/tout/?onglet=departements', icon: Map },
+  { label: 'Par région', description: 'Les clubs région par région', href: '/clubs/tout/?onglet=regions', icon: Map },
 ];
 
 const topCities = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes', 'Strasbourg', 'Toulouse'];
@@ -312,6 +312,20 @@ export function Header() {
                               </div>
                             </div>
                             <div>
+                              <form
+                                className="mb-4"
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  const value = new FormData(e.currentTarget).get('ville')?.toString().trim();
+                                  if (value) navigate(`/clubs/?q=${encodeURIComponent(value)}`);
+                                }}
+                              >
+                                <label htmlFor="mega-ville" className="sr-only">Ville ou code postal</label>
+                                <div className="relative">
+                                  <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                                  <Input id="mega-ville" name="ville" placeholder="Une ville ou un code postal…" className="pl-9" autoComplete="off" />
+                                </div>
+                              </form>
                               <MegaMenuHeading>Villes populaires</MegaMenuHeading>
                               <div className="grid grid-cols-2 gap-1">
                                 {topCities.map((city) => (
@@ -325,7 +339,7 @@ export function Header() {
                                   </Link>
                                 ))}
                               </div>
-                              <Link to="/clubs/tout/ville/" className="mt-3 inline-block px-2 text-sm font-bold text-primary hover:underline">
+                              <Link to="/clubs/tout/?onglet=villes" className="mt-3 inline-block px-2 text-sm font-bold text-primary hover:underline">
                                 Toutes les villes →
                               </Link>
                             </div>

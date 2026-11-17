@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { regions } from '@/data/clubs';
+import { DEPARTMENTS, REGIONS } from '@/lib/geo';
 import { getDisciplineQueryNames, getSubDisciplineValue } from '@/data/disciplines';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
@@ -115,22 +116,31 @@ export default function Recherche() {
   const [selectedDiscipline, setSelectedDiscipline] = useState(searchParams.get('discipline') || 'all');
   const [selectedSub, setSelectedSub] = useState(searchParams.get('sous-discipline') || 'all');
   const [selectedRegion, setSelectedRegion] = useState(searchParams.get('region') || 'all');
+  const [selectedDepartment, setSelectedDepartment] = useState(searchParams.get('departement') || 'all');
+  const departmentOptions = DEPARTMENTS
+    .filter((d) => selectedRegion === 'all' || REGIONS.find((r) => r.slug === d.regionSlug)?.name === selectedRegion)
+    .sort((a, b) => a.code.localeCompare(b.code, 'fr', { numeric: true }));
+  const changeRegion = (value: string) => {
+    setSelectedRegion(value);
+    const dep = DEPARTMENTS.find((d) => d.code === selectedDepartment);
+    if (value !== 'all' && dep && REGIONS.find((r) => r.slug === dep.regionSlug)?.name !== value) setSelectedDepartment('all');
+  };
   const avail = useAvailableDisciplines();
   const subDiscipline = getSubDisciplineValue(selectedDiscipline, selectedSub, avail.sports);
 
   useEffect(() => {
     setPage(0);
-  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, aroundRequested, visitorPosition, chosenRadius]);
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, selectedDepartment, aroundRequested, visitorPosition, chosenRadius]);
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
-    const filters = { q: searchQuery, discipline: selectedDiscipline, 'sous-discipline': selectedSub, region: selectedRegion };
+    const filters = { q: searchQuery, discipline: selectedDiscipline, 'sous-discipline': selectedSub, region: selectedRegion, departement: selectedDepartment };
     Object.entries(filters).forEach(([key, value]) => {
       if (value && value !== 'all') next.set(key, value);
       else next.delete(key);
     });
     if (next.toString() !== searchParams.toString()) setSearchParams(next, { replace: true });
-  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, searchParams, setSearchParams]);
+  }, [searchQuery, selectedDiscipline, selectedSub, selectedRegion, selectedDepartment, searchParams, setSearchParams]);
 
   // Si la saisie correspond à une commune, on cherche les clubs autour (rayon élargi si besoin).
   const { data: nearCity = null, isFetching: cityFetching } = useQuery({
@@ -145,7 +155,7 @@ export default function Recherche() {
   useEffect(() => { setNearRadius(undefined); }, [searchPosition, selectedDiscipline, selectedSub, selectedRegion, chosenRadius]);
 
   const { data: searchResult = EMPTY_RESULTS, isLoading, isFetching } = useQuery({
-    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, page, aroundRequested, searchPosition?.lat, searchPosition?.lng, chosenRadius],
+    queryKey: ['clubs', 'search', searchQuery, selectedDiscipline, selectedSub, subDiscipline, selectedRegion, selectedDepartment, page, aroundRequested, searchPosition?.lat, searchPosition?.lng, chosenRadius],
     enabled: !locationPending && cityReady && (selectedSub === 'all' || avail.isReady),
     queryFn: async (): Promise<{ clubs: Club[]; total: number; radiusKm?: number }> => {
       if (searchPosition) {
@@ -167,6 +177,7 @@ export default function Recherche() {
         disciplines: getDisciplineQueryNames(selectedDiscipline),
         subDiscipline,
         region: selectedRegion,
+        department: selectedDepartment,
         limit: 100,
         offset: page * 100,
       });
@@ -234,11 +245,31 @@ export default function Recherche() {
     </div>
   );
 
+  const locationSelects = (
+    <>
+      <Select value={selectedRegion} onValueChange={changeRegion}>
+        <SelectTrigger aria-label="Région"><SelectValue placeholder="Toutes les régions" /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Toutes les régions</SelectItem>
+          {regions.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+        </SelectContent>
+      </Select>
+      <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+        <SelectTrigger aria-label="Département"><SelectValue placeholder="Tous les départements" /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Tous les départements</SelectItem>
+          {departmentOptions.map((d) => <SelectItem key={d.code} value={d.code}>{d.code} · {d.name}</SelectItem>)}
+        </SelectContent>
+      </Select>
+    </>
+  );
+
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedDiscipline('all');
     setSelectedSub('all');
     setSelectedRegion('all');
+    setSelectedDepartment('all');
     setSearchParams({});
   };
 
@@ -247,6 +278,7 @@ export default function Recherche() {
     selectedDiscipline !== 'all' ? selectedDiscipline : '',
     selectedSub !== 'all' ? selectedSub : '',
     selectedRegion !== 'all' ? selectedRegion : '',
+    selectedDepartment !== 'all' ? selectedDepartment : '',
     aroundRequested ? 'autour' : '',
     chosenRadius ? 'rayon' : '',
   ].filter(Boolean).length;
@@ -266,14 +298,8 @@ export default function Recherche() {
             onSportChange={setSelectedDiscipline} onSubChange={setSelectedSub} layout="inline"
             className="grid grid-cols-2 [&>div]:w-full" triggerClassName="w-full" />
           <div className="min-w-0">
-            <label className="mb-2 block text-sm font-bold">Région</label>
-            <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-              <SelectTrigger><SelectValue placeholder="Toutes les régions" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes les régions</SelectItem>
-                {regions.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <label className="mb-2 block text-sm font-bold">Région et département</label>
+            <div className="grid grid-cols-2 gap-2">{locationSelects}</div>
           </div>
           {distanceFilter}
           <Button variant="ghost" onClick={clearFilters} disabled={!activeFiltersCount} className="gap-2">
@@ -323,18 +349,8 @@ export default function Recherche() {
                   onSubChange={setSelectedSub}
                 />
                 <div>
-                  <label className="text-sm font-bold mb-2 block">Région</label>
-                  <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Toutes les régions" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Toutes les régions</SelectItem>
-                      {regions.map((r) => (
-                        <SelectItem key={r} value={r}>{r}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <label className="text-sm font-bold mb-2 block">Région et département</label>
+                  <div className="grid gap-2">{locationSelects}</div>
                 </div>
                 {distanceFilter}
               </div>

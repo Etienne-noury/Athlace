@@ -281,6 +281,13 @@
       "when": 1795350000000,
       "tag": "0039_stats_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1795420000000,
+      "tag": "0040_location_index",
+      "breakpoints": true
     }
   ]
 }
