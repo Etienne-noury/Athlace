@@ -295,6 +295,13 @@
       "when": 1795440000000,
       "tag": "0041_publication_gate",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1795450000000,
+      "tag": "0042_publication_no_exception",
+      "breakpoints": true
     }
   ]
 }
