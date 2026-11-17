@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ARBORESCENCE, slugifyDiscipline } from '@/data/disciplines';
+import { ARBORESCENCE, isHiddenSubDiscipline, slugifyDiscipline } from '@/data/disciplines';
 
 export interface Row {
   discipline: string;
@@ -36,14 +36,13 @@ export function computeDisciplineAvailability(rows: Row[]) {
     for (const sport of cat.sports) {
       let count = 0;
       const subTotals: Record<string, number> = {};
-      const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? []), ...(sport.exclude ?? [])]);
       for (const m of sport.match) {
         const row = byDisc.get(m);
         if (!row) continue;
         count += Number(row.clubs) || 0;
         for (const [name, total] of Object.entries(row.subs ?? {})) {
           const n = Number(total) || 0;
-          if (n > 0 && !excluded.has(name)) subTotals[name] = (subTotals[name] ?? 0) + n;
+          if (n > 0 && !isHiddenSubDiscipline(sport, name, cat.id)) subTotals[name] = (subTotals[name] ?? 0) + n;
         }
       }
       const subList = Object.entries(subTotals)

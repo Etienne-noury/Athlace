@@ -1,4 +1,4 @@
-import { ARBORESCENCE, slugifyDiscipline, type SportNode } from '@/data/disciplines';
+import { ARBORESCENCE, isHiddenSubDiscipline, slugifyDiscipline, type SportNode } from '@/data/disciplines';
 import { findSportForSigle, type FederationSportive } from '@/lib/federations-officielles';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -45,9 +45,9 @@ export function getFederationStats(sigle: string | null, rows: FederationClubSta
   const relevant = rows.filter((row) => isFederationRow(sigle, row, sports));
   const disciplines = sports.flatMap((sport) => {
     const names = new Set(relevant.filter((row) => sport.match.includes(row.discipline)).flatMap((row) => row.subs));
-    const excluded = new Set([...(sport.offers ?? []), ...(sport.handi ?? []), ...(sport.exclude ?? [])]);
+    const categoryId = ARBORESCENCE.find((family) => family.sports.includes(sport))?.id;
     const sportId = slugifyDiscipline(sport.name);
-    return [...names].filter((name) => !excluded.has(name)).sort((a, b) => a.localeCompare(b, 'fr'))
+    return [...names].filter((name) => !isHiddenSubDiscipline(sport, name, categoryId)).sort((a, b) => a.localeCompare(b, 'fr'))
       .map((name) => ({ name, sportId, id: `${sportId}--${slugifyDiscipline(name)}` }));
   });
   return { count: relevant.reduce((sum, row) => sum + row.clubs, 0), disciplines };

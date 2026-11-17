@@ -136,7 +136,7 @@ export const ARBORESCENCE: CategoryNode[] = [
     color: "bg-primary",
     icon: "🏔️",
     sports: [
-      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"],"exclude":["Cyclotourisme"]},
+      {"name":"Randonnée pédestre","icon":"🥾","popularity":8,"feds":["FFRP"],"match":["Randonnée pédestre"],"subs":["Randonnée pédestre","Raquette à neige","Marche nordique","Longe Côte - Marche Aquatique","Marche d'Endurance","Ski de fond","Ski de randonnée (ou ski alpinisme)","Géocaching (caches et GPS) ou Randocaching®","Alpinisme"],"offers":["Randochallenges (Participation)"]},
       {"name":"Escalade","icon":"🧗","popularity":7,"feds":["FFME"],"match":["Montagne et escalade","Escalade"],"subs":[]},
       {"name":"Alpinisme et montagne","icon":"⛰️","popularity":5,"feds":["FFCAM"],"match":["Clubs alpins et de montagne","Alpinisme et montagne"],"subs":[]},
       {"name":"Spéléologie","icon":"🕳️","popularity":2,"feds":["FFS"],"match":["Spéléologie"],"subs":[]},
@@ -244,6 +244,27 @@ export const ARBORESCENCE: CategoryNode[] = [
   },
 ];
 
+/** Noms (slugifiés) de tous les sports de l'arborescence, y compris leurs libellés de correspondance en base. */
+const SPORT_NAME_KEYS = new Set(
+  ARBORESCENCE.flatMap((category) => category.sports.flatMap((sport) => [sport.name, ...sport.match])).map(slugifyDiscipline),
+);
+
+/** Catégories multisports dont les sous-disciplines sont des sports à part entière (handisport, sport adapté). */
+const MULTISPORT_CATEGORIES = new Set(['handicap']);
+
+/**
+ * Une valeur importée n'est pas une sous-discipline à afficher si elle est une offre, une offre handi,
+ * une exclusion manuelle, ou le nom d'un autre sport de l'arborescence : un sport ne doit exister qu'à
+ * un seul endroit (ex. « Cyclotourisme » chez les clubs de randonnée). Les catégories multisports font exception.
+ */
+export function isHiddenSubDiscipline(sport: SportNode, name: string, categoryId?: string): boolean {
+  if ((sport.offers ?? []).includes(name) || (sport.handi ?? []).includes(name) || (sport.exclude ?? []).includes(name)) return true;
+  if (categoryId && MULTISPORT_CATEGORIES.has(categoryId)) return false;
+  const key = slugifyDiscipline(name);
+  const own = new Set([sport.name, ...sport.match].map(slugifyDiscipline));
+  return !own.has(key) && SPORT_NAME_KEYS.has(key);
+}
+
 export const categories: Record<string, { name: string; color: string; icon: string }> =
   Object.fromEntries(
     ARBORESCENCE.map((c) => [c.id, { name: c.name, color: c.color, icon: c.icon }]),
@@ -270,6 +291,7 @@ function buildDisciplines(): Discipline[] {
       }
 
       for (const sub of sport.subs) {
+        if (isHiddenSubDiscipline(sport, sub, category.id)) continue;
         const subId = `${sportId}--${slugifyDiscipline(sub)}`;
         if (seen.has(subId)) continue;
         seen.add(subId);
