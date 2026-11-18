@@ -302,6 +302,13 @@
       "when": 1795450000000,
       "tag": "0042_publication_no_exception",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1795536000000,
+      "tag": "0043_club_form_public_fields",
+      "breakpoints": true
     }
   ]
 }

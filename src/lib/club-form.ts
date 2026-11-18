@@ -28,6 +28,8 @@ export interface TeamDraft {
   /** Nombre d'encadrants (« 0 » à « 10+ ») et leur statut (bénévole, diplômé). */
   coaches_count: string;
   coach_types: string[];
+  /** Diplômes fédéraux des encadrants diplômés (initiateur, moniteur…), quand la fédération en a. */
+  coach_titles?: string[];
 }
 export interface SocialLink { network: string; url: string }
 
@@ -114,6 +116,9 @@ export interface ClubPayload {
   tiktok_url?: string;
   youtube_url?: string;
   linkedin_url?: string;
+  twitter_url?: string;
+  /** Liens sans colonne dédiée (Strava, Autre). */
+  other_links?: SocialLink[];
 }
 
 /** Champs pris en compte dans la jauge « Fiche complète ». */
@@ -176,6 +181,7 @@ export const normalizeTeam = (t: Partial<TeamDraft>): TeamDraft => ({ ...newTeam
 
 const SOCIAL_FIELDS: Record<string, keyof ClubPayload> = {
   Instagram: 'instagram_url', Facebook: 'facebook_url', TikTok: 'tiktok_url', YouTube: 'youtube_url', LinkedIn: 'linkedin_url',
+  'X (Twitter)': 'twitter_url',
 };
 
 const teamLabel = (t: TeamDraft) => t.name.trim() || [t.sub_discipline, ...t.categories].filter(Boolean).join(' ') || 'Groupe';
@@ -189,11 +195,16 @@ export function flattenPayload(p: ClubPayload): ClubPayload {
       const f = SOCIAL_FIELDS[sl.network];
       if (f && sl.url.trim() && !out[f]) (out as Record<string, unknown>)[f] = sl.url.trim();
     }
+    // Réseaux sans colonne dédiée (Strava, Autre) : gardés en liste pour la fiche publique.
+    out.other_links = p.socials.filter((sl) => !SOCIAL_FIELDS[sl.network] && sl.url.trim()).map((sl) => ({ network: sl.network, url: sl.url.trim() }));
   }
   if (p.has_specific_conditions !== undefined) {
     out.other_conditions = p.has_specific_conditions ? (p.specific_conditions ?? []).map((c) => c.trim()).filter(Boolean).join(' ; ') : '';
   }
-  if (p.video_urls) out.video_url = p.video_urls.map((v) => v.trim()).find(Boolean) ?? '';
+  if (p.video_urls) {
+    out.video_urls = p.video_urls.map((v) => v.trim()).filter(Boolean);
+    out.video_url = out.video_urls[0] ?? '';
+  }
   if (p.documents_list) out.documents = p.documents_list.map((d) => d.trim()).filter(Boolean).join(' ; ');
   if (p.labels_list) out.labels = p.labels_list.join(', ');
   if (p.aids_other?.trim()) out.aids = [...(p.aids ?? []).filter((a) => a !== 'Autre'), p.aids_other.trim()];
@@ -258,7 +269,8 @@ export function upgradePayload(p: ClubPayload): ClubPayload {
   if (!out.socials) {
     out.socials = Object.entries(SOCIAL_FIELDS)
       .filter(([, f]) => typeof p[f] === 'string' && (p[f] as string).trim())
-      .map(([network, f]) => ({ network, url: (p[f] as string).trim() }));
+      .map(([network, f]) => ({ network, url: (p[f] as string).trim() }))
+      .concat((p.other_links ?? []).filter((l) => l.url));
   }
   if (!out.video_urls && p.video_url) out.video_urls = [p.video_url];
   if (!out.labels_list && p.labels) out.labels_list = p.labels.split(',').map((x) => x.trim()).filter(Boolean);
@@ -310,6 +322,14 @@ export function prefillFromClub(
     tiktok_url: s(club.tiktok_url),
     youtube_url: s(club.youtube_url),
     linkedin_url: s(club.linkedin_url),
+    twitter_url: s(club.twitter_url),
+    // Champs remplis par un questionnaire déjà validé : on les retrouve pour la mise à jour suivante.
+    teams: Array.isArray(club.teams) ? (club.teams as Partial<TeamDraft>[]).map(normalizeTeam) : undefined,
+    equipment_provided: arr(club.equipment_provided),
+    equipment_to_buy: arr(club.equipment_to_buy),
+    sport_notes: s(club.sport_notes),
+    video_urls: arr(club.video_urls),
+    required_level: s(club.required_level),
   };
   if (venues.length) {
     out.venues = venues.map((v) => ({

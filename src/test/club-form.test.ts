@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { completionPercent, clubIdentified, COMPLETION_FIELDS, flattenTeams, missingRequired, newTeam, teamsFromPrefill } from '@/lib/club-form';
+import { completionPercent, clubIdentified, COMPLETION_FIELDS, flattenPayload, flattenTeams, missingRequired, newTeam, teamsFromPrefill } from '@/lib/club-form';
 
 describe('questionnaire club', () => {
   it("la page 1 n'exige que l'identification du club", () => {
@@ -38,5 +38,22 @@ describe('questionnaire club', () => {
     expect(completionPercent({})).toBe(0);
     const total = COMPLETION_FIELDS.length + 1 + 2;
     expect(completionPercent({ club_id: 'x', sport_answers: { a: true } }, ['a', 'b'])).toBe(Math.round((2 / total) * 100));
+  });
+});
+
+describe('flattenPayload : champs visibles sur la fiche publique', () => {
+  it('garde toutes les vidéos, range X dans twitter_url et Strava dans other_links', () => {
+    const out = flattenPayload({
+      video_urls: [' https://youtu.be/a ', '', 'https://youtu.be/b'],
+      socials: [
+        { network: 'X (Twitter)', url: 'https://x.com/club' },
+        { network: 'Strava', url: 'https://strava.com/clubs/1' },
+        { network: 'Instagram', url: '' },
+      ],
+    });
+    expect(out.video_urls).toEqual(['https://youtu.be/a', 'https://youtu.be/b']);
+    expect(out.video_url).toBe('https://youtu.be/a');
+    expect(out.twitter_url).toBe('https://x.com/club');
+    expect(out.other_links).toEqual([{ network: 'Strava', url: 'https://strava.com/clubs/1' }]);
   });
 });

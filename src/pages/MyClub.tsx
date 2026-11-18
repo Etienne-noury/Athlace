@@ -449,7 +449,7 @@ export default function MyClub() {
           {step === 3 && <Step3 p={p} set={set} fed={fed} subOptions={subOptions} spec={spec} />}
           {step === 4 && <Step4 p={p} set={set} fed={fed} spec={spec} />}
           {step === 5 && (
-            <Step5 p={p} set={set} fed={fed} club={club} certify={certify} setCertify={setCertify}
+            <Step5 p={p} set={set} fed={fed} club={club} spec={spec} certify={certify} setCertify={setCertify}
               subId={subId} affMatch={affMatch} missing={missing} onEdit={goTo} />
           )}
         </div>
@@ -1061,6 +1061,13 @@ function TeamBlock({ t, index, onChange, onRemove, onDuplicate, venueNames, subO
             <Chips options={[...COACH_TYPES]} value={t.coach_types} onChange={(v) => up({ coach_types: v })} />
           </Field>
         )}
+        {hasCoaches && t.coach_types.includes('Diplômé') && spec.coachTitles && (
+          <div className="md:col-span-2">
+            <Field label="Diplômes des encadrants">
+              <Chips options={[...new Set([...spec.coachTitles, ...(t.coach_titles ?? [])])]} value={t.coach_titles ?? []} onChange={(v) => up({ coach_titles: v })} />
+            </Field>
+          </div>
+        )}
       </div>
 
       <Field label="Inscriptions pour ce groupe"><PillChoice options={REGISTRATION} value={t.registration} onChange={(v) => up({ registration: v })} /></Field>
@@ -1159,6 +1166,29 @@ function Step4({ p, set, fed, spec }: StepProps & { spec: SportFormSpec & { spor
         </Block>
       </div>
 
+      {spec.extras && spec.extras.length > 0 && (
+        <Block title={`Pratique propre au sport : ${spec.sportName}`}>
+          <div className="grid gap-5 md:grid-cols-2">
+            {spec.extras.map((q) => {
+              const v = (p.sport_answers ?? {})[q.key];
+              const setV = (nv: unknown) => set('sport_answers', { ...(p.sport_answers ?? {}), [q.key]: nv });
+              return (
+                <Field key={q.key} label={q.label}>
+                  {!q.options ? <YesNo value={typeof v === 'boolean' ? v : null} onChange={setV} />
+                    : q.multi ? <ChipsOther options={q.options} value={Array.isArray(v) ? (v as string[]) : []} onChange={setV} />
+                      : (
+                        <select className={cn(selectCls, 'max-w-sm')} value={typeof v === 'string' ? v : ''} onChange={(e) => setV(e.target.value || null)}>
+                          <option value="">-</option>
+                          {q.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                        </select>
+                      )}
+                </Field>
+              );
+            })}
+          </div>
+        </Block>
+      )}
+
       <Block title="Autres précisions">
         <Field label="Ce que vous voulez ajouter sur la pratique dans votre club" hint="Facultatif">
           <Textarea rows={3} value={p.sport_notes ?? ''} onChange={(e) => set('sport_notes', e.target.value)} />
@@ -1199,9 +1229,9 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function Step5({
-  p, set, fed, club, certify, setCertify, subId, affMatch, missing, onEdit,
+  p, set, fed, club, spec, certify, setCertify, subId, affMatch, missing, onEdit,
 }: StepProps & {
-  club: ClubRow | null; certify: boolean; setCertify: (v: boolean) => void;
+  club: ClubRow | null; spec: SportFormSpec; certify: boolean; setCertify: (v: boolean) => void;
   subId: string | null; affMatch: boolean | null; missing: { page: number; label: string }[]; onEdit: (n: number) => void;
 }) {
   const clubName = club?.name ?? p.new_club?.name;
@@ -1249,11 +1279,14 @@ function Step5({
                     t.slots.filter((sl) => sl.day).map((sl) => `${sl.day} ${sl.start_time}-${sl.end_time}${sl.venue ? ` (${sl.venue})` : ''}`).join(', '),
                     t.prices.filter((x) => x.amount).map((x) => `${x.label ? `${x.label} ` : ''}${x.amount} € / ${x.period}`).join(', '),
                     REGISTRATION.find((r) => r.v === t.registration)?.l,
-                    t.coaches_count ? `${t.coaches_count} encadrant(s)${t.coach_types.length ? ` (${t.coach_types.join(', ')})` : ''}` : '',
+                    t.coaches_count ? `${t.coaches_count} encadrant(s)${t.coach_types.length ? ` (${[...t.coach_types, ...(t.coach_titles ?? [])].join(', ')})` : ''}` : '',
                   ].filter(Boolean).join(' · ') || '-'}
                 </Row>
               ))}
               {rows.map(([k, l]) => <Row key={k} label={l}>{fmt(p[k])}</Row>)}
+              {sec.page === 4 && (spec.extras ?? []).filter((q) => isFilled(p.sport_answers?.[q.key])).map((q) => (
+                <Row key={q.key} label={q.label}>{fmt(p.sport_answers![q.key])}</Row>
+              ))}
             </dl>
           </div>
         );

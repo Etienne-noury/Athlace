@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, CheckCircle, MapPin, Users, CalendarDays, MessageSquare, Newspaper, ChartNoAxesCombined, ClipboardList, ArrowDown, CalendarCheck } from 'lucide-react';
+import { Search, CheckCircle, MapPin, Users, CalendarDays, MessageSquare, Newspaper, ChartNoAxesCombined, ClipboardList, ArrowDown, CalendarCheck, ClipboardEdit } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -133,7 +133,8 @@ export default function ClubsB2B() {
             <h1 className="text-4xl lg:text-6xl font-black mb-6">Espace club</h1>
             <p className="text-lg leading-relaxed max-w-xl">Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.</p>
             <div className="flex flex-wrap gap-3 mt-8">
-              <Button asChild variant="secondary" className="gap-2"><a href="#trouver-ma-fiche">Trouver ma fiche<ArrowDown className="h-4 w-4" /></a></Button>
+              <Button asChild variant="secondary" size="lg" className="gap-2"><Link to="/compte/mon-club/"><ClipboardEdit className="h-4 w-4" />Compléter ma fiche</Link></Button>
+              <Button asChild variant="tertiary" className="gap-2"><a href="#trouver-ma-fiche">Trouver ma fiche<ArrowDown className="h-4 w-4" /></a></Button>
               <Button asChild variant="tertiary" className="gap-2"><a href="#rendez-vous">Prendre rendez-vous<CalendarCheck className="h-4 w-4" /></a></Button>
             </div>
           </div>

@@ -450,6 +450,12 @@ export type Database = {
           installments: boolean | null
           is_hidden: boolean
           kit_image_url: string | null
+          equipment_provided: string[] | null
+          equipment_to_buy: string[] | null
+          other_links: Json | null
+          sport_notes: string | null
+          teams: Json | null
+          video_urls: string[] | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -549,6 +555,12 @@ export type Database = {
           installments?: boolean | null
           is_hidden?: boolean
           kit_image_url?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
+          other_links?: Json | null
+          sport_notes?: string | null
+          teams?: Json | null
+          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -648,6 +660,12 @@ export type Database = {
           installments?: boolean | null
           is_hidden?: boolean
           kit_image_url?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
+          other_links?: Json | null
+          sport_notes?: string | null
+          teams?: Json | null
+          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1227,6 +1245,12 @@ export type Database = {
           instagram_url: string | null
           installments: boolean | null
           kit_image_url: string | null
+          equipment_provided: string[] | null
+          equipment_to_buy: string[] | null
+          other_links: Json | null
+          sport_notes: string | null
+          teams: Json | null
+          video_urls: string[] | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -1323,6 +1347,12 @@ export type Database = {
           instagram_url?: string | null
           installments?: boolean | null
           kit_image_url?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
+          other_links?: Json | null
+          sport_notes?: string | null
+          teams?: Json | null
+          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1419,6 +1449,12 @@ export type Database = {
           instagram_url?: string | null
           installments?: boolean | null
           kit_image_url?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
+          other_links?: Json | null
+          sport_notes?: string | null
+          teams?: Json | null
+          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null

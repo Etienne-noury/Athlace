@@ -24,6 +24,29 @@ export interface SportFormSpec {
   toBuy: string[];
   /** Prérequis ou niveau propre au sport (grades, brevets, galops…) : libellé et valeurs. */
   prerequisite?: { label: string; options: string[] };
+  /** Diplômes d'encadrement propres à la fédération, proposés quand une équipe a des encadrants diplômés. */
+  coachTitles?: string[];
+  /** Questions propres au sport (étape 4), enregistrées dans sport_answers et affichées sur la fiche club. */
+  extras?: SportExtra[];
+}
+
+export interface SportExtra {
+  key: string;
+  label: string;
+  /** Liste de choix ; sans liste, la question est un oui/non. */
+  options?: string[];
+  /** Plusieurs choix possibles. */
+  multi?: boolean;
+  hint?: string;
+}
+
+/** Libellé lisible d'une réponse propre au sport, pour la fiche club (toutes fédérations confondues). */
+export function sportExtraLabel(key: string): string | undefined {
+  for (const spec of Object.values(SPORT)) {
+    const found = spec.extras?.find((e) => e.key === key);
+    if (found) return found.label;
+  }
+  return undefined;
 }
 
 const ALL_AGES = 'Tous âges';
@@ -256,6 +279,30 @@ const SPORT: Record<string, Partial<SportFormSpec>> = {
   'Tir sportif': { provided: ['Armes du club', 'Munitions (selon le club)', 'Cibles'], toBuy: ['Arme personnelle', 'Casque anti-bruit', 'Lunettes de tir'] },
   Échecs: { categories: ['Petits poussins', 'Poussins', 'Pupilles', 'Benjamins', 'Minimes', 'Cadets', 'Juniors', 'Seniors', 'Vétérans', ALL_AGES], divisions: ['Départementale', 'Régionale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Top 16'], provided: ['Échiquiers', 'Pendules'], toBuy: [] },
   'Pétanque et jeu provençal': { provided: ['Terrain', 'Cochonnets'], toBuy: ['Boules de compétition'] },
+  // FFS : pas de compétition ; progression « Ma progression » (chauves-souris), stages EFS Découverte puis SFP1
+  // (autonomie en progression) et SFP2 ; encadrants initiateur, moniteur, instructeur. Activités : spéléologie,
+  // canyonisme, plongée souterraine (EFPS) ; secours via le Spéléo Secours Français (SSF).
+  // Sources : ffspeleo.fr (EFS, référentiels Découverte et SFP2, carnet « Ma progression »), RTS spéléologie 2025.
+  Spéléologie: {
+    categories: ['Découverte et initiation', 'Jeunes (école de spéléo du club)', 'Jeunes (EDSC départementale)', 'Adultes débutants', 'Adultes autonomes (sorties club)', 'Familles', 'Groupe exploration'],
+    divisions: [],
+    labels: ['Club partenaire de l\'EDSC (école départementale)', 'Accueil de scolaires (label scolaire FFS)', 'Membres sauveteurs au Spéléo Secours Français'],
+    provided: ['Casque normé montagne', 'Éclairage frontal', 'Combinaison spéléo', 'Baudrier', 'Longes', 'Descendeur', 'Bloqueurs (ventral et poignée)', 'Kit (sac de transport)', 'Cordes et matériel collectif', 'Matériel de canyon (combinaison néoprène, baudrier)'],
+    toBuy: ['Bottes', 'Sous-combinaison (seconde couche)', 'Gants', 'Combinaison spéléo', 'Casque', 'Éclairage frontal', 'Kit personnel de progression sur corde', 'Couverture de survie'],
+    prerequisite: {
+      label: 'Niveau demandé pour rejoindre le groupe',
+      options: ['Aucun (découverte)', '1re chauve-souris', '2e chauve-souris', '3e chauve-souris', "Chauve-souris d'argent", "Chauve-souris d'or", 'Autonomie en progression sur corde (niveau SFP1)', 'Niveau SFP2'],
+    },
+    coachTitles: ['Initiateur fédéral', 'Moniteur fédéral', 'Instructeur fédéral', 'Diplôme d\'État (DE, DES spéléologie)', 'Initiateur ou moniteur canyon'],
+    extras: [
+      { key: 'speleo_activites', label: 'Activités proposées', multi: true, options: ['Spéléologie horizontale (initiation)', 'Spéléologie verticale (puits, cordes)', 'Canyonisme', 'Plongée souterraine', 'Exploration et désobstruction', 'Topographie', 'Études scientifiques (karst, faune, archéologie)', 'Protection du milieu souterrain'] },
+      { key: 'speleo_rythme', label: 'Rythme des sorties sous terre', options: ['Chaque week-end', 'Deux fois par mois', 'Une fois par mois', 'Ponctuel (stages, camps)'] },
+      { key: 'speleo_entrainement', label: 'Entraînement aux techniques de corde', multi: true, options: ['Falaise', 'Mur ou structure artificielle', 'Gymnase', 'Pas d\'entraînement hors sortie'] },
+      { key: 'speleo_camps', label: 'Camps et expéditions (France ou étranger)', hint: 'Oui ou non' },
+      { key: 'speleo_ma_progression', label: 'Le club valide les chauves-souris (carnet « Ma progression »)', hint: 'Oui ou non' },
+      { key: 'speleo_stages_efs', label: 'Le club oriente vers les stages EFS (Découverte, SFP1, SFP2)', hint: 'Oui ou non' },
+    ],
+  },
   'Vol libre': { prerequisite: { label: 'Brevet requis', options: ['Aucun (école, biplace)', 'Brevet initial', 'Brevet de pilote', 'Brevet de pilote confirmé'] } },
   Parachutisme: { prerequisite: { label: 'Niveau requis', options: ['Aucun (saut tandem, PAC)', 'Élève', 'Brevet A', 'Brevet B', 'Brevet C', 'Brevet D'] } },
   Handisport: { categories: ['Enfants', 'Ados', 'Adultes', ALL_AGES] },

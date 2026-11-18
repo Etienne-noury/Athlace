@@ -5,7 +5,7 @@ import {
   MapPin, Phone, Globe, Star, Clock, ChevronLeft, CreditCard, Loader2, Info,
   Trophy, Mail, Users, Award, Accessibility, Dumbbell, ExternalLink,
   Facebook, Instagram, Twitter, Linkedin, Youtube, Music2, UserPlus, Building2, Navigation,
-  BadgeCheck, Euro, ListChecks, Gauge, Sparkles,
+  BadgeCheck, Euro, ListChecks, Gauge, Sparkles, Link2, Backpack, Images, Shirt,
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { FavoriteButton } from '@/components/clubs/FavoriteButton';
@@ -20,6 +20,8 @@ import { getDisciplineById } from '@/data/disciplines';
 import { safeExternalUrl } from '@/lib/safe-url';
 import { cn } from '@/lib/utils';
 import { useClubMediaUrl } from '@/hooks/useClubMediaUrl';
+import type { TeamDraft } from '@/lib/club-form';
+import { sportExtraLabel } from '@/data/club-form-catalog';
 
 type Venue = Tables<'club_venues'>;
 type Schedule = Tables<'club_schedules'>;
@@ -118,6 +120,70 @@ function availability(notes: string | null): 'full' | 'open' | null {
 }
 
 const yn = (b: boolean) => (b ? 'Oui' : 'Non');
+
+const TEAM_LEVEL: Record<string, string> = { loisir: 'Loisir', competition: 'Compétition', les_deux: 'Loisir et compétition' };
+const TEAM_REG: Record<string, string> = { ouvertes: 'Inscriptions ouvertes', liste_attente: "Liste d'attente", complet: 'Complet' };
+
+/** Équipes et groupes saisis par le club : public, niveau, créneaux, tarifs et encadrants de chacun. */
+function TeamsSection({ teams }: { teams: Partial<TeamDraft>[] }) {
+  const list = teams.filter((t) => t && (t.name || t.categories?.length || t.slots?.length));
+  if (!list.length) return null;
+  return (
+    <Section icon={Users} title="Équipes et groupes">
+      <div className="grid grid-cols-1 gap-4">
+        {list.map((t, i) => {
+          const title = t.name?.trim() || [t.categories?.[0], t.gender].filter(Boolean).join(' · ') || `Groupe ${i + 1}`;
+          const ages = t.min_age || t.max_age
+            ? t.min_age && t.max_age ? `${t.min_age} à ${t.max_age} ans` : t.min_age ? `Dès ${t.min_age} ans` : `Jusqu'à ${t.max_age} ans`
+            : '';
+          const tags = [
+            t.categories?.[0] && t.name?.trim() ? t.categories[0] : '', t.gender && t.name?.trim() ? t.gender : '', t.sub_discipline, ages,
+            t.level ? TEAM_LEVEL[t.level] : '', t.division, t.beginners_ok === true ? 'Débutants acceptés' : t.beginners_ok === false ? 'Confirmés' : '',
+          ].filter(Boolean) as string[];
+          const coaches = t.coaches_count && t.coaches_count !== '0'
+            ? `${t.coaches_count} encadrant${t.coaches_count === '1' ? '' : 's'}${[...(t.coach_types ?? []), ...(t.coach_titles ?? [])].length ? ` : ${[...(t.coach_types ?? []), ...(t.coach_titles ?? [])].join(', ')}` : ''}`
+            : '';
+          const slots = (t.slots ?? []).filter((x) => x.day);
+          const prices = (t.prices ?? []).filter((x) => x.amount);
+          return (
+            <article key={t.id ?? i} className="rounded-xl bg-muted/50 p-4 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-sans font-bold text-foreground">{title}</h3>
+                {t.registration && TEAM_REG[t.registration] && (
+                  <Badge variant={t.registration === 'complet' ? 'destructive' : 'secondary'}>{TEAM_REG[t.registration]}</Badge>
+                )}
+              </div>
+              {tags.length > 0 && <Pills items={tags} />}
+              {slots.length > 0 && (
+                <ul className="text-sm text-foreground space-y-1">
+                  {slots.map((x, j) => (
+                    <li key={j} className="flex flex-wrap gap-x-2">
+                      <span className="font-bold capitalize">{x.day}</span>
+                      <span className="tabular-nums">{x.start_time}{x.end_time && `–${x.end_time}`}</span>
+                      {x.venue && <span className="text-muted-foreground">· {x.venue}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {prices.length > 0 && (
+                <p className="text-sm text-foreground">
+                  {prices.map((x) => `${x.label ? `${x.label} : ` : ''}${Number(String(x.amount).replace(',', '.')).toLocaleString('fr-FR')} € / ${x.period}${x.includes_license ? ' (licence incluse)' : ''}`).join(' · ')}
+                </p>
+              )}
+              {coaches && <p className="text-sm text-muted-foreground">{coaches}</p>}
+            </article>
+          );
+        })}
+      </div>
+    </Section>
+  );
+}
+
+function ClubPhoto({ path, alt }: { path: string; alt: string }) {
+  const src = useClubMediaUrl(path);
+  if (!src) return <div className="aspect-square rounded-xl bg-creme" aria-hidden />;
+  return <img src={src} alt={alt} loading="lazy" className="aspect-square w-full rounded-xl object-cover" />;
+}
 const PRACTICE_MODE: Record<string, string> = { loisir: 'Loisir', competition: 'Compétition', les_deux: 'Loisir et compétition' };
 
 function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<ReturnType<typeof fetchEnrichedClubById>>>['row'] & object; clubId: string }) {
@@ -142,10 +208,11 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
         .map((x) => {
           const q = pick(x.question_key);
           let value = x.value as string;
+          const label = q?.label ?? sportExtraLabel(x.question_key) ?? x.question_key;
           if (value === 'true') value = 'Oui';
           else if (value === 'false') value = 'Non';
           else if (value.startsWith('[')) { try { value = (JSON.parse(value) as string[]).join(', '); } catch { /* texte brut */ } }
-          return { key: x.question_key, label: q?.label ?? x.question_key, value, sort: q?.sort ?? 999 };
+          return { key: x.question_key, label, value, sort: q?.sort ?? 999 };
         })
         .sort((a, b) => a.sort - b.sort);
     },
@@ -174,7 +241,7 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
   }
   if (r.required_level) prereq.push({ label: 'Niveau requis', value: r.required_level });
   if (r.medical_required != null) prereq.push({ label: 'Certificat ou questionnaire de santé', value: r.medical_required ? 'Demandé' : 'Non demandé' });
-  if (r.other_conditions) prereq.push({ label: 'Autres conditions', value: <span className="whitespace-pre-line">{r.other_conditions}</span> });
+  if (r.other_conditions) prereq.push({ label: 'Conditions spécifiques', value: <span className="whitespace-pre-line">{r.other_conditions.split(' ; ').join('\n')}</span> });
 
   const level: { label: string; value: React.ReactNode }[] = [];
   if (r.practice_mode) level.push({ label: 'Pratique', value: PRACTICE_MODE[r.practice_mode] ?? r.practice_mode });
@@ -263,11 +330,33 @@ function ValidatedSections({ row: r, clubId }: { row: NonNullable<Awaited<Return
         </Section>
       )}
 
-      {answers.length > 0 && (
-        <Section icon={Sparkles} title="Infos spécifiques">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {answers.map((a) => <InfoTile key={a.key} label={a.label}>{a.value}</InfoTile>)}
+      {(has(r.equipment_provided) || has(r.equipment_to_buy)) && (
+        <Section icon={Backpack} title="Matériel">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {has(r.equipment_provided) && (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2 flex items-center gap-1"><Shirt className="w-3 h-3" aria-hidden /> Fourni par le club</p>
+                <Pills items={r.equipment_provided} />
+              </div>
+            )}
+            {has(r.equipment_to_buy) && (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">À prévoir soi-même</p>
+                <Pills items={r.equipment_to_buy} />
+              </div>
+            )}
           </div>
+        </Section>
+      )}
+
+      {(answers.length > 0 || r.sport_notes) && (
+        <Section icon={Sparkles} title="Infos spécifiques">
+          {answers.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {answers.map((a) => <InfoTile key={a.key} label={a.label}>{a.value}</InfoTile>)}
+            </div>
+          )}
+          {r.sport_notes && <p className={cn('text-sm text-foreground whitespace-pre-line', answers.length > 0 && 'mt-4')}>{r.sport_notes}</p>}
         </Section>
       )}
     </>
@@ -371,6 +460,8 @@ export default function ClubDetail() {
     { url: r?.linkedin_url, icon: Linkedin, label: 'LinkedIn' },
     { url: r?.youtube_url, icon: Youtube, label: 'YouTube' },
     { url: r?.tiktok_url, icon: Music2, label: 'TikTok' },
+    ...(Array.isArray(r?.other_links) ? (r!.other_links as { network?: string; url?: string }[]) : [])
+      .map((l) => ({ url: l.url, icon: Link2, label: l.network || 'Lien' })),
   ].map((s) => ({ ...s, url: safeExternalUrl(s.url) })).filter((s) => !!s.url);
   const hasActions = registerUrl || websiteUrl || contact?.email || contact?.phone || socials.length > 0 || !!directionsUrl;
 
@@ -391,6 +482,7 @@ export default function ClubDetail() {
       value: <>{total.toLocaleString('fr-FR')}{extra.length > 0 && <span className="block text-muted-foreground">{extra.join(' · ')}</span>}</>,
     });
   }
+  if (r?.creation_date) essentials.push({ label: 'Création', value: formatDate(r.creation_date) });
   if (r?.committee) essentials.push({ label: 'Comité', value: r.committee });
   if (r?.structure_type) essentials.push({ label: 'Type de structure', value: r.structure_type });
 
@@ -513,6 +605,9 @@ export default function ClubDetail() {
             </Section>
           )}
 
+          {/* Équipes et groupes (questionnaire club) */}
+          {Array.isArray(r?.teams) && <TeamsSection teams={r!.teams as Partial<TeamDraft>[]} />}
+
           {/* 4. Horaires */}
           {scheduleByDay.length > 0 && (
             <Section icon={Clock} title="Horaires">
@@ -595,6 +690,31 @@ export default function ClubDetail() {
                   <Badge key={`a-${a}`} variant="outline" className="gap-1"><Accessibility className="w-3 h-3" />{a}</Badge>
                 ))}
               </div>
+            </Section>
+          )}
+
+          {/* Photos et vidéos */}
+          {(has(r?.photo_urls) || has(r?.video_urls) || !!r?.video_url) && (
+            <Section icon={Images} title="Photos et vidéos">
+              {has(r?.photo_urls) && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {r!.photo_urls!.slice(0, 6).map((ph, i) => <ClubPhoto key={ph} path={ph} alt={`Photo ${i + 1} de ${club.name}`} />)}
+                </div>
+              )}
+              {(() => {
+                const vids = (has(r?.video_urls) ? r!.video_urls! : [r?.video_url]).map((v) => safeExternalUrl(v)).filter(Boolean) as string[];
+                return vids.length > 0 && (
+                  <ul className={cn('space-y-2', has(r?.photo_urls) && 'mt-4')}>
+                    {vids.map((v, i) => (
+                      <li key={v}>
+                        <a href={v} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline">
+                          <ExternalLink className="w-4 h-4" aria-hidden /> Vidéo {vids.length > 1 ? i + 1 : ''}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                );
+              })()}
             </Section>
           )}
 
