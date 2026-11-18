@@ -3,14 +3,38 @@
 export interface VenueDraft { name: string; address: string; is_main: boolean }
 export interface ScheduleDraft { day: string; start_time: string; end_time: string; category: string; level: string; venue: string }
 export interface PriceDraft { label: string; amount: string; period: 'saison' | 'mois' | 'trimestre' | 'séance'; includes_license: boolean }
+export interface TeamSlot { day: string; start_time: string; end_time: string; venue: string }
+export type TeamLevel = '' | 'loisir' | 'competition' | 'les_deux';
+export type TeamRegistration = '' | 'ouvertes' | 'liste_attente' | 'complet';
+/** Une équipe ou un groupe : sa pratique, ses lieux, ses créneaux et ses tarifs. */
+export interface TeamDraft {
+  id: string;
+  name: string;
+  sub_discipline: string;
+  categories: string[];
+  level: TeamLevel;
+  division: string;
+  venues: string[];
+  slots: TeamSlot[];
+  prices: PriceDraft[];
+  registration: TeamRegistration;
+}
 
+/**
+ * Brouillon du questionnaire (5 pages : Votre club et contact, Identité et description, Équipes et groupes,
+ * Spécificités du sport, Récapitulatif). Les équipes (teams) sont aussi « aplaties » dans les anciens champs
+ * (schedules, prices, sub_disciplines…) par flattenTeams, que lit la validation admin côté base.
+ */
 export interface ClubPayload {
-  // Étape 1
+  // Page 1 · Votre club (+ contact, plus bas)
   club_id?: string | null;
   new_club?: { name: string; discipline: string; city: string } | null;
+  // Page 5 · Récapitulatif
   role?: string;
   affiliation_number?: string;
-  // Étape 2
+  // Page 3 · Équipes et groupes
+  teams?: TeamDraft[];
+  // Page 2 · Identité et description
   logo?: string;
   color_1?: string;
   color_2?: string;
@@ -69,15 +93,14 @@ export interface ClubPayload {
 
 /** Champs pris en compte dans la jauge « Fiche complète ». */
 export const COMPLETION_FIELDS: (keyof ClubPayload)[] = [
-  'role', 'affiliation_number',
-  'logo', 'color_1', 'color_2', 'photos', 'video_url', 'description', 'creation_date',
-  'sub_disciplines', 'audiences', 'age_categories', 'practice_level', 'league',
-  'beginners_ok', 'min_age', 'max_age', 'required_level', 'health_certificate', 'other_conditions',
-  'venues', 'schedules',
-  'prices', 'trial', 'registration_start', 'registration_end', 'season_start', 'waitlist', 'installments',
-  'aids', 'documents', 'registration_url',
-  'coaches_certified', 'labels', 'ambiance', 'amenities', 'pmr', 'events', 'volunteers',
   'email', 'phone', 'website', 'instagram_url', 'facebook_url', 'tiktok_url', 'youtube_url', 'linkedin_url',
+  'logo', 'photos', 'video_url', 'description', 'creation_date', 'venues',
+  'audiences', 'beginners_ok', 'min_age', 'max_age', 'required_level', 'health_certificate', 'other_conditions',
+  'coaches_certified', 'ambiance', 'amenities', 'pmr', 'events', 'volunteers',
+  'teams', 'trial', 'registration_start', 'registration_end', 'season_start', 'installments',
+  'aids', 'documents', 'registration_url',
+  'labels',
+  'role', 'affiliation_number',
 ];
 
 export function isFilled(v: unknown): boolean {
@@ -98,9 +121,72 @@ export function completionPercent(p: ClubPayload, sportQuestionKeys: string[] = 
   return Math.round((filled / total) * 100);
 }
 
-export function step1Valid(p: ClubPayload): boolean {
-  const clubOk = !!p.club_id || (!!p.new_club?.name.trim() && !!p.new_club.discipline && !!p.new_club.city.trim());
-  return clubOk && !!p.role && !!p.affiliation_number?.trim();
+/** Le club est identifié : à partir de là, chaque saisie est enregistrée au fil de l'eau. */
+export function clubIdentified(p: ClubPayload): boolean {
+  return !!p.club_id || (!!p.new_club?.name.trim() && !!p.new_club.discipline && !!p.new_club.city.trim());
+}
+
+/** @deprecated garde l'ancien nom : seule l'identification du club conditionne désormais la page 1. */
+export const step1Valid = clubIdentified;
+
+/** Champs obligatoires pour envoyer la fiche (club, contact, description, lieu, équipe avec créneau, rôle). */
+export function missingRequired(p: ClubPayload): { page: number; label: string }[] {
+  const out: { page: number; label: string }[] = [];
+  if (!clubIdentified(p)) out.push({ page: 1, label: 'Votre club' });
+  if (!isFilled(p.email) && !isFilled(p.phone)) out.push({ page: 1, label: 'Un email ou un téléphone de contact' });
+  if (!isFilled(p.description)) out.push({ page: 2, label: 'La description du club' });
+  if (!(p.venues ?? []).some((v) => isFilled(v.name) || isFilled(v.address))) out.push({ page: 2, label: 'Au moins un lieu de pratique' });
+  const teams = p.teams ?? [];
+  if (!teams.some((t) => t.slots.some((sl) => sl.day && sl.start_time))) out.push({ page: 3, label: 'Au moins une équipe ou un groupe avec un créneau' });
+  if (!p.role) out.push({ page: 5, label: 'Votre rôle dans le club' });
+  return out;
+}
+
+export const newTeam = (n = 1): TeamDraft => ({
+  id: `t${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
+  name: n > 1 ? `Groupe ${n}` : '',
+  sub_discipline: '', categories: [], level: '', division: '', venues: [], slots: [], prices: [], registration: '',
+});
+
+const teamLabel = (t: TeamDraft) => t.name.trim() || [t.sub_discipline, ...t.categories].filter(Boolean).join(' ') || 'Groupe';
+
+/** Recopie les équipes dans les champs historiques lus par la validation admin (créneaux, tarifs, pratique). */
+export function flattenTeams(p: ClubPayload): ClubPayload {
+  const teams = p.teams;
+  if (!teams) return p;
+  const uniq = (xs: string[]) => [...new Set(xs.map((x) => x.trim()).filter(Boolean))];
+  const levels = uniq(teams.map((t) => t.level));
+  return {
+    ...p,
+    schedules: teams.flatMap((t) => t.slots.map((sl) => ({
+      day: sl.day, start_time: sl.start_time, end_time: sl.end_time,
+      category: [t.name.trim(), ...t.categories].filter(Boolean).join(' · '),
+      level: t.level === 'competition' ? (t.division.trim() || 'Compétition') : t.level === 'loisir' ? 'Loisir' : t.division.trim(),
+      venue: sl.venue || t.venues[0] || '',
+    }))),
+    prices: teams.flatMap((t) => t.prices.map((x) => ({ ...x, label: [teamLabel(t), x.label.trim()].filter(Boolean).join(' · ') }))),
+    sub_disciplines: uniq([...(p.sub_disciplines ?? []), ...teams.map((t) => t.sub_discipline)]),
+    age_categories: uniq(teams.flatMap((t) => t.categories)),
+    practice_level: levels.length === 0 ? p.practice_level : levels.length === 1 ? levels[0] : 'les_deux',
+    league: uniq(teams.map((t) => t.division)).join(', ') || p.league,
+    waitlist: teams.some((t) => t.registration === 'liste_attente') ? true : teams.length ? false : p.waitlist,
+  };
+}
+
+/** Construit une première équipe à partir des données fédération (créneaux, tarifs, sous-disciplines). */
+export function teamsFromPrefill(p: ClubPayload): TeamDraft[] {
+  if (p.teams?.length) return p.teams;
+  const hasData = isFilled(p.schedules) || isFilled(p.prices) || isFilled(p.age_categories) || isFilled(p.league);
+  if (!hasData) return [];
+  const t = newTeam();
+  t.categories = p.age_categories ?? [];
+  t.division = p.league ?? '';
+  t.level = (p.practice_level as TeamLevel) ?? '';
+  t.slots = (p.schedules ?? []).map((sl) => ({ day: sl.day, start_time: sl.start_time, end_time: sl.end_time, venue: sl.venue }));
+  t.venues = [...new Set(t.slots.map((sl) => sl.venue).filter(Boolean))];
+  t.prices = p.prices ?? [];
+  if ((p.sub_disciplines ?? []).length === 1) t.sub_discipline = p.sub_disciplines![0];
+  return [t];
 }
 
 type Row = Record<string, unknown>;
