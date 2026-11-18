@@ -54,4 +54,13 @@ export const PHOTO_CREDITS: Record<string, PhotoCredit> = {
   "twirling-baton/galerie-2": { author: "Nesnad", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:JapanBatonTwirlingAssociation-2015-12-13.jpg" },
   "twirling-baton/principe": { author: "Tulane Public Relations", license: "CC BY 2.0", url: "https://commons.wikimedia.org/wiki/File:Baton_twirling-01.jpg" },
   "vol-en-planeur--treuil/principe": { author: "Uwe Maeurer", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:ASK13_winch_launch_at_Hidesheim_-_first_solo.jpg" },
+  "balle-au-tambourin/galerie-2": { author: "PicPatrimoineSLH", license: "CC BY 4.0", url: "https://commons.wikimedia.org/wiki/File:Jeu_de_balle_au_tambourin_-_SLH.jpg" },
+  "balle-au-tambourin/galerie-3": { author: "Jeanne Griffin", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Ricetto_tamburello_games_Portacamaro_(AT)_19-7-2025.jpg" },
+  "balle-au-tambourin/materiel": { author: "Natascia19", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Tamburello.jpg" },
+  "balle-au-tambourin/principe": { author: "Joelflorentinpereira", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Les_joueurs_de_la_balle_au_tambourin.jpg" },
+  "ballon-au-poing/galerie-1": { author: "Firmin80", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:P35-Ballon-au-poing.JPG" },
+  "ballon-au-poing/galerie-2": { author: "Geoleplubo", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Balon-au-poing-Anmien.jpg" },
+  "ballon-au-poing/galerie-3": { author: "Firmin80", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Ballon-au-poing-CF-2018_(28).jpg" },
+  "ballon-au-poing/materiel": { author: "Firminwary59 (Wikipédia)", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:Ch%C3%A9s_deus_caches-2012.JPG" },
+  "ballon-au-poing/principe": { author: "Firmin80", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Ballon-au-poing-CF-2018_(12).jpg" },
 };
