@@ -1,4 +1,4 @@
-import { statSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { disciplines } from '@/data/disciplines';
@@ -50,5 +50,21 @@ describe('schémas des fiches sport', () => {
     const svg = getSportSchema('rugby')!.svg;
     expect(svg).toContain('hsl(var(--bleu-athlace))');
     expect(svg).not.toMatch(/#415CAF/i);
+  });
+});
+
+describe('crédits des photos', () => {
+  it('chaque crédit visible correspond à une photo présente', async () => {
+    const { PHOTO_CREDITS } = await import('@/data/photo-credits');
+    const present = new Set(__media.photoPaths.map((p) => p.replace(/^.*sport-photos\//, '').replace(/\.[^.]+$/, '')));
+    expect(Object.keys(PHOTO_CREDITS).filter((k) => !present.has(k))).toEqual([]);
+  });
+
+  it('chaque photo est listée dans CREDITS.md', () => {
+    const credits = readFileSync(join(process.cwd(), 'src/assets/sport-photos/CREDITS.md'), 'utf8');
+    const missing = __media.photoPaths
+      .map((p) => p.replace(/^.*sport-photos\//, ''))
+      .filter((f) => !credits.includes('`' + f + '`'));
+    expect(missing).toEqual([]);
   });
 });
