@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { safeExternalUrl } from '@/lib/safe-url';
 import type { DisciplineGuide, GuideSource, SportGuide } from '@/data/sport-guides';
+import { PHOTO_CREDITS } from '@/data/photo-credits';
 import { getSportPhoto, getSportSchema, PHOTO_SLOT_SUBJECT, type PhotoSlot } from './sport-media';
 import '@/styles/sport-guide.css';
 
@@ -33,12 +34,26 @@ const benefitIcon = (t: string) => BENEFIT_ICONS.find(([r]) => r.test(t))?.[1] ?
 const sentences = (t: string) => t.split(/(?<=[.!])\s+(?=[A-ZÀ-Ý])/).map((x) => x.trim()).filter(Boolean);
 const BUDGET_LABEL = ['', 'Accessible', 'Modéré', 'Élevé'];
 
+/** Crédit obligatoire pour les photos sous licence CC BY / CC BY-SA. */
+function PhotoCredit({ id, slot }: { id: string; slot: PhotoSlot }) {
+  const credit = PHOTO_CREDITS[`${id}/${slot}`];
+  if (!credit) return null;
+  const href = safeExternalUrl(credit.url);
+  const text = `Photo : ${credit.author} · ${credit.license}`;
+  return href ? (
+    <a className="credit" href={href} target="_blank" rel="noopener noreferrer">{text}</a>
+  ) : (
+    <span className="credit">{text}</span>
+  );
+}
+
 function Photo({ id, slot, name, icon, variant = '' }: { id: string; slot: PhotoSlot; name: string; icon?: string; variant?: '' | 'v2' | 'v3' }) {
   const src = getSportPhoto(id, slot);
   if (src) {
     return (
       <div className="photo">
         <img src={src} alt={`${name} : ${PHOTO_SLOT_SUBJECT[slot]}`} loading="lazy" decoding="async" />
+        <PhotoCredit id={id} slot={slot} />
       </div>
     );
   }
