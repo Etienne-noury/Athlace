@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Map, ClipboardEdit } from 'lucide-react';
+import { ChevronDown, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SearchAutocomplete } from '@/components/search/SearchAutocomplete';
 import { DisciplineFilter } from '@/components/filters/DisciplineFilter';
@@ -117,18 +117,11 @@ export function HeroSection() {
           </form>
 
           {/* Map CTA Button */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 animate-fade-up" style={{ animationDelay: '0.35s' }}>
+          <div className="mt-6 animate-fade-up" style={{ animationDelay: '0.35s' }}>
             <Button asChild variant="outline" size="lg" className="gap-2 bg-glass border-glass-border text-creme hover:bg-glass hover:text-creme">
               <Link to="/clubs/">
                 <Map className="w-5 h-5" />
                 Voir tous les clubs sur la carte
-              </Link>
-            </Button>
-            {/* Accès direct au questionnaire pour les dirigeants de club */}
-            <Button asChild variant="secondary" size="lg" className="gap-2">
-              <Link to="/compte/mon-club/">
-                <ClipboardEdit className="w-5 h-5" />
-                Vous gérez un club ? Compléter ma fiche
               </Link>
             </Button>
           </div>
