@@ -11,14 +11,25 @@ export interface TeamDraft {
   id: string;
   name: string;
   sub_discipline: string;
+  /** Hommes, Femmes ou Mixte. */
+  gender: string;
+  /** Catégories officielles du sport (U11, Minimes…) ou « Tous âges ». */
   categories: string[];
+  audiences: string[];
+  beginners_ok: boolean | null;
+  min_age: string;
+  max_age: string;
   level: TeamLevel;
   division: string;
   venues: string[];
   slots: TeamSlot[];
   prices: PriceDraft[];
   registration: TeamRegistration;
+  /** Nombre d'encadrants (« 0 » à « 10+ ») et leur statut (bénévole, diplômé). */
+  coaches_count: string;
+  coach_types: string[];
 }
+export interface SocialLink { network: string; url: string }
 
 /**
  * Brouillon du questionnaire (5 pages : Votre club et contact, Identité et description, Équipes et groupes,
@@ -34,6 +45,20 @@ export interface ClubPayload {
   affiliation_number?: string;
   // Page 3 · Équipes et groupes
   teams?: TeamDraft[];
+  aids_other?: string;
+  documents_list?: string[];
+  // Page 1 · réseaux sociaux (repliés par défaut)
+  socials?: SocialLink[];
+  // Page 2 · conditions spécifiques et médias
+  has_specific_conditions?: boolean | null;
+  specific_conditions?: string[];
+  video_urls?: string[];
+  // Page 4 · Spécificités du sport
+  labels_list?: string[];
+  equipment_provided?: string[];
+  equipment_to_buy?: string[];
+  prerequisite?: string;
+  sport_notes?: string;
   // Page 2 · Identité et description
   logo?: string;
   color_1?: string;
@@ -93,13 +118,10 @@ export interface ClubPayload {
 
 /** Champs pris en compte dans la jauge « Fiche complète ». */
 export const COMPLETION_FIELDS: (keyof ClubPayload)[] = [
-  'email', 'phone', 'website', 'instagram_url', 'facebook_url', 'tiktok_url', 'youtube_url', 'linkedin_url',
-  'logo', 'photos', 'video_url', 'description', 'creation_date', 'venues',
-  'audiences', 'beginners_ok', 'min_age', 'max_age', 'required_level', 'health_certificate', 'other_conditions',
-  'coaches_certified', 'ambiance', 'amenities', 'pmr', 'events', 'volunteers',
-  'teams', 'trial', 'registration_start', 'registration_end', 'season_start', 'installments',
-  'aids', 'documents', 'registration_url',
-  'labels',
+  'email', 'phone', 'website', 'socials',
+  'logo', 'description', 'creation_date', 'venues', 'health_certificate', 'has_specific_conditions', 'amenities', 'pmr', 'photos', 'video_urls',
+  'teams', 'trial', 'registration_start', 'registration_end', 'season_start', 'installments', 'aids', 'documents_list', 'registration_url',
+  'labels_list', 'equipment_provided', 'equipment_to_buy', 'prerequisite',
   'role', 'affiliation_number',
 ];
 
@@ -145,28 +167,66 @@ export function missingRequired(p: ClubPayload): { page: number; label: string }
 export const newTeam = (n = 1): TeamDraft => ({
   id: `t${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
   name: n > 1 ? `Groupe ${n}` : '',
-  sub_discipline: '', categories: [], level: '', division: '', venues: [], slots: [], prices: [], registration: '',
+  sub_discipline: '', gender: '', categories: [], audiences: [], beginners_ok: null, min_age: '', max_age: '',
+  level: '', division: '', venues: [], slots: [], prices: [], registration: '', coaches_count: '', coach_types: [],
 });
 
+/** Complète une équipe d'un ancien brouillon avec les champs ajoutés depuis. */
+export const normalizeTeam = (t: Partial<TeamDraft>): TeamDraft => ({ ...newTeam(), ...t, id: t.id ?? newTeam().id });
+
+const SOCIAL_FIELDS: Record<string, keyof ClubPayload> = {
+  Instagram: 'instagram_url', Facebook: 'facebook_url', TikTok: 'tiktok_url', YouTube: 'youtube_url', LinkedIn: 'linkedin_url',
+};
+
 const teamLabel = (t: TeamDraft) => t.name.trim() || [t.sub_discipline, ...t.categories].filter(Boolean).join(' ') || 'Groupe';
+
+/** Recopie les nouveaux champs (réseaux, conditions, médias, labels, pièces) dans les champs historiques. */
+export function flattenPayload(p: ClubPayload): ClubPayload {
+  const out: ClubPayload = { ...flattenTeams(p) };
+  if (p.socials) {
+    for (const f of Object.values(SOCIAL_FIELDS)) delete out[f];
+    for (const sl of p.socials) {
+      const f = SOCIAL_FIELDS[sl.network];
+      if (f && sl.url.trim() && !out[f]) (out as Record<string, unknown>)[f] = sl.url.trim();
+    }
+  }
+  if (p.has_specific_conditions !== undefined) {
+    out.other_conditions = p.has_specific_conditions ? (p.specific_conditions ?? []).map((c) => c.trim()).filter(Boolean).join(' ; ') : '';
+  }
+  if (p.video_urls) out.video_url = p.video_urls.map((v) => v.trim()).find(Boolean) ?? '';
+  if (p.documents_list) out.documents = p.documents_list.map((d) => d.trim()).filter(Boolean).join(' ; ');
+  if (p.labels_list) out.labels = p.labels_list.join(', ');
+  if (p.aids_other?.trim()) out.aids = [...(p.aids ?? []).filter((a) => a !== 'Autre'), p.aids_other.trim()];
+  if (p.prerequisite) out.required_level = p.prerequisite;
+  return out;
+}
 
 /** Recopie les équipes dans les champs historiques lus par la validation admin (créneaux, tarifs, pratique). */
 export function flattenTeams(p: ClubPayload): ClubPayload {
   const teams = p.teams;
   if (!teams) return p;
+  const ages = (k: 'min_age' | 'max_age') => teams.map((t) => Number(t[k])).filter((n) => Number.isFinite(n) && n > 0);
+  const mins = ages('min_age');
+  const maxs = ages('max_age');
+  const coaches = teams.reduce((a, t) => a + (t.coach_types?.includes('Diplômé') ? parseInt(t.coaches_count, 10) || 0 : 0), 0);
   const uniq = (xs: string[]) => [...new Set(xs.map((x) => x.trim()).filter(Boolean))];
   const levels = uniq(teams.map((t) => t.level));
   return {
     ...p,
     schedules: teams.flatMap((t) => t.slots.map((sl) => ({
       day: sl.day, start_time: sl.start_time, end_time: sl.end_time,
-      category: [t.name.trim(), ...t.categories].filter(Boolean).join(' · '),
+      category: [t.name.trim(), t.gender, ...t.categories].filter(Boolean).join(' · '),
       level: t.level === 'competition' ? (t.division.trim() || 'Compétition') : t.level === 'loisir' ? 'Loisir' : t.division.trim(),
       venue: sl.venue || t.venues[0] || '',
     }))),
     prices: teams.flatMap((t) => t.prices.map((x) => ({ ...x, label: [teamLabel(t), x.label.trim()].filter(Boolean).join(' · ') }))),
     sub_disciplines: uniq([...(p.sub_disciplines ?? []), ...teams.map((t) => t.sub_discipline)]),
     age_categories: uniq(teams.flatMap((t) => t.categories)),
+    audiences: uniq([...teams.flatMap((t) => t.audiences ?? []), ...teams.map((t) => (t.gender === 'Femmes' ? 'Féminines' : ''))]),
+    beginners_ok: teams.some((t) => t.beginners_ok === true) ? true : teams.some((t) => t.beginners_ok === false) ? false : p.beginners_ok,
+    min_age: mins.length ? String(Math.min(...mins)) : p.min_age,
+    max_age: maxs.length ? String(Math.max(...maxs)) : p.max_age,
+    coaches_certified: coaches ? String(coaches) : p.coaches_certified,
     practice_level: levels.length === 0 ? p.practice_level : levels.length === 1 ? levels[0] : 'les_deux',
     league: uniq(teams.map((t) => t.division)).join(', ') || p.league,
     waitlist: teams.some((t) => t.registration === 'liste_attente') ? true : teams.length ? false : p.waitlist,
@@ -175,7 +235,7 @@ export function flattenTeams(p: ClubPayload): ClubPayload {
 
 /** Construit une première équipe à partir des données fédération (créneaux, tarifs, sous-disciplines). */
 export function teamsFromPrefill(p: ClubPayload): TeamDraft[] {
-  if (p.teams?.length) return p.teams;
+  if (p.teams?.length) return p.teams.map(normalizeTeam);
   const hasData = isFilled(p.schedules) || isFilled(p.prices) || isFilled(p.age_categories) || isFilled(p.league);
   if (!hasData) return [];
   const t = newTeam();
@@ -186,7 +246,29 @@ export function teamsFromPrefill(p: ClubPayload): TeamDraft[] {
   t.venues = [...new Set(t.slots.map((sl) => sl.venue).filter(Boolean))];
   t.prices = p.prices ?? [];
   if ((p.sub_disciplines ?? []).length === 1) t.sub_discipline = p.sub_disciplines![0];
+  t.audiences = p.audiences ?? [];
+  t.min_age = p.min_age ?? '';
+  t.max_age = p.max_age ?? '';
   return [t];
+}
+
+/** Convertit les anciens champs du brouillon (réseaux, vidéo, labels, pièces) vers la nouvelle forme. */
+export function upgradePayload(p: ClubPayload): ClubPayload {
+  const out: ClubPayload = { ...p, teams: teamsFromPrefill(p) };
+  if (!out.socials) {
+    out.socials = Object.entries(SOCIAL_FIELDS)
+      .filter(([, f]) => typeof p[f] === 'string' && (p[f] as string).trim())
+      .map(([network, f]) => ({ network, url: (p[f] as string).trim() }));
+  }
+  if (!out.video_urls && p.video_url) out.video_urls = [p.video_url];
+  if (!out.labels_list && p.labels) out.labels_list = p.labels.split(',').map((x) => x.trim()).filter(Boolean);
+  if (!out.documents_list && p.documents) out.documents_list = p.documents.split(/\n|;/).map((x) => x.trim()).filter(Boolean);
+  if (out.has_specific_conditions === undefined && p.other_conditions) {
+    out.has_specific_conditions = true;
+    out.specific_conditions = p.other_conditions.split(/\n|;/).map((x) => x.trim()).filter(Boolean);
+  }
+  if (!out.prerequisite && p.required_level) out.prerequisite = p.required_level;
+  return out;
 }
 
 type Row = Record<string, unknown>;
