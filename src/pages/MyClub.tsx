@@ -204,23 +204,18 @@ function MediaImg({ src, alt, className }: { src: string; alt: string; className
 /* ---------- Données ---------- */
 
 async function loadClubPrefill(clubId: string) {
-  const [club, contact, venues, schedules, prices] = await Promise.all([
-    supabase.from('clubs_public').select('*').eq('id', clubId).maybeSingle(),
+  // get_club_for_claim lit la fiche même quand la fédération n'a pas encore donné son accord (phase de test),
+  // sans email ni téléphone ; ceux-ci ne sont préremplis que si la fiche est publiée (get_club_contact).
+  const [res, contact] = await Promise.all([
+    supabase.rpc('get_club_for_claim', { p_club_id: clubId }),
     supabase.rpc('get_club_contact', { p_club_id: clubId }),
-    supabase.from('club_venues').select('*').eq('club_id', clubId),
-    supabase.from('club_schedules').select('*').eq('club_id', clubId),
-    supabase.from('club_prices').select('*').eq('club_id', clubId),
   ]);
-  if (!club.data) return null;
+  const data = res.data as { club: Record<string, unknown>; venues: Record<string, unknown>[]; schedules: Record<string, unknown>[]; prices: Record<string, unknown>[] } | null;
+  if (!data?.club) return null;
   const c = Array.isArray(contact.data) ? contact.data[0] : null;
   return {
-    club: club.data as unknown as ClubRow,
-    prefill: prefillFromClub(
-      club.data as Record<string, unknown>, c ?? null,
-      (venues.data ?? []) as Record<string, unknown>[],
-      (schedules.data ?? []) as Record<string, unknown>[],
-      (prices.data ?? []) as Record<string, unknown>[],
-    ),
+    club: data.club as unknown as ClubRow,
+    prefill: prefillFromClub(data.club, c ?? null, data.venues ?? [], data.schedules ?? [], data.prices ?? []),
   };
 }
 
@@ -508,12 +503,8 @@ function Step1({
     const term = q.trim();
     if (term.length < 2) { setHits([]); return; }
     const t = setTimeout(async () => {
-      const safe = term.replace(/[,()%]/g, ' ');
-      const { data } = await supabase
-        .from('clubs_public')
-        .select('id, name, city, discipline, federation_code')
-        .or(`name.ilike.%${safe}%,city.ilike.%${safe}%`)
-        .limit(8);
+      // Recherche ouverte même avant l'accord de la fédération (nom, ville, discipline seulement).
+      const { data } = await supabase.rpc('search_clubs_for_claim', { q: term.replace(/[%_]/g, ' ') });
       setHits((data ?? []) as unknown as ClubRow[]);
     }, 250);
     return () => clearTimeout(t);

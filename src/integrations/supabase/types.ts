@@ -1573,6 +1573,21 @@ export type Database = {
           phone: string
         }[]
       }
+      get_club_for_claim: {
+        Args: { p_club_id: string }
+        Returns: Json
+      }
+      search_clubs_for_claim: {
+        Args: { q: string }
+        Returns: {
+          city: string | null
+          discipline: string
+          federation_code: string
+          id: string
+          name: string
+          postal_code: string | null
+        }[]
+      }
       get_clubs_columns: {
         Args: never
         Returns: {

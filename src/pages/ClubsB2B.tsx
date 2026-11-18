@@ -30,13 +30,8 @@ function ClubFinder() {
     queryKey: ['b2b-club-search', term],
     enabled: term.length >= 2,
     queryFn: async () => {
-      const safe = term.replace(/[%,()*]/g, ' ');
-      const { data, error } = await supabase
-        .from('clubs_public')
-        .select('id, name, city, postal_code, discipline')
-        .or(`name.ilike.%${safe}%,city.ilike.%${safe}%`)
-        .order('name')
-        .limit(10);
+      // Recherche ouverte même avant l'accord de la fédération : nom, ville et discipline seulement.
+      const { data, error } = await supabase.rpc('search_clubs_for_claim', { q: term.replace(/[%_]/g, ' ') });
       if (error) throw error;
       return data;
     },
