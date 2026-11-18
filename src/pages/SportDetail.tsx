@@ -20,6 +20,7 @@ import { ArrowRight, ExternalLink, MapPin } from 'lucide-react';
 import { slugify } from '@/lib/geo';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useSportGuides } from '@/hooks/useSportGuides';
+import { getSportFormSpec } from '@/data/club-form-catalog';
 
 // Fiches (mise en page, styles et schémas) chargées seulement quand une fiche s'affiche.
 const SportGuideSection = lazy(() => import('@/components/sports/SportGuide').then((m) => ({ default: m.SportGuideSection })));
@@ -48,6 +49,12 @@ export default function SportDetail() {
   );
   const root = parent ?? sport;
   const category = useMemo(() => ARBORESCENCE.find((c) => c.id === sport?.category), [sport]);
+  // Même référentiel de matériel que l'étape 4 du questionnaire club.
+  const equipment = useMemo(() => {
+    if (!root) return undefined;
+    const { provided, toBuy } = getSportFormSpec(root.name, root.category);
+    return { provided, toBuy };
+  }, [root]);
 
   const rootAvail = avail.getSport(root?.id);
   const clubCount = sport?.parentId ? (rootAvail.subs[sport.name] ?? 0) : rootAvail.count;
@@ -240,10 +247,11 @@ export default function SportDetail() {
           parentGuide={sportGuide}
           icon={root.icon}
           verifiedOn={guides.GUIDES_VERIFIED_ON}
+          equipment={equipment}
         />
       )}
       {guides && !sport.parentId && sportGuide && (
-        <SportGuideSection id={root.id} name={sport.name} guide={sportGuide} icon={root.icon} verifiedOn={guides.GUIDES_VERIFIED_ON} />
+        <SportGuideSection id={root.id} name={sport.name} guide={sportGuide} icon={root.icon} verifiedOn={guides.GUIDES_VERIFIED_ON} equipment={equipment} />
       )}
       </Suspense>
 

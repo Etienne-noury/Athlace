@@ -5,6 +5,29 @@ import { PHOTO_CREDITS } from '@/data/photo-credits';
 import { getSportPhoto, getSportSchema, PHOTO_SLOT_SUBJECT, type PhotoSlot } from './sport-media';
 import '@/styles/sport-guide.css';
 
+/** Matériel du sport, même référentiel que l'étape 4 du questionnaire club (src/data/club-form-catalog.ts). */
+export interface SportEquipment { provided: string[]; toBuy: string[] }
+
+function Equipment({ equipment, dark }: { equipment?: SportEquipment; dark?: boolean }) {
+  if (!equipment || (!equipment.provided.length && !equipment.toBuy.length)) return null;
+  return (
+    <div className={`equip${dark ? ' dark' : ''}`}>
+      {equipment.provided.length > 0 && (
+        <div>
+          <h3>Souvent fourni par le club</h3>
+          <div className="tags">{equipment.provided.map((x) => <span key={x}>{x}</span>)}</div>
+        </div>
+      )}
+      {equipment.toBuy.length > 0 && (
+        <div>
+          <h3>À prévoir soi-même</h3>
+          <div className="tags">{equipment.toBuy.map((x) => <span key={x}>{x}</span>)}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /**
  * Fiches « Comprendre le sport » des pages /sports/:sportId/, mise en page reprise de la maquette
  * validée (styles dans src/styles/sport-guide.css). Chaque cadre photo affiche la photo déposée dans
@@ -182,7 +205,7 @@ const SPORT_NAV: [string, string][] = [
   ['sg-bienfaits', 'Bienfaits & budget'],
 ];
 
-export function SportGuideSection({ id, name, guide, icon, verifiedOn }: { id: string; name: string; guide: SportGuide; icon: string; verifiedOn: string }) {
+export function SportGuideSection({ id, name, guide, icon, verifiedOn, equipment }: { id: string; name: string; guide: SportGuide; icon: string; verifiedOn: string; equipment?: SportEquipment }) {
   const r = guide.repere;
   const ageLabel = r?.age ?? 'Tout âge';
   const extra = [...guide.offres.map((o) => `🎈 ${o}`), ...guide.handi.map((o) => `♿ ${o}`)];
@@ -237,6 +260,7 @@ export function SportGuideSection({ id, name, guide, icon, verifiedOn }: { id: s
           <div>
             <SectionHead index={3} label="Matériel" title="Matériel et tenue" intro="Ce qu'il te faut pour commencer." />
             <ul className="checks">{sentences(guide.materiel).map((x) => <li key={x}>{x}</li>)}</ul>
+            <Equipment equipment={equipment} />
           </div>
           <Photo id={id} slot="materiel" name={name} icon={icon} variant="v3" />
         </div>
@@ -328,6 +352,7 @@ export function DisciplineGuideSection({
   parentGuide,
   icon,
   verifiedOn,
+  equipment,
 }: {
   id: string;
   name: string;
@@ -336,6 +361,7 @@ export function DisciplineGuideSection({
   parentGuide?: SportGuide;
   icon: string;
   verifiedOn: string;
+  equipment?: SportEquipment;
 }) {
   return (
     <div className="sg">
@@ -377,6 +403,7 @@ export function DisciplineGuideSection({
           <div>
             <h3 className="subh">🎒 Matériel et tenue</h3>
             <ul className="checks dark">{sentences(guide.materiel).map((x) => <li key={x}>{x}</li>)}</ul>
+            <Equipment equipment={equipment} dark />
           </div>
         </div>
       </section>

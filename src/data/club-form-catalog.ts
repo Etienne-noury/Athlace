@@ -4,14 +4,18 @@
  *
  * Construit par famille de sports (catégorie de l'arborescence), puis précisé sport par sport (clé = nom du sport
  * dans src/data/disciplines.ts). Les listes sont des propositions : le club peut toujours ajouter « Autre ».
+ * Catégories vérifiées sur les textes 2026-2027 des fédérations (sources en commentaire) : football, rugby, basket,
+ * handball, volley, judo, natation, athlétisme, tennis de table, badminton. Les autres sports restent à vérifier.
  * À faire valider par chaque fédération (webinaire) : les intitulés officiels évoluent selon les saisons.
  */
 
 export interface SportFormSpec {
   /** Catégories proposées pour une équipe ou un groupe (noms officiels quand ils existent). */
   categories: string[];
-  /** Divisions ou niveaux de compétition, propres au sport. */
+  /** Divisions ou niveaux de compétition, propres au sport (équipes masculines ou mixtes). */
   divisions: string[];
+  /** Divisions des équipes féminines quand la pyramide diffère. */
+  divisionsF?: string[];
   /** Labels et certifications de club délivrés par la fédération. */
   labels: string[];
   /** Dotation : ce que le club fournit (tenue, matériel). */
@@ -29,8 +33,10 @@ const TEAM_DIVISIONS_GENERIC = ['Départemental', 'Régional', 'National', 'Éli
 const SPORT_HEALTH = 'Label Sport Santé';
 
 const BELTS = ['Blanche', 'Jaune', 'Orange', 'Verte', 'Bleue', 'Marron', 'Noire 1er dan', 'Noire 2e dan et plus'];
-const JUDO_AGES = ['Éveil judo (4-5 ans)', 'Mini-poussins (6-7 ans)', 'Poussins (8-9 ans)', 'Benjamins (10-11 ans)', 'Minimes (12-13 ans)', 'Cadets (14-16 ans)', 'Juniors (17-19 ans)', 'Seniors', 'Vétérans', ALL_AGES];
-const ATHLE_AGES = ['Baby athlé', 'Éveil athlétique', 'Poussins', 'Benjamins', 'Minimes', 'Cadets', 'Juniors', 'Espoirs', 'Seniors', 'Masters', ALL_AGES];
+// France Judo 2026-2027 (source : judo-orvault.ffjudo.com/page/categories-dages-1).
+const JUDO_AGES = ['Baby judo (5 ans)', 'Poussinets (6-7 ans)', 'Poussins (8-9 ans)', 'Benjamins (10-11 ans)', 'Minimes (12-13 ans)', 'Cadets (14-16 ans)', 'Juniors (17-19 ans)', 'Seniors (20 ans et plus)', 'Vétérans (30 ans et plus)', 'Judo loisir adultes', 'Taïso'];
+// FFA, saison 2027 (du 1er septembre 2026 au 31 août 2027).
+const ATHLE_AGES = ['Baby athlé (BB)', 'Éveil athlétique (EA)', 'Poussins (PO)', 'Benjamins (BE)', 'Minimes (MI)', 'Cadets (CA)', 'Juniors (JU)', 'Espoirs (ES)', 'Seniors (SE)', 'Masters (MA)', 'Running loisir', 'Marche nordique'];
 
 /** Valeurs par famille (id de catégorie de l'arborescence). */
 const FAMILY: Record<string, SportFormSpec> = {
@@ -97,16 +103,26 @@ const FAMILY: Record<string, SportFormSpec> = {
 
 /** Précisions sport par sport (seuls les champs différents de la famille). */
 const SPORT: Record<string, Partial<SportFormSpec>> = {
+  // FFF 2026-2027 : une catégorie par année (U6 à U20) ; en pratique les équipes regroupent deux années
+  // jusqu'en U13 (foot à 5 en U6-U9, foot à 8 en U10-U13), puis souvent une seule à partir de U14.
+  // Sources : occitanie.fff.fr (catégories 2026-2027), portailfoot.fr, brochure technique 2026-2027 District de la Mayenne.
   Football: {
-    categories: ['U6', 'U7', 'U8', 'U9', 'U10', 'U11', 'U12', 'U13', 'U14', 'U15', 'U16', 'U17', 'U18', 'U19', 'U20', 'Seniors', 'Vétérans (+35 ans)', 'Foot loisir', 'Foot entreprise'],
-    divisions: ['Départemental 5', 'Départemental 4', 'Départemental 3', 'Départemental 2', 'Départemental 1', 'Régional 3', 'Régional 2', 'Régional 1', 'National 3', 'National 2', 'National'],
+    categories: [
+      'U6-U7', 'U8-U9', 'U10-U11', 'U12-U13', 'U14-U15', 'U16-U17', 'U18-U19',
+      'U14', 'U15', 'U16', 'U17', 'U18', 'U19', 'U20',
+      'Seniors', 'Vétérans (Senior vétéran)', 'Foot loisir', 'Futsal', 'Foot entreprise',
+    ],
+    divisions: ['District 5', 'District 4', 'District 3', 'District 2', 'District 1', 'Régional 3', 'Régional 2', 'Régional 1', 'National 3', 'National 2', 'National', 'Ligue 2', 'Ligue 1'],
+    divisionsF: ['District', 'Régional 2', 'Régional 1', 'D3 Féminine', 'Seconde Ligue', 'Première Ligue'],
     labels: ['Label Jeunes FFF', 'Label École Féminine de Football', SPORT_HEALTH],
     provided: ['Maillot', 'Short', 'Chaussettes', 'Survêtement', 'Sac', 'K-way', 'Ballon', 'Tenue de match (prêtée pour la saison)'],
     toBuy: ['Crampons', 'Protège-tibias', 'Gants de gardien', 'Survêtement', 'Sac'],
   },
+  // FFR, règlements généraux 2026-2027 (article 239). M5 à M12 mixtes ; les filles jouent ensuite en M15 F et M18 F.
   Rugby: {
-    categories: ['M6', 'M8', 'M10', 'M12', 'M14', 'M16', 'M19', 'Seniors', 'Rugby à 5 (loisir)', 'Vétérans'],
-    divisions: ['Régionale 3', 'Régionale 2', 'Régionale 1', 'Fédérale 3', 'Fédérale 2', 'Fédérale 1', 'Nationale 2', 'Nationale'],
+    categories: ['M5 (baby rugby)', 'M6', 'M8', 'M10', 'M12', 'M14', 'M16', 'M19', 'M15 F', 'M18 F', 'Seniors', 'Rugby à 5 (loisir)', 'Vétérans (loisir)'],
+    divisions: ['Régionale 3', 'Régionale 2', 'Régionale 1', 'Fédérale 3', 'Fédérale 2', 'Fédérale 1', 'Nationale 2', 'Nationale', 'Pro D2', 'Top 14'],
+    divisionsF: ['Régionale', 'Fédérale 2', 'Fédérale 1', 'Élite 2', 'Élite 1'],
     labels: ['Label École de Rugby', SPORT_HEALTH],
     provided: ['Maillot', 'Short', 'Chaussettes', 'Survêtement', 'Sac', 'Ballon'],
     toBuy: ['Crampons', 'Protège-dents', 'Casque', 'Épaulières'],
@@ -115,21 +131,27 @@ const SPORT: Record<string, Partial<SportFormSpec>> = {
     categories: ['Moins de 7 ans', 'Moins de 9 ans', 'Moins de 11 ans', 'Moins de 13 ans', 'Moins de 15 ans', 'Moins de 17 ans', 'Moins de 19 ans', 'Seniors', 'Fauteuil', ALL_AGES],
     divisions: ['Fédérale', 'Nationale 2', 'Nationale 1', 'Élite 2', 'Élite 1'],
   },
+  // FFBB 2026-2027 : catégories annuelles U7 à U21, championnats jeunes sur deux années (sauf U18, sur trois).
   Basketball: {
-    categories: ['U7', 'U9', 'U11', 'U13', 'U15', 'U17', 'U18', 'U21', 'Seniors', 'Vétérans', 'Basket loisir', '3x3'],
-    divisions: ['Départementale 4', 'Départementale 3', 'Départementale 2', 'Départementale 1', 'Régionale 3', 'Régionale 2', 'Régionale 1', 'Pré-nationale', 'Nationale 3', 'Nationale 2', 'Nationale 1'],
+    categories: ['U7 (baby et mini-basket)', 'U9', 'U11', 'U13', 'U15', 'U17', 'U18', 'U21', 'Seniors', 'Anciens / vétérans (loisir)', 'Basket loisir', '3x3'],
+    divisions: ['Départementale 4', 'Départementale 3', 'Départementale 2', 'Départementale 1', 'Régionale 2', 'Régionale 1', 'Pré-Nationale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Élite 2', 'Betclic Élite'],
+    divisionsF: ['Départementale 3', 'Départementale 2', 'Départementale 1', 'Régionale 2', 'Régionale 1', 'Pré-Nationale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Ligue féminine 2', 'Ligue féminine'],
     labels: ['Label École Française de Mini-Basket', 'Label Club Formateur', SPORT_HEALTH],
     provided: ['Maillot (réversible)', 'Short', 'Survêtement', 'Sac', 'Ballon'], toBuy: ['Chaussures de basket', 'Chaussettes'],
   },
+  // FFHandball 2026-2027 : Baby hand, Mini hand, U11, U13, U15 (3 ans), U17, U18 (3 ans), +16 ans (seniors).
   Handball: {
-    categories: ['Baby hand (moins de 6 ans)', 'Moins de 9 ans', 'Moins de 11 ans', 'Moins de 13 ans', 'Moins de 15 ans', 'Moins de 17 ans', 'Moins de 18 ans', 'Seniors', 'Hand loisir', 'Handfit'],
-    divisions: ['Départemental', 'Honneur régional', 'Excellence régionale', 'Pré-nationale', 'Nationale 3', 'Nationale 2', 'Nationale 1'],
+    categories: ['Baby hand', 'Mini hand petits', 'Mini hand grands', 'U11', 'U13', 'U15', 'U17', 'U18', '+16 ans (seniors)', 'Hand loisir', 'Handfit'],
+    divisions: ['Départemental', 'Honneur régional', 'Excellence régionale', 'Prénationale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Proligue', 'Starligue'],
+    divisionsF: ['Départemental', 'Excellence régionale', 'Prénationale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'D2 Féminine', 'Ligue Butagaz Énergie'],
     labels: ["Label École de Hand", SPORT_HEALTH],
     provided: ['Maillot', 'Short', 'Chaussettes', 'Survêtement', 'Ballon'], toBuy: ['Chaussures de salle', 'Genouillères'],
   },
+  // FFvolley 2026-2027 (catégories et RGES) : M7 à M21, Seniors, Masters.
   Volley: {
-    categories: ['M7', 'M9', 'M11', 'M13', 'M15', 'M18', 'M21', 'Seniors', 'Volley loisir', 'Beach volley'],
-    divisions: ['Départementale', 'Régionale', 'Pré-nationale', 'Nationale 3', 'Nationale 2', 'Élite'],
+    categories: ['Baby volley', 'M7', 'M9', 'M11', 'M13', 'M15', 'M18', 'M21', 'Seniors', 'Masters', 'Volley loisir (compet\'lib)', 'Beach volley'],
+    divisions: ['Départemental 3', 'Départemental 2', 'Accession régionale', 'Régionale 3', 'Régionale 2', 'Pré-Nationale', 'Nationale 3', 'Nationale 2', 'Élite', 'Ligue B', 'Marmara SpikeLigue'],
+    divisionsF: ['Départemental 3', 'Départemental 2', 'Accession régionale', 'Régionale 3', 'Régionale 2', 'Pré-Nationale', 'Nationale 3', 'Nationale 2', 'Élite', 'Ligue A féminine'],
     provided: ['Maillot', 'Short', 'Ballon'], toBuy: ['Chaussures de salle', 'Genouillères'],
   },
   'Football américain': {
@@ -149,22 +171,25 @@ const SPORT: Record<string, Partial<SportFormSpec>> = {
     provided: ['Balles', 'Raquette en prêt', 'Tenue du club'], toBuy: ['Raquette', 'Chaussures de tennis', 'Tenue'],
     prerequisite: { label: 'Classement', options: ['Non classé', '40', '30/5 à 30', '15/5 à 15', '5/6 à 1/6', 'Seconde série', 'Première série'] },
   },
+  // FFTT, circulaire administrative 2026-2027 (annexe 2).
   'Tennis de table': {
-    categories: ['Poussins', 'Benjamins', 'Minimes', 'Cadets', 'Juniors', 'Seniors', 'Vétérans', 'Loisir', ALL_AGES],
-    divisions: ['Départementale', 'Pré-régionale', 'Régionale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Pro'],
+    categories: ['Poussins (moins de 9 ans)', 'Benjamins (moins de 11 ans)', 'Minimes (moins de 13 ans)', 'Cadets (moins de 15 ans)', 'Juniors (moins de 19 ans)', 'Seniors', 'Vétérans (40 ans et plus)', 'Loisir', 'Ping santé'],
+    divisions: ['Départementale 4', 'Départementale 3', 'Départementale 2', 'Départementale 1', 'Pré-régionale', 'Régionale 3', 'Régionale 2', 'Régionale 1', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Pro B', 'Pro A'],
     provided: ['Raquette en prêt', 'Balles', 'Maillot du club'], toBuy: ['Raquette', 'Chaussures de salle'],
   },
+  // Guide du Badminton FFBaD 2026-2027, chapitre 02.
   Badminton: {
-    categories: ['Minibad', 'Poussins', 'Benjamins', 'Minimes', 'Cadets', 'Juniors', 'Seniors', 'Vétérans', 'Loisir', ALL_AGES],
+    categories: ['Minibad (U9)', 'Poussins (U11)', 'Benjamins (U13)', 'Minimes (U15)', 'Cadets (U17)', 'Juniors (U19)', 'Seniors', 'Vétérans (35 ans et plus)', 'Loisir', 'Badminton santé'],
     divisions: ['Départementale', 'Régionale', 'Pré-nationale', 'Nationale 3', 'Nationale 2', 'Nationale 1', 'Top 12'],
     provided: ['Volants', 'Raquette en prêt'], toBuy: ['Raquette', 'Chaussures de salle', 'Volants'],
   },
+  // FFN, natation course 2027 : catégories U12 à U18 puis Seniors ; Maîtres à partir de 25 ans.
   Natation: {
-    categories: ['École de natation', 'Avenirs', 'Jeunes', 'Juniors', 'Seniors', 'Maîtres', 'Natation loisir', 'Aquaforme', ALL_AGES],
-    divisions: ['Départemental', 'Régional', 'Interrégional', 'National'],
+    categories: ['École de natation (apprentissage)', 'U12 et moins', 'U13', 'U14', 'U15', 'U16', 'U17', 'U18', 'Seniors (19 ans et plus)', 'Maîtres (25 ans et plus)', 'Natation loisir adultes', 'Aquaforme'],
+    divisions: ['Départemental', 'Régional', 'Interrégional', 'National', 'Élite'],
     labels: ['Label École de Natation Française', SPORT_HEALTH],
     provided: ['Planches, pull-buoys et matériel pédagogique', 'Bonnet du club'], toBuy: ['Maillot de bain', 'Bonnet', 'Lunettes', 'Palmes', 'Plaquettes'],
-    prerequisite: { label: 'Niveau requis', options: ['Aucun (apprentissage)', "Savoir nager 25 m", 'Sauv\'nage', 'Pass\'sports de l\'eau', 'Pass\'compétition'] },
+    prerequisite: { label: 'Niveau requis', options: ['Aucun (apprentissage)', "Sauv'nage", "Pass'sports de l'eau", "Pass'compétition"] },
   },
   'Plongée et sports sous-marins': {
     categories: ['Enfants (8-14 ans)', 'Ados', 'Adultes', ALL_AGES],

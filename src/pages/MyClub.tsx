@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Plus, Trash2, Upload, CheckCircle2, Search, X, Pencil, AlertCircle } from 'lucide-react';
+import { Loader2, Plus, Trash2, Upload, Check, CheckCircle2, Search, X, Pencil, AlertCircle, Copy, Download, FileSpreadsheet, Layers } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ import {
   type ClubPayload, type PriceDraft, type SocialLink, type TeamDraft, type TeamSlot, type VenueDraft,
 } from '@/lib/club-form';
 import { ARBORESCENCE } from '@/data/disciplines';
+import { parseTeamsCsv, teamTemplateCsv } from '@/lib/team-import';
 import { AMENITY_OPTIONS, COACH_TYPES, GENDERS, SOCIAL_NETWORKS, getSportFormSpec, type SportFormSpec } from '@/data/club-form-catalog';
 
 /* ---------- Constantes ---------- */
@@ -44,11 +45,6 @@ const MEDIA_BUCKET = 'club-media';
 const MEDIA_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 const MEDIA_MAX_BYTES = 5 * 1024 * 1024;
 
-interface SportQuestion {
-  id: string; key: string; label: string; help: string | null;
-  type: 'text' | 'number' | 'boolean' | 'select' | 'multiselect';
-  options: string[] | null; sort: number; federation_code: string | null;
-}
 type ClubRow = Record<string, unknown> & { id: string; name: string; city: string | null; discipline: string; federation_code: string };
 
 /* ---------- Petits composants ---------- */
@@ -71,10 +67,11 @@ function StepCard({ step, percent, onGo, canLeaveFirst, saveState }: {
               >
                 <span className={cn(
                   'flex h-9 w-9 shrink-0 items-center justify-center rounded-pill border-2 text-small font-bold transition-colors',
-                  current ? 'border-primary bg-primary text-primary-foreground'
-                    : n < step ? 'border-primary bg-creme text-bleu-athlace' : 'border-border bg-background text-nuit/70 group-hover:border-primary',
+                  n < step ? 'border-primary bg-primary text-primary-foreground'
+                    : current ? 'border-primary bg-background text-bleu-athlace ring-4 ring-primary/15'
+                      : 'border-border bg-background text-nuit/70 group-hover:border-primary',
                 )}>
-                  {n < step ? <CheckCircle2 className="h-4 w-4" /> : n}
+                  {n < step ? <Check className="h-5 w-5" strokeWidth={3} aria-label={`Étape ${n} faite`} /> : n}
                 </span>
                 <span className={cn('hidden max-w-[9rem] text-caption leading-tight md:block', current ? 'font-bold text-nuit' : 'text-nuit/70')}>{label}</span>
               </button>
@@ -305,19 +302,6 @@ export default function MyClub() {
     setP((o) => upgradePayload({ ...r.prefill, role: o.role, affiliation_number: o.affiliation_number, club_id: id, new_club: null }));
   };
 
-  const fedCode = club?.federation_code ?? null;
-  const { data: questions = [] } = useQuery({
-    queryKey: ['sport-questions', fedCode],
-    queryFn: async () => {
-      let q = supabase.from('sport_questions').select('*').eq('active', true);
-      q = fedCode ? q.or(`federation_code.is.null,federation_code.eq.${fedCode}`) : q.is('federation_code', null);
-      const { data, error } = await q.order('sort').order('key');
-      if (error) throw error;
-      return (data ?? []) as SportQuestion[];
-    },
-    enabled: !!user,
-  });
-
   const { data: discRows = [] } = useQuery({
     queryKey: ['available-disciplines'],
     queryFn: fetchAvailableDisciplines,
@@ -331,7 +315,7 @@ export default function MyClub() {
     return [...new Set([...fromDb, ...(prefill.sub_disciplines ?? []), ...(p.teams ?? []).map((t) => t.sub_discipline).filter(Boolean)])];
   }, [discRows, discipline, prefill.sub_disciplines, p.teams]);
 
-  const percent = completionPercent(p, questions.map((q) => q.key));
+  const percent = completionPercent(p);
   // Référentiel du sport (catégories, divisions, labels, dotation…) d'après la discipline du club.
   const spec = useMemo(() => {
     for (const family of ARBORESCENCE) {
@@ -463,9 +447,9 @@ export default function MyClub() {
           )}
           {step === 2 && <Step2 p={p} set={set} fed={fed} userId={user.id} />}
           {step === 3 && <Step3 p={p} set={set} fed={fed} subOptions={subOptions} spec={spec} />}
-          {step === 4 && <Step4 p={p} set={set} fed={fed} questions={questions} spec={spec} />}
+          {step === 4 && <Step4 p={p} set={set} fed={fed} spec={spec} />}
           {step === 5 && (
-            <Step5 p={p} set={set} fed={fed} club={club} questions={questions} certify={certify} setCertify={setCertify}
+            <Step5 p={p} set={set} fed={fed} club={club} certify={certify} setCertify={setCertify}
               subId={subId} affMatch={affMatch} missing={missing} onEdit={goTo} />
           )}
         </div>
@@ -753,7 +737,7 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
         <Field label="Certificat médical ou questionnaire de santé demandé">
           <YesNo value={p.health_certificate} onChange={(v) => set('health_certificate', v)} />
         </Field>
-        <Field label="Conditions spécifiques" hint="Ex. savoir nager, avoir un vélo, autorisation parentale…">
+        <Field label="Conditions spécifiques" hint="Ex. test de niveau à l'entrée, licence compétition obligatoire, surclassement médical.">
           <YesNo value={p.has_specific_conditions} onChange={(v) => {
             set('has_specific_conditions', v);
             if (v && !(p.specific_conditions ?? []).length) set('specific_conditions', ['']);
@@ -812,15 +796,146 @@ function Step2({ p, set, fed, userId }: StepProps & { userId: string }) {
   );
 }
 
+/** Liste déroulante d'un seul choix, avec « Autre » qui ouvre un champ libre. */
+function SelectOther({ options, value, onChange, otherLabel }: {
+  options: string[]; value: string; onChange: (v: string) => void; otherLabel: string;
+}) {
+  const OTHER = '__autre__';
+  const known = options.includes(value);
+  const [custom, setCustom] = useState(!!value && !known);
+  return (
+    <div className="flex flex-wrap gap-2">
+      <select aria-label="Catégorie" className={cn(selectCls, 'max-w-xs')} value={custom ? OTHER : value}
+        onChange={(e) => {
+          if (e.target.value === OTHER) { setCustom(true); onChange(''); } else { setCustom(false); onChange(e.target.value); }
+        }}>
+        <option value="">-</option>
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+        <option value={OTHER}>Autre…</option>
+      </select>
+      {custom && <Input className="max-w-xs" placeholder={otherLabel} aria-label={otherLabel} value={value} onChange={(e) => onChange(e.target.value)} />}
+    </div>
+  );
+}
+
+/** Équipe ajoutée par défaut et jamais remplie : remplacée lors d'un ajout groupé ou d'un import. */
+const isEmptyTeam = (t: TeamDraft) =>
+  !t.categories.length && !t.gender && !t.sub_discipline && !t.level && !t.slots.length && !t.prices.length && !t.venues.length;
+
+/**
+ * Remplir vite beaucoup d'équipes : création groupée (une équipe par catégorie cochée, avec lieux, créneaux,
+ * tarifs et encadrants repris d'une équipe modèle) ou import d'un fichier Excel/CSV à partir du modèle.
+ */
+function TeamsBulk({ spec, teams, onAdd }: { spec: SportFormSpec; teams: TeamDraft[]; onAdd: (t: TeamDraft[]) => void }) {
+  const [mode, setMode] = useState<'' | 'bulk' | 'file'>('');
+  const [gender, setGender] = useState('');
+  const [cats, setCats] = useState<string[]>([]);
+  const [level, setLevel] = useState<TeamDraft['level']>('');
+  const [modelId, setModelId] = useState('');
+  const [report, setReport] = useState<{ ok: number; errors: string[] } | null>(null);
+  const models = teams.filter((t) => !isEmptyTeam(t));
+  const label = (t: TeamDraft, i: number) => t.name.trim() || [t.gender, t.categories[0]].filter(Boolean).join(' · ') || `Équipe ${i + 1}`;
+
+  const create = () => {
+    const model = teams.find((t) => t.id === modelId);
+    const add = cats.map((c) => {
+      const base = model ? structuredClone(model) : newTeam();
+      return { ...base, id: newTeam().id, name: '', gender, categories: [c], level: level || base.level, division: model ? '' : base.division };
+    });
+    onAdd(add);
+    toast({ title: `${add.length} équipe${add.length > 1 ? 's' : ''} ajoutée${add.length > 1 ? 's' : ''}`, description: 'Complétez les créneaux et tarifs propres à chacune.' });
+    setCats([]); setMode('');
+  };
+
+  const download = () => {
+    const blob = new Blob([teamTemplateCsv(spec.categories)], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'athlace-modele-equipes.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  const importFile = async (file: File) => {
+    if (/\.xlsx?$/i.test(file.name)) {
+      setReport({ ok: 0, errors: ['Fichier Excel (.xlsx) : dans Excel, faites « Enregistrer sous » puis choisissez « CSV (séparateur : point-virgule) », et importez ce fichier.'] });
+      return;
+    }
+    const res = parseTeamsCsv(await file.text());
+    if (res.teams.length) onAdd(res.teams);
+    setReport({ ok: res.teams.length, errors: res.errors });
+  };
+
+  return (
+    <div className="space-y-4 rounded-2xl border border-dashed bg-creme/40 p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="mr-auto text-small font-bold text-nuit">Beaucoup d'équipes ? Gagnez du temps :</p>
+        <Button variant={mode === 'bulk' ? 'default' : 'outline'} size="sm" onClick={() => setMode(mode === 'bulk' ? '' : 'bulk')}>
+          <Layers className="mr-1 h-4 w-4" /> Créer plusieurs équipes d'un coup
+        </Button>
+        <Button variant={mode === 'file' ? 'default' : 'outline'} size="sm" onClick={() => setMode(mode === 'file' ? '' : 'file')}>
+          <FileSpreadsheet className="mr-1 h-4 w-4" /> Importer un fichier Excel
+        </Button>
+      </div>
+
+      {mode === 'bulk' && (
+        <div className="space-y-4 rounded-xl bg-background p-4">
+          <Field label="Genre"><PillChoice options={GENDERS.map((g) => ({ v: g, l: g }))} value={gender} onChange={setGender} /></Field>
+          <Field label="Catégories (une équipe sera créée par catégorie cochée)">
+            <Chips options={spec.categories} value={cats} onChange={setCats} />
+          </Field>
+          <Field label="Niveau"><PillChoice options={LEVELS} value={level} onChange={(v) => setLevel(v as TeamDraft['level'])} /></Field>
+          {models.length > 0 && (
+            <Field label="Reprendre les lieux, créneaux, tarifs et encadrants de" hint="Facultatif : vous ajusterez ensuite chaque équipe.">
+              <select className={cn(selectCls, 'max-w-sm')} value={modelId} onChange={(e) => setModelId(e.target.value)}>
+                <option value="">Aucune (équipes vides)</option>
+                {models.map((t, i) => <option key={t.id} value={t.id}>{label(t, i)}</option>)}
+              </select>
+            </Field>
+          )}
+          <Button onClick={create} disabled={!cats.length}>
+            <Plus className="mr-1 h-4 w-4" /> Créer {cats.length || ''} équipe{cats.length > 1 ? 's' : ''}
+          </Button>
+        </div>
+      )}
+
+      {mode === 'file' && (
+        <div className="space-y-3 rounded-xl bg-background p-4 text-small text-nuit">
+          <ol className="list-decimal space-y-1 pl-5 text-nuit/70">
+            <li>Téléchargez le modèle et ouvrez-le dans Excel (ou Google Sheets).</li>
+            <li>Une ligne par créneau : répétez le même nom d'équipe pour lui donner plusieurs créneaux.</li>
+            <li>Enregistrez au format CSV, puis importez-le ici. Les équipes s'ajoutent à la liste, vous pouvez tout modifier ensuite.</li>
+          </ol>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={download}><Download className="mr-1 h-4 w-4" /> Télécharger le modèle</Button>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-primary px-4 py-2 text-small font-bold text-primary-foreground">
+              <Upload className="h-4 w-4" /> Importer le fichier
+              <input type="file" accept=".csv,text/csv,.xlsx,.xls" className="sr-only"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) importFile(f); e.target.value = ''; }} />
+            </label>
+          </div>
+          {report && (
+            <div className="space-y-1 rounded-xl bg-creme p-3">
+              {report.ok > 0 && <p className="font-bold">{report.ok} équipe{report.ok > 1 ? 's' : ''} importée{report.ok > 1 ? 's' : ''}.</p>}
+              {report.errors.map((e) => <p key={e} className="text-nuit/70">{e}</p>)}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* Étape 3 · Équipes et groupes : un bloc par équipe (pratique, public, niveau, lieux, créneaux, tarifs, encadrants, inscriptions) */
-function TeamBlock({ t, index, onChange, onRemove, venueNames, subOptions, spec }: {
-  t: TeamDraft; index: number; onChange: (t: TeamDraft) => void; onRemove: () => void; venueNames: string[]; subOptions: string[]; spec: SportFormSpec;
+function TeamBlock({ t, index, onChange, onRemove, onDuplicate, venueNames, subOptions, spec }: {
+  t: TeamDraft; index: number; onChange: (t: TeamDraft) => void; onRemove: () => void; onDuplicate: () => void;
+  venueNames: string[]; subOptions: string[]; spec: SportFormSpec;
 }) {
   const up = (patch: Partial<TeamDraft>) => onChange({ ...t, ...patch });
   const upSlot = (i: number, patch: Partial<TeamSlot>) => up({ slots: t.slots.map((x, j) => (j === i ? { ...x, ...patch } : x)) });
   const upPrice = (i: number, patch: Partial<PriceDraft>) => up({ prices: t.prices.map((x, j) => (j === i ? { ...x, ...patch } : x)) });
   const slotVenues = [...new Set([...(t.venues.length ? t.venues : venueNames), ...t.slots.map((x) => x.venue)].filter(Boolean))];
-  const divisions = [...new Set([...spec.divisions, t.division].filter(Boolean))];
+  const divisions = [...new Set([...(t.gender === 'Femmes' && spec.divisionsF ? spec.divisionsF : spec.divisions), t.division].filter(Boolean))];
   const competes = t.level === 'competition' || t.level === 'les_deux';
   const hasCoaches = t.coaches_count !== '' && t.coaches_count !== '0';
 
@@ -830,7 +945,10 @@ function TeamBlock({ t, index, onChange, onRemove, venueNames, subOptions, spec 
         <h3 className="font-sans text-subtitle font-bold text-nuit">
           {t.name.trim() || [t.gender, ...t.categories].filter(Boolean).join(' · ') || `Équipe ou groupe ${index + 1}`}
         </h3>
-        <Button variant="ghost" size="sm" onClick={onRemove}><Trash2 className="mr-1 h-4 w-4" />Retirer</Button>
+        <div className="flex gap-1">
+          <Button variant="ghost" size="sm" onClick={onDuplicate}><Copy className="mr-1 h-4 w-4" />Dupliquer</Button>
+          <Button variant="ghost" size="sm" onClick={onRemove}><Trash2 className="mr-1 h-4 w-4" />Retirer</Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -851,8 +969,8 @@ function TeamBlock({ t, index, onChange, onRemove, venueNames, subOptions, spec 
 
       <div className="grid gap-4 md:grid-cols-[auto_1fr]">
         <Field label="Genre"><PillChoice options={GENDERS.map((g) => ({ v: g, l: g }))} value={t.gender} onChange={(v) => up({ gender: v })} /></Field>
-        <Field label="Catégorie" hint="Catégories officielles du sport, ou « Tous âges ».">
-          <ChipsOther options={spec.categories} value={t.categories} onChange={(v) => up({ categories: v })} placeholder="Autre catégorie…" />
+        <Field label="Catégorie" hint="Catégorie officielle de la fédération. Une équipe = une catégorie.">
+          <SelectOther options={spec.categories} value={t.categories[0] ?? ''} onChange={(v) => up({ categories: v ? [v] : [] })} otherLabel="Autre catégorie…" />
         </Field>
       </div>
 
@@ -963,9 +1081,14 @@ function Step3({ p, set, fed, subOptions, spec }: StepProps & { subOptions: stri
       {(fed('schedules') || fed('prices')) && teams.length > 0 && (
         <p className="text-small text-nuit/70">Prérempli avec les données de votre fédération <FedBadge /></p>
       )}
+      <TeamsBulk spec={spec} teams={teams} onAdd={(add) => set('teams', [...teams.filter((x) => !isEmptyTeam(x)), ...add])} />
       {teams.map((t, i) => (
         <TeamBlock key={t.id} t={t} index={i} venueNames={venueNames} subOptions={subOptions} spec={spec}
           onChange={(nt) => set('teams', teams.map((x) => (x.id === t.id ? nt : x)))}
+          onDuplicate={() => {
+            const copy: TeamDraft = { ...structuredClone(t), id: newTeam().id, name: t.name ? `${t.name} (copie)` : '' };
+            set('teams', [...teams.slice(0, i + 1), copy, ...teams.slice(i + 1)]);
+          }}
           onRemove={() => set('teams', teams.filter((x) => x.id !== t.id))} />
       ))}
       <Button variant="outline" className="w-full border-dashed" onClick={() => set('teams', [...teams, newTeam(teams.length + 1)])}>
@@ -1006,10 +1129,8 @@ function Step3({ p, set, fed, subOptions, spec }: StepProps & { subOptions: stri
   );
 }
 
-/* Étape 4 · Spécificités du sport : labels, dotation, matériel, prérequis, questions et précisions libres */
-function Step4({ p, set, fed, questions, spec }: StepProps & { questions: SportQuestion[]; spec: SportFormSpec & { sportName: string } }) {
-  const answers = p.sport_answers ?? {};
-  const setA = (k: string, v: unknown) => set('sport_answers', { ...answers, [k]: v });
+/* Étape 4 · Spécificités du sport : labels, prérequis, dotation, matériel et précisions libres */
+function Step4({ p, set, fed, spec }: StepProps & { spec: SportFormSpec & { sportName: string } }) {
   return (
     <>
       {spec.sportName && <p className="text-small text-nuit/70">Questions adaptées au sport : <span className="font-bold text-nuit">{spec.sportName}</span>.</p>}
@@ -1037,35 +1158,6 @@ function Step4({ p, set, fed, questions, spec }: StepProps & { questions: SportQ
           </Field>
         </Block>
       </div>
-
-      {questions.length > 0 && (
-        <Block title="Questions propres à votre sport">
-          <div className="grid gap-4 md:grid-cols-2">
-            {questions.map((q) => {
-              const v = answers[q.key];
-              return (
-                <Field key={q.id} label={q.label} hint={q.help ?? undefined}>
-                  {q.type === 'text' && <Input value={(v as string) ?? ''} onChange={(e) => setA(q.key, e.target.value)} />}
-                  {q.type === 'number' && (
-                    <Input type="number" className="w-40" value={(v as string | number) ?? ''}
-                      onChange={(e) => setA(q.key, e.target.value === '' ? null : Number(e.target.value))} />
-                  )}
-                  {q.type === 'boolean' && <YesNo value={v as boolean | null} onChange={(b) => setA(q.key, b)} />}
-                  {q.type === 'select' && (
-                    <select className={selectCls} value={(v as string) ?? ''} onChange={(e) => setA(q.key, e.target.value || null)}>
-                      <option value="">-</option>
-                      {(q.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  )}
-                  {q.type === 'multiselect' && (
-                    <Chips options={q.options ?? []} value={Array.isArray(v) ? (v as string[]) : []} onChange={(arr) => setA(q.key, arr)} />
-                  )}
-                </Field>
-              );
-            })}
-          </div>
-        </Block>
-      )}
 
       <Block title="Autres précisions">
         <Field label="Ce que vous voulez ajouter sur la pratique dans votre club" hint="Facultatif">
@@ -1107,9 +1199,9 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function Step5({
-  p, set, fed, club, questions, certify, setCertify, subId, affMatch, missing, onEdit,
+  p, set, fed, club, certify, setCertify, subId, affMatch, missing, onEdit,
 }: StepProps & {
-  club: ClubRow | null; questions: SportQuestion[]; certify: boolean; setCertify: (v: boolean) => void;
+  club: ClubRow | null; certify: boolean; setCertify: (v: boolean) => void;
   subId: string | null; affMatch: boolean | null; missing: { page: number; label: string }[]; onEdit: (n: number) => void;
 }) {
   const clubName = club?.name ?? p.new_club?.name;
@@ -1162,9 +1254,6 @@ function Step5({
                 </Row>
               ))}
               {rows.map(([k, l]) => <Row key={k} label={l}>{fmt(p[k])}</Row>)}
-              {sec.page === 4 && questions.filter((q) => isFilled(p.sport_answers?.[q.key])).map((q) => (
-                <Row key={q.id} label={q.label}>{fmt(p.sport_answers![q.key])}</Row>
-              ))}
             </dl>
           </div>
         );
