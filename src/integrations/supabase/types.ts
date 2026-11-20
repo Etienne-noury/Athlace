@@ -38,6 +38,33 @@ export type Database = {
         }
         Relationships: []
       }
+      city_index: {
+        Row: {
+          city: string
+          clubs: number
+          department_code: string | null
+          postal_code: string | null
+          region: string | null
+          search: string
+        }
+        Insert: {
+          city: string
+          clubs: number
+          department_code?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search: string
+        }
+        Update: {
+          city?: string
+          clubs?: number
+          department_code?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search?: string
+        }
+        Relationships: []
+      }
       club_field_status: {
         Row: {
           club_id: string
@@ -438,6 +465,8 @@ export type Database = {
           description: string | null
           discipline: string
           email: string | null
+          equipment_provided: string[] | null
+          equipment_to_buy: string[] | null
           external_id: string
           facebook_url: string | null
           federation_code: string
@@ -450,12 +479,6 @@ export type Database = {
           installments: boolean | null
           is_hidden: boolean
           kit_image_url: string | null
-          equipment_provided: string[] | null
-          equipment_to_buy: string[] | null
-          other_links: Json | null
-          sport_notes: string | null
-          teams: Json | null
-          video_urls: string[] | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -477,6 +500,7 @@ export type Database = {
           name: string
           opening_hours: string | null
           other_conditions: string | null
+          other_links: Json | null
           outing_durations: string[] | null
           outing_places: string[] | null
           phone: string | null
@@ -500,8 +524,10 @@ export type Database = {
           seeks_volunteers: boolean | null
           siret: string | null
           source_url: string | null
+          sport_notes: string | null
           structure_type: string | null
           sub_disciplines: string[] | null
+          teams: Json | null
           tiktok_url: string | null
           trainings: string[] | null
           transports: string[] | null
@@ -509,6 +535,7 @@ export type Database = {
           twitter_url: string | null
           updated_at: string
           video_url: string | null
+          video_urls: string[] | null
           waitlist: boolean | null
           website: string | null
           youtube_url: string | null
@@ -543,6 +570,8 @@ export type Database = {
           description?: string | null
           discipline: string
           email?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
           external_id: string
           facebook_url?: string | null
           federation_code: string
@@ -555,12 +584,6 @@ export type Database = {
           installments?: boolean | null
           is_hidden?: boolean
           kit_image_url?: string | null
-          equipment_provided?: string[] | null
-          equipment_to_buy?: string[] | null
-          other_links?: Json | null
-          sport_notes?: string | null
-          teams?: Json | null
-          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -582,6 +605,7 @@ export type Database = {
           name: string
           opening_hours?: string | null
           other_conditions?: string | null
+          other_links?: Json | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -605,8 +629,10 @@ export type Database = {
           seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
+          sport_notes?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          teams?: Json | null
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
@@ -614,6 +640,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string
           video_url?: string | null
+          video_urls?: string[] | null
           waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
@@ -648,6 +675,8 @@ export type Database = {
           description?: string | null
           discipline?: string
           email?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
           external_id?: string
           facebook_url?: string | null
           federation_code?: string
@@ -660,12 +689,6 @@ export type Database = {
           installments?: boolean | null
           is_hidden?: boolean
           kit_image_url?: string | null
-          equipment_provided?: string[] | null
-          equipment_to_buy?: string[] | null
-          other_links?: Json | null
-          sport_notes?: string | null
-          teams?: Json | null
-          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -687,6 +710,7 @@ export type Database = {
           name?: string
           opening_hours?: string | null
           other_conditions?: string | null
+          other_links?: Json | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           phone?: string | null
@@ -710,8 +734,10 @@ export type Database = {
           seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
+          sport_notes?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          teams?: Json | null
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
@@ -719,6 +745,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string
           video_url?: string | null
+          video_urls?: string[] | null
           waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
@@ -984,9 +1011,27 @@ export type Database = {
         Relationships: []
       }
       federation_publication: {
-        Row: { authorized: boolean; authorized_at: string | null; federation_code: string; note: string | null; updated_at: string }
-        Insert: { authorized?: boolean; authorized_at?: string | null; federation_code: string; note?: string | null; updated_at?: string }
-        Update: { authorized?: boolean; authorized_at?: string | null; federation_code?: string; note?: string | null; updated_at?: string }
+        Row: {
+          authorized: boolean
+          authorized_at: string | null
+          federation_code: string
+          note: string | null
+          updated_at: string
+        }
+        Insert: {
+          authorized?: boolean
+          authorized_at?: string | null
+          federation_code: string
+          note?: string | null
+          updated_at?: string
+        }
+        Update: {
+          authorized?: boolean
+          authorized_at?: string | null
+          federation_code?: string
+          note?: string | null
+          updated_at?: string
+        }
         Relationships: []
       }
       federation_scraping_status: {
@@ -1115,6 +1160,24 @@ export type Database = {
         }
         Relationships: []
       }
+      stats_cache: {
+        Row: {
+          data: Json
+          key: string
+          refreshed_at: string
+        }
+        Insert: {
+          data: Json
+          key: string
+          refreshed_at?: string
+        }
+        Update: {
+          data?: Json
+          key?: string
+          refreshed_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1234,6 +1297,8 @@ export type Database = {
           department_code: string | null
           description: string | null
           discipline: string | null
+          equipment_provided: string[] | null
+          equipment_to_buy: string[] | null
           external_id: string | null
           facebook_url: string | null
           federation_code: string | null
@@ -1245,12 +1310,6 @@ export type Database = {
           instagram_url: string | null
           installments: boolean | null
           kit_image_url: string | null
-          equipment_provided: string[] | null
-          equipment_to_buy: string[] | null
-          other_links: Json | null
-          sport_notes: string | null
-          teams: Json | null
-          video_urls: string[] | null
           labels: string[] | null
           latitude: number | null
           league: string | null
@@ -1272,6 +1331,7 @@ export type Database = {
           name: string | null
           opening_hours: string | null
           other_conditions: string | null
+          other_links: Json | null
           outing_durations: string[] | null
           outing_places: string[] | null
           photo_urls: string[] | null
@@ -1294,8 +1354,10 @@ export type Database = {
           seeks_volunteers: boolean | null
           siret: string | null
           source_url: string | null
+          sport_notes: string | null
           structure_type: string | null
           sub_disciplines: string[] | null
+          teams: Json | null
           tiktok_url: string | null
           trainings: string[] | null
           transports: string[] | null
@@ -1303,6 +1365,7 @@ export type Database = {
           twitter_url: string | null
           updated_at: string | null
           video_url: string | null
+          video_urls: string[] | null
           waitlist: boolean | null
           website: string | null
           youtube_url: string | null
@@ -1336,6 +1399,8 @@ export type Database = {
           department_code?: string | null
           description?: string | null
           discipline?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
           external_id?: string | null
           facebook_url?: string | null
           federation_code?: string | null
@@ -1347,12 +1412,6 @@ export type Database = {
           instagram_url?: string | null
           installments?: boolean | null
           kit_image_url?: string | null
-          equipment_provided?: string[] | null
-          equipment_to_buy?: string[] | null
-          other_links?: Json | null
-          sport_notes?: string | null
-          teams?: Json | null
-          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1374,6 +1433,7 @@ export type Database = {
           name?: string | null
           opening_hours?: string | null
           other_conditions?: string | null
+          other_links?: Json | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
@@ -1396,8 +1456,10 @@ export type Database = {
           seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
+          sport_notes?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          teams?: Json | null
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
@@ -1405,6 +1467,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string | null
           video_url?: string | null
+          video_urls?: string[] | null
           waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
@@ -1438,6 +1501,8 @@ export type Database = {
           department_code?: string | null
           description?: string | null
           discipline?: string | null
+          equipment_provided?: string[] | null
+          equipment_to_buy?: string[] | null
           external_id?: string | null
           facebook_url?: string | null
           federation_code?: string | null
@@ -1449,12 +1514,6 @@ export type Database = {
           instagram_url?: string | null
           installments?: boolean | null
           kit_image_url?: string | null
-          equipment_provided?: string[] | null
-          equipment_to_buy?: string[] | null
-          other_links?: Json | null
-          sport_notes?: string | null
-          teams?: Json | null
-          video_urls?: string[] | null
           labels?: string[] | null
           latitude?: number | null
           league?: string | null
@@ -1476,6 +1535,7 @@ export type Database = {
           name?: string | null
           opening_hours?: string | null
           other_conditions?: string | null
+          other_links?: Json | null
           outing_durations?: string[] | null
           outing_places?: string[] | null
           photo_urls?: string[] | null
@@ -1498,8 +1558,10 @@ export type Database = {
           seeks_volunteers?: boolean | null
           siret?: string | null
           source_url?: string | null
+          sport_notes?: string | null
           structure_type?: string | null
           sub_disciplines?: string[] | null
+          teams?: Json | null
           tiktok_url?: string | null
           trainings?: string[] | null
           transports?: string[] | null
@@ -1507,6 +1569,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string | null
           video_url?: string | null
+          video_urls?: string[] | null
           waitlist?: boolean | null
           website?: string | null
           youtube_url?: string | null
@@ -1573,25 +1636,7 @@ export type Database = {
           phone: string
         }[]
       }
-      get_club_for_claim: {
-        Args: { p_club_id: string }
-        Returns: Json
-      }
-      published_federations: {
-        Args: never
-        Returns: string[]
-      }
-      search_clubs_for_claim: {
-        Args: { q: string }
-        Returns: {
-          city: string | null
-          discipline: string
-          federation_code: string
-          id: string
-          name: string
-          postal_code: string | null
-        }[]
-      }
+      get_club_for_claim: { Args: { p_club_id: string }; Returns: Json }
       get_clubs_columns: {
         Args: never
         Returns: {
@@ -1601,18 +1646,8 @@ export type Database = {
         }[]
       }
       home_stats: { Args: never; Returns: Json }
-      location_stats: { Args: never; Returns: Json }
-      search_cities: {
-        Args: { p_limit?: number; p_q?: string }
-        Returns: {
-          city: string
-          clubs: number
-          department_code: string
-          postal_code: string
-          region: string
-        }[]
-      }
       is_published_club_media: { Args: { p_name: string }; Returns: boolean }
+      location_stats: { Args: never; Returns: Json }
       map_club_clusters: {
         Args: {
           p_disciplines?: string[]
@@ -1631,9 +1666,33 @@ export type Database = {
           lng: number
         }[]
       }
+      published_federations: { Args: never; Returns: string[] }
+      refresh_location_index: { Args: never; Returns: undefined }
+      refresh_stats_cache: { Args: never; Returns: undefined }
       reject_submission: {
         Args: { note: string; submission_id: string }
         Returns: undefined
+      }
+      search_cities: {
+        Args: { p_limit?: number; p_q?: string }
+        Returns: {
+          city: string
+          clubs: number
+          department_code: string
+          postal_code: string
+          region: string
+        }[]
+      }
+      search_clubs_for_claim: {
+        Args: { q: string }
+        Returns: {
+          city: string
+          discipline: string
+          federation_code: string
+          id: string
+          name: string
+          postal_code: string
+        }[]
       }
       site_stats: { Args: never; Returns: Json }
       submission_payload_to_club: {
