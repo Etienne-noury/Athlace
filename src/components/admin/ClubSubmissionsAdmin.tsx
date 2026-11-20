@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { isFilled, prefillFromClub, type ClubPayload } from '@/lib/club-form';
+import { isFilled, prefillFromClub, type ClubPayload, type TeamDraft } from '@/lib/club-form';
+import { sportExtraLabel } from '@/data/club-form-catalog';
 
 const FIELDS: [keyof ClubPayload, string][] = [
   ['affiliation_number', "N° d'affiliation"], ['logo', 'Logo'], ['color_1', 'Couleur principale'], ['color_2', 'Couleur secondaire'],
@@ -25,8 +26,19 @@ const FIELDS: [keyof ClubPayload, string][] = [
   ['labels', 'Labels'], ['ambiance', 'Ambiance (0-100)'], ['amenities', 'Équipements'], ['pmr', 'Accessibilité PMR'],
   ['events', 'Événements annuels'], ['volunteers', 'Cherche des bénévoles'], ['email', 'Email'], ['phone', 'Téléphone'],
   ['website', 'Site web'], ['instagram_url', 'Instagram'], ['facebook_url', 'Facebook'], ['tiktok_url', 'TikTok'],
-  ['youtube_url', 'YouTube'], ['linkedin_url', 'LinkedIn'],
+  ['youtube_url', 'YouTube'], ['linkedin_url', 'LinkedIn'], ['twitter_url', 'X (Twitter)'], ['other_links', 'Autres liens'],
+  ['video_urls', 'Vidéos'], ['equipment_provided', 'Matériel fourni (dotation)'], ['equipment_to_buy', 'Matériel à acheter'],
+  ['sport_notes', 'Autres précisions'],
 ];
+
+/** Une ligne lisible par équipe : catégorie, genre, niveau, créneaux, tarifs, encadrants. */
+const teamSummary = (t: Partial<TeamDraft>) => [
+  t.name?.trim(), t.categories?.[0], t.gender, t.sub_discipline, t.level, t.division,
+  t.min_age || t.max_age ? `${t.min_age || '?'}-${t.max_age || '?'} ans` : '',
+  (t.slots ?? []).filter((x) => x.day).map((x) => `${x.day} ${x.start_time}${x.end_time ? `-${x.end_time}` : ''}${x.venue ? ` (${x.venue})` : ''}`).join(', '),
+  (t.prices ?? []).filter((x) => x.amount).map((x) => `${x.amount} €/${x.period}`).join(', '),
+  t.coaches_count ? `${t.coaches_count} encadrant(s) ${[...(t.coach_types ?? []), ...(t.coach_titles ?? [])].join(', ')}` : '',
+].filter(Boolean).join(' · ');
 
 const fmt = (v: unknown): string => {
   if (!isFilled(v)) return '-';
@@ -155,11 +167,12 @@ function SubmissionDetail({ sub, onDone }: { sub: Submission; onDone: () => void
 
   const rows: { key: string; label: string; cur: unknown; next: unknown }[] = [
     ...FIELDS.map(([k, l]) => ({ key: k, label: l, cur: (current as ClubPayload)[k], next: p[k] })),
+    { key: 'teams', label: 'Équipes et groupes', cur: (current.teams ?? []).map(teamSummary), next: (p.teams ?? []).map(teamSummary) },
     { key: 'venues', label: 'Lieux', cur: current.venues, next: p.venues },
     { key: 'schedules', label: 'Créneaux', cur: current.schedules, next: p.schedules },
     { key: 'prices', label: 'Tarifs', cur: current.prices, next: p.prices },
     ...Object.entries(p.sport_answers ?? {}).map(([k, v]) => ({
-      key: `sport:${k}`, label: `Sport · ${answers.labels[k] ?? k}`, cur: answers.cur[k], next: v,
+      key: `sport:${k}`, label: `Sport · ${answers.labels[k] ?? sportExtraLabel(k) ?? k}`, cur: answers.cur[k], next: v,
     })),
   ].filter((r) => isFilled(r.cur) || isFilled(r.next));
   const changed = rows.filter((r) => isFilled(r.next) && norm(r.cur) !== norm(r.next) && !(typeof r.cur === 'string' && fmt(r.cur) === fmt(r.next)));
