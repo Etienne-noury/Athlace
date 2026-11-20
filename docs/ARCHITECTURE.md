@@ -19,9 +19,13 @@ Le navigateur ne détient jamais de secret : il parle à Supabase avec la clé p
 
 | Objet | Accès public | Écriture |
 | --- | --- | --- |
-| `clubs` (table) | non, via la vue `clubs_public` (sans e-mail ni téléphone) | admin / fonctions serveur |
+| `clubs` (table) | non, via la vue `clubs_public` (sans e-mail ni téléphone, seulement les clubs des fédérations autorisées) | admin / fonctions serveur |
+| `federation_publication` (accord écrit de chaque fédération, onglet admin « Scraping ») | non | admin |
 | `get_club_contact(id)` | oui, un club à la fois | - |
-| `club_venues`, `club_schedules`, `club_prices`, `club_sport_answers`, `club_field_status` | lecture | admin |
+| `club_venues`, `club_schedules`, `club_prices`, `club_sport_answers` | lecture, seulement pour les clubs visibles dans `clubs_public` | admin |
+| `club_field_status` (valeur fédération / valeur club, écran admin « Conflits ») | non (depuis `0047`) | admin |
+| `search_clubs_for_claim(q)`, `get_club_for_claim(id)` (revendication d'une fiche) | sessions connectées seulement (y compris la session anonyme du questionnaire `/fiche-club/`, migration `0046`) ; fiche sans contact | - |
+| `stats_cache`, `city_index` (compteurs publics, recalculés toutes les 10 min) | non, lus par `home_stats`, `available_disciplines`, `federation_club_stats`, `search_cities`, `location_stats` | `refresh_stats_cache()` / `refresh_location_index()` via pg_cron |
 | `club_submissions` (fiche proposée par un club) | chaque utilisateur voit les siennes | l'utilisateur tant que la fiche n'est pas validée ; validation par `approve_submission` (admin) |
 | `club_waitlist` (demandes de rendez-vous club) | non | uniquement via la fonction edge `club-appointment` (validation + délai anti-spam) ; lecture admin |
 | `profiles`, `favorites` | chaque utilisateur voit les siens | idem |
@@ -37,6 +41,8 @@ Le navigateur ne détient jamais de secret : il parle à Supabase avec la clé p
 **Règle des vues publiques** : `clubs_public` lit `clubs` avec les droits de son propriétaire (elle contourne la RLS pour n'exposer que des colonnes sûres). Elle ne doit donc avoir que le droit `SELECT` pour `anon` et `authenticated`. Toute nouvelle vue publique suit la même règle (voir `drizzle/migrations/0033_revoke_public_view_writes.sql`).
 
 Le rôle admin est vérifié côté serveur par `private.has_role(uid, 'admin')` (SQL) et `requireAdmin()` (fonctions edge).
+
+**Règle de publication** : un club n'est public que si sa fédération est autorisée dans `federation_publication` (filtre dans `clubs_public`, migrations `0041` et `0042`). Toute table liée à un club se filtre en vérifiant que le club existe dans `clubs_public`. Seule exception assumée : la revendication (`0044`), qui ne sert jamais à afficher une page publique.
 
 **Règle des droits** : un visiteur non connecté (`anon`) n'a aucun droit d'écriture sur aucune table, en plus de la RLS (voir `drizzle/migrations/0038_security_hardening.sql`). Toute écriture anonyme passe par une fonction edge qui valide les données.
 
@@ -74,3 +80,5 @@ Tout le reste du dossier `src/` est utilisé. `src/components/ui/` est le kit sh
 Deux dossiers coexistent pour des raisons historiques : `supabase/migrations/` (début du projet) puis `drizzle/migrations/` (schéma actuel des clubs). Lire les deux par ordre de date pour avoir l'état complet de la base.
 
 Fusionner une PR GitHub met à jour le code dans Lovable mais n'applique pas les migrations à la base en ligne : il faut demander à Lovable d'appliquer le fichier. Lovable les exécute directement, sans toujours remplir la table de suivi `drizzle.__drizzle_migrations` : pour savoir si une migration est en place, contrôler son effet en base (table, droit ou fonction créés) plutôt que le nombre de lignes de cette table. Chaque migration doit pouvoir être rejouée sans erreur (`IF NOT EXISTS`, `CREATE OR REPLACE`, `DROP POLICY IF EXISTS`).
+
+**État au 20/11/2026** : toutes les migrations jusqu'à `0044` ont leur effet en base, sauf `0038_security_hardening.sql` (fusionnée le 16/11, pas encore appliquée). `0047` est ajoutée par l'audit du 20/11.
