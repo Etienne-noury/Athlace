@@ -160,7 +160,10 @@ export function Header() {
   const location = useLocation();
   const avail = useAvailableDisciplines();
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const auth = useAuth();
+  const { profile } = auth;
+  // Session anonyme (questionnaire club sans compte) affichée comme un visiteur.
+  const user = auth.user && !auth.user.is_anonymous ? auth.user : null;
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Close the mobile menu whenever the route changes

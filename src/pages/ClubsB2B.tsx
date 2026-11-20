@@ -12,6 +12,7 @@ import { PageTitle } from '@/components/PageTitle';
 import communityPhoto from '@/assets/espace-club-community.jpg';
 import { Badge } from '@/components/ui/badge';
 import { SoonBadge } from '@/components/ui/SoonBadge';
+import { clubFormPath } from '@/lib/club-form-access';
 import { supabase } from '@/integrations/supabase/client';
 
 function useDebounced<T>(value: T, delay = 300) {
@@ -30,8 +31,14 @@ function ClubFinder() {
     queryKey: ['b2b-club-search', term],
     enabled: term.length >= 2,
     queryFn: async () => {
-      // Recherche ouverte même avant l'accord de la fédération : nom, ville et discipline seulement.
-      const { data, error } = await supabase.rpc('search_clubs_for_claim', { q: term.replace(/[%_]/g, ' ') });
+      // Seulement les fiches publiées (accord de la fédération) ; les autres se retrouvent dans « Compléter ma fiche ».
+      const safe = term.replace(/[%,()*]/g, ' ');
+      const { data, error } = await supabase
+        .from('clubs_public')
+        .select('id, name, city, postal_code, discipline')
+        .or(`name.ilike.%${safe}%,city.ilike.%${safe}%`)
+        .order('name')
+        .limit(10);
       if (error) throw error;
       return data;
     },
@@ -67,7 +74,7 @@ function ClubFinder() {
                 </p>
               </div>
               <Button asChild size="sm" className="shrink-0">
-                <Link to={`/compte/mon-club/?club=${c.id}`}>C'est mon club</Link>
+                <Link to={clubFormPath(c.id)}>C'est mon club</Link>
               </Button>
             </CardContent>
           </Card>
@@ -128,7 +135,7 @@ export default function ClubsB2B() {
             <h1 className="text-4xl lg:text-6xl font-black mb-6">Espace club</h1>
             <p className="text-lg leading-relaxed max-w-xl">Votre club est déjà sur Athlace. Prenez la main sur votre fiche, puis gérez et animez votre club au même endroit.</p>
             <div className="flex flex-wrap gap-3 mt-8">
-              <Button asChild variant="secondary" size="lg" className="gap-2"><Link to="/compte/mon-club/"><ClipboardEdit className="h-4 w-4" />Compléter ma fiche</Link></Button>
+              <Button asChild variant="secondary" size="lg" className="gap-2"><Link to={clubFormPath()}><ClipboardEdit className="h-4 w-4" />Compléter ma fiche</Link></Button>
               <Button asChild variant="tertiary" className="gap-2"><a href="#trouver-ma-fiche">Trouver ma fiche<ArrowDown className="h-4 w-4" /></a></Button>
               <Button asChild variant="tertiary" className="gap-2"><a href="#rendez-vous">Prendre rendez-vous<CalendarCheck className="h-4 w-4" /></a></Button>
             </div>
@@ -171,7 +178,7 @@ export default function ClubsB2B() {
                       </li>
                     ))}
                   </ul>
-                  {o.available ? <Button asChild className="mt-6"><Link to="/compte/mon-club/">Compléter ma fiche</Link></Button>
+                  {o.available ? <Button asChild className="mt-6"><Link to={clubFormPath()}>Compléter ma fiche</Link></Button>
                     : <div className="mt-6 flex flex-wrap gap-2 items-center"><Button disabled>Choisir cette offre</Button><SoonBadge /></div>}
                 </CardContent>
               </Card>

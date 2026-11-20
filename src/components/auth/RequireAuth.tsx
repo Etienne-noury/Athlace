@@ -17,7 +17,8 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
     );
   }
 
-  if (!user) {
+  // Session anonyme (questionnaire club sans compte) : pas d'accès aux pages du compte.
+  if (!user || user.is_anonymous) {
     return (
       <Navigate
         to="/compte/connexion/"

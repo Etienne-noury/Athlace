@@ -33,6 +33,7 @@ const ClubDetail = lazy(() => import("./pages/ClubDetail"));
 // Fédérations, événements, blog
 const FederationsIndex = lazy(() => import("./pages/FederationsIndex"));
 const FederationDetail = lazy(() => import("./pages/FederationDetail"));
+const OpenClubForm = lazy(() => import("./pages/OpenClubForm"));
 const Evenements = lazy(() => import("./pages/Evenements"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
 const Blog = lazy(() => import("./pages/Blog"));
@@ -160,6 +161,8 @@ const App = () => (
               <Route path="/compte/favoris/" element={<RequireAuth><Favorites /></RequireAuth>} />
               <Route path="/compte/mes-clubs/" element={<Redirect to="/compte/favoris/" />} />
               <Route path="/compte/mon-club/" element={<RequireAuth><MyClub /></RequireAuth>} />
+              {/* Questionnaire club sans compte (session anonyme), ouvert ponctuellement : src/lib/club-form-access.ts */}
+              <Route path="/fiche-club/" element={<OpenClubForm />} />
               <Route path="/compte/alertes/" element={<RequireAuth><Notifications /></RequireAuth>} />
               <Route path="/compte/notifications/" element={<Redirect to="/compte/alertes/" />} />
               <Route path="/compte/fidelite/" element={<Fidelity />} />

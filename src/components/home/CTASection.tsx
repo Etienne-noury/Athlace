@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Building2 } from 'lucide-react';
+import { clubFormPath } from '@/lib/club-form-access';
 import { Button } from '@/components/ui/button';
 
 export function CTASection() {
@@ -55,7 +56,7 @@ export function CTASection() {
               
               <div className="flex flex-wrap gap-3">
                 <Button asChild size="lg" className="gap-2">
-                  <Link to="/compte/mon-club/">
+                  <Link to={clubFormPath()}>
                     Compléter ma fiche
                     <ArrowRight className="w-4 h-4" />
                   </Link>
