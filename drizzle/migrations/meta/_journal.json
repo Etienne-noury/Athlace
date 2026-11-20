@@ -327,8 +327,15 @@
     {
       "idx": 46,
       "version": "7",
-      "when": 1795800000000,
-      "tag": "0046_club_field_status_admin_only",
+      "when": 1795701000000,
+      "tag": "0046_claim_search_signed_in",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1795801000000,
+      "tag": "0047_club_field_status_admin_only",
       "breakpoints": true
     }
   ]
