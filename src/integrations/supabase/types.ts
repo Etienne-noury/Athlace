@@ -1577,6 +1577,10 @@ export type Database = {
         Args: { p_club_id: string }
         Returns: Json
       }
+      published_federations: {
+        Args: never
+        Returns: string[]
+      }
       search_clubs_for_claim: {
         Args: { q: string }
         Returns: {

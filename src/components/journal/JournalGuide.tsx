@@ -18,11 +18,14 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { fetchFederationsByCategorie } from '@/lib/federations-officielles';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
+import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 
 export function JournalGuide({ slug }: { slug: string }) {
   const article = getJournalArticle(slug);
   const { stats } = useSiteStats();
   const avail = useAvailableDisciplines();
+  // Aucun lien vers une fédération tant qu'elle n'a pas donné son accord écrit.
+  const { isPublished } = usePublishedFederations();
 
   const title = useMemo(() => {
     if (slug === 'guide-licences-federations') return 'Guide des licences fédérales';
@@ -116,11 +119,13 @@ export function JournalGuide({ slug }: { slug: string }) {
                                       </div>
                                     </div>
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                      <Button variant="outline" size="sm" asChild>
-                                        <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
-                                          Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
-                                        </a>
-                                      </Button>
+                                      {isPublished(fed.sigle) && (
+                                        <Button variant="outline" size="sm" asChild>
+                                          <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
+                                            Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
+                                          </a>
+                                        </Button>
+                                      )}
                                       {sport.sportSlug && avail.isSportAvailable(sport.sportSlug) && (
                                         <Button variant="secondary" size="sm" asChild>
                                           <Link to={`/sports/${sport.sportSlug}/`}>Voir le sport {sport.sportName}</Link>

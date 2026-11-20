@@ -23,7 +23,7 @@ Le navigateur ne détient jamais de secret : il parle à Supabase avec la clé p
 | `federation_publication` (accord écrit de chaque fédération, onglet admin « Scraping ») | non | admin |
 | `get_club_contact(id)` | oui, un club à la fois | - |
 | `club_venues`, `club_schedules`, `club_prices`, `club_sport_answers` | lecture, seulement pour les clubs visibles dans `clubs_public` | admin |
-| `club_field_status` (valeur fédération / valeur club, écran admin « Conflits ») | non (depuis `0045`) | admin |
+| `club_field_status` (valeur fédération / valeur club, écran admin « Conflits ») | non (depuis `0046`) | admin |
 | `search_clubs_for_claim(q)`, `get_club_for_claim(id)` (revendication d'une fiche) | nom, ville, discipline pour tous ; fiche sans contact pour un compte connecté | - |
 | `stats_cache`, `city_index` (compteurs publics, recalculés toutes les 10 min) | non, lus par `home_stats`, `available_disciplines`, `federation_club_stats`, `search_cities`, `location_stats` | `refresh_stats_cache()` / `refresh_location_index()` via pg_cron |
 | `club_submissions` (fiche proposée par un club) | chaque utilisateur voit les siennes | l'utilisateur tant que la fiche n'est pas validée ; validation par `approve_submission` (admin) |
@@ -81,4 +81,4 @@ Deux dossiers coexistent pour des raisons historiques : `supabase/migrations/` (
 
 Fusionner une PR GitHub met à jour le code dans Lovable mais n'applique pas les migrations à la base en ligne : il faut demander à Lovable d'appliquer le fichier. Lovable les exécute directement, sans toujours remplir la table de suivi `drizzle.__drizzle_migrations` : pour savoir si une migration est en place, contrôler son effet en base (table, droit ou fonction créés) plutôt que le nombre de lignes de cette table. Chaque migration doit pouvoir être rejouée sans erreur (`IF NOT EXISTS`, `CREATE OR REPLACE`, `DROP POLICY IF EXISTS`).
 
-**État au 20/11/2026** : toutes les migrations jusqu'à `0044` ont leur effet en base, sauf `0038_security_hardening.sql` (fusionnée le 16/11, pas encore appliquée). `0045` est ajoutée par l'audit du 20/11.
+**État au 20/11/2026** : toutes les migrations jusqu'à `0044` ont leur effet en base, sauf `0038_security_hardening.sql` (fusionnée le 16/11, pas encore appliquée). `0046` est ajoutée par l'audit du 20/11.

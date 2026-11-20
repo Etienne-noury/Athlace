@@ -23,7 +23,7 @@ export function getFederationSports(sigle: string | null): SportNode[] {
 
 // Existing imports sometimes use a legacy code. Require both that code and
 // the sport's exact discipline to disambiguate FFP (polo vs parachutisme).
-const LEGACY_CODES: Record<string, string[]> = {
+export const LEGACY_CODES: Record<string, string[]> = {
   FFRP: ['FFRANDO'], 'FFB-BIL': ['FFB-BILLARD'], FFVV: ['FFVP'],
   'FFP-PARA': ['FFP'], FFP: ['FFPOLO'],
 };

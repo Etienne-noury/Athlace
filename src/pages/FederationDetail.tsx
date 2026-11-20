@@ -8,18 +8,21 @@ import { useFederationDirectory } from '@/hooks/useFederationDirectory';
 import { findFederationBySlug, findSportForSigle, getFederationStats, federationClubUrl } from '@/lib/federation-directory';
 import { slugifyDiscipline } from '@/data/disciplines';
 import { safeExternalUrl } from '@/lib/safe-url';
+import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 import NotFound from '@/pages/NotFound';
 
 export default function FederationDetail() {
   const { slug } = useParams<{ slug: string }>();
   const directory = useFederationDirectory();
+  const { isPublished } = usePublishedFederations();
   if (directory.isLoading) return <Layout><div role="status" className="container mx-auto px-4 py-16 flex items-center gap-3"><Loader2 className="h-6 w-6 animate-spin" />Chargement de la fédération…</div></Layout>;
   if (directory.isError) return <Layout><div role="alert" className="container mx-auto px-4 py-16 space-y-4"><p>La fédération ne peut pas être chargée pour le moment.</p><Button variant="outline" onClick={directory.retry}>Réessayer</Button></div></Layout>;
   const federation = findFederationBySlug(directory.federations, slug);
   if (!federation) return <NotFound />;
   const match = findSportForSigle(federation.sigle);
   const { count, disciplines } = getFederationStats(federation.sigle, directory.stats);
-  const officialUrl = safeExternalUrl(federation.site_web);
+  // Aucun lien vers le site d'une fédération qui n'a pas encore donné son accord écrit.
+  const officialUrl = isPublished(federation.sigle) ? safeExternalUrl(federation.site_web) : null;
   const sportId = match ? slugifyDiscipline(match.sport.name) : '';
 
   return <Layout>

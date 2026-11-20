@@ -7,6 +7,7 @@ import { Layout } from '@/components/layout/Layout';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
+import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 import { fetchFederationSources, type Federation } from '@/data/federations';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
@@ -17,6 +18,8 @@ const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; 
 
 export default function Federations() {
   const avail = useAvailableDisciplines();
+  // Aucun lien vers une fédération tant qu'elle n'a pas donné son accord écrit.
+  const { isPublished } = usePublishedFederations();
   const { data: federations = [], isLoading } = useQuery({
     queryKey: ['federations'],
     queryFn: fetchFederationSources,
@@ -81,15 +84,17 @@ export default function Federations() {
                     <Icon className="w-3 h-3" />
                     {meta.label}
                   </Badge>
-                  <a
-                    href={fed.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-colors"
-                  >
-                    Accéder à l'annuaire
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+                  {isPublished(fed.code) && (
+                    <a
+                      href={fed.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-colors"
+                    >
+                      Accéder à l'annuaire
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
                   {fed.sportSlug && sportOk && (
                     <Link
                       to={`/sports/${fed.sportSlug}/`}
