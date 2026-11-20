@@ -21,6 +21,7 @@ import { slugify } from '@/lib/geo';
 import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDisciplines';
 import { useSportGuides } from '@/hooks/useSportGuides';
 import { getSportFormSpec } from '@/data/club-form-catalog';
+import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 
 // Fiches (mise en page, styles et schémas) chargées seulement quand une fiche s'affiche.
 const SportGuideSection = lazy(() => import('@/components/sports/SportGuide').then((m) => ({ default: m.SportGuideSection })));
@@ -83,6 +84,7 @@ export default function SportDetail() {
     [root, federationSources],
   );
 
+  const { isPublished } = usePublishedFederations();
   const { data: guides } = useSportGuides();
   const sportGuide = root ? guides?.SPORT_GUIDES[root.id] : undefined;
   const disciplineGuide = sport?.parentId ? guides?.DISCIPLINE_GUIDES[sport.id] : undefined;
@@ -314,11 +316,14 @@ export default function SportDetail() {
                 Licence, calendrier des compétitions et règlement officiel : tout est sur son site.
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <a href={federation.url} target="_blank" rel="noopener noreferrer">
-                Site de la fédération <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
+            {/* Lien seulement après l'accord écrit de la fédération. */}
+            {isPublished(federation.code) && (
+              <Button variant="outline" asChild>
+                <a href={federation.url} target="_blank" rel="noopener noreferrer">
+                  Site de la fédération <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            )}
           </div>
         </section>
       )}

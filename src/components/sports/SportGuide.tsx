@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { safeExternalUrl } from '@/lib/safe-url';
 import type { DisciplineGuide, GuideSource, SportGuide } from '@/data/sport-guides';
 import { PHOTO_CREDITS } from '@/data/photo-credits';
+import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 import { getSportPhoto, getSportSchema, PHOTO_SLOT_SUBJECT, type PhotoSlot } from './sport-media';
 import '@/styles/sport-guide.css';
 
@@ -171,6 +172,8 @@ function SubNav({ items }: { items: [string, string][] }) {
 }
 
 function Sources({ sources, verifiedOn, note }: { sources: GuideSource[]; verifiedOn: string; note?: string }) {
+  // Sources sur le site d'une fédération sans accord écrit : citées en texte, sans lien.
+  const { canLink } = usePublishedFederations();
   const links = sources
     .map((s) => ({ ...s, href: safeExternalUrl(s.url) }))
     .filter((s): s is GuideSource & { href: string } => !!s.href);
@@ -187,7 +190,7 @@ function Sources({ sources, verifiedOn, note }: { sources: GuideSource[]; verifi
         </div>
         <ul>
           {links.map((s) => (
-            <li key={s.href}><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a></li>
+            <li key={s.href}>{canLink(s.href) ? <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a> : <span>{s.label}</span>}</li>
           ))}
         </ul>
       </div>
