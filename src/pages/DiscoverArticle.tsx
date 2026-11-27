@@ -17,6 +17,7 @@ import { fetchFederationsByCategorie } from '@/lib/federations-officielles';
 import { useSiteStats } from '@/hooks/useSiteStats';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { usePublishedFederations } from '@/hooks/usePublishedFederations';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 export default function DiscoverArticle() {
   const { slug } = useParams<{ slug: string }>();
@@ -117,9 +118,9 @@ export default function DiscoverArticle() {
                                       </div>
                                     </div>
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                      {isPublished(fed.sigle) && (
+                                      {isPublished(fed.sigle) && safeExternalUrl(fed.site_web) && (
                                         <Button variant="outline" size="sm" asChild>
-                                          <a href={fed.site_web} target="_blank" rel="noopener noreferrer">
+                                          <a href={safeExternalUrl(fed.site_web)!} target="_blank" rel="noopener noreferrer">
                                             Accéder au site fédéral <ExternalLink className="w-3 h-3 ml-2" />
                                           </a>
                                         </Button>

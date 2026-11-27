@@ -22,6 +22,7 @@ import { useAvailableDisciplines, formatClubCount } from '@/hooks/useAvailableDi
 import { useSportGuides } from '@/hooks/useSportGuides';
 import { getSportFormSpec } from '@/data/club-form-catalog';
 import { usePublishedFederations } from '@/hooks/usePublishedFederations';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 // Fiches (mise en page, styles et schémas) chargées seulement quand une fiche s'affiche.
 const SportGuideSection = lazy(() => import('@/components/sports/SportGuide').then((m) => ({ default: m.SportGuideSection })));
@@ -317,9 +318,9 @@ export default function SportDetail() {
               </p>
             </div>
             {/* Lien seulement après l'accord écrit de la fédération. */}
-            {isPublished(federation.code) && (
+            {isPublished(federation.code) && safeExternalUrl(federation.url) && (
               <Button variant="outline" asChild>
-                <a href={federation.url} target="_blank" rel="noopener noreferrer">
+                <a href={safeExternalUrl(federation.url)!} target="_blank" rel="noopener noreferrer">
                   Site de la fédération <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>
