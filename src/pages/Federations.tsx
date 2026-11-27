@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { useAvailableDisciplines } from '@/hooks/useAvailableDisciplines';
 import { usePublishedFederations } from '@/hooks/usePublishedFederations';
 import { fetchFederationSources, type Federation } from '@/data/federations';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 const typeMeta: Record<Federation['type'], { label: string; icon: typeof Code2; className: string }> = {
   api: { label: 'API publique', icon: Code2, className: 'bg-creme text-primary border-border' },
@@ -84,9 +85,9 @@ export default function Federations() {
                     <Icon className="w-3 h-3" />
                     {meta.label}
                   </Badge>
-                  {isPublished(fed.code) && (
+                  {isPublished(fed.code) && safeExternalUrl(fed.url) && (
                     <a
-                      href={fed.url}
+                      href={safeExternalUrl(fed.url)!}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-colors"
